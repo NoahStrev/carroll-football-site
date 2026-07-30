@@ -368,6 +368,26 @@ table.mini tbody tr:nth-child(1) .lb-rank { color: var(--cat-2); font-weight: 80
 .sitenav .links a:hover { background: var(--grid); color: var(--text-primary); }
 .sitenav .links a.active { background: var(--series-1); color: #fff; }
 
+/* ---- unit header (2026-07-30): moved here from lifting-strength.html and
+   special-teams-overview.html, where it was declared byte-identically in both
+   files' local <style> blocks -- a real dashboard-canvas header, shared across
+   every unit/tab, belongs in the shared design system per this file's own
+   stated rule, not copy-pasted per page. ---- */
+.unit-header {
+  background: linear-gradient(135deg, var(--brand-navy), color-mix(in srgb, var(--brand-navy) 80%, #000));
+  color: var(--brand-navy-ink); border-radius: 12px 12px 0 0; padding: 18px 26px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  border-bottom: 3px solid var(--cat-2);
+}
+.unit-header .brandmark { display: flex; align-items: center; gap: 13px; }
+.unit-header .brandmark .crest {
+  width: 40px; height: 40px; border-radius: 50%; background: var(--cat-2); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+}
+.unit-header h2 { font-size: 23px; margin: 0; font-weight: 800; letter-spacing: -.01em; }
+.unit-header .sub { font-size: 11.5px; opacity: .8; }
+
 /* ---- responsive (2026-07-29): the dashboard canvas (.slide, now fluid above)
    used to be a fixed 1280px block panned via .stage's overflow-x -- per user
    request this now reflows on tablet/mobile instead. Component classes that are
@@ -389,4 +409,6 @@ table.mini tbody tr:nth-child(1) .lb-rank { color: var(--cat-2); font-weight: 80
   .kpi.small .value { font-size: 16px; }
   table.mini { font-size: 11.5px; }
   table.mini th, table.mini td { padding: 6px; }
+  .unit-header { padding: 14px 16px; }
+  .unit-header h2 { font-size: 19px; }
 }

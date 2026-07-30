@@ -40,7 +40,9 @@ based on.
      source and had to be built from other real fields.
    - **Lifting & Strength — done** (`dashboards/lifting-strength.html`). 4 tabs:
      All Time / Last Session, Senior/Junior, Sophomore/Freshman (leaderboard grids,
-     top 12 per Combined Total/Bench/Squat/Clean), and Class Comparison
+     every qualifying athlete per Combined Total/Bench/Squat/Clean in a scrollable
+     sticky-header list — was a top-12 cutoff, changed 2026-07-30 per the user), and
+     Class Comparison
      (athlete-vs-athlete line charts across every metric including Height/Weight).
      Class year isn't its own field in the Lifting Data output — derived from
      `years_with_program` (confirmed by that project to match the source's own
@@ -66,6 +68,14 @@ based on.
    scratch.
 3. **Phase 3 — offense &amp; defense**: no existing dashboard reference for either —
    design from scratch once we get here.
+4. **Phase 4 — report ingestion &amp; downloads** (lowest priority, added 2026-07-30
+   per the user): get the program's existing generated reports (CCIW Buddah Report,
+   National Buddah Report, Game Analysis, National/CCIW Game Prep Report — the
+   sibling projects under `Football/`) into this site and downloadable, not just
+   living in each project's own output folder. Design/scope TBD once we get here —
+   likely a per-report-type listing page with download links, possibly filterable
+   by season/opponent; may need its own data/build step per report type the same
+   way Phase 1 does.
 
 ## Testing notes (Special Teams Overview)
 
@@ -151,6 +161,81 @@ narrowing/reset, search-box filtering, tooltip content via direct DOM
 inspection (chart values don't show up in plain text extraction), and both
 light/dark mode, across every tab of both dashboards.
 
+## Scrollable leaderboards + responsive reflow (2026-07-30, per the user)
+
+- **Lifting leaderboard cards show every qualifying athlete**, not a top-12 cutoff —
+  sorted list in a sticky-header scroll region (`.lb-scroll-wrap`/`.lb-scroll`,
+  `dashboards/lifting-strength.html`), with a count badge on the card header. "Every
+  qualifying athlete" is genuinely all of them, not just non-zero ones — the Lifting
+  Data pipeline never emits a zero-value row in the first place (confirmed by
+  checking `data/lifting.json` directly), so there was nothing extra to filter.
+- **The whole site now reflows on tablet/mobile instead of horizontal-scrolling a
+  fixed 1280px canvas.** `.slide` (`css/theme.css`) changed from a hardcoded
+  `width: 1280px` to fluid `width: 100%; max-width: 1280px`, plus breakpoints for
+  every grid component actually in use (`.grid2`/`.colcard-2` in theme.css;
+  `.kpirow-6`/`.chartgrid`/`.trend-body` in `special-teams-overview.html`;
+  `.lbgrid`/`.comparegrid` in `lifting-strength.html`). Verified zero horizontal
+  overflow at 375px/768px/1280px across every tab of both dashboards, the filters
+  panel, and the landing page. Component classes re-declared per-page keep their
+  breakpoints in that same file, since a shared theme.css rule at equal specificity
+  would lose to the page's own unconditional declaration.
+
+## Validation pass + real bugs found (2026-07-30, per the user's "validate there
+aren't any issues" request)
+
+Browser-tested (not just read back) after the above changes: console errors across
+every tab of both dashboards, filter narrowing/reset/search, the searchable
+combobox (including selecting the same athlete for both A and B — renders fine, no
+NaN coordinates), dark/light theme toggle, and re-ran both `scripts/build_*.py`
+against source and diffed against the committed `data/*.json` (byte-identical, no
+drift). Two real, confirmed bugs found and fixed:
+
+- **Clicking "None" on any filter group showed every row instead of zero.**
+  `applyFilters()` (`js/charts.js`) treated an empty checked-set the same as "no
+  filter applied" (`if (!set.size) return true`) rather than "exclude everything" —
+  backwards from what clicking "None" should do. Fixed to `return false` in that
+  branch; a normal (non-empty) selection is unaffected.
+- **`lifting-strength.html`'s position filter wasn't actually using the shared,
+  fixed `applyFilters` at all**, despite the 2026-07-30 UX-overhaul section above
+  claiming both dashboards were unified on one implementation. `classGroupHTML`/
+  `allTimeGroupHTML` had their own inline condition
+  (`!positionFilter.size || !r.position || positionFilter.has(r.position)`) with the
+  identical "empty selection passes everything" bug, invisible to a test of
+  `applyFilters()` alone since that function was never called from this file. Fixed
+  by routing both functions through the shared `applyFilters` instead of duplicating
+  the logic — confirmed via a QB-only filter test that the row count (15) exactly
+  matches an independent count of QB-tagged-or-blank-position athletes in
+  `data/lifting.json`.
+
+## Class Comparison realigned by career-year, not calendar date (2026-07-30, per
+the user)
+
+The chart used to plot both athletes' points by literal `session_label`, so a
+2021-22 freshman and a 2024-25 freshman landed at completely different x-positions
+even though both were being tested in their freshman year. Rebuilt around each
+athlete's own chronological year-in-program instead: `athleteYearOrder()`
+(`dashboards/lifting-strength.html`) ranks an athlete's distinct football_years as
+"Year 1, Year 2, ..." (their first, second, ... recorded season in this dataset),
+and points are keyed/sorted by `(yearIdx, testing_period)` rather than the raw
+calendar label. A real class label (Freshman/Sophomore/Junior/Senior) is layered
+into the tooltip wherever it's known (`CLASS_LOOKUP`, built once from
+`leaderboard_rows`, populated 2023-24 onward only — same gap noted elsewhere in this
+file) without claiming it for years it isn't. Verified: Evan Holm's "Year 1 (January
+2021-22)" and Brayden Albee's "Year 1 (January 2024-25, Freshman)" now plot at the
+identical x-coordinate despite being three calendar years apart, across all 6
+metrics, with no NaN coordinates for any tested athlete pair.
+
+## Code streamlining (2026-07-30)
+
+- **`.unit-header` (and its brandmark/crest/h2/sub rules) moved into
+  `css/theme.css`** — it was declared byte-identically in both dashboards' local
+  `<style>` blocks, directly against this file's own "shared design system" rule
+  above. Its responsive override also standardized on one breakpoint (640px); the
+  two dashboards had drifted to 640px/560px respectively during the same-day
+  responsive pass.
+- **Removed `renderKPI()` from `js/charts.js`** — defined but never called from
+  either dashboard (each builds its own KPI markup directly).
+
 ## Data sources
 
 - `../Lifting Data/output/` — lifting/strength testing (Combined Total, Athleticism
@@ -161,8 +246,16 @@ light/dark mode, across every tab of both dashboards.
 
 ## Running locally
 
-No build step — open `index.html` directly, or serve the folder:
+No build step — open `index.html` directly, or serve the folder. A launch config
+already exists at the `Football/` root (`.claude/launch.json`, name "carroll-site",
+port 8731); otherwise:
 
 ```bash
-python -m http.server 8000
+python -m http.server 8731
 ```
+
+## Git
+
+Initialized but had no commits until 2026-07-30's validation pass — first commit
+covers everything through that pass (Phase 1 dashboards, design system, all UX/bugfix
+rounds below). Going forward, changes land as their own commits when requested.

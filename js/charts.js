@@ -103,20 +103,6 @@ function hideTooltip() {
   if (tooltipEl) tooltipEl.style.display = 'none';
 }
 
-/* --------------------------------------------------------------- KPI tile --- */
-
-function renderKPI(container, { label, value, foot, dotColor }) {
-  container.innerHTML = '';
-  const kpi = el('div', 'kpi');
-  const labelEl = el('div', 'label');
-  if (dotColor) labelEl.appendChild(el('span', 'statusdot')).style.background = dotColor;
-  labelEl.append(document.createTextNode(label));
-  kpi.appendChild(labelEl);
-  kpi.appendChild(el('div', 'value', value));
-  if (foot) kpi.appendChild(el('div', 'foot', foot));
-  container.appendChild(kpi);
-}
-
 /* ------------------------------------------------------------- bar chart ---- */
 
 /** categories: [name...]; values: [number...]; labelFmt(v): string for the cap.
@@ -485,7 +471,12 @@ function applyFilters(rows, state) {
   // selection." (Real bug found and fixed 2026-07-29: the default, everything-
   // checked view must show every row, not silently drop the ones missing one field.)
   return rows.filter((r) => Object.entries(state).every(([field, set]) => {
-    if (!set.size) return true;
+    // An empty set means the user explicitly hit "None" on this group -- unlike
+    // a normal narrowed selection, that should exclude everything on this field
+    // (including blank/null rows), not fall through to "no filter applied."
+    // Real bug found and fixed 2026-07-30: this used to `return true` here, so
+    // clicking "None" silently showed every row instead of zero.
+    if (!set.size) return false;
     const v = r[field];
     if (v === null || v === undefined || v === '') return true;
     return set.has(String(v));

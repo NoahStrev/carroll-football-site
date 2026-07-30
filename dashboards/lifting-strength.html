@@ -6,20 +6,8 @@
 <title>Lifting &amp; Strength — Carroll Football Analytics</title>
 <link rel="stylesheet" href="../css/theme.css">
 <style>
-  .unit-header {
-    background: linear-gradient(135deg, var(--brand-navy), color-mix(in srgb, var(--brand-navy) 80%, #000));
-    color: var(--brand-navy-ink); border-radius: 12px 12px 0 0; padding: 18px 26px;
-    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-    border-bottom: 3px solid var(--cat-2);
-  }
-  .unit-header .brandmark { display: flex; align-items: center; gap: 13px; }
-  .unit-header .brandmark .crest {
-    width: 40px; height: 40px; border-radius: 50%; background: var(--cat-2); color: #fff;
-    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
-  }
-  .unit-header h2 { font-size: 23px; margin: 0; font-weight: 800; letter-spacing: -.01em; }
-  .unit-header .sub { font-size: 11.5px; opacity: .8; }
+  /* .unit-header lives in css/theme.css -- identical in both dashboards, don't
+     re-declare it here (moved out 2026-07-30, was byte-duplicated in both files). */
 
   .classgroup { margin-bottom: 22px; }
   .classgroup-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
@@ -55,8 +43,6 @@
   @media (max-width: 640px) {
     .lbgrid { grid-template-columns: 1fr; }
     .comparegrid { grid-template-columns: 1fr; }
-    .unit-header { padding: 14px 16px; }
-    .unit-header h2 { font-size: 19px; }
     .lb-scroll-wrap { padding-left: 12px; padding-right: 12px; }
   }
 </style>
@@ -102,6 +88,31 @@ let DATA = null;
 const METRICS = ['Combined Total', 'Bench', 'Squat', 'Clean'];
 const METRIC_UNITS = { 'Combined Total': 'lbs', 'Bench': 'lbs', 'Squat': 'lbs', 'Clean': 'lbs', 'Weight': 'lbs', 'Height': 'in' };
 
+/* --------------------------------------------------- career-year alignment --- */
+// Class Comparison (2026-07-30, per the user): "line up people at a point in
+// time" -- a 2021-22 freshman's numbers should plot against a 2024-25 freshman's
+// numbers at the same x position, not get spread across the chart by literal
+// calendar year the way session_label comparison did before. `athlete_key|
+// football_year -> class` is only populated for 2023-24+ (see the intro copy
+// above), so real Freshman/Sophomore/... labels can't anchor every year -- the
+// x-axis instead uses each athlete's OWN chronological order of recorded
+// football_years ("Year 1" = their first season in this dataset, "Year 2" =
+// their second, ...), which is always available and is exactly "career stage"
+// for the years this dataset covers. The real class label is layered on top in
+// the tooltip wherever it's known, not claimed as fact for years it isn't.
+let CLASS_LOOKUP = null;
+function buildClassLookup() {
+  CLASS_LOOKUP = new Map();
+  DATA.leaderboard_rows.forEach((r) => {
+    if (r.class) CLASS_LOOKUP.set(`${r.athlete_key}|${r.football_year}`, r.class);
+  });
+}
+const PERIOD_RANK = { 'December': 0, 'January': 1, 'April': 2, '—': 0 };
+function athleteYearOrder(athlete) {
+  const years = [...new Set(athlete.points.map((p) => p.football_year))].sort();
+  return new Map(years.map((y, i) => [y, i + 1]));
+}
+
 /* ------------------------------------------------------------ leaderboard --- */
 
 function leaderboardTable(title, rows) {
@@ -133,11 +144,14 @@ function leaderboardTable(title, rows) {
 }
 
 function classGroupHTML(label, positionFilter) {
-  // A blank/no-position row always passes the filter, same rule as Special
-  // Teams (fixed 2026-07-29 there, applied here too 2026-07-30) -- "no position
-  // on record" isn't the same as "excluded by the user's selection."
-  const rowsFor = (metric) => DATA.leaderboard_rows.filter((r) => r.class === label && r.metric === metric &&
-    (!positionFilter.size || !r.position || positionFilter.has(r.position)));
+  // Routed through the shared applyFilters (js/charts.js) rather than a hand-
+  // rolled condition here -- an earlier local copy of this filter had its own
+  // "empty selection passes everything" bug (fixed 2026-07-30) that survived
+  // because it wasn't actually using the shared, already-fixed implementation
+  // despite documentation claiming it was.
+  const rowsFor = (metric) => applyFilters(
+    DATA.leaderboard_rows.filter((r) => r.class === label && r.metric === metric),
+    { position: positionFilter });
   return `
     <div class="classgroup">
       <div class="classgroup-head"><span class="ribbon">${label}</span></div>
@@ -149,9 +163,9 @@ function classGroupHTML(label, positionFilter) {
 
 function allTimeGroupHTML(label, isLastSession, positionFilter) {
   const rowsFor = (metric) => {
-    const candidates = DATA.leaderboard_rows.filter((r) => r.metric === metric &&
-      (!positionFilter.size || !r.position || positionFilter.has(r.position)) &&
-      (!isLastSession || r.is_last_session));
+    const candidates = applyFilters(
+      DATA.leaderboard_rows.filter((r) => r.metric === metric && (!isLastSession || r.is_last_session)),
+      { position: positionFilter });
     if (!isLastSession) {
       // All Time: one row per athlete -- their single best session for this metric.
       const byAthlete = new Map();
@@ -248,7 +262,7 @@ function compareTab(root) {
         <div class="compare-legend" id="cmp-legend"></div>
         <div class="comparegrid" id="cmp-charts"></div>
       </div>
-      <div class="footer-note">Source: Lifting Data project — Combined Total, Bench, Squat, Clean (best per session), Weight (per session), Height (per football year).</div>
+      <div class="footer-note">Source: Lifting Data project — Combined Total, Bench, Squat, Clean (best per session), Weight (per session), Height (per football year). X-axis is each athlete's own Year 1/Year 2/... (their first, second, ... recorded season in this dataset), not calendar year — a Year 1 point lines up with the other athlete's Year 1 regardless of what actual football year each was in. Hover a point for the real session and class year (Freshman/Sophomore/Junior/Senior, where known — only populated 2023-24 onward).</div>
     </div></div>`;
 
   // Searchable combobox instead of a plain <select> -- scrolling through 230+
@@ -265,40 +279,60 @@ function compareTab(root) {
   });
   function seriesFor(athleteKey, metric) {
     const a = DATA.athletes.find((x) => x.athlete_key === athleteKey);
-    if (!a) return { values: [], labels: [] };
-    const pts = a.points.filter((p) => p.metric === metric);
-    return { values: pts.map((p) => p.value), labels: pts.map((p) => p.session_label), name: `${a.first_name} ${a.last_name}` };
+    if (!a) return { points: [], name: '' };
+    const yearOrder = athleteYearOrder(a);
+    const points = a.points
+      .filter((p) => p.metric === metric)
+      .map((p) => {
+        const yearIdx = yearOrder.get(p.football_year);
+        const periodRank = PERIOD_RANK[p.testing_period] ?? 0;
+        return {
+          value: p.value, yearIdx, periodRank, key: `${yearIdx}.${periodRank}`,
+          session_label: p.session_label,
+          classLabel: CLASS_LOOKUP.get(`${athleteKey}|${p.football_year}`) || null,
+        };
+      })
+      .sort((x, y) => x.yearIdx - y.yearIdx || x.periodRank - y.periodRank);
+    return { points, name: `${a.first_name} ${a.last_name}` };
   }
 
   function renderCompareChart(container, metric, colorA, colorB) {
     const a = seriesFor(selA.value, metric);
     const b = seriesFor(selB.value, metric);
-    const allLabels = [...new Set([...a.labels, ...b.labels])];
+    // Aligned by career-year (each athlete's own Year 1/2/3...), not calendar
+    // date -- see the "career-year alignment" note above seriesFor.
+    const allKeys = [...new Set([...a.points.map((p) => p.key), ...b.points.map((p) => p.key)])]
+      .sort((k1, k2) => {
+        const [y1, p1] = k1.split('.').map(Number), [y2, p2] = k2.split('.').map(Number);
+        return y1 - y2 || p1 - p2;
+      });
     const W = 380, H = 130, PAD = 8;
-    const allVals = [...a.values, ...b.values];
+    const allVals = [...a.points.map((p) => p.value), ...b.points.map((p) => p.value)];
     if (!allVals.length) { container.innerHTML = `<div class="card-body"><div class="lb-empty">No data.</div></div>`; return; }
     const vMin = Math.min(...allVals), vMax = Math.max(...allVals);
-    const sx = (i) => PAD + (i / Math.max(1, allLabels.length - 1)) * (W - PAD * 2);
+    const sx = (i) => PAD + (i / Math.max(1, allKeys.length - 1)) * (W - PAD * 2);
     const sy = (v) => H - PAD - ((v - vMin) / (vMax - vMin || 1)) * (H - PAD * 2);
 
     function pathFor(series, color) {
-      if (series.values.length < 1) return '';
+      if (series.points.length < 1) return '';
       const svgns = 'http://www.w3.org/2000/svg';
       const g = document.createElementNS(svgns, 'g');
-      const idxOf = (label) => allLabels.indexOf(label);
-      for (let i = 1; i < series.values.length; i++) {
+      const idxOf = (key) => allKeys.indexOf(key);
+      for (let i = 1; i < series.points.length; i++) {
+        const p0 = series.points[i - 1], p1 = series.points[i];
         const line = document.createElementNS(svgns, 'line');
-        line.setAttribute('x1', sx(idxOf(series.labels[i - 1]))); line.setAttribute('y1', sy(series.values[i - 1]));
-        line.setAttribute('x2', sx(idxOf(series.labels[i]))); line.setAttribute('y2', sy(series.values[i]));
+        line.setAttribute('x1', sx(idxOf(p0.key))); line.setAttribute('y1', sy(p0.value));
+        line.setAttribute('x2', sx(idxOf(p1.key))); line.setAttribute('y2', sy(p1.value));
         line.setAttribute('stroke', color); line.setAttribute('stroke-width', '2'); line.setAttribute('stroke-linecap', 'round');
         g.appendChild(line);
       }
-      series.values.forEach((v, i) => {
+      series.points.forEach((p) => {
         const c = document.createElementNS(svgns, 'circle');
-        c.setAttribute('cx', sx(idxOf(series.labels[i]))); c.setAttribute('cy', sy(v)); c.setAttribute('r', 3);
+        c.setAttribute('cx', sx(idxOf(p.key))); c.setAttribute('cy', sy(p.value)); c.setAttribute('r', 3);
         c.setAttribute('fill', color);
         c.style.cursor = 'pointer';
-        const html = `<b>${series.name}</b> — ${series.labels[i]}: ${fmt(v)}`;
+        const classPart = p.classLabel ? `, ${p.classLabel}` : '';
+        const html = `<b>${series.name}</b> — Year ${p.yearIdx} (${p.session_label}${classPart}): ${fmt(p.value)}`;
         c.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html));
         c.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html));
         c.addEventListener('mouseleave', hideTooltip);
@@ -320,8 +354,9 @@ function compareTab(root) {
     const body = container.querySelector('.card-body');
     body.appendChild(svg);
     const axis = el('div', 'axis-x');
-    axis.appendChild(el('span', null, allLabels[0] || ''));
-    axis.appendChild(el('span', null, allLabels[allLabels.length - 1] || ''));
+    const labelFor = (key) => key ? `Year ${key.split('.')[0]}` : '';
+    axis.appendChild(el('span', null, labelFor(allKeys[0])));
+    axis.appendChild(el('span', null, labelFor(allKeys[allKeys.length - 1])));
     body.appendChild(axis);
   }
 
@@ -364,7 +399,7 @@ document.querySelectorAll('#lift-tabs .tabbtn').forEach((btn) => {
 
 fetch('../data/lifting.json')
   .then((r) => r.json())
-  .then((data) => { DATA = data; showTab('alltime'); })
+  .then((data) => { DATA = data; buildClassLookup(); showTab('alltime'); })
   .catch((err) => {
     document.getElementById('lift-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/lifting.json — ${err}. Run scripts/build_lifting_data.py first, and serve over http:// not file://.</div></div>`;
   });
