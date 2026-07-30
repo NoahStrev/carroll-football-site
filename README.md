@@ -1,0 +1,168 @@
+# Carroll Football Analytics Site
+
+Replaces `dashboards-site-poc` (kept around for reference for now; delete it once this
+site fully covers what it did — see the special-teams position pages below).
+
+Static HTML/CSS/JS, no build step, same approach as `dashboards-site-poc` and the
+`Special Teams Data/mockups/*.html` prototypes this project's visual language is
+based on.
+
+## Structure
+
+- `index.html` — landing page, links to every dashboard (built or planned)
+- `css/theme.css` — shared design system (colors, KPI tiles, cards, hand-drawn
+  chart components) extracted from the five existing `Special Teams Data/mockups/`
+  dashboards, which all independently converged on the identical CSS — that's the
+  established, confirmed-good visual language for this whole site, not a new
+  invention. Every new page should link this file rather than re-declare its own
+  copy of these tokens/components.
+- `dashboards/` — one HTML file per dashboard page
+- `data/` — JSON data files consumed by the dashboards (built from the various
+  projects' Excel outputs)
+- `scripts/` — data-prep scripts, one per dashboard, that read an Excel workbook
+  from a sibling project and write the matching JSON into `data/`
+
+## Plan
+
+1. **Phase 1 — unit-level overview**:
+   - **Special Teams Overview — done** (`dashboards/special-teams-overview.html`).
+     Rebuilt from the user's actual Tableau screenshots (9 images: Money Unit, Punt,
+     Punt Return, Kickoff, Kickoff Return, plus the 4-tab Offseason Lifting
+     dashboard used for Lifting below). Same metrics/charts/filters as the
+     original, modernized styling per the `dataviz` skill. Two metrics from the
+     original aren't in the current data pipeline and are explicitly flagged
+     rather than faked: **Snap Rating** (no such column exists in
+     `Carroll_Special_Teams_2021_Current.xlsx`) and the exact L/Short miss-location
+     breakdown (only "Blocked" is tracked as a miss reason currently). See
+     `scripts/build_special_teams_data.py` for exactly which source column feeds
+     which chart, including several derived fields (Punt Return's outcome bucket,
+     Kickoff Return's return-location) that don't exist as single columns in the
+     source and had to be built from other real fields.
+   - **Lifting & Strength — done** (`dashboards/lifting-strength.html`). 4 tabs:
+     All Time / Last Session, Senior/Junior, Sophomore/Freshman (leaderboard grids,
+     top 12 per Combined Total/Bench/Squat/Clean), and Class Comparison
+     (athlete-vs-athlete line charts across every metric including Height/Weight).
+     Class year isn't its own field in the Lifting Data output — derived from
+     `years_with_program` (confirmed by that project to match the source's own
+     class field exactly), which only exists 2023-24 onward, so 2021-22/2022-23
+     sessions only ever appear in the All Time / Last Session tab. "Att Date" from
+     the original is shown as testing session (football year + period) since the
+     source tracks by session, not an exact calendar date. See
+     `scripts/build_lifting_data.py`.
+     **Known follow-up, not fixed here** (belongs to the Lifting Data project, out
+     of scope for this dashboard task): the Class Comparison athlete list surfaced
+     several apparent spelling-variant duplicates that Lifting Data's own name
+     normalization didn't catch (only handled parenthetical-suffix and
+     Jr/Sr/II-style patterns, not general misspellings) — e.g. "Benjamin Lichucki"
+     vs "Benjamin Lichuki", "Colin Chappel" vs "Collin Chappel", "Dominic Caruso"
+     vs "Dominick Caruso", "Cameran Banks" vs "Camren Banks", "Evan Griffiths" vs
+     "Evan Grifftihs", "Quintin Fisher" vs "Qunitin Fisher". Each pair is probably
+     the same person split across two identities — worth a pass in that project
+     before trusting cross-year totals for anyone on this list.
+2. **Phase 2 — position-level (special teams)**: placekicker, kickoff kicker,
+   punter, short snapper, long snapper — individual-analysis versions of Phase 1's
+   unit-level view. `Special Teams Data/mockups/*.html` already has a first pass at
+   these; migrate/adapt them into `dashboards/` here rather than rebuilding from
+   scratch.
+3. **Phase 3 — offense &amp; defense**: no existing dashboard reference for either —
+   design from scratch once we get here.
+
+## Testing notes (Special Teams Overview)
+
+Real bugs found and fixed while testing in the browser (not just eyeballing the
+code) — worth re-checking for the same class of issue when building Lifting next:
+- **Filters silently dropped rows with a blank value on the filtered field**, even
+  with every real option selected (e.g. Money Unit defaulted to 172/236 kicks, not
+  236, because ~61 rows have no Long Snapper charted). Fixed: a blank/null value
+  now always passes every filter on that field — "no info charted" isn't the same
+  as "excluded by selection."
+- **A hardcoded filter-option list (`quarter: ['1','2','3','4']`) silently excluded
+  real `'OT'` rows** from ever being selectable, so they vanished from every
+  default view with no error. Fixed by computing every unit's quarter/is_home
+  filter options from its own actual data instead of hardcoding.
+- **One chart's title didn't match what it actually computed** (Kickoff Return's
+  "Drive Success by Return Location" was rendering average field position, not a
+  success rate) — caught by systematically re-reading every chart title against
+  its render call, not just visually spot-checking a couple.
+
+## Testing notes (Lifting & Strength)
+
+- **12 athletes showed up as "null null"** in the Class Comparison dropdown.
+  Cause: athlete metadata (name/position/class) was only being captured from rows
+  matching the four leaderboard metrics, so any athlete whose only data in a given
+  football year was Height/Weight (no lift attempt logged that season) got no name
+  attached for that year. Fixed by building the metadata lookup from every row,
+  not just the leaderboard-metric ones.
+- Verified rendering (not just absence of console errors) by inspecting the actual
+  SVG output via `javascript_tool` — confirmed real, non-NaN coordinates and both
+  athletes' distinct colors present in each Class Comparison chart, since the
+  chart values don't show up in a plain text-extraction check the way KPI numbers
+  and table cells do.
+- Leaderboard values spot-checked against numbers already independently verified
+  in the Lifting Data project itself (e.g. Adam Anderson's December/January/April
+  2023-24 Combined Totals) — exact matches.
+
+## UX/design overhaul (2026-07-30, per the user's feedback)
+
+Four pieces of feedback after the first version of both dashboards: filtering
+wasn't intuitive, tooltips needed more content, the design overall needed more
+polish, and the Special Teams trend cards' comparison basis was wrong.
+
+- **Filters rebuilt as checkbox panels**, not native `<select multiple>`. The
+  original required ctrl-click to multi-select with no visible "what's currently
+  chosen" affordance — most people don't know that interaction exists. Now every
+  option is a real checkbox, with per-group All/None buttons, a live count badge
+  on the Filters button so you can tell at a glance whether anything's narrowed
+  without opening the panel, and a search box on any group with more than 8
+  options. Built once in `js/charts.js` (`buildFilterPanel`/`wireFilterPanel`/
+  `readFilterState`) and shared by both dashboards — previously each dashboard
+  had its own near-duplicate copy of this logic, which is exactly how the
+  blank-value filter bug happened in the first place (fixed once, still needed a
+  second fix in `lifting-strength.html`'s position filter, which had its own
+  separate hand-rolled copy of the same bug — now both use the one shared,
+  fixed implementation).
+- **Athlete A/B selection also got a search combobox** (`makeSearchCombobox` in
+  `js/charts.js`) instead of a plain `<select>` — scrolling through 230+ names
+  alphabetically was the same "not intuitive" complaint applied to a single-select
+  picker.
+- **Tooltips enriched across every chart type**: bar charts now auto-include their
+  sample size (`n=`) in the hover, not just visually beside the bar; stacked bars
+  show % of that category's total; sparkline points show the delta vs the previous
+  point AND vs the average; the five Special Teams scatter charts (the richest
+  per-play data available) now show the full play context on hover — opponent,
+  date, quarter, outcome, hash — not just the two plotted values. Tooltip styling
+  itself rebuilt as a structured title/rows/divider layout (`.tt-title`/`.tt-row`/
+  `.tt-muted`/`.tt-divider` classes) rather than one plain text line, and is now
+  viewport-aware (flips to avoid clipping off the right/bottom edge).
+- **Visual polish pass**: consistent 10-12px border-radius scale (was a mix of
+  4/8/10px across different components), card/KPI elevation with hover lift,
+  color-aware KPI accent bars (a "critical" KPI like Kicks Blocked now gets a red
+  accent, not the default blue), a gradient + bottom accent on the navy unit
+  headers, sticky/blurred site nav, bar and leaderboard-row hover states, bolder
+  typography on headings and KPI values.
+- **Special Teams trend cards fixed**: "Last vs Season Avg" is now "Last vs
+  Previous Game" — true week-over-week, comparing the most recent game to the one
+  immediately before it, matching what the original Tableau dashboards' "Last
+  Week vs Avg" actually meant (the original build misread "Avg" as season
+  average).
+
+All changes tested in the browser (not just read back) after landing: filter
+narrowing/reset, search-box filtering, tooltip content via direct DOM
+inspection (chart values don't show up in plain text extraction), and both
+light/dark mode, across every tab of both dashboards.
+
+## Data sources
+
+- `../Lifting Data/output/` — lifting/strength testing (Combined Total, Athleticism
+  Score, Strength Score, all four Team/Position variants — see that project's
+  README/SKILL.md for the full schema)
+- `../Special Teams Data/*.xlsx` — punt, punt return, PAT/FG, kickoff, kickoff
+  return
+
+## Running locally
+
+No build step — open `index.html` directly, or serve the folder:
+
+```bash
+python -m http.server 8000
+```

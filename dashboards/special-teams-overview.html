@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Special Teams Overview — Carroll Football Analytics</title>
+<link rel="stylesheet" href="../css/theme.css">
+<style>
+  .unit-header {
+    background: linear-gradient(135deg, var(--brand-navy), color-mix(in srgb, var(--brand-navy) 80%, #000));
+    color: var(--brand-navy-ink); border-radius: 12px 12px 0 0; padding: 18px 26px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    border-bottom: 3px solid var(--cat-2);
+  }
+  .unit-header .brandmark { display: flex; align-items: center; gap: 13px; }
+  .unit-header .brandmark .crest {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--cat-2); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+  }
+  .unit-header h2 { font-size: 23px; margin: 0; font-weight: 800; letter-spacing: -.01em; }
+  .unit-header .sub { font-size: 11.5px; opacity: .8; }
+  .kpirow-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 16px; }
+  .chartgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .chartgrid .card-body { min-height: 190px; }
+  .data-note { font-size: 10.5px; color: var(--muted); margin-top: 6px; }
+  select.fp-select-inline { font-family: inherit; font-size: 12px; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--page); color: var(--text-primary); }
+  .trend-body { display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; }
+
+  /* ---- responsive (2026-07-29) ---- */
+  @media (max-width: 900px) {
+    .kpirow-6 { grid-template-columns: repeat(3, 1fr); }
+    .chartgrid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .kpirow-6 { grid-template-columns: repeat(2, 1fr); }
+    .trend-body { grid-template-columns: 1fr; }
+    .unit-header { padding: 14px 16px; }
+    .unit-header h2 { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="../index.html">Overview</a>
+      <a href="special-teams-overview.html" class="active">Special Teams</a>
+      <a href="lifting-strength.html">Lifting &amp; Strength</a>
+    </div>
+  </nav>
+
+  <div class="intro">
+    <h1>Special Teams Overview</h1>
+    <p>
+      All five special-teams units, rebuilt from the real <code>Carroll_Special_Teams_2021_Current.xlsx</code>
+      workbook (2021–2025). Every KPI/chart here recomputes live from the filtered rows.
+      Two things shown on the original Tableau version aren't in the current data pipeline yet and are
+      omitted rather than faked: <b>Snap Rating</b> (no such column exists in the source) and the exact
+      L/Short miss-location breakdown (only "Blocked" is currently tracked as a miss reason). Hangtime and
+      snap-timing fields are hand-charted by the coaching staff and are real wherever populated — filters
+      and charts here only ever use the rows that actually have a value, never an average padded with blanks.
+    </p>
+  </div>
+
+  <div class="tabbar" id="unit-tabs">
+    <button class="tabbtn active" data-unit="money_unit">Money Unit</button>
+    <button class="tabbtn" data-unit="punt_return">Punt Return</button>
+    <button class="tabbtn" data-unit="punt">Punt</button>
+    <button class="tabbtn" data-unit="kickoff">Kickoff</button>
+    <button class="tabbtn" data-unit="kickoff_return">Kickoff Return</button>
+  </div>
+
+  <div class="stage" id="unit-stage"></div>
+</div>
+
+<script src="../js/charts.js"></script>
+<script>
+let DATA = null;
+
+/* buildFilterPanel / wireFilterPanel / readFilterState / applyFilters now live in
+   js/charts.js (shared with lifting-strength.html) -- rebuilt 2026-07-30 as a
+   checkbox-list panel instead of native <select multiple>, per the user's "filtering
+   is not intuitive" feedback. Don't re-add local copies here. */
+
+/* ------------------------------------------------------------ shared KPIs --- */
+
+function kpiHTML(id, label, dotVar) {
+  const dot = dotVar ? `<span class="statusdot" style="background:var(${dotVar})"></span>` : '';
+  const accent = dotVar ? ` style="--kpi-accent:var(${dotVar})"` : '';
+  return `<div class="kpi"${accent}><div class="label">${dot}${label}</div><div class="value" id="${id}-value">—</div><div class="foot" id="${id}-foot"></div></div>`;
+}
+
+function setKPI(id, value, foot) {
+  document.getElementById(`${id}-value`).textContent = value;
+  if (foot !== undefined) document.getElementById(`${id}-foot`).textContent = foot;
+}
+
+/* ----------------------------------------------------- game-level trend ----- */
+
+/** Groups rows by (season, date) chronologically, averages `field`, returns
+ * {values, labels} for renderSparkline -- this is this rebuild's equivalent of
+ * the reference dashboards' "Last Week Avg" trend (games are weekly). */
+function gameTrend(rows, field) {
+  const byGame = groupBy(rows.map((r) => ({ ...r, _gk: `${r.season}|${r.date}` })), '_gk');
+  const games = [...byGame.keys()].sort((a, b) => {
+    const da = new Date(a.split('|')[1]), db = new Date(b.split('|')[1]);
+    return da - db;
+  });
+  const values = games.map((g) => mean(byGame.get(g).map((r) => r[field])));
+  const labels = games.map((g) => {
+    const [season, date] = g.split('|');
+    const [m, d] = date.split('/');
+    return `${m}/${d}`;
+  });
+  return { values, labels };
+}
+
+function renderTrendCard(container, rows, field, unit, title) {
+  const { values, labels } = gameTrend(rows, field);
+  const lastVal = values.length ? values[values.length - 1] : null;
+  // Changed 2026-07-30 per the user: this compared the last game to the SEASON
+  // average, but should compare it to the PREVIOUS game (true week-over-week,
+  // matching the original Tableau dashboards' "Last Week vs Avg" -- "Avg" there
+  // meant the prior week's number, not a season-long average).
+  const prevVal = values.length > 1 ? values[values.length - 2] : null;
+  const delta = lastVal !== null && prevVal !== null ? lastVal - prevVal : null;
+  container.innerHTML = `
+    <div class="card-head"><h3>${title}</h3><span class="grip">⋮⋮</span></div>
+    <div class="card-body trend-body">
+      <div>
+        <div class="kpi small" style="border:none; padding:0; background:none;">
+          <div class="label">Last Game Avg</div>
+          <div class="value">${fmt(lastVal)}${unit}</div>
+        </div>
+        <div class="kpi small" style="border:none; padding:0; background:none; margin-top:10px;">
+          <div class="label">Last vs Previous Game</div>
+          <div class="value" style="font-size:15px; color:${delta === null ? 'inherit' : (delta >= 0 ? 'var(--delta-good)' : 'var(--critical)')}">${delta === null ? '—' : (delta >= 0 ? '+' : '') + fmt(delta)}</div>
+        </div>
+      </div>
+      <div class="trend-chart"></div>
+    </div>`;
+  renderSparkline(container.querySelector('.trend-chart'), { values, labels, unit });
+}
+
+/* ============================================================================
+   MONEY UNIT
+   ============================================================================ */
+
+const MONEY_FILTERS = [
+  { field: 'fg_exp', label: 'FG / EXP' },
+  { field: 'is_home', label: 'Home/Away' },
+  { field: 'quarter', label: 'Quarter' },
+  { field: 'season', label: 'Season' },
+  { field: 'kicker', label: 'Kicker' },
+  { field: 'long_snapper', label: 'Long Snapper' },
+];
+
+function moneyUnitTab(root) {
+  const filterValues = { ...DATA.filters.money_unit};
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Money Unit</h2></div>
+          <div class="sub">PAT / Field Goal · Carroll Special Teams</div>
+        </div>
+        <div class="shelf" id="mu-shelf"></div>
+        <div class="body">
+          <div class="kpirow-6" id="mu-kpis">
+            ${kpiHTML('mu-att', 'Kicks Attempted')}
+            ${kpiHTML('mu-fgpct', 'FG %', '--good')}
+            ${kpiHTML('mu-patpct', 'PAT %', '--good')}
+            ${kpiHTML('mu-s2k', 'Avg Snap to Kick')}
+            ${kpiHTML('mu-fgdist', 'Avg FG Distance')}
+            ${kpiHTML('mu-blocked', 'Kicks Blocked', '--critical')}
+          </div>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Snap to Kick vs Distance</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="mu-scatter"></div></div>
+            <div class="card"><div class="card-head"><h3>FG % by Distance Bucket</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="mu-fgbucket"></div></div>
+            <div class="card"><div class="card-head"><h3>Make % by Hash Kicked From</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="mu-hash"></div></div>
+            <div class="card"><div class="card-head"><h3>Misses by Location</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="mu-miss"><div class="data-note">Only "Blocked" is currently tracked as a miss reason in the source data (the Tableau version's L/Short breakdown isn't captured yet).</div></div></div>
+          </div>
+          <div class="grid2">
+            <div class="card"><div class="card-body" id="mu-snapcatch"></div></div>
+            <div class="card"><div class="card-body" id="mu-s2ktrend"></div></div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Carroll PAT-FG sheet, Carroll_Special_Teams_2021_Current.xlsx (236 rows). Snap-timing fields recompute only from rows where they're actually charted.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('mu-shelf').innerHTML = buildFilterPanel('mu', MONEY_FILTERS, filterValues);
+  wireFilterPanel('mu', MONEY_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('mu', MONEY_FILTERS);
+    const rows = applyFilters(DATA.units.money_unit, state);
+    document.getElementById('mu-summary').textContent = `${rows.length} kicks in view`;
+
+    const makes = rows.filter((r) => r.make);
+    const fgs = rows.filter((r) => r.fg_exp === 'FG');
+    const pats = rows.filter((r) => r.fg_exp === 'EXP');
+    const fgMakes = fgs.filter((r) => r.make).length;
+    const patMakes = pats.filter((r) => r.make).length;
+    const s2k = mean(rows.map((r) => r.snap_to_kick));
+    const fgDist = mean(fgs.map((r) => r.distance));
+    const blocked = rows.filter((r) => r.miss_location === 'Blocked').length;
+
+    setKPI('mu-att', `${makes.length}/${rows.length}`, 'made / attempted');
+    setKPI('mu-fgpct', pct(fgs.length ? fgMakes / fgs.length : null), `${fgMakes}/${fgs.length} field goals`);
+    setKPI('mu-patpct', pct(pats.length ? patMakes / pats.length : null), `${patMakes}/${pats.length} PATs`);
+    setKPI('mu-s2k', `${fmt(s2k, 2)}s`, `${rows.filter((r) => r.snap_to_kick !== null).length} charted`);
+    setKPI('mu-fgdist', `${fmt(fgDist, 1)} yds`);
+    setKPI('mu-blocked', String(blocked));
+
+    renderScatter(document.getElementById('mu-scatter'), {
+      points: rows.filter((r) => r.snap_to_kick !== null && r.distance !== null).map((r) => ({
+        x: r.snap_to_kick, y: r.distance, group: r.make ? 'Make' : 'Miss',
+        label: [
+          `<div class="tt-title">${r.kicker} — ${r.make ? 'Make' : 'Miss'}</div>`,
+          `<div class="tt-row"><span>Snap to kick</span><span>${fmt(r.snap_to_kick, 2)}s</span></div>`,
+          `<div class="tt-row"><span>Distance</span><span>${r.distance} yd</span></div>`,
+          `<div class="tt-divider"></div>`,
+          `<div class="tt-muted">${r.fg_exp} vs ${r.opponent}, ${r.date} · Q${r.quarter}${r.hash_kicked_from ? ` · Hash ${r.hash_kicked_from}` : ''}</div>`,
+        ].join(''),
+      })),
+      xLabel: 'Snap to kick (s)', yLabel: 'Distance (yd)',
+      colorMap: { Make: cssVar('--good'), Miss: cssVar('--critical') },
+    });
+
+    const buckets = ['0-29', '30-39', '40-49', '50+'];
+    const bucketOf = (d) => (d < 30 ? '0-29' : d < 40 ? '30-39' : d < 50 ? '40-49' : '50+');
+    const fgByBucket = groupBy(fgs.map((r) => ({ ...r, _b: bucketOf(r.distance) })), '_b');
+    renderBar(document.getElementById('mu-fgbucket'), {
+      categories: buckets,
+      values: buckets.map((b) => {
+        const g = fgByBucket.get(b);
+        if (!g || !g.length) return null;
+        return g.filter((r) => r.make).length / g.length;
+      }),
+      labelFmt: (v) => pct(v, 0),
+      colorFn: () => cssVar('--cat-1'),
+      xlab2: (b) => `n=${(fgByBucket.get(b) || []).length}`,
+    });
+
+    const hashes = ['L', 'LM', 'M', 'RM', 'R'];
+    const byHash = groupBy(rows.filter((r) => r.hash_kicked_from), 'hash_kicked_from');
+    renderBar(document.getElementById('mu-hash'), {
+      categories: hashes.filter((h) => byHash.has(h)),
+      values: hashes.filter((h) => byHash.has(h)).map((h) => byHash.get(h).filter((r) => r.make).length / byHash.get(h).length),
+      labelFmt: (v) => pct(v, 0),
+      colorFn: () => cssVar('--cat-3'),
+      xlab2: (h) => `n=${byHash.get(h).length}`,
+    });
+
+    const missRows = rows.filter((r) => !r.make && r.miss_location);
+    const missCounts = groupBy(missRows, 'miss_location');
+    if (missCounts.size) {
+      const cats = [...missCounts.keys()];
+      renderBar(document.getElementById('mu-miss'), {
+        categories: cats, values: cats.map((c) => missCounts.get(c).length),
+        labelFmt: (v) => String(v), colorFn: () => cssVar('--critical'),
+      });
+    }
+
+    renderTrendCard(document.getElementById('mu-snapcatch'), rows, 'snap_to_catch', 's', 'Avg Snap to Catch');
+    renderTrendCard(document.getElementById('mu-s2ktrend'), rows, 'snap_to_kick', 's', 'Avg Snap to Kick');
+  }
+  render();
+}
+
+/* ============================================================================
+   PUNT
+   ============================================================================ */
+
+const PUNT_FILTERS = [
+  { field: 'snapper', label: 'Snapper Name' },
+  { field: 'next_drive_outcome', label: 'Next Drive Outcome' },
+  { field: 'is_home', label: 'Home/Away' },
+  { field: 'quarter', label: 'Quarter' },
+  { field: 'season', label: 'Season' },
+  { field: 'opponent', label: 'Opponent' },
+  { field: 'punter', label: 'Punter' },
+];
+
+function puntTab(root) {
+  const filterValues = { ...DATA.filters.punt};
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Punt</h2></div><div class="sub">Carroll Special Teams · Punt Unit</div></div>
+        <div class="shelf" id="pt-shelf"></div>
+        <div class="body">
+          <div class="kpirow-6">
+            ${kpiHTML('pt-n', '# of Punts')}
+            ${kpiHTML('pt-hang', 'Avg Hangtime')}
+            ${kpiHTML('pt-dist', 'Avg Distance')}
+            ${kpiHTML('pt-s2k', 'Avg Snap to Kick')}
+            ${kpiHTML('pt-fp', 'Avg Field Position')}
+            ${kpiHTML('pt-pts', 'Avg Points Scored')}
+          </div>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Return Length vs Hangtime</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="pt-scatter"></div></div>
+            <div class="card"><div class="card-head"><h3>Punts by Outcome</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="pt-outcome"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="pt-success"></div></div>
+            <div class="card"><div class="card-head"><h3>Outcome by Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="pt-outcomefp"></div></div>
+          </div>
+          <div class="grid2">
+            <div class="card"><div class="card-body" id="pt-s2ktrend"></div></div>
+            <div class="card"><div class="card-body" id="pt-disttrend"></div></div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Carroll Punt sheet, Carroll_Special_Teams_2021_Current.xlsx (247 rows).</div>
+      </div>
+    </div>`;
+
+  document.getElementById('pt-shelf').innerHTML = buildFilterPanel('pt', PUNT_FILTERS, filterValues);
+  wireFilterPanel('pt', PUNT_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('pt', PUNT_FILTERS);
+    const rows = applyFilters(DATA.units.punt, state);
+    document.getElementById('pt-summary').textContent = `${rows.length} punts in view`;
+
+    setKPI('pt-n', String(rows.length));
+    setKPI('pt-hang', `${fmt(mean(rows.map((r) => r.hangtime)), 2)}s`, `${rows.filter((r) => r.hangtime !== null).length} charted`);
+    setKPI('pt-dist', `${fmt(mean(rows.map((r) => r.total_distance)))} yds`);
+    setKPI('pt-s2k', `${fmt(mean(rows.map((r) => r.snap_to_kick)), 2)}s`, `${rows.filter((r) => r.snap_to_kick !== null).length} charted`);
+    setKPI('pt-fp', fmt(mean(rows.map((r) => r.converted_los))));
+    setKPI('pt-pts', fmt(mean(rows.map((r) => r.next_drive_points)), 2));
+
+    const outcomeColors = categoricalColorMap(DATA.filters.punt.next_drive_outcome.length ? ['No Score', 'Field Goal', 'Touchdown', 'Safety'] : []);
+    renderScatter(document.getElementById('pt-scatter'), {
+      points: rows.filter((r) => r.hangtime !== null && r.return_length !== null).map((r) => ({
+        x: r.hangtime, y: r.return_length, group: r.next_drive_outcome || 'No Score',
+        label: [
+          `<div class="tt-title">${r.punter || '—'}</div>`,
+          `<div class="tt-row"><span>Hangtime</span><span>${fmt(r.hangtime, 2)}s</span></div>`,
+          `<div class="tt-row"><span>Return length</span><span>${r.return_length} yd</span></div>`,
+          `<div class="tt-row"><span>Kick outcome</span><span>${r.kick_outcome || '—'}</span></div>`,
+          `<div class="tt-divider"></div>`,
+          `<div class="tt-muted">vs ${r.opponent}, ${r.date} · Q${r.quarter} · Next drive: ${r.next_drive_outcome || 'No Score'}</div>`,
+        ].join(''),
+      })),
+      xLabel: 'Hangtime (s)', yLabel: 'Return length (yd)',
+      colorMap: outcomeColors,
+    });
+
+    const outcomes = ['Downed', 'Fair Catch', 'Out of Bounds', 'Touchback', 'Muff', 'Return', 'Return Touchdown'].filter((o) => rows.some((r) => r.kick_outcome === o));
+    renderBar(document.getElementById('pt-outcome'), {
+      categories: outcomes,
+      values: outcomes.map((o) => rows.filter((r) => r.kick_outcome === o).length),
+      labelFmt: (v) => String(v),
+      colorFn: (name) => categoricalColorMap(outcomes)[name],
+    });
+
+    const buckets = sortBuckets([...new Set(rows.map((r) => r.field_bucket).filter(Boolean))]);
+    const byBucket = groupBy(rows.filter((r) => r.field_bucket), 'field_bucket');
+    renderBar(document.getElementById('pt-success'), {
+      categories: buckets,
+      values: buckets.map((b) => {
+        const g = byBucket.get(b);
+        return g.filter((r) => r.drive_success).length / g.length;
+      }),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'),
+      xlab2: (b) => `n=${byBucket.get(b).length}`,
+    });
+
+    const outcomeCats = ['No Score', 'Field Goal', 'Touchdown', 'Safety'];
+    const stackColors = categoricalColorMap(outcomeCats);
+    renderStacked(document.getElementById('pt-outcomefp'), {
+      categories: buckets,
+      series: Object.fromEntries(outcomeCats.map((o) => [o, buckets.map((b) => byBucket.get(b).filter((r) => r.next_drive_outcome === o).length)])),
+      order: outcomeCats, colors: stackColors,
+    });
+
+    renderTrendCard(document.getElementById('pt-s2ktrend'), rows, 'snap_to_kick', 's', 'Avg Snap to Kick');
+    renderTrendCard(document.getElementById('pt-disttrend'), rows, 'total_distance', ' yds', 'Avg Punt Distance');
+  }
+  render();
+}
+
+/* ============================================================================
+   PUNT RETURN
+   ============================================================================ */
+
+const PUNT_RETURN_FILTERS = [
+  { field: 'next_drive_outcome', label: 'Next Drive Outcome' },
+  { field: 'is_home', label: 'Home/Away' },
+  { field: 'quarter', label: 'Quarter' },
+  { field: 'season', label: 'Season' },
+  { field: 'opponent', label: 'Opponent' },
+  { field: 'returner', label: 'Returner' },
+];
+
+function puntReturnTab(root) {
+  const filterValues = { ...DATA.filters.punt_return};
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Punt Return</h2></div><div class="sub">Carroll Special Teams · Punt Return Unit</div></div>
+        <div class="shelf" id="prt-shelf"></div>
+        <div class="body">
+          <div class="kpirow-6">
+            ${kpiHTML('prt-n', '# of Punts')}
+            ${kpiHTML('prt-carry', 'Avg Carry Distance')}
+            ${kpiHTML('prt-ret', 'Avg Return Length')}
+            ${kpiHTML('prt-s2k', 'Avg Snap to Kick')}
+            ${kpiHTML('prt-fp', 'Avg Field Position')}
+            ${kpiHTML('prt-pts', 'Avg Points Scored')}
+          </div>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Return Length vs Hangtime</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="prt-scatter"></div></div>
+            <div class="card"><div class="card-head"><h3>Punts by Outcome</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="prt-outcome"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="prt-successfp"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Return Length</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="prt-successrl"></div></div>
+          </div>
+          <div class="grid2">
+            <div class="card"><div class="card-body" id="prt-rettrend"></div></div>
+            <div class="card"><div class="card-head"><h3>Field Position by Outcome</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="prt-fpoutcome"></div></div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Carroll Punt Return sheet, Carroll_Special_Teams_2021_Current.xlsx (209 rows). "Punts by Outcome" is derived from the sheet's TB/FC/Muff/Blocked flags plus return length (no single outcome column on this sheet).</div>
+      </div>
+    </div>`;
+
+  document.getElementById('prt-shelf').innerHTML = buildFilterPanel('prt', PUNT_RETURN_FILTERS, filterValues);
+  wireFilterPanel('prt', PUNT_RETURN_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('prt', PUNT_RETURN_FILTERS);
+    const rows = applyFilters(DATA.units.punt_return, state);
+    document.getElementById('prt-summary').textContent = `${rows.length} punts in view`;
+
+    setKPI('prt-n', String(rows.length));
+    setKPI('prt-carry', `${fmt(mean(rows.map((r) => r.carry_distance)))} yds`);
+    setKPI('prt-ret', `${fmt(mean(rows.map((r) => r.return_length)))} yds`);
+    setKPI('prt-s2k', `${fmt(mean(rows.map((r) => r.snap_to_kick)), 2)}s`, `${rows.filter((r) => r.snap_to_kick !== null).length} charted`);
+    setKPI('prt-fp', fmt(mean(rows.map((r) => r.converted_los))));
+    setKPI('prt-pts', fmt(mean(rows.map((r) => r.next_drive_points)), 2));
+
+    const outcomeCats = ['No Score', 'Field Goal', 'Touchdown', 'Safety'];
+    const outcomeColors = categoricalColorMap(outcomeCats);
+    renderScatter(document.getElementById('prt-scatter'), {
+      points: rows.filter((r) => r.hangtime !== null && r.return_length !== null).map((r) => ({
+        x: r.hangtime, y: r.return_length, group: r.next_drive_outcome || 'No Score',
+        label: [
+          `<div class="tt-title">${r.returner || '—'}</div>`,
+          `<div class="tt-row"><span>Hangtime</span><span>${fmt(r.hangtime, 2)}s</span></div>`,
+          `<div class="tt-row"><span>Return length</span><span>${r.return_length} yd</span></div>`,
+          `<div class="tt-row"><span>Kick outcome</span><span>${r.kick_outcome || '—'}</span></div>`,
+          `<div class="tt-divider"></div>`,
+          `<div class="tt-muted">vs ${r.opponent}, ${r.date} · Q${r.quarter} · Next drive: ${r.next_drive_outcome || 'No Score'}</div>`,
+        ].join(''),
+      })),
+      xLabel: 'Hangtime (s)', yLabel: 'Return length (yd)', colorMap: outcomeColors,
+    });
+
+    const outcomes = ['Downed', 'Fair Catch', 'Returned', 'Touchback', 'Muff', 'Blocked'].filter((o) => rows.some((r) => r.kick_outcome === o));
+    renderBar(document.getElementById('prt-outcome'), {
+      categories: outcomes, values: outcomes.map((o) => rows.filter((r) => r.kick_outcome === o).length),
+      labelFmt: (v) => String(v), colorFn: (name) => categoricalColorMap(outcomes)[name],
+    });
+
+    const buckets = sortBuckets([...new Set(rows.map((r) => r.field_bucket).filter(Boolean))]);
+    const byBucket = groupBy(rows.filter((r) => r.field_bucket), 'field_bucket');
+    renderBar(document.getElementById('prt-successfp'), {
+      categories: buckets,
+      values: buckets.map((b) => byBucket.get(b).filter((r) => r.drive_success).length / byBucket.get(b).length),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'),
+      xlab2: (b) => `n=${byBucket.get(b).length}`,
+    });
+
+    const rlBucket = (rl) => (rl <= 5 ? '0-5' : rl <= 10 ? '6-10' : rl <= 15 ? '11-15' : rl <= 20 ? '16-20' : '21+');
+    const withRL = rows.filter((r) => r.return_length !== null && r.return_length > 0);
+    const byRL = groupBy(withRL.map((r) => ({ ...r, _rlb: rlBucket(r.return_length) })), '_rlb');
+    const rlCats = ['0-5', '6-10', '11-15', '16-20', '21+'].filter((c) => byRL.has(c));
+    renderBar(document.getElementById('prt-successrl'), {
+      categories: rlCats,
+      values: rlCats.map((c) => byRL.get(c).filter((r) => r.drive_success).length / byRL.get(c).length),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'),
+      xlab2: (c) => `n=${byRL.get(c).length}`,
+    });
+
+    renderTrendCard(document.getElementById('prt-rettrend'), rows, 'return_length', ' yds', 'Avg Return Length');
+
+    renderStacked(document.getElementById('prt-fpoutcome'), {
+      categories: buckets,
+      series: Object.fromEntries(outcomeCats.map((o) => [o, buckets.map((b) => byBucket.get(b).filter((r) => r.next_drive_outcome === o).length)])),
+      order: outcomeCats, colors: outcomeColors,
+    });
+  }
+  render();
+}
+
+/* ============================================================================
+   KICKOFF
+   ============================================================================ */
+
+const KICKOFF_FILTERS = [
+  { field: 'kick_type', label: 'Kick Type' },
+  { field: 'next_drive_outcome', label: 'Next Drive Outcome' },
+  { field: 'is_home', label: 'Home/Away' },
+  { field: 'quarter', label: 'Quarter' },
+  { field: 'season', label: 'Season' },
+  { field: 'opponent', label: 'Opponent' },
+  { field: 'kicker', label: 'Kicker' },
+];
+
+function kickoffTab(root) {
+  const filterValues = { ...DATA.filters.kickoff};
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Kickoff</h2></div><div class="sub">Carroll Special Teams · Kickoff Unit</div></div>
+        <div class="shelf" id="ko-shelf"></div>
+        <div class="body">
+          <div class="kpirow-6">
+            ${kpiHTML('ko-n', '# of Kicks')}
+            ${kpiHTML('ko-hang', 'Avg Hangtime')}
+            ${kpiHTML('ko-dist', 'Avg Distance')}
+            ${kpiHTML('ko-ret', 'Avg Return Length')}
+            ${kpiHTML('ko-fp', 'Avg Field Position')}
+            ${kpiHTML('ko-pts', 'Avg Points Scored')}
+          </div>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Kick Distance vs Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="ko-scatter"></div></div>
+            <div class="card"><div class="card-head"><h3>Avg Field Position by Kick Type</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="ko-typefp"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="ko-success"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Kick Type</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="ko-typesuccess"></div></div>
+          </div>
+          <div class="grid2">
+            <div class="card"><div class="card-body" id="ko-fptrend"></div></div>
+            <div class="card"><div class="card-body" id="ko-rettrend"></div></div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Carroll Kickoff sheet, Carroll_Special_Teams_2021_Current.xlsx (262 rows). Only Deep and Onside kick types are distinguished in the source data (no separate Pooch/Squib category tracked).</div>
+      </div>
+    </div>`;
+
+  document.getElementById('ko-shelf').innerHTML = buildFilterPanel('ko', KICKOFF_FILTERS, filterValues);
+  wireFilterPanel('ko', KICKOFF_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('ko', KICKOFF_FILTERS);
+    const rows = applyFilters(DATA.units.kickoff, state);
+    document.getElementById('ko-summary').textContent = `${rows.length} kicks in view`;
+
+    setKPI('ko-n', String(rows.length));
+    setKPI('ko-hang', `${fmt(mean(rows.map((r) => r.hangtime)), 2)}s`, `${rows.filter((r) => r.hangtime !== null).length} charted`);
+    setKPI('ko-dist', `${fmt(mean(rows.map((r) => r.total_distance)))} yds`);
+    setKPI('ko-ret', `${fmt(mean(rows.map((r) => r.return_length)))} yds`);
+    setKPI('ko-fp', fmt(mean(rows.map((r) => r.converted_los))));
+    setKPI('ko-pts', fmt(mean(rows.map((r) => r.next_drive_points)), 2));
+
+    const kickTypes = ['Deep', 'Onside'].filter((t) => rows.some((r) => r.kick_type === t));
+    const typeColors = categoricalColorMap(kickTypes);
+    renderScatter(document.getElementById('ko-scatter'), {
+      points: rows.filter((r) => r.total_distance !== null && r.converted_los !== null).map((r) => ({
+        x: r.total_distance, y: r.converted_los, group: r.kick_type,
+        label: [
+          `<div class="tt-title">${r.kicker} — ${r.kick_type}</div>`,
+          `<div class="tt-row"><span>Kick distance</span><span>${r.total_distance} yd</span></div>`,
+          `<div class="tt-row"><span>Landing spot</span><span>${r.converted_los}</span></div>`,
+          r.return_length !== null ? `<div class="tt-row"><span>Return allowed</span><span>${r.return_length} yd</span></div>` : '',
+          `<div class="tt-divider"></div>`,
+          `<div class="tt-muted">vs ${r.opponent}, ${r.date} · Q${r.quarter} · Next drive: ${r.next_drive_outcome || 'No Score'}</div>`,
+        ].join(''),
+      })),
+      xLabel: 'Kick distance (yd)', yLabel: 'Field position', colorMap: typeColors,
+    });
+
+    const byType = groupBy(rows, 'kick_type');
+    renderBar(document.getElementById('ko-typefp'), {
+      categories: kickTypes, values: kickTypes.map((t) => mean(byType.get(t).map((r) => r.converted_los))),
+      colorFn: (name) => typeColors[name], xlab2: (t) => `n=${byType.get(t).length}`,
+    });
+
+    const buckets = sortBuckets([...new Set(rows.map((r) => r.field_bucket).filter(Boolean))]);
+    const byBucket = groupBy(rows.filter((r) => r.field_bucket), 'field_bucket');
+    renderBar(document.getElementById('ko-success'), {
+      categories: buckets,
+      values: buckets.map((b) => byBucket.get(b).filter((r) => r.drive_success).length / byBucket.get(b).length),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'),
+      xlab2: (b) => `n=${byBucket.get(b).length}`,
+    });
+
+    renderBar(document.getElementById('ko-typesuccess'), {
+      categories: kickTypes,
+      values: kickTypes.map((t) => byType.get(t).filter((r) => r.drive_success).length / byType.get(t).length),
+      labelFmt: (v) => pct(v, 0), colorFn: (name) => typeColors[name],
+      xlab2: (t) => `n=${byType.get(t).length}`,
+    });
+
+    renderTrendCard(document.getElementById('ko-fptrend'), rows, 'converted_los', '', 'Avg Field Position');
+    renderTrendCard(document.getElementById('ko-rettrend'), rows, 'return_length', ' yds', 'Avg Return Length Allowed');
+  }
+  render();
+}
+
+/* ============================================================================
+   KICKOFF RETURN
+   ============================================================================ */
+
+const KICKOFF_RETURN_FILTERS = [
+  { field: 'kick_type', label: 'Kick Type' },
+  { field: 'next_drive_outcome', label: 'Next Drive Outcome' },
+  { field: 'is_home', label: 'Home/Away' },
+  { field: 'quarter', label: 'Quarter' },
+  { field: 'season', label: 'Season' },
+  { field: 'opponent', label: 'Opponent' },
+  { field: 'returner', label: 'Returner' },
+];
+
+function kickoffReturnTab(root) {
+  const filterValues = { ...DATA.filters.kickoff_return};
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Kickoff Return</h2></div><div class="sub">Carroll Special Teams · Kickoff Return Unit</div></div>
+        <div class="shelf" id="kor-shelf"></div>
+        <div class="body">
+          <div class="kpirow-6">
+            ${kpiHTML('kor-n', '# of Returns')}
+            ${kpiHTML('kor-hang', 'Avg Hangtime')}
+            ${kpiHTML('kor-dist', 'Avg Distance')}
+            ${kpiHTML('kor-ret', 'Avg Return Length')}
+            ${kpiHTML('kor-fp', 'Avg Field Position')}
+            ${kpiHTML('kor-pts', 'Avg Points Scored')}
+          </div>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Field Position by Return Length</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="kor-scatter"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Return Location</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="kor-location"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="kor-success"></div></div>
+            <div class="card"><div class="card-head"><h3>Outcome by Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="kor-outcomefp"></div></div>
+          </div>
+          <div class="grid2">
+            <div class="card"><div class="card-body" id="kor-fptrend"></div></div>
+            <div class="card"><div class="card-body" id="kor-rettrend"></div></div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Carroll Kickoff Return sheet, Carroll_Special_Teams_2021_Current.xlsx (273 rows). Return Location uses the sheet's "Hash Received On" field.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('kor-shelf').innerHTML = buildFilterPanel('kor', KICKOFF_RETURN_FILTERS, filterValues);
+  wireFilterPanel('kor', KICKOFF_RETURN_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('kor', KICKOFF_RETURN_FILTERS);
+    const rows = applyFilters(DATA.units.kickoff_return, state);
+    document.getElementById('kor-summary').textContent = `${rows.length} returns in view`;
+
+    setKPI('kor-n', String(rows.length));
+    setKPI('kor-hang', `${fmt(mean(rows.map((r) => r.hangtime)), 2)}s`, `${rows.filter((r) => r.hangtime !== null).length} charted`);
+    setKPI('kor-dist', `${fmt(mean(rows.map((r) => r.total_distance)))} yds`);
+    setKPI('kor-ret', `${fmt(mean(rows.map((r) => r.return_length)))} yds`);
+    setKPI('kor-fp', fmt(mean(rows.map((r) => r.converted_los))));
+    setKPI('kor-pts', fmt(mean(rows.map((r) => r.next_drive_points)), 2));
+
+    const returners = [...new Set(rows.map((r) => r.returner).filter(Boolean))];
+    const returnerColors = categoricalColorMap(returners);
+    renderScatter(document.getElementById('kor-scatter'), {
+      points: rows.filter((r) => r.converted_los !== null && r.return_length !== null).map((r) => ({
+        x: r.converted_los, y: r.return_length, group: r.returner,
+        label: [
+          `<div class="tt-title">${r.returner || '—'}</div>`,
+          `<div class="tt-row"><span>Landing spot</span><span>${r.converted_los}</span></div>`,
+          `<div class="tt-row"><span>Return length</span><span>${r.return_length} yd</span></div>`,
+          r.return_location ? `<div class="tt-row"><span>Return location</span><span>${r.return_location}</span></div>` : '',
+          `<div class="tt-divider"></div>`,
+          `<div class="tt-muted">vs ${r.opponent}, ${r.date} · Q${r.quarter} · ${r.kick_type} · Next drive: ${r.next_drive_outcome || 'No Score'}</div>`,
+        ].join(''),
+      })),
+      xLabel: 'Field position (landing)', yLabel: 'Return length (yd)', colorMap: returnerColors,
+    });
+
+    const locOrder = ['L', 'LM', 'M', 'RM', 'R', 'OBR', 'OBL'];
+    const byLoc = groupBy(rows.filter((r) => r.return_location), 'return_location');
+    const locCats = locOrder.filter((l) => byLoc.has(l));
+    renderBar(document.getElementById('kor-location'), {
+      categories: locCats,
+      values: locCats.map((l) => byLoc.get(l).filter((r) => r.drive_success).length / byLoc.get(l).length),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'),
+      xlab2: (l) => `n=${byLoc.get(l).length}`,
+    });
+
+    const buckets = sortBuckets([...new Set(rows.map((r) => r.field_bucket).filter(Boolean))]);
+    const byBucket = groupBy(rows.filter((r) => r.field_bucket), 'field_bucket');
+    renderBar(document.getElementById('kor-success'), {
+      categories: buckets,
+      values: buckets.map((b) => byBucket.get(b).filter((r) => r.drive_success).length / byBucket.get(b).length),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'),
+      xlab2: (b) => `n=${byBucket.get(b).length}`,
+    });
+
+    const outcomeCats = ['No Score', 'Field Goal', 'Touchdown'].filter((o) => rows.some((r) => r.next_drive_outcome === o));
+    renderStacked(document.getElementById('kor-outcomefp'), {
+      categories: buckets,
+      series: Object.fromEntries(outcomeCats.map((o) => [o, buckets.map((b) => byBucket.get(b).filter((r) => r.next_drive_outcome === o).length)])),
+      order: outcomeCats, colors: categoricalColorMap(outcomeCats),
+    });
+
+    renderTrendCard(document.getElementById('kor-fptrend'), rows, 'converted_los', '', 'Avg Starting Field Position');
+    renderTrendCard(document.getElementById('kor-rettrend'), rows, 'return_length', ' yds', 'Avg Return Length');
+  }
+  render();
+}
+
+/* ------------------------------------------------------------------ tabs ---- */
+
+const TAB_RENDERERS = {
+  money_unit: moneyUnitTab,
+  punt_return: puntReturnTab,
+  punt: puntTab,
+  kickoff: kickoffTab,
+  kickoff_return: kickoffReturnTab,
+};
+
+function showUnit(unit) {
+  document.querySelectorAll('#unit-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.unit === unit));
+  const stage = document.getElementById('unit-stage');
+  TAB_RENDERERS[unit](stage);
+}
+
+document.querySelectorAll('#unit-tabs .tabbtn').forEach((btn) => {
+  btn.addEventListener('click', () => showUnit(btn.dataset.unit));
+});
+
+fetch('../data/special-teams.json')
+  .then((r) => r.json())
+  .then((data) => {
+    DATA = data;
+    showUnit('money_unit');
+  })
+  .catch((err) => {
+    document.getElementById('unit-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/special-teams.json — ${err}. Run scripts/build_special_teams_data.py first, and serve this folder over http:// rather than opening the file directly (fetch() of a local JSON file is blocked under file://).</div></div>`;
+  });
+</script>
+</body>
+</html>

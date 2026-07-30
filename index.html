@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carroll Football Analytics</title>
+<link rel="stylesheet" href="css/theme.css">
+<style>
+  .hero { max-width: 1280px; margin: 0 auto 28px; padding: 0 4px; }
+  .hero h1 { font-size: 26px; margin: 0 0 8px; }
+  .hero p { font-size: 14px; color: var(--text-secondary); max-width: 720px; line-height: 1.55; margin: 0; }
+
+  .section-title { max-width: 1280px; margin: 0 auto 12px; padding: 0 4px; }
+  .section-title h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-secondary); margin: 0; }
+
+  .cardgrid { max-width: 1280px; margin: 0 auto 32px; padding: 0 4px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .tile {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+    padding: 17px 19px; text-decoration: none; color: inherit; display: block;
+    transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+  }
+  .tile:hover { border-color: var(--series-1); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,.10); }
+  .tile.disabled { opacity: .55; cursor: default; }
+  .tile.disabled:hover { border-color: var(--border); transform: none; box-shadow: none; }
+  .tile h3 { font-size: 15.5px; margin: 0 0 7px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .tile p { font-size: 12.5px; color: var(--text-secondary); margin: 0; line-height: 1.5; }
+  .pill { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .pill.live { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--good); }
+  .pill.soon { background: var(--grid); color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="index.html" class="active">Overview</a>
+      <a href="dashboards/special-teams-overview.html">Special Teams</a>
+      <a href="dashboards/lifting-strength.html">Lifting &amp; Strength</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <h1>Carroll Football Analytics</h1>
+    <p>
+      Dashboards built from the program's own tracked data — special teams, strength
+      testing, and (eventually) offense/defense. Replaces the old Tableau Public
+      dashboards with something that lives alongside the rest of the data pipeline.
+    </p>
+  </div>
+
+  <div class="section-title"><h2>Phase 1 &middot; Unit-Level Overview</h2></div>
+  <div class="cardgrid">
+    <a class="tile" href="dashboards/special-teams-overview.html">
+      <h3>Special Teams Overview <span class="pill live">Live</span></h3>
+      <p>Money Unit, Punt, Punt Return, Kickoff, and Kickoff Return — modernized from the original Tableau dashboard, same metrics and charts. Two metrics (Snap Rating, exact miss-location) aren't in the source data yet and are flagged rather than faked.</p>
+    </a>
+    <a class="tile" href="dashboards/lifting-strength.html">
+      <h3>Lifting &amp; Strength <span class="pill live">Live</span></h3>
+      <p>All Time / Last Session, Senior/Junior, Sophomore/Freshman leaderboards, and athlete-vs-athlete Class Comparison — rebuilt from the Lifting Data pipeline's Combined Total/Bench/Squat/Clean.</p>
+    </a>
+  </div>
+
+  <div class="section-title"><h2>Phase 2 &middot; Position-Level (Special Teams)</h2></div>
+  <div class="cardgrid">
+    <a class="tile disabled" href="#"><h3>Placekicker <span class="pill soon">Planned</span></h3><p>PAT/FG, individual analysis.</p></a>
+    <a class="tile disabled" href="#"><h3>Kickoff Kicker <span class="pill soon">Planned</span></h3><p>Kickoff distance, hang time, coverage.</p></a>
+    <a class="tile disabled" href="#"><h3>Punter <span class="pill soon">Planned</span></h3><p>Gross/net, I20%, touchback%.</p></a>
+    <a class="tile disabled" href="#"><h3>Short Snapper <span class="pill soon">Planned</span></h3><p>PAT/FG snap accuracy and timing.</p></a>
+    <a class="tile disabled" href="#"><h3>Long Snapper <span class="pill soon">Planned</span></h3><p>Punt snap accuracy and timing.</p></a>
+  </div>
+
+  <div class="section-title"><h2>Phase 3 &middot; Offense &amp; Defense</h2></div>
+  <div class="cardgrid">
+    <a class="tile disabled" href="#"><h3>Offense <span class="pill soon">Planned</span></h3><p>No existing dashboard reference yet — design TBD once we get here.</p></a>
+    <a class="tile disabled" href="#"><h3>Defense <span class="pill soon">Planned</span></h3><p>No existing dashboard reference yet — design TBD once we get here.</p></a>
+  </div>
+
+</div>
+
+</body>
+</html>
