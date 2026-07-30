@@ -19,6 +19,8 @@
       <a href="../index.html">Overview</a>
       <a href="special-teams-overview.html">Special Teams</a>
       <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html">Offense</a>
+      <a href="defense.html">Defense</a>
     </div>
   </nav>
 
@@ -351,11 +353,20 @@ function deepTab(root) {
     });
 
     const allSeasons = DATA.filters.punt.season;
-    const punters = DATA.filters.punt.punter.filter((p) => rows.some((r) => r.punter === p));
+    // Real bug found 2026-07-30 re-validating this page: the insight text below
+    // promises the Season filter never narrows this grid (by design -- it's a
+    // cross-season view, only Quarter narrows it and Punter hides rows), but
+    // both `punters` and cellFor were reading from season-filtered rows --
+    // selecting a single season silently zeroed every other season's column
+    // and could drop punter rows who didn't punt that season. Uses a separate
+    // rows variable with the season filter forced open so only Punter/Quarter
+    // actually affect this chart, matching the stated behavior.
+    const heatmapRows = applyFilters(DATA.units.punt, { ...state, season: new Set(allSeasons) });
+    const punters = DATA.filters.punt.punter.filter((p) => heatmapRows.some((r) => r.punter === p));
     renderHeatmap(document.getElementById('ptd-heatmap'), {
       rowLabels: punters, colLabels: allSeasons,
       cellFor: (punter, season) => {
-        const g = rows.filter((r) => r.season === season && r.punter === punter);
+        const g = heatmapRows.filter((r) => r.season === season && r.punter === punter);
         if (!g.length) return null;
         return { pct: rate(g, (r) => r.i20), n: g.length, made: g.filter((r) => r.i20).length };
       },

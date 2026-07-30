@@ -178,8 +178,63 @@ based on.
    `[1,2,3,5]` with no 4 charted yet shows exactly those four buckets, not five).
    Direction (which end means "better") still isn't asserted anywhere, since
    that's still unconfirmed upstream.
-3. **Phase 3 — offense &amp; defense**: no existing dashboard reference for either —
-   design from scratch once we get here.
+3. **Phase 3 — offense &amp; defense — done** (`dashboards/offense.html`,
+   `dashboards/defense.html`, 2026-07-30). No existing Tableau/mockup reference for
+   either, designed from scratch against the real `Game Analysis` project's
+   `combined_play_data.xlsx` — per the user, split into two tabs each,
+   **Executive Scorecard** (built from the official scraped play-by-play:
+   yards/play, success rate, explosive rate, turnover/takeaway rate, Red Zone
+   TD%, an approximate points-per-drive, down/distance efficiency heatmap, a
+   yards-per-play game trend, and a full game log) and **Play-Calling &amp;
+   Tendencies** (built from the coaching staff's own hand-charted play-by-play:
+   run/pass mix by down and situation, formation/personnel usage, and either the
+   opponent's defensive front/coverage shown to Carroll's offense, or Carroll's
+   own defensive front/blitz calls, depending on the page).
+   - **Only the 50 real Carroll games are used** (2021-2025) — 5 additional raw
+     files are self-scout charting of *other* teams' games (e.g. "Aurora vs
+     SNC"), correctly flagged as unmatched in the source's own `GameMatchLog`
+     sheet and excluded entirely, not treated as a 3rd category of O/D.
+   - **A real semantic correction made before writing any dashboard code**: the
+     source project's own `SKILL.md` was checked for what `ODK='D'` rows
+     actually carry, and independently re-verified against real fill rates on
+     the 50-game set — confirmed `PERSONNEL`/`OFF FORM`/`OFF STR`/`BACKFIELD`/
+     `MOTION`/`PROTECTION` are Carroll's own offense, charted on `'O'` rows
+     (and correspondingly under 1% filled on `'D'` rows) — NOT the opponent's
+     formation charted while Carroll is on defense, which a first read of the
+     column names might suggest. This means the Defense page has no
+     opponent-formation/personnel chart at all (explicitly called out in its
+     intro text as a structural gap in the self-scout charting workflow, not a
+     "still being charted, will fill in" gap like Snap Location elsewhere on
+     this site) — only Carroll's own defensive call
+     (`FRONT (D)`/`TAG (D)`/`MOVEMENT`/`BLITZ (D)`) is real on `'D'` rows.
+   - **Red Zone TD%** is computed by deduping to distinct drives (via a
+     `game_label|drive_num` key) that had at least one Red-Zone snap, not by
+     counting plays — a play-count-based version would over-weight drives with
+     more red-zone snaps.
+   - **"Points per Drive" is a labeled approximation** (6 for a touchdown, 3 for
+     a made field goal, 0 otherwise) — doesn't add PAT/two-point value on top;
+     called out as such in both pages' intro text rather than presented as an
+     exact number.
+   - **Formation/personnel/play-call/defensive-front/coverage names are shown
+     exactly as charted, including real data-entry typos** (e.g. "COPVER 3
+     STRONG", "C0VER 0") — not silently normalized, same policy as the
+     Kickoff Kicker/Punter pages' known duplicate-name callouts. `play_call`
+     alone has 260+ distinct real values, so its usage charts and the Play
+     Call detail table use `topKeysByCount()` (`js/charts.js`, new) to show the
+     top N by volume rather than every value.
+   - **Hoisted `gameTrend()`/`renderTrendCard()`** from `special-teams-overview.html`
+     into `js/charts.js` (needed again by both new pages) — generalized the date
+     parsing to handle both this project's existing `"M/D/YYYY"` dates and the
+     new `combined_play_data.xlsx`'s ISO `"YYYY-MM-DD"` dates without going
+     through the `Date` constructor's timezone-dependent parsing (an ISO string
+     parses as UTC midnight, which can shift a day in negative-UTC timezones).
+     `.trend-body` moved from that page's local `<style>` block into
+     `css/theme.css` alongside it.
+   - See `scripts/build_game_data.py` for the exact column mapping (including
+     which `OfficialPlayByPlay` fields feed the Executive Scorecard vs. which
+     `Plays` fields feed Tendencies) and `data/game-data.json` for the row-level
+     output — same "row-level JSON, filter/aggregate client-side" pattern as
+     every other dashboard on this site.
 4. **Phase 4 — report ingestion &amp; downloads** (lowest priority, added 2026-07-30
    per the user): get the program's existing generated reports (CCIW Buddah Report,
    National Buddah Report, Game Analysis, National/CCIW Game Prep Report — the
@@ -455,6 +510,10 @@ shaped pages instead of 2 to compare against each other.
   README/SKILL.md for the full schema)
 - `../Special Teams Data/*.xlsx` — punt, punt return, PAT/FG, kickoff, kickoff
   return
+- `../Game Analysis/processed/combined_play_data.xlsx` — offense/defense
+  play-by-play (self-scout `Plays` sheet + official scraped `OfficialPlayByPlay`
+  sheet, matched per game via that project's own `GameMatchLog` sheet) — see
+  that project's `SKILL.md` for the full column reference and known data gaps.
 
 ## Running locally
 

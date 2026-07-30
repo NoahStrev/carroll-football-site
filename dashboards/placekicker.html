@@ -23,6 +23,8 @@
       <a href="../index.html">Overview</a>
       <a href="special-teams-overview.html">Special Teams</a>
       <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html">Offense</a>
+      <a href="defense.html">Defense</a>
     </div>
   </nav>
 
@@ -368,10 +370,18 @@ function deepTab(root) {
     });
 
     const allSeasons = DATA.filters.money_unit.season;
+    // Real bug found 2026-07-30 re-validating this page: the insight text below
+    // promises the Season filter never narrows this grid (by design -- it's a
+    // cross-season view), but cellFor was reading from `fgRows`, which IS
+    // already season-filtered -- selecting a single season silently zeroed
+    // every other season's column instead of leaving them alone. Uses a
+    // separate rows variable with the season filter forced open so only
+    // Kicker/Quarter actually affect this chart, matching the stated behavior.
+    const heatmapFgRows = fgs(applyFilters(DATA.units.money_unit, { ...state, season: new Set(allSeasons) }));
     renderHeatmap(document.getElementById('pkd-heatmap'), {
       rowLabels: FG_DIST_BUCKETS, colLabels: allSeasons,
       cellFor: (bucket, season) => {
-        const g = fgRows.filter((r) => r.season === season && fgDistBucket(r.distance) === bucket);
+        const g = heatmapFgRows.filter((r) => r.season === season && fgDistBucket(r.distance) === bucket);
         if (!g.length) return null;
         return { pct: makeRate(g), n: g.length, made: makes(g).length };
       },

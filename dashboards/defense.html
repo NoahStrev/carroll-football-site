@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Defense — Carroll Football Analytics</title>
+<link rel="stylesheet" href="../css/theme.css">
+<style>
+  /* .unit-header, .kpirow/-5/-6, .grid2, .heat, .linewrap svg, .trend-body all
+     already live in css/theme.css. */
+  .chartgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .chartgrid .card-body { min-height: 190px; }
+  .data-note { font-size: 10.5px; color: var(--muted); margin-top: 6px; }
+
+  @media (max-width: 900px) {
+    .chartgrid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="../index.html">Overview</a>
+      <a href="special-teams-overview.html">Special Teams</a>
+      <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html">Offense</a>
+      <a href="defense.html" class="active">Defense</a>
+    </div>
+  </nav>
+
+  <div class="intro">
+    <h1>Defense</h1>
+    <p>
+      Carroll's own defense, from the same <code>Game Analysis</code> project's
+      <code>combined_play_data.xlsx</code> as <a href="offense.html">Offense</a> (50 real Carroll
+      games, 2021&ndash;2025). <b>Executive Scorecard</b> uses the official play-by-play, from the
+      opponent's side of the ball; <b>Play-Calling &amp; Tendencies</b> uses the coaching staff's
+      hand-charted play-by-play. <b>Known, structural data gap, not fixed here</b>: unlike the
+      Offense page (which also gets the opponent's defensive front/coverage shown, charted
+      alongside Carroll's own offensive snaps), <b>the opponent's own formation/personnel is not
+      charted on Carroll's defensive snaps</b> &mdash; confirmed by checking real fill rates (under
+      1% on 'D' rows vs. 90%+ on 'O' rows) &mdash; only Carroll's own defensive call
+      (front/tag/movement/blitz) is. This is a property of the self-scout charting workflow
+      itself (own-team offensive detail + the defensive look shown against it), not a "still
+      being charted" gap like Snap Location elsewhere on this site, so there's no opponent-look
+      chart on this page. <b>Defensive front/blitz-call names are shown exactly as charted</b>,
+      including occasional data-entry typos &mdash; not normalized here. <b>The Play-Calling
+      tab's source data has Down = 0 on ~17% of defensive snaps</b> (the source's own data
+      dictionary documents Down as 1-4 only) &mdash; real charted rows, not blank, but outside
+      the documented range, so the Run/Pass-by-Down chart only ever shows downs 1-4 rather than
+      guessing what 0 means; those snaps still count in every other total (Run/Pass Rate,
+      Yards/Play Allowed, etc.).
+    </p>
+  </div>
+
+  <div class="tabbar" id="def-tabs">
+    <button class="tabbtn active" data-tab="exec">Executive Scorecard</button>
+    <button class="tabbtn" data-tab="tendencies">Play-Calling &amp; Tendencies</button>
+  </div>
+
+  <div class="stage" id="def-stage"></div>
+</div>
+
+<script src="../js/charts.js"></script>
+<script>
+let DATA = null;
+
+function distanceBucket(d) {
+  if (d === null || d === undefined) return null;
+  return d <= 3 ? '1-3' : d <= 6 ? '4-6' : d <= 9 ? '7-9' : '10+';
+}
+const DIST_BUCKETS = ['1-3', '4-6', '7-9', '10+'];
+const DOWNS = [1, 2, 3, 4];
+const SITUATIONS = ['Standard Down', 'Passing Down', 'Money Down'];
+const FIELD_ZONES = ['Backed Up', 'Own Territory', 'Midfield', 'Opponent Territory', 'Red Zone'];
+function isSuccess(eff) { return eff === 'Successful' || eff === 'Explosive'; }
+
+/* ============================================================================
+   EXECUTIVE SCORECARD
+   ============================================================================ */
+
+const EXEC_FILTERS = [
+  { field: 'season', label: 'Season' },
+  { field: 'opponent', label: 'Opponent' },
+  { field: 'quarter', label: 'Quarter' },
+  { field: 'situation', label: 'Situation' },
+  { field: 'field_zone', label: 'Field Zone' },
+];
+
+function execTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Defense</h2></div>
+          <div class="sub">Executive Scorecard · Official Play-by-Play</div>
+        </div>
+        <div class="shelf" id="de-shelf"></div>
+        <div class="body">
+          <div class="kpirow-6" id="de-kpis">
+            ${kpiHTML('de-ypp', 'Yards Allowed / Play', '--critical')}
+            ${kpiHTML('de-succ', 'Success Rate Allowed', '--critical')}
+            ${kpiHTML('de-exp', 'Explosive Rate Allowed')}
+            ${kpiHTML('de-to', 'Takeaway Rate', '--good')}
+            ${kpiHTML('de-rz', 'Red Zone TD % Allowed')}
+            ${kpiHTML('de-ppd', 'Points Allowed / Drive (approx.)')}
+          </div>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Yards Allowed / Play by Down</h3></div><div class="card-body" id="de-down"></div></div>
+            <div class="card"><div class="card-head"><h3>Success Rate Allowed by Situation</h3></div><div class="card-body" id="de-situation"></div></div>
+            <div class="card"><div class="card-head"><h3>Explosive Rate Allowed by Field Zone</h3></div><div class="card-body" id="de-zone"></div></div>
+            <div class="card"><div class="card-head"><h3>Opponent Drive Result Mix</h3></div><div class="card-body" id="de-driveresult"></div></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Success Rate Allowed — Down × Distance</h3></div>
+            <div class="card-body">
+              <div class="heat" id="de-heatmap"></div>
+              <div class="insight">Sequential blue = success rate allowed; text = successful/plays. Standard down/distance efficiency grid, Rush/Pass/Sack/Kneel snaps only.</div>
+            </div>
+          </div>
+          <div class="grid2" style="margin-bottom:14px;">
+            <div class="card"><div class="card-body" id="de-ypptrend"></div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Game log</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Opponent</th><th>Date</th><th>Plays</th><th>Yds/Play Allowed</th><th>Success % Allowed</th><th>Explosive % Allowed</th><th>Takeaways</th><th>Points/Drive Allowed</th></tr></thead>
+                <tbody id="de-table-body"></tbody>
+              </table>
+              <div class="insight">Yds/Play, Success %, Explosive %, and Takeaways respect every filter above. Points/Drive Allowed uses this game's full drive log regardless of the Quarter/Situation/Field Zone filters (drives aren't scoped to a single quarter or situation).</div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's OfficialPlayByPlay sheet, combined_play_data.xlsx (50 real Carroll games, 2021–2025), opponent's-possession rows.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('de-shelf').innerHTML = buildFilterPanel('de', EXEC_FILTERS, DATA.filters.defense);
+  wireFilterPanel('de', EXEC_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('de', EXEC_FILTERS);
+    const rows = applyFilters(DATA.defense.official, state);
+    const drives = applyFilters(DATA.defense.drives, { season: state.season, opponent: state.opponent });
+    document.getElementById('de-summary').textContent = `${rows.length} plays in view`;
+
+    const withEff = rows.filter((r) => r.play_efficiency !== null);
+    setKPI('de-ypp', fmt(mean(rows.map((r) => r.yards)), 1), `${rows.length} plays`);
+    setKPI('de-succ', pct(rate(withEff, (r) => isSuccess(r.play_efficiency))), `${withEff.length} classified`);
+    setKPI('de-exp', pct(rate(withEff, (r) => r.play_efficiency === 'Explosive')));
+    setKPI('de-to', pct(rate(rows, (r) => r.is_turnover)), `${rows.filter((r) => r.is_turnover).length} takeaways`);
+
+    const rzDrives = new Set(rows.filter((r) => r.field_zone === 'Red Zone').map((r) => `${r.game_label}|${r.drive_num}`));
+    const rzResults = [...rzDrives].map((k) => rows.find((r) => `${r.game_label}|${r.drive_num}` === k).drive_result);
+    setKPI('de-rz', rzResults.length ? pct(rzResults.filter((r) => r === 'Touchdown').length / rzResults.length) : '—', `${rzResults.length} red zone drives`);
+
+    const ppd = drives.length ? mean(drives.map((d) => (d.result === 'Touchdown' ? 6 : d.result === 'Field Goal Good' ? 3 : 0))) : null;
+    setKPI('de-ppd', fmt(ppd, 2), `${drives.length} drives (season/opponent filters only)`);
+
+    const downs = DOWNS.filter((d) => rows.some((r) => r.down === d));
+    const byDown = groupBy(rows, 'down');
+    renderBar(document.getElementById('de-down'), {
+      categories: downs, values: downs.map((d) => mean(byDown.get(d).map((r) => r.yards))),
+      labelFmt: (v) => fmt(v, 1), colorFn: () => cssVar('--critical'), xlab2: (d) => `n=${byDown.get(d).length}`,
+    });
+
+    const bySituation = groupBy(withEff, 'situation');
+    const situations = SITUATIONS.filter((s) => bySituation.has(s));
+    renderBar(document.getElementById('de-situation'), {
+      categories: situations, values: situations.map((s) => rate(bySituation.get(s), (r) => isSuccess(r.play_efficiency))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--serious'), xlab2: (s) => `n=${bySituation.get(s).length}`,
+    });
+
+    const byZone = groupBy(withEff, 'field_zone');
+    const zones = FIELD_ZONES.filter((z) => byZone.has(z));
+    renderBar(document.getElementById('de-zone'), {
+      categories: zones, values: zones.map((z) => rate(byZone.get(z), (r) => r.play_efficiency === 'Explosive')),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-8'), xlab2: (z) => `n=${byZone.get(z).length}`,
+    });
+
+    const byResult = groupBy(rows.filter((r) => r.drive_result), 'drive_result');
+    const resultCats = topKeysByCount(byResult, 8);
+    renderBar(document.getElementById('de-driveresult'), {
+      categories: resultCats, values: resultCats.map((c) => byResult.get(c).length),
+      labelFmt: (v) => String(v), colorFn: (name) => categoricalColorMap(resultCats)[name],
+    });
+
+    const byDownDist = groupBy(withEff.map((r) => ({ ...r, _db: distanceBucket(r.distance) })).filter((r) => r._db), '_db');
+    renderHeatmap(document.getElementById('de-heatmap'), {
+      rowLabels: downs, colLabels: DIST_BUCKETS,
+      cellFor: (down, bucket) => {
+        const g = (byDownDist.get(bucket) || []).filter((r) => r.down === down);
+        if (!g.length) return null;
+        return { pct: rate(g, (r) => isSuccess(r.play_efficiency)), n: g.length, made: g.filter((r) => isSuccess(r.play_efficiency)).length };
+      },
+      title: (down, bucket) => `Down ${down}, ${bucket} yds to go`,
+    });
+
+    renderTrendCard(document.getElementById('de-ypptrend'), rows, 'yards', ' yds', 'Yards Allowed / Play by Game');
+
+    const byGame = groupBy(rows, 'game_label');
+    const gamesInView = DATA.games.filter((g) => byGame.has(g.game_label));
+    const drivesByGame = groupBy(drives, 'game_label');
+    const tbody = gamesInView.map((g) => {
+      const gRows = byGame.get(g.game_label);
+      const gEff = gRows.filter((r) => r.play_efficiency !== null);
+      const gDrives = drivesByGame.get(g.game_label) || [];
+      const gPpd = gDrives.length ? mean(gDrives.map((d) => (d.result === 'Touchdown' ? 6 : d.result === 'Field Goal Good' ? 3 : 0))) : null;
+      return `<tr>
+        <td class="name">${g.opponent}</td><td>${g.date}</td><td>${gRows.length}</td>
+        <td>${fmt(mean(gRows.map((r) => r.yards)), 1)}</td>
+        <td>${pct(rate(gEff, (r) => isSuccess(r.play_efficiency)), 0)}</td>
+        <td>${pct(rate(gEff, (r) => r.play_efficiency === 'Explosive'), 0)}</td>
+        <td>${gRows.filter((r) => r.is_turnover).length}</td>
+        <td>${fmt(gPpd, 2)}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('de-table-body').innerHTML = tbody || '<tr><td colspan="8" style="text-align:center; color:var(--muted);">No games in current filter.</td></tr>';
+  }
+  render();
+}
+
+/* ============================================================================
+   PLAY-CALLING & TENDENCIES
+   ============================================================================ */
+
+const TEND_FILTERS = [
+  { field: 'season', label: 'Season' },
+  { field: 'opponent', label: 'Opponent' },
+  { field: 'situation', label: 'Situation' },
+  { field: 'field_zone', label: 'Field Zone' },
+  { field: 'down', label: 'Down' },
+];
+
+function tendenciesTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Defense</h2></div>
+          <div class="sub">Play-Calling &amp; Tendencies · Hand-Charted Plays</div>
+        </div>
+        <div class="shelf" id="dt-shelf"></div>
+        <div class="body">
+          <div class="kpirow" id="dt-kpis">
+            ${kpiHTML('dt-run', 'Run Rate Faced')}
+            ${kpiHTML('dt-pass', 'Pass Rate Faced')}
+            ${kpiHTML('dt-ypp', 'Yards / Play Allowed', '--critical')}
+            ${kpiHTML('dt-blitz', 'Blitz Rate')}
+          </div>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Run/Pass Mix Faced by Down</h3></div><div class="card-body" id="dt-downmix"></div></div>
+            <div class="card"><div class="card-head"><h3>Run/Pass Mix Faced by Situation</h3></div><div class="card-body" id="dt-sitmix"></div></div>
+            <div class="card"><div class="card-head"><h3>Carroll's Defensive Front Called</h3></div><div class="card-body" id="dt-front"></div></div>
+            <div class="card"><div class="card-head"><h3>Carroll's Blitz Called</h3></div><div class="card-body" id="dt-blitzchart"></div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Defensive front detail (top 15 by volume)</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Front</th><th>N</th><th>Avg Yards Allowed</th><th>Success % Allowed</th><th>Explosive % Allowed</th></tr></thead>
+                <tbody id="dt-table-body"></tbody>
+              </table>
+              <div class="insight">Front (D) is only charted on some defensive snaps — this table only ever counts rows that actually have one, respecting every filter above.</div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's Plays sheet, combined_play_data.xlsx. Front/blitz-call names shown exactly as charted, including occasional typos — not normalized. No opponent formation/personnel here — see the intro above for why.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('dt-shelf').innerHTML = buildFilterPanel('dt', TEND_FILTERS, DATA.filters.defense);
+  wireFilterPanel('dt', TEND_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('dt', TEND_FILTERS);
+    const rows = applyFilters(DATA.defense.plays, state);
+    document.getElementById('dt-summary').textContent = `${rows.length} snaps in view`;
+
+    const runPass = rows.filter((r) => r.play_type === 'Run' || r.play_type === 'Pass');
+    setKPI('dt-run', pct(rate(runPass, (r) => r.play_type === 'Run')), `${runPass.length} run/pass snaps`);
+    setKPI('dt-pass', pct(rate(runPass, (r) => r.play_type === 'Pass')));
+    setKPI('dt-ypp', fmt(mean(runPass.map((r) => r.yards)), 1));
+    const blitzCharted = rows.filter((r) => r.blitz_d !== null && r.blitz_d !== undefined);
+    setKPI('dt-blitz', blitzCharted.length ? pct(rate(blitzCharted, (r) => r.blitz_d !== '-')) : '—', `${blitzCharted.length} charted`);
+
+    const downs = DOWNS.filter((d) => runPass.some((r) => r.down === d));
+    const byDown = groupBy(runPass, 'down');
+    const runPassColors = { Run: cssVar('--cat-1'), Pass: cssVar('--cat-4') };
+    renderStacked(document.getElementById('dt-downmix'), {
+      categories: downs,
+      series: { Run: downs.map((d) => byDown.get(d).filter((r) => r.play_type === 'Run').length), Pass: downs.map((d) => byDown.get(d).filter((r) => r.play_type === 'Pass').length) },
+      order: ['Run', 'Pass'], colors: runPassColors,
+    });
+
+    const bySituation = groupBy(runPass.filter((r) => r.situation), 'situation');
+    const situations = SITUATIONS.filter((s) => bySituation.has(s));
+    renderStacked(document.getElementById('dt-sitmix'), {
+      categories: situations,
+      series: { Run: situations.map((s) => bySituation.get(s).filter((r) => r.play_type === 'Run').length), Pass: situations.map((s) => bySituation.get(s).filter((r) => r.play_type === 'Pass').length) },
+      order: ['Run', 'Pass'], colors: runPassColors,
+    });
+
+    const byFront = groupBy(rows.filter((r) => r.front_d), 'front_d');
+    const frontCats = topKeysByCount(byFront, 10);
+    renderBar(document.getElementById('dt-front'), {
+      categories: frontCats, values: frontCats.map((f) => byFront.get(f).length),
+      labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-2'),
+      xlab2: (f) => `avg ${fmt(mean(byFront.get(f).map((r) => r.yards)), 1)} yds`,
+    });
+
+    const byBlitz = groupBy(rows.filter((r) => r.blitz_d && r.blitz_d !== '-'), 'blitz_d');
+    const blitzCats = topKeysByCount(byBlitz, 10);
+    renderBar(document.getElementById('dt-blitzchart'), {
+      categories: blitzCats, values: blitzCats.map((b) => byBlitz.get(b).length),
+      labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-7'),
+      xlab2: (b) => `avg ${fmt(mean(byBlitz.get(b).map((r) => r.yards)), 1)} yds`,
+    });
+
+    const frontCatsTable = topKeysByCount(byFront, 15);
+    const tbody = frontCatsTable.map((f) => {
+      const g = byFront.get(f);
+      const gEff = g.filter((r) => r.play_efficiency !== null);
+      return `<tr>
+        <td class="name">${f}</td><td>${g.length}</td><td>${fmt(mean(g.map((r) => r.yards)), 1)}</td>
+        <td>${pct(rate(gEff, (r) => isSuccess(r.play_efficiency)), 0)}</td>
+        <td>${pct(rate(gEff, (r) => r.play_efficiency === 'Explosive'), 0)}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('dt-table-body').innerHTML = tbody || '<tr><td colspan="5" style="text-align:center; color:var(--muted);">No fronts in current filter.</td></tr>';
+  }
+  render();
+}
+
+/* ------------------------------------------------------------------------ tabs ---- */
+
+const TAB_RENDERERS = { exec: execTab, tendencies: tendenciesTab };
+
+function showTab(tab) {
+  document.querySelectorAll('#def-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  TAB_RENDERERS[tab](document.getElementById('def-stage'));
+}
+
+document.querySelectorAll('#def-tabs .tabbtn').forEach((btn) => {
+  btn.addEventListener('click', () => showTab(btn.dataset.tab));
+});
+
+fetch('../data/game-data.json')
+  .then((r) => r.json())
+  .then((data) => { DATA = data; showTab('exec'); })
+  .catch((err) => {
+    document.getElementById('def-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/game-data.json — ${err}. Run scripts/build_game_data.py first, and serve over http:// not file://.</div></div>`;
+  });
+</script>
+</body>
+</html>

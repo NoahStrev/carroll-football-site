@@ -12,14 +12,10 @@
   .chartgrid .card-body { min-height: 190px; }
   .data-note { font-size: 10.5px; color: var(--muted); margin-top: 6px; }
   select.fp-select-inline { font-family: inherit; font-size: 12px; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--page); color: var(--text-primary); }
-  .trend-body { display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; }
 
   /* ---- responsive (2026-07-29) ---- */
   @media (max-width: 900px) {
     .chartgrid { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 560px) {
-    .trend-body { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -32,6 +28,8 @@
       <a href="../index.html">Overview</a>
       <a href="special-teams-overview.html" class="active">Special Teams</a>
       <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html">Offense</a>
+      <a href="defense.html">Defense</a>
     </div>
   </nav>
 
@@ -75,50 +73,9 @@ let DATA = null;
 
 /* ----------------------------------------------------- game-level trend ----- */
 
-/** Groups rows by (season, date) chronologically, averages `field`, returns
- * {values, labels} for renderSparkline -- this is this rebuild's equivalent of
- * the reference dashboards' "Last Week Avg" trend (games are weekly). */
-function gameTrend(rows, field) {
-  const byGame = groupBy(rows.map((r) => ({ ...r, _gk: `${r.season}|${r.date}` })), '_gk');
-  const games = [...byGame.keys()].sort((a, b) => {
-    const da = new Date(a.split('|')[1]), db = new Date(b.split('|')[1]);
-    return da - db;
-  });
-  const values = games.map((g) => mean(byGame.get(g).map((r) => r[field])));
-  const labels = games.map((g) => {
-    const [season, date] = g.split('|');
-    const [m, d] = date.split('/');
-    return `${m}/${d}`;
-  });
-  return { values, labels };
-}
-
-function renderTrendCard(container, rows, field, unit, title) {
-  const { values, labels } = gameTrend(rows, field);
-  const lastVal = values.length ? values[values.length - 1] : null;
-  // Changed 2026-07-30 per the user: this compared the last game to the SEASON
-  // average, but should compare it to the PREVIOUS game (true week-over-week,
-  // matching the original Tableau dashboards' "Last Week vs Avg" -- "Avg" there
-  // meant the prior week's number, not a season-long average).
-  const prevVal = values.length > 1 ? values[values.length - 2] : null;
-  const delta = lastVal !== null && prevVal !== null ? lastVal - prevVal : null;
-  container.innerHTML = `
-    <div class="card-head"><h3>${title}</h3></div>
-    <div class="card-body trend-body">
-      <div>
-        <div class="kpi small" style="border:none; padding:0; background:none;">
-          <div class="label">Last Game Avg</div>
-          <div class="value">${fmt(lastVal)}${unit}</div>
-        </div>
-        <div class="kpi small" style="border:none; padding:0; background:none; margin-top:10px;">
-          <div class="label">Last vs Previous Game</div>
-          <div class="value" style="font-size:15px; color:${delta === null ? 'inherit' : (delta >= 0 ? 'var(--delta-good)' : 'var(--critical)')}">${delta === null ? '—' : (delta >= 0 ? '+' : '') + fmt(delta)}</div>
-        </div>
-      </div>
-      <div class="trend-chart"></div>
-    </div>`;
-  renderSparkline(container.querySelector('.trend-chart'), { values, labels, unit });
-}
+/* gameTrend/renderTrendCard now live in js/charts.js (hoisted 2026-07-30 --
+   Offense/Defense need the identical "Last Game vs Previous Game" trend
+   card, don't re-add a local copy here). */
 
 /* ============================================================================
    MONEY UNIT
@@ -237,6 +194,11 @@ function moneyUnitTab(root) {
         categories: cats, values: cats.map((c) => missCounts.get(c).length),
         labelFmt: (v) => String(v), colorFn: () => cssVar('--critical'),
       });
+    } else {
+      // Real bug found 2026-07-30 re-validating this page: this branch didn't
+      // exist, so filtering down to a subset with zero blocked kicks left the
+      // PREVIOUS filter's bar chart on screen instead of clearing it.
+      document.getElementById('mu-miss').innerHTML = '<div class="data-note">No blocked kicks in the current filter. Only "Blocked" is currently tracked as a miss reason in the source data (the Tableau version\'s L/Short breakdown isn\'t captured yet).</div>';
     }
 
     renderTrendCard(document.getElementById('mu-snapcatch'), rows, 'snap_to_catch', 's', 'Avg Snap to Catch');

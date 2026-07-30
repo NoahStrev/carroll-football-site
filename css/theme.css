@@ -303,6 +303,14 @@ html, body {
 .linewrap svg { display: block; width: 100%; height: 150px; overflow: visible; }
 .axis-x { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--muted); margin-top: 4px; padding: 0 2px; }
 
+/* ---- game-trend card (renderTrendCard, js/charts.js) -- moved here
+   2026-07-30 from special-teams-overview.html's local <style> block since
+   Offense/Defense need the identical layout, not a re-declared copy. ---- */
+.trend-body { display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; }
+@media (max-width: 560px) {
+  .trend-body { grid-template-columns: 1fr; }
+}
+
 .legend { display: flex; gap: 14px; font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; flex-wrap: wrap; }
 .legend .sw { display: inline-flex; align-items: center; gap: 5px; }
 .legend .dot { width: 9px; height: 9px; border-radius: 2px; }

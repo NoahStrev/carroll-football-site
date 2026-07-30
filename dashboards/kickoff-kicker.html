@@ -20,6 +20,8 @@
       <a href="../index.html">Overview</a>
       <a href="special-teams-overview.html">Special Teams</a>
       <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html">Offense</a>
+      <a href="defense.html">Defense</a>
     </div>
   </nav>
 
@@ -341,11 +343,20 @@ function deepTab(root) {
     });
 
     const allSeasons = DATA.filters.kickoff.season;
-    const kickers = DATA.filters.kickoff.kicker.filter((k) => rows.some((r) => r.kicker === k));
+    // Real bug found 2026-07-30 re-validating this page: the insight text below
+    // promises the Season filter never narrows this grid (by design -- it's a
+    // cross-season view, only Quarter narrows it and Kicker hides rows), but
+    // both `kickers` and cellFor were reading from season-filtered rows --
+    // selecting a single season silently zeroed every other season's column
+    // and could drop kicker rows who didn't kick that season. Uses a separate
+    // rows variable with the season filter forced open so only Kicker/Quarter
+    // actually affect this chart, matching the stated behavior.
+    const heatmapDeepRows = deep(applyFilters(DATA.units.kickoff, { ...state, season: new Set(allSeasons) }));
+    const kickers = DATA.filters.kickoff.kicker.filter((k) => heatmapDeepRows.some((r) => r.kicker === k));
     renderHeatmap(document.getElementById('kkd-heatmap'), {
       rowLabels: kickers, colLabels: allSeasons,
       cellFor: (kicker, season) => {
-        const g = deepRows.filter((r) => r.season === season && r.kicker === kicker);
+        const g = heatmapDeepRows.filter((r) => r.season === season && r.kicker === kicker);
         if (!g.length) return null;
         return { pct: rate(g, (r) => r.touchback), n: g.length, made: g.filter((r) => r.touchback).length };
       },

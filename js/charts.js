@@ -525,6 +525,74 @@ function sortBuckets(labels) {
   return [...labels].sort((a, b) => parseInt(a) - parseInt(b));
 }
 
+/** Parses either "M/D/YYYY" (Special Teams data) or ISO "YYYY-MM-DD" (Game
+ * Analysis data) into a sortable numeric key, without going through the Date
+ * constructor's timezone-dependent parsing (an ISO string parses as UTC
+ * midnight, which can shift a day in negative-UTC timezones). */
+function parseGameDate(d) {
+  const [a, b, c] = d.includes('-') ? d.split('-') : d.split('/').reverse();
+  // includes('-') -> [YYYY, MM, DD]; else reversed "M/D/YYYY" -> [YYYY, D, M]
+  return d.includes('-') ? Number(a) * 10000 + Number(b) * 100 + Number(c) : Number(a) * 10000 + Number(c) * 100 + Number(b);
+}
+
+function formatGameDateLabel(d) {
+  if (d.includes('-')) {
+    const [, m, day] = d.split('-');
+    return `${Number(m)}/${Number(day)}`;
+  }
+  const [m, day] = d.split('/');
+  return `${m}/${day}`;
+}
+
+/** Groups rows by (season, date) chronologically, averages `field`, returns
+ * {values, labels} for renderSparkline -- games/weeks. Hoisted 2026-07-30
+ * from special-teams-overview.html into here since Offense/Defense need the
+ * identical thing. */
+function gameTrend(rows, field) {
+  const byGame = groupBy(rows.map((r) => ({ ...r, _gk: `${r.season}|${r.date}` })), '_gk');
+  const games = [...byGame.keys()].sort((a, b) => parseGameDate(a.split('|')[1]) - parseGameDate(b.split('|')[1]));
+  const values = games.map((g) => mean(byGame.get(g).map((r) => r[field])));
+  const labels = games.map((g) => formatGameDateLabel(g.split('|')[1]));
+  return { values, labels };
+}
+
+/** Card with a "Last Game" KPI + "Last vs Previous Game" delta + sparkline --
+ * hoisted 2026-07-30 from special-teams-overview.html (was duplicated there
+ * with the Offense/Defense build), same "Last Week vs Avg" semantics as the
+ * original Tableau dashboards (comparing to the immediately-prior game, not
+ * a season average). */
+function renderTrendCard(container, rows, field, unit, title) {
+  const { values, labels } = gameTrend(rows, field);
+  const lastVal = values.length ? values[values.length - 1] : null;
+  const prevVal = values.length > 1 ? values[values.length - 2] : null;
+  const delta = lastVal !== null && prevVal !== null ? lastVal - prevVal : null;
+  container.innerHTML = `
+    <div class="card-head"><h3>${title}</h3></div>
+    <div class="card-body trend-body">
+      <div>
+        <div class="kpi small" style="border:none; padding:0; background:none;">
+          <div class="label">Last Game Avg</div>
+          <div class="value">${fmt(lastVal)}${unit}</div>
+        </div>
+        <div class="kpi small" style="border:none; padding:0; background:none; margin-top:10px;">
+          <div class="label">Last vs Previous Game</div>
+          <div class="value" style="font-size:15px; color:${delta === null ? 'inherit' : (delta >= 0 ? 'var(--delta-good)' : 'var(--critical)')}">${delta === null ? '—' : (delta >= 0 ? '+' : '') + fmt(delta)}</div>
+        </div>
+      </div>
+      <div class="trend-chart"></div>
+    </div>`;
+  renderSparkline(container.querySelector('.trend-chart'), { values, labels, unit });
+}
+
+/** Top N keys of a groupBy() Map, ordered by descending row count -- for
+ * open-ended categorical fields (formation, personnel, defensive front,
+ * coverage, play call, ...) that have no fixed canonical order the way
+ * distance buckets or a season list do (Offense/Defense play-calling
+ * tendencies charts, e.g. play_call has 260+ distinct real values). */
+function topKeysByCount(map, n = 10) {
+  return [...map.entries()].sort((a, b) => b[1].length - a[1].length).slice(0, n).map(([k]) => k);
+}
+
 /* ============================================================================
    FILTER PANEL (rebuilt 2026-07-30, per the user: "filtering is not intuitive")
    ============================================================================

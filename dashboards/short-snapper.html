@@ -19,6 +19,8 @@
       <a href="../index.html">Overview</a>
       <a href="special-teams-overview.html">Special Teams</a>
       <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html">Offense</a>
+      <a href="defense.html">Defense</a>
     </div>
   </nav>
 
@@ -352,11 +354,20 @@ function deepTab(root) {
     });
 
     const allSeasons = DATA.filters.money_unit.season;
-    const snappers = DATA.filters.money_unit.long_snapper.filter((s) => rows.some((r) => r.long_snapper === s));
+    // Real bug found 2026-07-30 re-validating this page: the insight text below
+    // promises the Season filter never narrows this grid (by design -- it's a
+    // cross-season view, only Quarter narrows it and Snapper hides rows), but
+    // both `snappers` and cellFor were reading from season-filtered rows --
+    // selecting a single season silently zeroed every other season's column
+    // and could drop snapper rows with no attempts that season. Uses a
+    // separate rows variable with the season filter forced open so only
+    // Snapper/Quarter actually affect this chart, matching the stated behavior.
+    const heatmapFgRows = fgs(withSnapper(applyFilters(DATA.units.money_unit, { ...state, season: new Set(allSeasons) })));
+    const snappers = DATA.filters.money_unit.long_snapper.filter((s) => heatmapFgRows.some((r) => r.long_snapper === s));
     renderHeatmap(document.getElementById('ssd-heatmap'), {
       rowLabels: snappers, colLabels: allSeasons,
       cellFor: (snapper, season) => {
-        const g = fgRows.filter((r) => r.season === season && r.long_snapper === snapper);
+        const g = heatmapFgRows.filter((r) => r.season === season && r.long_snapper === snapper);
         if (!g.length) return null;
         return { pct: makeRate(g), n: g.length, made: makes(g).length };
       },

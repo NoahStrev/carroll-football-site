@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Offense — Carroll Football Analytics</title>
+<link rel="stylesheet" href="../css/theme.css">
+<style>
+  /* .unit-header, .kpirow/-5/-6, .grid2, .heat, .linewrap svg, .trend-body all
+     already live in css/theme.css. */
+  .chartgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .chartgrid .card-body { min-height: 190px; }
+  .data-note { font-size: 10.5px; color: var(--muted); margin-top: 6px; }
+
+  @media (max-width: 900px) {
+    .chartgrid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="../index.html">Overview</a>
+      <a href="special-teams-overview.html">Special Teams</a>
+      <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html" class="active">Offense</a>
+      <a href="defense.html">Defense</a>
+    </div>
+  </nav>
+
+  <div class="intro">
+    <h1>Offense</h1>
+    <p>
+      Carroll's own offense, from the real <code>Game Analysis</code> project's
+      <code>combined_play_data.xlsx</code> (50 real Carroll games, 2021&ndash;2025 &mdash; 5 additional
+      self-scout files of <em>other</em> teams' games are excluded entirely, since they aren't
+      Carroll's own offense/defense). <b>Executive Scorecard</b> uses the official scraped
+      play-by-play (down/distance/field position/drive results/explosive-play classification
+      already computed from the box score); <b>Play-Calling &amp; Tendencies</b> uses the
+      coaching staff's own hand-charted play-by-play (formation/personnel/play call/opponent
+      look) &mdash; two different sources at two different grains, so small differences between
+      the two tabs' numbers (e.g. yards/play) are expected, not a bug. <b>Formation/personnel/
+      play-call/defensive-front/coverage names are shown exactly as charted</b>, including
+      occasional data-entry typos (e.g. "COPVER 3 STRONG") &mdash; not normalized here, same
+      policy as this site's other known-duplicate-name callouts (Kickoff Kicker's
+      "Scofield"/"Sebastian Scofield", Punter's "Streveler"/"Noah Streveler"). <b>Play Call is
+      only charted on ~35% of offensive snaps</b> (specific playbook call names on top of the
+      Run/Pass bucket) &mdash; every chart using it only ever counts the rows that actually have
+      one. "Points per Drive" below is an approximation (6 for a touchdown, 3 for a made field
+      goal, 0 otherwise) — it doesn't add PAT/two-point value on top, a simplification, not a
+      fabricated number. <b>The Play-Calling tab's source data has Down = 0 on ~4% of offensive
+      snaps</b> (the source's own data dictionary documents Down as 1-4 only) — real charted
+      rows, not blank, but outside the documented range, so the Run/Pass-by-Down chart only
+      ever shows downs 1-4 rather than guessing what 0 means; those snaps still count in every
+      other total (Run/Pass Rate, Yards/Play, etc.).
+    </p>
+  </div>
+
+  <div class="tabbar" id="off-tabs">
+    <button class="tabbtn active" data-tab="exec">Executive Scorecard</button>
+    <button class="tabbtn" data-tab="tendencies">Play-Calling &amp; Tendencies</button>
+  </div>
+
+  <div class="stage" id="off-stage"></div>
+</div>
+
+<script src="../js/charts.js"></script>
+<script>
+let DATA = null;
+
+function distanceBucket(d) {
+  if (d === null || d === undefined) return null;
+  return d <= 3 ? '1-3' : d <= 6 ? '4-6' : d <= 9 ? '7-9' : '10+';
+}
+const DIST_BUCKETS = ['1-3', '4-6', '7-9', '10+'];
+const DOWNS = [1, 2, 3, 4];
+const SITUATIONS = ['Standard Down', 'Passing Down', 'Money Down'];
+const FIELD_ZONES = ['Backed Up', 'Own Territory', 'Midfield', 'Opponent Territory', 'Red Zone'];
+function isSuccess(eff) { return eff === 'Successful' || eff === 'Explosive'; }
+
+/* ============================================================================
+   EXECUTIVE SCORECARD
+   ============================================================================ */
+
+const EXEC_FILTERS = [
+  { field: 'season', label: 'Season' },
+  { field: 'opponent', label: 'Opponent' },
+  { field: 'quarter', label: 'Quarter' },
+  { field: 'situation', label: 'Situation' },
+  { field: 'field_zone', label: 'Field Zone' },
+];
+
+function execTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Offense</h2></div>
+          <div class="sub">Executive Scorecard · Official Play-by-Play</div>
+        </div>
+        <div class="shelf" id="oe-shelf"></div>
+        <div class="body">
+          <div class="kpirow-6" id="oe-kpis">
+            ${kpiHTML('oe-ypp', 'Yards / Play', '--good')}
+            ${kpiHTML('oe-succ', 'Success Rate', '--good')}
+            ${kpiHTML('oe-exp', 'Explosive Rate')}
+            ${kpiHTML('oe-to', 'Turnover Rate', '--critical')}
+            ${kpiHTML('oe-rz', 'Red Zone TD %')}
+            ${kpiHTML('oe-ppd', 'Points / Drive (approx.)')}
+          </div>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Yards / Play by Down</h3></div><div class="card-body" id="oe-down"></div></div>
+            <div class="card"><div class="card-head"><h3>Success Rate by Situation</h3></div><div class="card-body" id="oe-situation"></div></div>
+            <div class="card"><div class="card-head"><h3>Explosive Rate by Field Zone</h3></div><div class="card-body" id="oe-zone"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Result Mix</h3></div><div class="card-body" id="oe-driveresult"></div></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Success Rate — Down × Distance</h3></div>
+            <div class="card-body">
+              <div class="heat" id="oe-heatmap"></div>
+              <div class="insight">Sequential blue = success rate; text = successful/plays. Standard down/distance efficiency grid, Rush/Pass/Sack/Kneel snaps only.</div>
+            </div>
+          </div>
+          <div class="grid2" style="margin-bottom:14px;">
+            <div class="card"><div class="card-body" id="oe-ypptrend"></div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Game log</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Opponent</th><th>Date</th><th>Plays</th><th>Yds/Play</th><th>Success %</th><th>Explosive %</th><th>Turnovers</th><th>Points/Drive</th></tr></thead>
+                <tbody id="oe-table-body"></tbody>
+              </table>
+              <div class="insight">Yds/Play, Success %, Explosive %, and Turnovers respect every filter above. Points/Drive uses this game's full drive log regardless of the Quarter/Situation/Field Zone filters (drives aren't scoped to a single quarter or situation).</div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's OfficialPlayByPlay sheet, combined_play_data.xlsx (50 real Carroll games, 2021–2025).</div>
+      </div>
+    </div>`;
+
+  document.getElementById('oe-shelf').innerHTML = buildFilterPanel('oe', EXEC_FILTERS, DATA.filters.offense);
+  wireFilterPanel('oe', EXEC_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('oe', EXEC_FILTERS);
+    const rows = applyFilters(DATA.offense.official, state);
+    const drives = applyFilters(DATA.offense.drives, { season: state.season, opponent: state.opponent });
+    document.getElementById('oe-summary').textContent = `${rows.length} plays in view`;
+
+    const withEff = rows.filter((r) => r.play_efficiency !== null);
+    setKPI('oe-ypp', fmt(mean(rows.map((r) => r.yards)), 1), `${rows.length} plays`);
+    setKPI('oe-succ', pct(rate(withEff, (r) => isSuccess(r.play_efficiency))), `${withEff.length} classified`);
+    setKPI('oe-exp', pct(rate(withEff, (r) => r.play_efficiency === 'Explosive')));
+    setKPI('oe-to', pct(rate(rows, (r) => r.is_turnover)), `${rows.filter((r) => r.is_turnover).length} giveaways`);
+
+    const rzDrives = new Set(rows.filter((r) => r.field_zone === 'Red Zone').map((r) => `${r.game_label}|${r.drive_num}`));
+    const rzResults = [...rzDrives].map((k) => rows.find((r) => `${r.game_label}|${r.drive_num}` === k).drive_result);
+    setKPI('oe-rz', rzResults.length ? pct(rzResults.filter((r) => r === 'Touchdown').length / rzResults.length) : '—', `${rzResults.length} red zone drives`);
+
+    const ppd = drives.length ? mean(drives.map((d) => (d.result === 'Touchdown' ? 6 : d.result === 'Field Goal Good' ? 3 : 0))) : null;
+    setKPI('oe-ppd', fmt(ppd, 2), `${drives.length} drives (season/opponent filters only)`);
+
+    const downs = DOWNS.filter((d) => rows.some((r) => r.down === d));
+    const byDown = groupBy(rows, 'down');
+    renderBar(document.getElementById('oe-down'), {
+      categories: downs, values: downs.map((d) => mean(byDown.get(d).map((r) => r.yards))),
+      labelFmt: (v) => fmt(v, 1), colorFn: () => cssVar('--cat-1'), xlab2: (d) => `n=${byDown.get(d).length}`,
+    });
+
+    const bySituation = groupBy(withEff, 'situation');
+    const situations = SITUATIONS.filter((s) => bySituation.has(s));
+    renderBar(document.getElementById('oe-situation'), {
+      categories: situations, values: situations.map((s) => rate(bySituation.get(s), (r) => isSuccess(r.play_efficiency))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), xlab2: (s) => `n=${bySituation.get(s).length}`,
+    });
+
+    const byZone = groupBy(withEff, 'field_zone');
+    const zones = FIELD_ZONES.filter((z) => byZone.has(z));
+    renderBar(document.getElementById('oe-zone'), {
+      categories: zones, values: zones.map((z) => rate(byZone.get(z), (r) => r.play_efficiency === 'Explosive')),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-2'), xlab2: (z) => `n=${byZone.get(z).length}`,
+    });
+
+    const resultCats = topKeysByCount(groupBy(rows.filter((r) => r.drive_result), 'drive_result'), 8);
+    const byResult = groupBy(rows.filter((r) => r.drive_result), 'drive_result');
+    renderBar(document.getElementById('oe-driveresult'), {
+      categories: resultCats, values: resultCats.map((c) => byResult.get(c).length),
+      labelFmt: (v) => String(v), colorFn: (name) => categoricalColorMap(resultCats)[name],
+    });
+
+    const byDownDist = groupBy(withEff.map((r) => ({ ...r, _db: distanceBucket(r.distance) })).filter((r) => r._db), '_db');
+    renderHeatmap(document.getElementById('oe-heatmap'), {
+      rowLabels: downs, colLabels: DIST_BUCKETS,
+      cellFor: (down, bucket) => {
+        const g = (byDownDist.get(bucket) || []).filter((r) => r.down === down);
+        if (!g.length) return null;
+        return { pct: rate(g, (r) => isSuccess(r.play_efficiency)), n: g.length, made: g.filter((r) => isSuccess(r.play_efficiency)).length };
+      },
+      title: (down, bucket) => `Down ${down}, ${bucket} yds to go`,
+    });
+
+    renderTrendCard(document.getElementById('oe-ypptrend'), rows, 'yards', ' yds', 'Yards / Play by Game');
+
+    const byGame = groupBy(rows, 'game_label');
+    const gamesInView = DATA.games.filter((g) => byGame.has(g.game_label));
+    const drivesByGame = groupBy(drives, 'game_label');
+    const tbody = gamesInView.map((g) => {
+      const gRows = byGame.get(g.game_label);
+      const gEff = gRows.filter((r) => r.play_efficiency !== null);
+      const gDrives = drivesByGame.get(g.game_label) || [];
+      const gPpd = gDrives.length ? mean(gDrives.map((d) => (d.result === 'Touchdown' ? 6 : d.result === 'Field Goal Good' ? 3 : 0))) : null;
+      return `<tr>
+        <td class="name">${g.opponent}</td><td>${g.date}</td><td>${gRows.length}</td>
+        <td>${fmt(mean(gRows.map((r) => r.yards)), 1)}</td>
+        <td>${pct(rate(gEff, (r) => isSuccess(r.play_efficiency)), 0)}</td>
+        <td>${pct(rate(gEff, (r) => r.play_efficiency === 'Explosive'), 0)}</td>
+        <td>${gRows.filter((r) => r.is_turnover).length}</td>
+        <td>${fmt(gPpd, 2)}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('oe-table-body').innerHTML = tbody || '<tr><td colspan="8" style="text-align:center; color:var(--muted);">No games in current filter.</td></tr>';
+  }
+  render();
+}
+
+/* ============================================================================
+   PLAY-CALLING & TENDENCIES
+   ============================================================================ */
+
+const TEND_FILTERS = [
+  { field: 'season', label: 'Season' },
+  { field: 'opponent', label: 'Opponent' },
+  { field: 'situation', label: 'Situation' },
+  { field: 'field_zone', label: 'Field Zone' },
+  { field: 'down', label: 'Down' },
+];
+
+function tendenciesTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Offense</h2></div>
+          <div class="sub">Play-Calling &amp; Tendencies · Hand-Charted Plays</div>
+        </div>
+        <div class="shelf" id="ot-shelf"></div>
+        <div class="body">
+          <div class="kpirow" id="ot-kpis">
+            ${kpiHTML('ot-run', 'Run Rate')}
+            ${kpiHTML('ot-pass', 'Pass Rate')}
+            ${kpiHTML('ot-ypp', 'Yards / Play (Run+Pass)', '--good')}
+            ${kpiHTML('ot-form', 'Most-Used Formation')}
+          </div>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Run/Pass Mix by Down</h3></div><div class="card-body" id="ot-downmix"></div></div>
+            <div class="card"><div class="card-head"><h3>Run/Pass Mix by Situation</h3></div><div class="card-body" id="ot-sitmix"></div></div>
+            <div class="card"><div class="card-head"><h3>Formation Usage</h3></div><div class="card-body" id="ot-formation"></div></div>
+            <div class="card"><div class="card-head"><h3>Personnel Usage</h3></div><div class="card-body" id="ot-personnel"></div></div>
+          </div>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Opponent Defensive Front Shown</h3></div><div class="card-body" id="ot-deffront"></div></div>
+            <div class="card"><div class="card-head"><h3>Opponent Coverage Shown</h3></div><div class="card-body" id="ot-coverage"></div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Play call detail (top 15 by volume)</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Play Call</th><th>N</th><th>Avg Yards</th><th>Success %</th><th>Explosive %</th></tr></thead>
+                <tbody id="ot-table-body"></tbody>
+              </table>
+              <div class="insight">Only ~35% of snaps have a specific Play Call charted (on top of the Run/Pass bucket) — this table only ever counts rows that actually have one, respecting every filter above.</div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's Plays sheet, combined_play_data.xlsx. Formation/personnel/play-call/front/coverage names shown exactly as charted, including occasional typos — not normalized.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('ot-shelf').innerHTML = buildFilterPanel('ot', TEND_FILTERS, DATA.filters.offense);
+  wireFilterPanel('ot', TEND_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('ot', TEND_FILTERS);
+    const rows = applyFilters(DATA.offense.plays, state);
+    document.getElementById('ot-summary').textContent = `${rows.length} snaps in view`;
+
+    const runPass = rows.filter((r) => r.play_type === 'Run' || r.play_type === 'Pass');
+    setKPI('ot-run', pct(rate(runPass, (r) => r.play_type === 'Run')), `${runPass.length} run/pass snaps`);
+    setKPI('ot-pass', pct(rate(runPass, (r) => r.play_type === 'Pass')));
+    setKPI('ot-ypp', fmt(mean(runPass.map((r) => r.yards)), 1));
+    const byFormation = groupBy(rows.filter((r) => r.formation), 'formation');
+    const topForm = topKeysByCount(byFormation, 1)[0];
+    setKPI('ot-form', topForm || '—', topForm ? `${byFormation.get(topForm).length} snaps` : '');
+
+    const downs = DOWNS.filter((d) => runPass.some((r) => r.down === d));
+    const byDown = groupBy(runPass, 'down');
+    const runPassColors = { Run: cssVar('--cat-1'), Pass: cssVar('--cat-4') };
+    renderStacked(document.getElementById('ot-downmix'), {
+      categories: downs,
+      series: { Run: downs.map((d) => byDown.get(d).filter((r) => r.play_type === 'Run').length), Pass: downs.map((d) => byDown.get(d).filter((r) => r.play_type === 'Pass').length) },
+      order: ['Run', 'Pass'], colors: runPassColors,
+    });
+
+    const bySituation = groupBy(runPass.filter((r) => r.situation), 'situation');
+    const situations = SITUATIONS.filter((s) => bySituation.has(s));
+    renderStacked(document.getElementById('ot-sitmix'), {
+      categories: situations,
+      series: { Run: situations.map((s) => bySituation.get(s).filter((r) => r.play_type === 'Run').length), Pass: situations.map((s) => bySituation.get(s).filter((r) => r.play_type === 'Pass').length) },
+      order: ['Run', 'Pass'], colors: runPassColors,
+    });
+
+    const formCats = topKeysByCount(byFormation, 10);
+    renderBar(document.getElementById('ot-formation'), {
+      categories: formCats, values: formCats.map((f) => byFormation.get(f).length),
+      labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-1'),
+      xlab2: (f) => `avg ${fmt(mean(byFormation.get(f).map((r) => r.yards)), 1)} yds`,
+    });
+
+    const byPersonnel = groupBy(rows.filter((r) => r.personnel !== null && r.personnel !== undefined), 'personnel');
+    const persCats = topKeysByCount(byPersonnel, 10);
+    renderBar(document.getElementById('ot-personnel'), {
+      categories: persCats, values: persCats.map((p) => byPersonnel.get(p).length),
+      labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-3'),
+      xlab2: (p) => `avg ${fmt(mean(byPersonnel.get(p).map((r) => r.yards)), 1)} yds`,
+    });
+
+    const byDefFront = groupBy(rows.filter((r) => r.def_front), 'def_front');
+    const frontCats = topKeysByCount(byDefFront, 10);
+    renderBar(document.getElementById('ot-deffront'), {
+      categories: frontCats, values: frontCats.map((f) => byDefFront.get(f).length),
+      labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-2'), xlab2: (f) => `n=${byDefFront.get(f).length}`,
+    });
+
+    const byCoverage = groupBy(rows.filter((r) => r.coverage), 'coverage');
+    const covCats = topKeysByCount(byCoverage, 10);
+    renderBar(document.getElementById('ot-coverage'), {
+      categories: covCats, values: covCats.map((c) => byCoverage.get(c).length),
+      labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-5'), xlab2: (c) => `n=${byCoverage.get(c).length}`,
+    });
+
+    const byPlayCall = groupBy(rows.filter((r) => r.play_call), 'play_call');
+    const callCats = topKeysByCount(byPlayCall, 15);
+    const tbody = callCats.map((c) => {
+      const g = byPlayCall.get(c);
+      const gEff = g.filter((r) => r.play_efficiency !== null);
+      return `<tr>
+        <td class="name">${c}</td><td>${g.length}</td><td>${fmt(mean(g.map((r) => r.yards)), 1)}</td>
+        <td>${pct(rate(gEff, (r) => isSuccess(r.play_efficiency)), 0)}</td>
+        <td>${pct(rate(gEff, (r) => r.play_efficiency === 'Explosive'), 0)}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('ot-table-body').innerHTML = tbody || '<tr><td colspan="5" style="text-align:center; color:var(--muted);">No play calls in current filter.</td></tr>';
+  }
+  render();
+}
+
+/* ------------------------------------------------------------------------ tabs ---- */
+
+const TAB_RENDERERS = { exec: execTab, tendencies: tendenciesTab };
+
+function showTab(tab) {
+  document.querySelectorAll('#off-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  TAB_RENDERERS[tab](document.getElementById('off-stage'));
+}
+
+document.querySelectorAll('#off-tabs .tabbtn').forEach((btn) => {
+  btn.addEventListener('click', () => showTab(btn.dataset.tab));
+});
+
+fetch('../data/game-data.json')
+  .then((r) => r.json())
+  .then((data) => { DATA = data; showTab('exec'); })
+  .catch((err) => {
+    document.getElementById('off-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/game-data.json — ${err}. Run scripts/build_game_data.py first, and serve over http:// not file://.</div></div>`;
+  });
+</script>
+</body>
+</html>
