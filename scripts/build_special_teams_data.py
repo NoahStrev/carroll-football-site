@@ -177,6 +177,7 @@ def build_money_unit(wb):
             "hash_kicked_from": r["Hash Kicked From"],
             "snap_to_catch": r["Snap to Catch"], "catch_to_kick": r["Catch to Kick"],
             "snap_to_kick": snap_to_kick,
+            "value": r["PAT/FG Value"], "score": r["PAT/FG Score"],
         })
     return rows
 

@@ -73,16 +73,8 @@ let DATA = null;
 
 /* ------------------------------------------------------------ shared KPIs --- */
 
-function kpiHTML(id, label, dotVar) {
-  const dot = dotVar ? `<span class="statusdot" style="background:var(${dotVar})"></span>` : '';
-  const accent = dotVar ? ` style="--kpi-accent:var(${dotVar})"` : '';
-  return `<div class="kpi"${accent}><div class="label">${dot}${label}</div><div class="value" id="${id}-value">—</div><div class="foot" id="${id}-foot"></div></div>`;
-}
-
-function setKPI(id, value, foot) {
-  document.getElementById(`${id}-value`).textContent = value;
-  if (foot !== undefined) document.getElementById(`${id}-foot`).textContent = foot;
-}
+/* kpiHTML/setKPI now live in js/charts.js (hoisted 2026-08-01 -- every Phase 2
+   position page needs the same KPI-tile markup, don't re-add local copies). */
 
 /* ----------------------------------------------------- game-level trend ----- */
 

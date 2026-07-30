@@ -63,9 +63,33 @@ based on.
      before trusting cross-year totals for anyone on this list.
 2. **Phase 2 — position-level (special teams)**: placekicker, kickoff kicker,
    punter, short snapper, long snapper — individual-analysis versions of Phase 1's
-   unit-level view. `Special Teams Data/mockups/*.html` already has a first pass at
-   these; migrate/adapt them into `dashboards/` here rather than rebuilding from
-   scratch.
+   unit-level view. `Special Teams Data/mockups/*.html` has a first pass at these;
+   migrated/adapted into `dashboards/` here rather than rebuilt from scratch.
+   - **Placekicker — done** (`dashboards/placekicker.html`, 2026-08-01). 3 tabs:
+     Executive Scorecard, Kicker Head-to-Head (any two kickers, searchable
+     combobox), Situational Deep Dive (quarter/season/hash breakdowns, distance ×
+     season heatmap, kicker detail table). **Deliberately does not port the
+     mockup's fabricated widgets** — the mockup used a hash-based jitter model to
+     invent Operation Time, Hash Kicked From, snap quality, and a miss-reason
+     split, all tagged "sample data," because those fields were blank when the
+     mockup was drafted. They aren't blank anymore: `Snap to Catch`/
+     `Catch to Kick`/`Hash Kicked From` are hand-charted by the coaching staff and
+     real from 2023 onward (0% charted 2021-2022, ~90-100% 2024-2025, confirmed by
+     checking the actual workbook column-by-column before building anything) — so
+     this page charts the **real** values wherever charted, same "never average-
+     padded with blanks" rule as Phase 1's Money Unit tab, instead of fabricating
+     a statistical model. Two exceptions with no real equivalent were dropped
+     entirely rather than reinterpreted: full miss-reason direction (still only
+     "Blocked" vs. everything else, matching Phase 1) and "snap quality" (no such
+     column exists anywhere in the source). Also surfaces `PAT/FG Value`/`Score` —
+     a real, fully-computed "points added over expectation" metric already in the
+     source workbook (see `Special Teams Data/rules/carroll_pat_fg_rules.md`) that
+     no dashboard on this site had used before. `scripts/build_special_teams_data.py`
+     extended to extract it. Added a shared `renderHeatmap()` and hoisted
+     `kpiHTML`/`setKPI` into `js/charts.js` (was duplicated in
+     `special-teams-overview.html`) for reuse across the remaining 4 position
+     pages.
+   - Kickoff kicker, punter, short snapper, long snapper — not started.
 3. **Phase 3 — offense &amp; defense**: no existing dashboard reference for either —
    design from scratch once we get here.
 4. **Phase 4 — report ingestion &amp; downloads** (lowest priority, added 2026-07-30

@@ -103,6 +103,22 @@ function hideTooltip() {
   if (tooltipEl) tooltipEl.style.display = 'none';
 }
 
+/* --------------------------------------------------------------- KPI tile --- */
+// Hoisted here 2026-08-01 from special-teams-overview.html (was duplicated
+// verbatim there) since every Phase 2 position page needs the same KPI-tile
+// markup -- reuse instead of re-copying per page.
+
+function kpiHTML(id, label, dotVar) {
+  const dot = dotVar ? `<span class="statusdot" style="background:var(${dotVar})"></span>` : '';
+  const accent = dotVar ? ` style="--kpi-accent:var(${dotVar})"` : '';
+  return `<div class="kpi"${accent}><div class="label">${dot}${label}</div><div class="value" id="${id}-value">—</div><div class="foot" id="${id}-foot"></div></div>`;
+}
+
+function setKPI(id, value, foot) {
+  document.getElementById(`${id}-value`).textContent = value;
+  if (foot !== undefined) document.getElementById(`${id}-foot`).textContent = foot;
+}
+
 /* ------------------------------------------------------------- bar chart ---- */
 
 /** categories: [name...]; values: [number...]; labelFmt(v): string for the cap.
@@ -266,6 +282,47 @@ function renderScatter(container, { points, xLabel, yLabel, colorMap, xDomain, y
   axis.appendChild(el('span', null, yLabel));
   container.appendChild(wrap);
   container.appendChild(axis);
+}
+
+/* ------------------------------------------------------------- heatmap ------ */
+
+const SEQ_STEPS = ['--seq-100', '--seq-200', '--seq-300', '--seq-400', '--seq-500', '--seq-600'];
+
+/** rowLabels/colLabels: [string...]. cellFor(row, col): {pct: 0..1, n, made} or
+ * null/undefined for "no data in this cell" (rendered as a dash on --grid, not a
+ * fabricated 0%). Sequential single-hue ramp per the dataviz skill -- magnitude
+ * only, sorted rows/cols stay in the order given (caller's job, e.g. sortBuckets
+ * for a distance bucket axis). */
+function renderHeatmap(container, { rowLabels, colLabels, cellFor, title = (r, c) => `${r} × ${c}` }) {
+  container.innerHTML = '';
+  const grid = el('div', 'heat');
+  grid.style.gridTemplateColumns = `130px repeat(${colLabels.length}, 1fr)`;
+  grid.appendChild(el('div', 'rowlabel', ''));
+  colLabels.forEach((c) => grid.appendChild(el('div', 'collabel', c)));
+  rowLabels.forEach((r) => {
+    grid.appendChild(el('div', 'rowlabel', r));
+    colLabels.forEach((c) => {
+      const cell = cellFor(r, c);
+      const div = el('div', 'hcell');
+      if (!cell || !cell.n) {
+        div.style.background = cssVar('--grid');
+        div.style.color = cssVar('--muted');
+        div.textContent = '—';
+      } else {
+        const step = Math.min(SEQ_STEPS.length - 1, Math.floor(cell.pct * SEQ_STEPS.length));
+        div.style.background = cssVar(SEQ_STEPS[step]);
+        div.style.color = step >= 4 ? '#fff' : cssVar('--text-primary');
+        div.innerHTML = `${pct(cell.pct, 0)}<span class="n">${cell.made}/${cell.n}</span>`;
+        const html = `<div class="tt-title">${title(r, c)}</div><div class="tt-row"><span>${pct(cell.pct, 0)}</span><span>${cell.made}/${cell.n}</span></div>`;
+        div.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html));
+        div.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html));
+        div.addEventListener('mouseleave', hideTooltip);
+        div.style.cursor = 'pointer';
+      }
+      grid.appendChild(div);
+    });
+  });
+  container.appendChild(grid);
 }
 
 /* ------------------------------------------------------------ sparkline ----- */

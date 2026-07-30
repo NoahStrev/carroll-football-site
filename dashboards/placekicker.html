@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Placekicker — Carroll Football Analytics</title>
+<link rel="stylesheet" href="../css/theme.css">
+<style>
+  /* .unit-header, .kpirow-6/.chartgrid-equivalents, .colcard-2/.kicker-col/
+     .kicker-head/.kicker-select/.kicker-body/.mini-kpi-row, .heat all already
+     live in css/theme.css (carried from the mockups for exactly this kind of
+     page) -- only page-specific layout goes here. */
+  .pk-kpirow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
+  .pk-kpirow-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .pk-trend-svg { display: block; width: 100%; height: 150px; overflow: visible; }
+
+  @media (max-width: 900px) {
+    .pk-kpirow { grid-template-columns: repeat(3, 1fr); }
+    .pk-kpirow-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .pk-kpirow { grid-template-columns: repeat(2, 1fr); }
+    .pk-kpirow-4 { grid-template-columns: 1fr; }
+    .mini-kpi-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="../index.html">Overview</a>
+      <a href="special-teams-overview.html">Special Teams</a>
+      <a href="lifting-strength.html">Lifting &amp; Strength</a>
+    </div>
+  </nav>
+
+  <div class="intro">
+    <h1>Placekicker</h1>
+    <p>
+      Individual placekicker breakdown from the real <code>Carroll PAT-FG</code> sheet in
+      <code>Carroll_Special_Teams_2021_Current.xlsx</code> (236 kicks, 2021–2025, this coach's
+      tenure) — complements the unit-level Money Unit tab on
+      <a href="special-teams-overview.html">Special Teams Overview</a> with per-kicker splits.
+      <b>Snap to Catch, Catch to Kick, and Hash Kicked From are hand-charted from film by the
+      coaching staff and only exist from 2023 onward</b> (0% charted 2021–2022, effectively
+      complete 2024–2025) — every chart using them only ever averages the rows that actually
+      have a value, never padded with blanks for the uncharted years. <b>Miss Location only
+      distinguishes "Blocked" from everything else</b> — the source never records a wide-left/
+      wide-right/short direction, so that breakdown isn't shown here rather than invented.
+      <b>PAT/FG Value and Score</b> are a real, fully-computed "points added over expectation"
+      metric already in the source workbook (see that project's
+      <code>rules/carroll_pat_fg_rules.md</code>) — 0 (average) is the baseline, positive is
+      better than expected for the distance attempted, out of a 0–100 rescale for Score.
+    </p>
+  </div>
+
+  <div class="tabbar" id="pk-tabs">
+    <button class="tabbtn active" data-tab="exec">Executive Scorecard</button>
+    <button class="tabbtn" data-tab="h2h">Kicker Head-to-Head</button>
+    <button class="tabbtn" data-tab="deep">Situational Deep Dive</button>
+  </div>
+
+  <div class="stage" id="pk-stage"></div>
+</div>
+
+<script src="../js/charts.js"></script>
+<script>
+let DATA = null;
+const DIST_BUCKETS = ['0-29', '30-39', '40-49', '50+'];
+const bucketOf = (d) => (d < 30 ? '0-29' : d < 40 ? '30-39' : d < 50 ? '40-49' : '50+');
+
+function fgs(rows) { return rows.filter((r) => r.fg_exp === 'FG'); }
+function pats(rows) { return rows.filter((r) => r.fg_exp === 'EXP'); }
+function makes(rows) { return rows.filter((r) => r.make); }
+function rate(rows) { return rows.length ? makes(rows).length / rows.length : null; }
+
+/* ------------------------------------------------------------------ tab: Executive Scorecard --- */
+
+const EXEC_FILTERS = [
+  { field: 'season', label: 'Season' },
+  { field: 'kicker', label: 'Kicker' },
+];
+
+function execTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Placekicker</h2></div><div class="sub">Executive Scorecard</div></div>
+      <div class="shelf" id="pke-shelf"></div>
+      <div class="body">
+        <div class="pk-kpirow" id="pke-kpis">
+          ${kpiHTML('pke-pat', 'PAT Make Rate', '--good')}
+          ${kpiHTML('pke-fg', 'FG Make Rate', '--critical')}
+          ${kpiHTML('pke-long', 'Longest FG Made')}
+          ${kpiHTML('pke-n', 'Kicks in View')}
+          ${kpiHTML('pke-score', 'Avg PAT/FG Score')}
+        </div>
+        <div class="grid2">
+          <div class="card"><div class="card-head"><h3>FG Make % by Season</h3></div><div class="card-body" id="pke-season"></div></div>
+          <div class="card"><div class="card-head"><h3>FG Make % by Distance Bucket</h3></div><div class="card-body" id="pke-dist"></div></div>
+        </div>
+      </div>
+      <div class="footer-note">Source: Carroll PAT-FG sheet, Carroll_Special_Teams_2021_Current.xlsx (236 rows).</div>
+    </div></div>`;
+
+  document.getElementById('pke-shelf').innerHTML = buildFilterPanel('pke', EXEC_FILTERS, DATA.filters.money_unit);
+  wireFilterPanel('pke', EXEC_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('pke', EXEC_FILTERS);
+    const rows = applyFilters(DATA.units.money_unit, state);
+    document.getElementById('pke-summary').textContent = `${rows.length} kicks in view`;
+
+    const fgRows = fgs(rows), patRows = pats(rows);
+    const fgMade = makes(fgRows);
+    setKPI('pke-pat', pct(rate(patRows)), `${makes(patRows).length}/${patRows.length} PATs`);
+    setKPI('pke-fg', pct(rate(fgRows)), `${fgMade.length}/${fgRows.length} field goals`);
+    setKPI('pke-long', fgMade.length ? `${Math.max(...fgMade.map((r) => r.distance))} yds` : '—');
+    setKPI('pke-n', String(rows.length));
+    setKPI('pke-score', fmt(mean(rows.map((r) => r.score)), 0));
+
+    const seasons = DATA.filters.money_unit.season.filter((s) => rows.some((r) => r.season === s));
+    const byseason = groupBy(fgRows, 'season');
+    renderBar(document.getElementById('pke-season'), {
+      categories: seasons,
+      values: seasons.map((s) => { const g = byseason.get(s); return g && g.length ? rate(g) : null; }),
+      labelFmt: (v) => pct(v, 0),
+      colorFn: () => cssVar('--cat-1'),
+      xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+    });
+
+    const byBucket = groupBy(fgRows.map((r) => ({ ...r, _b: bucketOf(r.distance) })), '_b');
+    renderBar(document.getElementById('pke-dist'), {
+      categories: DIST_BUCKETS,
+      values: DIST_BUCKETS.map((b) => { const g = byBucket.get(b); return g && g.length ? rate(g) : null; }),
+      labelFmt: (v) => pct(v, 0),
+      colorFn: () => cssVar('--cat-3'),
+      xlab2: (b) => `n=${(byBucket.get(b) || []).length}`,
+    });
+  }
+  render();
+}
+
+/* ------------------------------------------------------------------ tab: Kicker Head-to-Head --- */
+
+const H2H_FILTERS = [{ field: 'season', label: 'Season' }];
+
+function initials(name) { return name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2); }
+
+function h2hTab(root) {
+  const kickers = DATA.filters.money_unit.kicker;
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Placekicker</h2></div><div class="sub">Kicker Head-to-Head</div></div>
+      <div class="shelf" id="pkh-shelf"></div>
+      <div class="body">
+        <div class="colcard-2" style="margin-bottom:14px;">
+          <div class="kicker-col">
+            <div class="kicker-head">
+              <div class="avatar" id="pkh-A-avatar" style="background:var(--cat-6);"></div>
+              <div style="flex:1; min-width:0;"><div id="pkh-A-sel"></div><div class="yrs" id="pkh-A-years"></div></div>
+            </div>
+            <div class="kicker-body">
+              <div class="mini-kpi-row">
+                <div class="mini-kpi"><div class="l">PAT%</div><div class="v" id="pkh-A-pat">—</div></div>
+                <div class="mini-kpi"><div class="l">FG%</div><div class="v" id="pkh-A-fg">—</div></div>
+                <div class="mini-kpi"><div class="l">Long</div><div class="v" id="pkh-A-long">—</div></div>
+                <div class="mini-kpi"><div class="l">Avg Score</div><div class="v" id="pkh-A-score">—</div></div>
+              </div>
+              <div class="card-head" style="padding:0 0 6px; border:none;"><h3>FG makes by distance</h3></div>
+              <div class="barchart" style="height:110px; padding-top:14px;">
+                <div class="gridlines"><div></div><div></div><div></div></div>
+                <div id="pkh-A-distchart" style="display:contents;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="kicker-col">
+            <div class="kicker-head">
+              <div class="avatar" id="pkh-B-avatar" style="background:var(--cat-3);"></div>
+              <div style="flex:1; min-width:0;"><div id="pkh-B-sel"></div><div class="yrs" id="pkh-B-years"></div></div>
+            </div>
+            <div class="kicker-body">
+              <div class="mini-kpi-row">
+                <div class="mini-kpi"><div class="l">PAT%</div><div class="v" id="pkh-B-pat">—</div></div>
+                <div class="mini-kpi"><div class="l">FG%</div><div class="v" id="pkh-B-fg">—</div></div>
+                <div class="mini-kpi"><div class="l">Long</div><div class="v" id="pkh-B-long">—</div></div>
+                <div class="mini-kpi"><div class="l">Avg Score</div><div class="v" id="pkh-B-score">—</div></div>
+              </div>
+              <div class="card-head" style="padding:0 0 6px; border:none;"><h3>FG makes by distance</h3></div>
+              <div class="barchart" style="height:110px; padding-top:14px;">
+                <div class="gridlines"><div></div><div></div><div></div></div>
+                <div id="pkh-B-distchart" style="display:contents;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-head"><h3>FG make % by season — selected kickers</h3></div>
+          <div class="card-body">
+            <div class="legend" id="pkh-trend-legend"></div>
+            <div class="linewrap"><svg class="pk-trend-svg" id="pkh-trend-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Operation time build-up, snap → kick</h3></div>
+          <div class="card-body">
+            <div class="legend">
+              <span class="sw"><span class="dot" style="background:var(--cat-1);"></span>Snap → catch</span>
+              <span class="sw"><span class="dot" style="background:var(--cat-4);"></span>Catch → kick</span>
+            </div>
+            <div class="stacked" style="height:120px;">
+              <div class="gridlines"><div></div><div></div><div></div></div>
+              <div id="pkh-optime-chart" style="display:contents;"></div>
+            </div>
+            <div class="data-note">Only charted 2023 onward — bars use whichever of the selected kickers' rows actually have Snap to Catch/Catch to Kick logged, never padded with blanks for 2021–2022.</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">Source: Carroll PAT-FG sheet, Carroll_Special_Teams_2021_Current.xlsx.</div>
+    </div></div>`;
+
+  document.getElementById('pkh-shelf').innerHTML = buildFilterPanel('pkh', H2H_FILTERS, DATA.filters.money_unit);
+  wireFilterPanel('pkh', H2H_FILTERS, render);
+
+  const selA = makeSearchCombobox(document.getElementById('pkh-A-sel'), {
+    options: kickers.map((k) => ({ value: k, label: k })), value: kickers[0], onChange: render, placeholder: 'Search kicker…',
+  });
+  const selB = makeSearchCombobox(document.getElementById('pkh-B-sel'), {
+    options: kickers.map((k) => ({ value: k, label: k })), value: kickers[1] || kickers[0], onChange: render, placeholder: 'Search kicker…',
+  });
+
+  function renderSide(prefix, kicker, rows) {
+    document.getElementById(`${prefix}-avatar`).textContent = initials(kicker);
+    const kRows = rows.filter((r) => r.kicker === kicker);
+    const seasons = [...new Set(kRows.map((r) => r.season))].sort();
+    document.getElementById(`${prefix}-years`).textContent = seasons.length ? (seasons.length === 1 ? seasons[0] : `${seasons[0]} – ${seasons[seasons.length - 1]}`) : 'no attempts in range';
+    const kFg = fgs(kRows), kPat = pats(kRows), kFgMade = makes(kFg);
+    document.getElementById(`${prefix}-pat`).textContent = pct(rate(kPat));
+    document.getElementById(`${prefix}-fg`).textContent = pct(rate(kFg));
+    document.getElementById(`${prefix}-long`).textContent = kFgMade.length ? `${Math.max(...kFgMade.map((r) => r.distance))} yds` : '—';
+    document.getElementById(`${prefix}-score`).textContent = fmt(mean(kRows.map((r) => r.score)), 0);
+    const byBucket = groupBy(kFg.map((r) => ({ ...r, _b: bucketOf(r.distance) })), '_b');
+    renderBar(document.getElementById(`${prefix}-distchart`), {
+      categories: DIST_BUCKETS,
+      values: DIST_BUCKETS.map((b) => (byBucket.get(b) || []).filter((r) => r.make).length),
+      labelFmt: (v) => String(v),
+      colorFn: () => cssVar('--cat-1'),
+      xlab2: (b) => `n=${(byBucket.get(b) || []).length}`,
+    });
+    return kRows;
+  }
+
+  function render() {
+    const state = readFilterState('pkh', H2H_FILTERS);
+    const rows = applyFilters(DATA.units.money_unit, state);
+    document.getElementById('pkh-summary').textContent = `${rows.length} kicks in view`;
+    const rowsA = renderSide('pkh-A', selA.value, rows);
+    const rowsB = renderSide('pkh-B', selB.value, rows);
+
+    document.getElementById('pkh-trend-legend').innerHTML = `
+      <span class="sw"><span class="dot" style="background:var(--cat-6)"></span>${selA.value}</span>
+      <span class="sw"><span class="dot" style="background:var(--cat-3)"></span>${selB.value}</span>`;
+
+    const seasons = DATA.filters.money_unit.season;
+    function seasonRates(kRows) {
+      const byS = groupBy(fgs(kRows), 'season');
+      return seasons.map((s) => { const g = byS.get(s); return g && g.length ? rate(g) : null; });
+    }
+    renderTwoLine(document.getElementById('pkh-trend-svg'), seasons, seasonRates(rowsA), seasonRates(rowsB), cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0));
+
+    const opRows = rows.filter((r) => r.kicker === selA.value || r.kicker === selB.value);
+    renderStacked(document.getElementById('pkh-optime-chart'), {
+      categories: [selA.value, selB.value],
+      series: {
+        'Snap → catch': [selA.value, selB.value].map((k) => mean(opRows.filter((r) => r.kicker === k).map((r) => r.snap_to_catch)) || 0),
+        'Catch → kick': [selA.value, selB.value].map((k) => mean(opRows.filter((r) => r.kicker === k).map((r) => r.catch_to_kick)) || 0),
+      },
+      order: ['Snap → catch', 'Catch → kick'],
+      colors: { 'Snap → catch': cssVar('--cat-1'), 'Catch → kick': cssVar('--cat-4') },
+      legend: false,
+    });
+  }
+  render();
+}
+
+/** Small shared two-series line chart over a fixed category axis (e.g. seasons) --
+ * simpler than the Lifting Class Comparison chart since there's no career-year
+ * realignment needed here, just a straight per-season plot. */
+function renderTwoLine(svg, categories, valuesA, valuesB, colorA, colorB, nameA, nameB, labelFmt) {
+  const svgns = 'http://www.w3.org/2000/svg';
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  const W = 1180, H = 150, PAD = 10;
+  const all = [...valuesA, ...valuesB].filter((v) => v !== null && v !== undefined);
+  const vMin = all.length ? Math.min(...all, 0) : 0;
+  const vMax = all.length ? Math.max(...all, 1) : 1;
+  const sx = (i) => PAD + (i / Math.max(1, categories.length - 1)) * (W - PAD * 2);
+  const sy = (v) => H - PAD - ((v - vMin) / (vMax - vMin || 1)) * (H - PAD * 2 - 16) - 10;
+
+  function line(values, color, name) {
+    for (let i = 1; i < values.length; i++) {
+      if (values[i - 1] === null || values[i] === null) continue;
+      const l = document.createElementNS(svgns, 'line');
+      l.setAttribute('x1', sx(i - 1)); l.setAttribute('y1', sy(values[i - 1]));
+      l.setAttribute('x2', sx(i)); l.setAttribute('y2', sy(values[i]));
+      l.setAttribute('stroke', color); l.setAttribute('stroke-width', '2'); l.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(l);
+    }
+    values.forEach((v, i) => {
+      if (v === null) return;
+      const c = document.createElementNS(svgns, 'circle');
+      c.setAttribute('cx', sx(i)); c.setAttribute('cy', sy(v)); c.setAttribute('r', 3.5);
+      c.setAttribute('fill', color);
+      c.style.cursor = 'pointer';
+      const html = `<div class="tt-title">${name} — ${categories[i]}</div><div class="tt-row"><span>${labelFmt(v)}</span></div>`;
+      c.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html));
+      c.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html));
+      c.addEventListener('mouseleave', hideTooltip);
+      svg.appendChild(c);
+    });
+  }
+  line(valuesA, colorA, nameA);
+  line(valuesB, colorB, nameB);
+  categories.forEach((cat, i) => {
+    const t = document.createElementNS(svgns, 'text');
+    t.setAttribute('x', sx(i)); t.setAttribute('y', H - 2); t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('font-size', '10'); t.setAttribute('fill', cssVar('--muted'));
+    t.textContent = cat;
+    svg.appendChild(t);
+  });
+}
+
+/* ------------------------------------------------------------------ tab: Situational Deep Dive --- */
+
+const DEEP_FILTERS = [
+  { field: 'season', label: 'Season' },
+  { field: 'kicker', label: 'Kicker' },
+  { field: 'quarter', label: 'Quarter' },
+];
+
+function deepTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Placekicker</h2></div><div class="sub">Situational Deep Dive</div></div>
+      <div class="shelf" id="pkd-shelf"></div>
+      <div class="body">
+        <div class="pk-kpirow-4" id="pkd-kpis">
+          ${kpiHTML('pkd-fg', 'FG Make Rate', '--critical')}
+          ${kpiHTML('pkd-blocked', 'Blocked')}
+          ${kpiHTML('pkd-homeaway', 'Home vs Away FG%')}
+          ${kpiHTML('pkd-bestq', 'Best Quarter')}
+        </div>
+        <div class="grid2" style="margin-bottom:14px;">
+          <div class="card"><div class="card-head"><h3>FG attempts &amp; make % by quarter</h3></div><div class="card-body" id="pkd-quarter"></div></div>
+          <div class="card"><div class="card-head"><h3>PAT vs FG attempt volume by season</h3></div><div class="card-body" id="pkd-volume"></div></div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-head"><h3>FG make % — distance bucket × season</h3></div>
+          <div class="card-body">
+            <div class="heat" id="pkd-heatmap"></div>
+            <div class="insight">Sequential blue = make%. Columns always show all five seasons — only the Kicker and Quarter filters narrow this grid.</div>
+          </div>
+        </div>
+        <div class="grid2" style="margin-bottom:14px;">
+          <div class="card"><div class="card-head"><h3>FG make % by hash kicked from</h3></div><div class="card-body" id="pkd-hash"><div class="data-note">Charted 2023 onward only.</div></div></div>
+          <div class="card"><div class="card-head"><h3>Avg PAT/FG Score by season</h3></div><div class="card-body" id="pkd-scoretrend"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Kicker &amp; miss-type detail</h3></div>
+          <div class="card-body">
+            <table class="mini">
+              <thead><tr><th>Kicker</th><th>Seasons</th><th>PAT (made/att)</th><th>PAT %</th><th>FG (made/att)</th><th>FG %</th><th>Long</th><th>Avg Score</th><th>Avg Op Time</th></tr></thead>
+              <tbody id="pkd-table-body"></tbody>
+            </table>
+            <div class="insight">Attempts/makes/PAT/FG/Long/Score are real and respect the filters above. Avg Op Time only reflects charted rows (2023 onward) — shows "—" for a kicker with none in view.</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">Source: Carroll PAT-FG sheet, Carroll_Special_Teams_2021_Current.xlsx (236 rows).</div>
+    </div></div>`;
+
+  document.getElementById('pkd-shelf').innerHTML = buildFilterPanel('pkd', DEEP_FILTERS, DATA.filters.money_unit);
+  wireFilterPanel('pkd', DEEP_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('pkd', DEEP_FILTERS);
+    const rows = applyFilters(DATA.units.money_unit, state);
+    document.getElementById('pkd-summary').textContent = `${rows.length} kicks in view`;
+
+    const fgRows = fgs(rows), patRows = pats(rows);
+    setKPI('pkd-fg', pct(rate(fgRows)), `${makes(fgRows).length}/${fgRows.length} field goals`);
+    setKPI('pkd-blocked', String(rows.filter((r) => r.miss_location === 'Blocked').length));
+    const homeFg = fgRows.filter((r) => r.is_home), awayFg = fgRows.filter((r) => !r.is_home);
+    setKPI('pkd-homeaway', `${pct(rate(homeFg), 0)} / ${pct(rate(awayFg), 0)}`, 'home / away');
+    const byQ = groupBy(fgRows, 'quarter');
+    let bestQ = null, bestRate = -1;
+    byQ.forEach((g, q) => { if (g.length >= 3 && rate(g) > bestRate) { bestRate = rate(g); bestQ = q; } });
+    setKPI('pkd-bestq', bestQ !== null ? `Q${bestQ}` : '—', bestQ !== null ? `${pct(bestRate, 0)} (n=${byQ.get(bestQ).length})` : 'not enough attempts');
+
+    const quarters = DATA.filters.money_unit.quarter.filter((q) => byQ.has(q));
+    renderBar(document.getElementById('pkd-quarter'), {
+      categories: quarters,
+      values: quarters.map((q) => rate(byQ.get(q))),
+      labelFmt: (v) => pct(v, 0),
+      colorFn: () => cssVar('--cat-2'),
+      xlab2: (q) => `n=${byQ.get(q).length}`,
+    });
+
+    const seasons = DATA.filters.money_unit.season.filter((s) => rows.some((r) => r.season === s));
+    const patBySeason = groupBy(patRows, 'season'), fgBySeason = groupBy(fgRows, 'season');
+    renderStacked(document.getElementById('pkd-volume'), {
+      categories: seasons,
+      series: {
+        PAT: seasons.map((s) => (patBySeason.get(s) || []).length),
+        FG: seasons.map((s) => (fgBySeason.get(s) || []).length),
+      },
+      order: ['PAT', 'FG'],
+      colors: { PAT: cssVar('--cat-1'), FG: cssVar('--cat-3') },
+    });
+
+    const allSeasons = DATA.filters.money_unit.season;
+    renderHeatmap(document.getElementById('pkd-heatmap'), {
+      rowLabels: DIST_BUCKETS, colLabels: allSeasons,
+      cellFor: (bucket, season) => {
+        const g = fgRows.filter((r) => r.season === season && bucketOf(r.distance) === bucket);
+        if (!g.length) return null;
+        return { pct: rate(g), n: g.length, made: makes(g).length };
+      },
+      title: (bucket, season) => `${bucket} yds, ${season}`,
+    });
+
+    const hashes = ['L', 'LM', 'M', 'RM', 'R'];
+    const byHash = groupBy(fgRows.filter((r) => r.hash_kicked_from), 'hash_kicked_from');
+    const hashesPresent = hashes.filter((h) => byHash.has(h));
+    if (hashesPresent.length) {
+      renderBar(document.getElementById('pkd-hash'), {
+        categories: hashesPresent,
+        values: hashesPresent.map((h) => rate(byHash.get(h))),
+        labelFmt: (v) => pct(v, 0),
+        colorFn: () => cssVar('--cat-3'),
+        xlab2: (h) => `n=${byHash.get(h).length}`,
+      });
+    } else {
+      document.getElementById('pkd-hash').innerHTML = '<div class="data-note">No charted hash data in the current filter (2023 onward only).</div>';
+    }
+
+    const scoreBySeason = groupBy(rows, 'season');
+    renderBar(document.getElementById('pkd-scoretrend'), {
+      categories: seasons,
+      values: seasons.map((s) => mean((scoreBySeason.get(s) || []).map((r) => r.score))),
+      labelFmt: (v) => fmt(v, 0),
+      colorFn: (s, v) => (v >= 50 ? cssVar('--good') : cssVar('--critical')),
+      xlab2: (s) => `n=${(scoreBySeason.get(s) || []).length}`,
+    });
+
+    const kickers = DATA.filters.money_unit.kicker.filter((k) => rows.some((r) => r.kicker === k));
+    const tbody = kickers.map((k) => {
+      const kRows = rows.filter((r) => r.kicker === k);
+      const kSeasons = [...new Set(kRows.map((r) => r.season))].sort();
+      const kFg = fgs(kRows), kPat = pats(kRows), kFgMade = makes(kFg);
+      const opRows = kRows.filter((r) => r.snap_to_kick !== null);
+      const avgOp = mean(opRows.map((r) => r.snap_to_kick));
+      return `<tr>
+        <td class="name">${k}</td>
+        <td>${kSeasons.length === 1 ? kSeasons[0] : `${kSeasons[0]}–${kSeasons[kSeasons.length - 1]}`}</td>
+        <td>${makes(kPat).length}/${kPat.length}</td>
+        <td>${pct(rate(kPat), 0)}</td>
+        <td>${makes(kFg).length}/${kFg.length}</td>
+        <td>${pct(rate(kFg), 0)}</td>
+        <td>${kFgMade.length ? Math.max(...kFgMade.map((r) => r.distance)) + ' yds' : '—'}</td>
+        <td>${fmt(mean(kRows.map((r) => r.score)), 0)}</td>
+        <td>${avgOp !== null ? fmt(avgOp, 2) + 's' : '—'}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('pkd-table-body').innerHTML = tbody || '<tr><td colspan="9" style="text-align:center; color:var(--muted);">No kickers in current filter.</td></tr>';
+  }
+  render();
+}
+
+/* ------------------------------------------------------------------------ tabs ---- */
+
+const TAB_RENDERERS = { exec: execTab, h2h: h2hTab, deep: deepTab };
+
+function showTab(tab) {
+  document.querySelectorAll('#pk-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  TAB_RENDERERS[tab](document.getElementById('pk-stage'));
+}
+
+document.querySelectorAll('#pk-tabs .tabbtn').forEach((btn) => {
+  btn.addEventListener('click', () => showTab(btn.dataset.tab));
+});
+
+fetch('../data/special-teams.json')
+  .then((r) => r.json())
+  .then((data) => { DATA = data; showTab('exec'); })
+  .catch((err) => {
+    document.getElementById('pk-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/special-teams.json — ${err}. Run scripts/build_special_teams_data.py first, and serve over http:// not file://.</div></div>`;
+  });
+</script>
+</body>
+</html>
