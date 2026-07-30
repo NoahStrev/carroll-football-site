@@ -45,6 +45,11 @@ function pct(n, decimals = 1) {
   return `${(n * 100).toFixed(decimals)}%`;
 }
 
+/** Two-letter initials for an avatar circle, e.g. "Jacob Laurent" -> "JL".
+ * Hoisted 2026-08-01 -- was duplicated verbatim in placekicker.html and
+ * kickoff-kicker.html, will be needed again by the remaining position pages. */
+function initials(name) { return name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2); }
+
 function el(tag, cls, html) {
   const e = document.createElement(tag);
   if (cls) e.className = cls;

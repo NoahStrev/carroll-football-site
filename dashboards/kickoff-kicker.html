@@ -7,9 +7,8 @@
 <link rel="stylesheet" href="../css/theme.css">
 <style>
   /* .unit-header, .kpirow/.kpirow-5/.kpirow-6, .colcard-2/.kicker-col/etc.,
-     .heat, .chartgrid-shaped grids all already live in css/theme.css. */
-  .kk-chartgrid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-  @media (max-width: 900px) { .kk-chartgrid2 { grid-template-columns: 1fr; } }
+     .heat, .grid2 (2-col, already collapses at 900px) all already live in
+     css/theme.css -- reuse .grid2 below rather than a page-local duplicate. */
 </style>
 </head>
 <body>
@@ -59,7 +58,7 @@ let DATA = null;
 function deep(rows) { return rows.filter((r) => r.kick_type === 'Deep'); }
 function onside(rows) { return rows.filter((r) => r.kick_type === 'Onside'); }
 function rate(rows, field) { return rows.length ? rows.filter((r) => r[field]).length / rows.length : null; }
-function initials(name) { return name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2); }
+/* initials() now lives in js/charts.js -- shared across position pages. */
 
 /* ------------------------------------------------------------------ tab: Executive Scorecard --- */
 
@@ -80,7 +79,7 @@ function execTab(root) {
           ${kpiHTML('kke-dist', 'Avg Kickoff Distance')}
           ${kpiHTML('kke-ret', 'Avg Return Allowed', '--critical')}
         </div>
-        <div class="kk-chartgrid2">
+        <div class="grid2" style="margin-bottom:14px;">
           <div class="card"><div class="card-head"><h3>Touchback % by Season</h3></div><div class="card-body" id="kke-tbseason"></div></div>
           <div class="card"><div class="card-head"><h3>Inside-25 % by Season</h3></div><div class="card-body" id="kke-i25season"></div></div>
           <div class="card"><div class="card-head"><h3>Avg Kickoff Distance by Season</h3></div><div class="card-body" id="kke-distseason"></div></div>
@@ -114,7 +113,6 @@ function execTab(root) {
       categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g ? rate(g, 'inside_25') : null; }),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
     });
-    const maxDist = Math.max(1, ...deepRows.map((r) => r.total_distance || 0));
     renderBar(document.getElementById('kke-distseason'), {
       categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g && g.length ? mean(g.map((r) => r.total_distance)) : null; }),
       labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--cat-4'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
@@ -157,7 +155,7 @@ function h2hTab(root) {
                 <div class="mini-kpi"><div class="l">TB%</div><div class="v" id="kkh-A-tb">—</div></div>
                 <div class="mini-kpi"><div class="l">I25%</div><div class="v" id="kkh-A-i25">—</div></div>
                 <div class="mini-kpi"><div class="l">Avg dist</div><div class="v" id="kkh-A-dist">—</div></div>
-                <div class="mini-kpi"><div class="l">Hangtime <span class="illus-tag" style="padding:1px 4px; font-size:8px;">2023+</span></div><div class="v" id="kkh-A-hang">—</div></div>
+                <div class="mini-kpi"><div class="l">Hangtime <span style="font-size:9px; color:var(--muted); font-weight:400;">(2023+)</span></div><div class="v" id="kkh-A-hang">—</div></div>
               </div>
               <div class="card-head" style="padding:0 0 6px; border:none;"><h3>Outcome mix</h3></div>
               <div class="barchart" style="height:110px; padding-top:14px;">
@@ -176,7 +174,7 @@ function h2hTab(root) {
                 <div class="mini-kpi"><div class="l">TB%</div><div class="v" id="kkh-B-tb">—</div></div>
                 <div class="mini-kpi"><div class="l">I25%</div><div class="v" id="kkh-B-i25">—</div></div>
                 <div class="mini-kpi"><div class="l">Avg dist</div><div class="v" id="kkh-B-dist">—</div></div>
-                <div class="mini-kpi"><div class="l">Hangtime <span class="illus-tag" style="padding:1px 4px; font-size:8px;">2023+</span></div><div class="v" id="kkh-B-hang">—</div></div>
+                <div class="mini-kpi"><div class="l">Hangtime <span style="font-size:9px; color:var(--muted); font-weight:400;">(2023+)</span></div><div class="v" id="kkh-B-hang">—</div></div>
               </div>
               <div class="card-head" style="padding:0 0 6px; border:none;"><h3>Outcome mix</h3></div>
               <div class="barchart" style="height:110px; padding-top:14px;">
@@ -186,19 +184,19 @@ function h2hTab(root) {
             </div>
           </div>
         </div>
-        <div class="kk-chartgrid2">
+        <div class="grid2" style="margin-bottom:14px;">
           <div class="card">
             <div class="card-head"><h3>Touchback % by season — selected kickers</h3></div>
             <div class="card-body">
               <div class="legend" id="kkh-tb-legend"></div>
-              <div class="linewrap"><svg style="display:block; width:100%; height:150px; overflow:visible;" id="kkh-tb-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
+              <div class="linewrap"><svg id="kkh-tb-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
             </div>
           </div>
           <div class="card">
             <div class="card-head"><h3>Avg return allowed by season — selected kickers</h3></div>
             <div class="card-body">
               <div class="legend" id="kkh-ret-legend"></div>
-              <div class="linewrap"><svg style="display:block; width:100%; height:150px; overflow:visible;" id="kkh-ret-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
+              <div class="linewrap"><svg id="kkh-ret-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
             </div>
           </div>
         </div>
@@ -282,7 +280,7 @@ function deepTab(root) {
           ${kpiHTML('kkd-bestq', 'Best Quarter (TB%)')}
           ${kpiHTML('kkd-onside', 'Onside Recovery Rate')}
         </div>
-        <div class="kk-chartgrid2">
+        <div class="grid2" style="margin-bottom:14px;">
           <div class="card"><div class="card-head"><h3>Touchback % &amp; volume by quarter</h3></div><div class="card-body" id="kkd-quarter"></div></div>
           <div class="card"><div class="card-head"><h3>Avg return allowed by season</h3></div><div class="card-body" id="kkd-retseason"></div></div>
         </div>
@@ -293,7 +291,7 @@ function deepTab(root) {
             <div class="insight">Sequential blue = TB%; text = TB/attempts (deep kicks only). Columns always show all five seasons — only the Quarter filter narrows this grid (Kicker filter hides non-matching rows).</div>
           </div>
         </div>
-        <div class="kk-chartgrid2">
+        <div class="grid2" style="margin-bottom:14px;">
           <div class="card"><div class="card-head"><h3>Touchback % by hash kicked from</h3></div><div class="card-body" id="kkd-hash"><div class="data-note">Charted 2023 onward only.</div></div></div>
           <div class="card"><div class="card-head"><h3>Avg Kickoff Score by season</h3></div><div class="card-body" id="kkd-scoretrend"></div></div>
         </div>

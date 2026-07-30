@@ -9,8 +9,9 @@
   /* .unit-header, .kpirow/.kpirow-5/.kpirow-6, .colcard-2/.kicker-col/
      .kicker-head/.kicker-select/.kicker-body/.mini-kpi-row, .heat all already
      live in css/theme.css (carried from the mockups, or hoisted 2026-08-01) --
-     only page-specific layout goes here. */
-  .pk-trend-svg { display: block; width: 100%; height: 150px; overflow: visible; }
+     only page-specific layout goes here. .linewrap svg (also in theme.css)
+  already gives any svg inside a .linewrap div display:block/100%/150px/
+  visible-overflow -- no extra class needed for a trend-chart svg. */
 </style>
 </head>
 <body>
@@ -135,7 +136,7 @@ function execTab(root) {
 
 const H2H_FILTERS = [{ field: 'season', label: 'Season' }];
 
-function initials(name) { return name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2); }
+/* initials() now lives in js/charts.js -- shared across position pages. */
 
 function h2hTab(root) {
   const kickers = DATA.filters.money_unit.kicker;
@@ -188,7 +189,7 @@ function h2hTab(root) {
           <div class="card-head"><h3>FG make % by season — selected kickers</h3></div>
           <div class="card-body">
             <div class="legend" id="pkh-trend-legend"></div>
-            <div class="linewrap"><svg class="pk-trend-svg" id="pkh-trend-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
+            <div class="linewrap"><svg id="pkh-trend-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
           </div>
         </div>
         <div class="card">

@@ -291,6 +291,49 @@ metrics, with no NaN coordinates for any tested athlete pair.
   Lifting leaderboard cards already got this treatment incidentally when their
   header gained a real count badge earlier this session.
 
+## Phase 2 validation + streamlining pass (2026-08-01)
+
+Re-validated Placekicker and Kickoff Kicker after landing them: tab-switch state
+(filters correctly reset per tab, no leakage), every filter's None/All/search
+interaction (not just Deep Dive's), the same-kicker-for-both-sides Head-to-Head
+edge case, tablet width (768px), and tooltip content on the heatmap/trend-line
+charts — all cross-checked against independent Python recomputation, all clean.
+Re-ran `build_special_teams_data.py` and diffed against committed
+`data/special-teams.json` — byte-identical, no drift.
+
+One real finding, not fixed (systemic, not a Phase 2 regression): every chart
+color across the **whole site** is resolved to a literal RGB value at render
+time via `cssVar()` and baked into an inline style or SVG attribute — toggling
+`data-theme` doesn't repaint an already-rendered chart until the next filter
+change or tab switch re-runs its `render()`. Low severity (self-corrects on the
+next interaction, and the primary theme switch is OS-level `prefers-color-scheme`
+anyway) but real; a proper fix would mean threading actual `var(--x)` references
+through every `renderBar`/`renderStacked`/`renderScatter`/`renderHeatmap` call
+site instead of resolved colors, which is a bigger, riskier change than this pass
+scoped in for (SVG presentation attributes don't reliably support custom
+properties the way inline CSS properties do) — flagged for a dedicated pass if
+it's ever worth doing.
+
+Streamlining found in the two new pages:
+- **A real naming/semantics bug**: `kickoff-kicker.html` reused `.illus-tag` (the
+  site-wide "this is fabricated/illustrative data" marker) to badge a "2023+"
+  coverage caveat on genuinely real data — the exact opposite of what that class
+  means everywhere else. Replaced with a plain muted-text note, matching how
+  Placekicker already handled the identical situation with prose instead of a
+  badge.
+- **Three duplications caught at 2 occurrences** (this project's now-established
+  practice: fix at the second copy, don't wait for a third): `initials()` was
+  byte-identical in both new files → hoisted into `js/charts.js`. A page-local
+  `.kk-chartgrid2` in `kickoff-kicker.html` turned out to be an exact duplicate of
+  theme.css's existing `.grid2` → removed, callers use `.grid2` directly. A
+  page-local `.pk-trend-svg` class (Placekicker) and inline
+  `style="display:block; width:100%; height:150px; overflow:visible;"` (Kickoff
+  Kicker, ×2) both duplicated theme.css's existing `.linewrap svg` rule, which
+  already applies automatically to any `<svg>` nested in a `.linewrap` div (both
+  trend charts already use that wrapper) → both removed as dead weight.
+- One dead local variable (`maxDist`, computed and never read) removed from
+  `kickoff-kicker.html`.
+
 ## Data sources
 
 - `../Lifting Data/output/` — lifting/strength testing (Combined Total, Athleticism
