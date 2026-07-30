@@ -15,7 +15,12 @@
     background: var(--cat-2); color: #fff; font-weight: 700; font-size: 12px;
     padding: 4px 12px; border-radius: 999px; text-transform: uppercase; letter-spacing: .03em;
   }
-  .lbgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .lbgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
+  .lbgrid-label {
+    font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted);
+    font-weight: 700; margin-bottom: 7px;
+  }
+  .lbgrid:last-of-type { margin-bottom: 0; }
   .lb-rank { color: var(--muted); font-variant-numeric: tabular-nums; width: 18px; display: inline-block; }
   .lb-empty { font-size: 11.5px; color: var(--muted); padding: 12px; }
   .card-head .count {
@@ -64,13 +69,23 @@
   <div class="intro">
     <h1>Lifting &amp; Strength</h1>
     <p>
-      Rebuilt from the <code>Lifting Data</code> pipeline (five seasons, 2021-22 through 2025-26, each
-      max-out session's best Bench/Squat/Clean and their Combined Total). Class year (Freshman/Sophomore/
-      Junior/Senior) is derived from years-with-program, which the Lifting Data project confirmed matches
-      the source's own class field exactly wherever both exist — but that's only 2023-24 onward, so
-      2021-22/2022-23 sessions only appear in the All Time / Last Session tab, never a class-specific one.
-      "Att Date" from the original Tableau version is shown here as testing session (football year +
-      December/January/April) — the source data tracks by session, not an exact calendar date.
+      Rebuilt from the <code>Lifting Data</code> pipeline (five seasons, 2021-22 through 2025-26).
+      Class year (Freshman/Sophomore/Junior/Senior) is derived from years-with-program, which the Lifting
+      Data project confirmed matches the source's own class field exactly wherever both exist — but that's
+      only 2023-24 onward, so 2021-22/2022-23 sessions only appear in the All Time / Last Session tab, never
+      a class-specific one. "Att Date" from the original Tableau version is shown here as testing session
+      (football year + December/January/April) — the source data tracks by session, not an exact calendar
+      date. <b>Every leaderboard group is now split into two sections</b>: <b>Strength</b> (Combined Total,
+      Bench, Squat, Clean, and Strength Score — a team-wide percentile averaged across those three lifts'
+      z-scores) and <b>Athletic Testing</b> (Broad Jump, Vertical, Pro Agility, and Athleticism Score — a
+      percentile across all six of Bench/Squat/Clean/Broad Jump/Pro Agility/Vertical). Pro Agility is a
+      timed sprint, the one metric here where a <em>lower</em> number ranks first. <b>Athleticism Score only
+      exists for 2023-24 and 2025-26</b> — it requires all six contributing metrics in the same session, and
+      Vertical/Pro Agility don't both exist in every year (Pro Agility itself has no data at all in
+      2024-25 — a real gap in that year's testing, not a bug here). Both scores are <b>team-scope only</b> —
+      each athlete's percentile against the <em>whole roster</em> that session, not just their position
+      group; a position-scope version exists in the source data and could be added later. See the
+      <code>Lifting Data</code> project's own SKILL.md for the full z-score methodology.
     </p>
   </div>
 
@@ -87,8 +102,25 @@
 <script src="../js/charts.js"></script>
 <script>
 let DATA = null;
-const METRICS = ['Combined Total', 'Bench', 'Squat', 'Clean'];
-const METRIC_UNITS = { 'Combined Total': 'lbs', 'Bench': 'lbs', 'Squat': 'lbs', 'Clean': 'lbs', 'Weight': 'lbs', 'Height': 'in' };
+// Extended 2026-07-30 per the user ("reporting dashboards of the other
+// metrics... adding them onto the existing structure since we already have it
+// broken out by grade") -- Strength Score/Athleticism Score (team-scope
+// percentiles) and Broad Jump/Vertical/Pro Agility (raw athletic testing) join
+// the original 4 lift metrics, grouped into two labeled sections per class
+// group rather than one flat row now that there are 9 metrics instead of 4.
+// Position-scope scores (Strength/Athleticism Score (Position)) deliberately
+// left out of this pass -- see README for why.
+const STRENGTH_METRICS = ['Combined Total', 'Bench', 'Squat', 'Clean', 'Strength Score (Team)'];
+const ATHLETIC_METRICS = ['Broad Jump', 'Vertical', 'Pro Agility', 'Athleticism Score (Team)'];
+const METRICS = [...STRENGTH_METRICS, ...ATHLETIC_METRICS];
+const METRIC_UNITS = {
+  'Combined Total': 'lbs', 'Bench': 'lbs', 'Squat': 'lbs', 'Clean': 'lbs', 'Weight': 'lbs', 'Height': 'in',
+  'Strength Score (Team)': '', 'Athleticism Score (Team)': '', 'Broad Jump': 'in', 'Vertical': 'in', 'Pro Agility': 's',
+};
+// Pro Agility is a timed sprint -- lower is faster/better, the one metric here
+// that isn't "bigger number wins" (matches Lifting Data's own z-score convention).
+const LOWER_IS_BETTER = new Set(['Pro Agility']);
+function metricLabel(metric, v) { return `${fmt(v, metric === 'Pro Agility' ? 2 : 1)}${METRIC_UNITS[metric] || ''}`; }
 
 /* --------------------------------------------------- career-year alignment --- */
 // Class Comparison (2026-07-30, per the user): "line up people at a point in
@@ -122,7 +154,8 @@ function leaderboardTable(title, rows) {
   // never emits a zero-value row, an athlete with no recorded lift just has no
   // row), scrolled instead of truncated to a top-N slice (fixed 2026-07-30 per
   // user feedback -- the old top-12 cutoff hid most of the roster).
-  const top = [...rows].sort((a, b) => b.value - a.value);
+  const lowerBetter = LOWER_IS_BETTER.has(title);
+  const top = [...rows].sort((a, b) => lowerBetter ? a.value - b.value : b.value - a.value);
   if (!top.length) {
     return `<div class="card"><div class="card-head"><h3>${title}</h3></div><div class="lb-empty">No qualifying sessions.</div></div>`;
   }
@@ -131,7 +164,7 @@ function leaderboardTable(title, rows) {
       <td><span class="lb-rank">${i + 1}</span></td>
       <td class="name">${r.first_name} ${r.last_name}</td>
       <td>${r.session_label}</td>
-      <td style="text-align:right; font-weight:700;">${fmt(r.value, 1)}</td>
+      <td style="text-align:right; font-weight:700;">${metricLabel(title, r.value)}</td>
     </tr>`).join('');
   return `
     <div class="card">
@@ -142,6 +175,20 @@ function leaderboardTable(title, rows) {
           <tbody>${body}</tbody>
         </table>
       </div>
+    </div>`;
+}
+
+// Shared by classGroupHTML/allTimeGroupHTML -- two labeled `.lbgrid` sections
+// (Strength / Athletic Testing) instead of one flat row of 9 leaderboard cards.
+function metricSectionsHTML(rowsFor) {
+  return `
+    <div class="lbgrid-label">Strength</div>
+    <div class="lbgrid">
+      ${STRENGTH_METRICS.map((m) => leaderboardTable(m, rowsFor(m))).join('')}
+    </div>
+    <div class="lbgrid-label">Athletic Testing</div>
+    <div class="lbgrid">
+      ${ATHLETIC_METRICS.map((m) => leaderboardTable(m, rowsFor(m))).join('')}
     </div>`;
 }
 
@@ -157,9 +204,7 @@ function classGroupHTML(label, positionFilter) {
   return `
     <div class="classgroup">
       <div class="classgroup-head"><span class="ribbon">${label}</span></div>
-      <div class="lbgrid">
-        ${METRICS.map((m) => leaderboardTable(m, rowsFor(m))).join('')}
-      </div>
+      ${metricSectionsHTML(rowsFor)}
     </div>`;
 }
 
@@ -169,11 +214,17 @@ function allTimeGroupHTML(label, isLastSession, positionFilter) {
       DATA.leaderboard_rows.filter((r) => r.metric === metric && (!isLastSession || r.is_last_session)),
       { position: positionFilter });
     if (!isLastSession) {
-      // All Time: one row per athlete -- their single best session for this metric.
+      // All Time: one row per athlete -- their single best session for this
+      // metric (lowest time for Pro Agility, highest value for everything else --
+      // real bug found 2026-07-30 while adding Pro Agility: this reduction was
+      // hardcoded "bigger wins," which would have shown each athlete's SLOWEST
+      // Pro Agility time as their All-Time "best").
+      const lowerBetter = LOWER_IS_BETTER.has(metric);
       const byAthlete = new Map();
       candidates.forEach((r) => {
         const cur = byAthlete.get(r.athlete_key);
-        if (!cur || r.value > cur.value) byAthlete.set(r.athlete_key, r);
+        const better = !cur || (lowerBetter ? r.value < cur.value : r.value > cur.value);
+        if (better) byAthlete.set(r.athlete_key, r);
       });
       return [...byAthlete.values()];
     }
@@ -182,9 +233,7 @@ function allTimeGroupHTML(label, isLastSession, positionFilter) {
   return `
     <div class="classgroup">
       <div class="classgroup-head"><span class="ribbon">${label}</span></div>
-      <div class="lbgrid">
-        ${METRICS.map((m) => leaderboardTable(m, rowsFor(m))).join('')}
-      </div>
+      ${metricSectionsHTML(rowsFor)}
     </div>`;
 }
 
@@ -214,7 +263,7 @@ function allTimeTab(root) {
       <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Offseason Lifting</h2></div><div class="sub">All Time &amp; ${DATA.last_session.label} (Last Session)</div></div>
       <div class="shelf">${positionFilterHTML('at')}</div>
       <div class="body" id="at-body"></div>
-      <div class="footer-note">Source: Lifting Data project's Combined Total / Bench / Squat / Clean, best value per athlete per session, 5 football years (2021-22 through 2025-26).</div>
+      <div class="footer-note">Source: Lifting Data project's Strength (Combined Total/Bench/Squat/Clean/Strength Score) and Athletic Testing (Broad Jump/Vertical/Pro Agility/Athleticism Score) metrics, best value per athlete per session, 5 football years (2021-22 through 2025-26).</div>
     </div></div>`;
   wirePositionFilter('at', render);
   function render() {
@@ -264,7 +313,7 @@ function compareTab(root) {
         <div class="compare-legend" id="cmp-legend"></div>
         <div class="comparegrid" id="cmp-charts"></div>
       </div>
-      <div class="footer-note">Source: Lifting Data project — Combined Total, Bench, Squat, Clean (best per session), Weight (per session), Height (per football year). X-axis is each athlete's own Year 1/Year 2/... (their first, second, ... recorded season in this dataset), not calendar year — a Year 1 point lines up with the other athlete's Year 1 regardless of what actual football year each was in. Hover a point for the real session and class year (Freshman/Sophomore/Junior/Senior, where known — only populated 2023-24 onward).</div>
+      <div class="footer-note">Source: Lifting Data project — Combined Total, Bench, Squat, Clean, Strength Score, Broad Jump, Vertical, Pro Agility, Athleticism Score (best per session), Weight (per session), Height (per football year). X-axis is each athlete's own Year 1/Year 2/... (their first, second, ... recorded season in this dataset), not calendar year — a Year 1 point lines up with the other athlete's Year 1 regardless of what actual football year each was in. Hover a point for the real session and class year (Freshman/Sophomore/Junior/Senior, where known — only populated 2023-24 onward).</div>
     </div></div>`;
 
   // Searchable combobox instead of a plain <select> -- scrolling through 230+
@@ -334,7 +383,7 @@ function compareTab(root) {
         c.setAttribute('fill', color);
         c.style.cursor = 'pointer';
         const classPart = p.classLabel ? `, ${p.classLabel}` : '';
-        const html = `<b>${series.name}</b> — Year ${p.yearIdx} (${p.session_label}${classPart}): ${fmt(p.value)}`;
+        const html = `<b>${series.name}</b> — Year ${p.yearIdx} (${p.session_label}${classPart}): ${metricLabel(metric, p.value)}`;
         c.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html));
         c.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html));
         c.addEventListener('mouseleave', hideTooltip);
@@ -372,7 +421,7 @@ function compareTab(root) {
       <span class="sw"><span class="dot" style="background:${colorB}"></span>${bName}</span>`;
     const chartsEl = document.getElementById('cmp-charts');
     chartsEl.innerHTML = '';
-    ['Combined Total', 'Squat', 'Bench', 'Clean', 'Weight', 'Height'].forEach((metric) => {
+    [...STRENGTH_METRICS, 'Weight', 'Height', ...ATHLETIC_METRICS].forEach((metric) => {
       const card = el('div', 'card');
       chartsEl.appendChild(card);
       renderCompareChart(card, metric, colorA, colorB);

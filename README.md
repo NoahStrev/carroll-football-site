@@ -544,6 +544,61 @@ documented cache-bust-the-script-src workaround (see workflow notes)
 resolved it for verification, and the temporary `?cbtest=1` suffix was
 removed again before landing.
 
+## Special Teams Team Overview + Lifting athletic-testing metrics (2026-07-30, per the user)
+
+Two enhancement requests: "add what can get added" to Special Teams Overview
+(explicitly meant to be a whole-units view, not just five separate tabs) and
+"reporting dashboards of the other metrics" for Lifting, added onto the
+existing class/grade structure rather than a new one.
+
+**Special Teams — new "Team Overview" tab** (`dashboards/special-teams-overview.html`,
+now the default/first tab): the only place all 5 units get compared directly,
+using each unit's own real "points added over expectation" Value/Score metric
+(0–100 rescale) — 5 KPI tiles (avg Score per unit), Avg Score by Unit and by
+Season bar charts, a snap/play volume-by-unit bar, and a Unit × Season table
+that deliberately ignores the tab's own Season filter (documented in its own
+insight text, same "explicitly say what a filter does and doesn't touch"
+policy as the Offense/Defense Points-per-Drive KPIs) since its whole point is
+comparing every season at once. **Real data gap found and fixed while
+building this**: Punt Return and Kickoff Return both have real `Value`/`Score`
+columns on their source sheets (confirmed against the actual workbook headers)
+that `build_special_teams_data.py` never extracted — Money Unit/Punt/Kickoff
+already had theirs wired up, so this was a silent, same-shaped gap to the
+"Snap Location" one caught earlier in this project. Fixed by adding the same
+two-field pattern to `build_punt_return()`/`build_kickoff_return()`. First
+real insight the new tab surfaced: Punt Return's avg Score is consistently
+low (7–16 out of 100) across all 5 seasons — a real, persistent pattern, not
+a one-off — while every other unit sits in the mid-50s-to-60s range.
+
+**Lifting & Strength — Strength/Athleticism Score + Broad Jump/Vertical/Pro
+Agility** (`dashboards/lifting-strength.html`, `scripts/build_lifting_data.py`):
+the Lifting Data pipeline already computes two composite z-score percentiles
+(Strength Score, Athleticism Score — see that project's SKILL.md "Scores"
+section) and tracks three raw testing metrics never surfaced here before.
+Added onto the *existing* leaderboard structure (All Time/Last Session,
+Senior/Junior, Sophomore/Freshman) rather than a new tab, per the user's own
+suggestion — each class group's `.lbgrid` split into two labeled sections,
+**Strength** (Combined Total/Bench/Squat/Clean/Strength Score) and
+**Athletic Testing** (Broad Jump/Vertical/Pro Agility/Athleticism Score), and
+all 5 new metrics added to the Class Comparison tab's chart list too.
+Team-scope scores only (not Position-scope) for this first pass — a
+position-scope version exists in the source data and could be added later.
+Pro Agility is a timed sprint, the one metric on this whole page where
+*lower* ranks first — `LOWER_IS_BETTER` threaded through the leaderboard sort,
+the All-Time best-session reduction, and the Class Comparison series
+reduction. **Real bug found while wiring this up**: the All Time tab's
+"one row per athlete, their best session" reduction was hardcoded to
+"bigger value wins" — without the Pro Agility fix, an athlete's All-Time
+"best" Pro Agility would have shown their *slowest* charted time. Caught and
+fixed before shipping, not left for a later pass. `METRIC_UNITS` — declared
+in the original build but never actually read anywhere (dead code) — is now
+real: every leaderboard/comparison value renders with its correct unit
+(`lbs`/`in`/`s`, or nothing for a percentile) instead of a bare number.
+
+Both pages re-verified live after landing (console errors, KPI/table values,
+filter interactions, mobile width, dark mode) — clean, no regressions on the
+pre-existing tabs/metrics.
+
 ## Data sources
 
 - `../Lifting Data/output/` — lifting/strength testing (Combined Total, Athleticism

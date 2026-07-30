@@ -124,6 +124,12 @@ def build_punt_return(wb):
             "return_length": r["Return Length"], "snap_to_kick": snap_to_kick,
             "converted_los": r["Converted Result LOS"],
             "field_bucket": field_bucket(r["Converted Result LOS"]),
+            # Added 2026-07-30: real columns on this sheet the pipeline never
+            # extracted before (same "points added over expectation" metric
+            # every other unit already surfaces) -- found while building the
+            # Team Overview tab, which needed a Value/Score field common to
+            # all 5 units and this one was silently missing it.
+            "value": r["Punt Return Value"], "score": r["Punt Return Score"],
         })
     return rows
 
@@ -164,6 +170,9 @@ def build_kickoff_return(wb):
             "return_location": r["Hash Received On"],
             "converted_los": r["Converted Result LOS"],
             "field_bucket": field_bucket(r["Converted Result LOS"]),
+            # Added 2026-07-30: see the identical note in build_punt_return() --
+            # same real column, same gap, same fix.
+            "value": r["Kickoff Return Value"], "score": r["Kickoff Return Score"],
         })
     return rows
 

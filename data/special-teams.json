@@ -6936,7 +6936,9 @@
 "return_length": 6,
 "snap_to_kick": null,
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.379,
+"score": 4.6
 },
 {
 "season": "2021",
@@ -6954,7 +6956,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.192,
+"score": 7.9
 },
 {
 "season": "2021",
@@ -6972,7 +6976,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.592,
+"score": 0.8
 },
 {
 "season": "2021",
@@ -6990,7 +6996,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.426,
+"score": 3.7
 },
 {
 "season": "2021",
@@ -7008,7 +7016,9 @@
 "return_length": 14,
 "snap_to_kick": null,
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.098,
+"score": 9.6
 },
 {
 "season": "2021",
@@ -7026,7 +7036,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 15,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.574,
+"score": 1.1
 },
 {
 "season": "2021",
@@ -7044,7 +7056,9 @@
 "return_length": 7,
 "snap_to_kick": null,
 "converted_los": 50,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.574,
+"score": 21.7
 },
 {
 "season": "2021",
@@ -7062,7 +7076,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.509,
+"score": 2.2
 },
 {
 "season": "2021",
@@ -7080,7 +7096,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.592,
+"score": 0.8
 },
 {
 "season": "2021",
@@ -7098,7 +7116,9 @@
 "return_length": 9,
 "snap_to_kick": null,
 "converted_los": 64,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.244,
+"score": 33.7
 },
 {
 "season": "2021",
@@ -7116,7 +7136,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2021",
@@ -7134,7 +7156,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.53,
+"score": 1.9
 },
 {
 "season": "2021",
@@ -7152,7 +7176,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2021",
@@ -7170,7 +7196,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 59,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 1.01,
+"score": 29.5
 },
 {
 "season": "2021",
@@ -7188,7 +7216,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.332,
+"score": 5.4
 },
 {
 "season": "2021",
@@ -7206,7 +7236,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 17,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.598,
+"score": 0.6
 },
 {
 "season": "2021",
@@ -7224,7 +7256,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2021",
@@ -7242,7 +7276,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.426,
+"score": 3.7
 },
 {
 "season": "2021",
@@ -7260,7 +7296,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 5,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.485,
+"score": 2.7
 },
 {
 "season": "2021",
@@ -7278,7 +7316,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.239,
+"score": 7.1
 },
 {
 "season": "2021",
@@ -7296,7 +7336,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2021",
@@ -7314,7 +7356,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.551,
+"score": 1.5
 },
 {
 "season": "2021",
@@ -7332,7 +7376,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.098,
+"score": 9.6
 },
 {
 "season": "2021",
@@ -7350,7 +7396,9 @@
 "return_length": 4,
 "snap_to_kick": null,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.592,
+"score": 0.8
 },
 {
 "season": "2021",
@@ -7368,7 +7416,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2021",
@@ -7386,7 +7436,9 @@
 "return_length": 2,
 "snap_to_kick": null,
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.613,
+"score": 0.4
 },
 {
 "season": "2021",
@@ -7404,7 +7456,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 60,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.057,
+"score": 30.3
 },
 {
 "season": "2021",
@@ -7422,7 +7476,9 @@
 "return_length": 7,
 "snap_to_kick": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2021",
@@ -7440,7 +7496,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.052,
+"score": 10.4
 },
 {
 "season": "2021",
@@ -7458,7 +7516,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 44,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.255,
+"score": 15.9
 },
 {
 "season": "2021",
@@ -7476,7 +7536,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 44,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.255,
+"score": 15.9
 },
 {
 "season": "2021",
@@ -7494,7 +7556,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 44,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.255,
+"score": 15.9
 },
 {
 "season": "2021",
@@ -7512,7 +7576,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.551,
+"score": 1.5
 },
 {
 "season": "2021",
@@ -7530,7 +7596,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.61,
+"score": 0.4
 },
 {
 "season": "2022",
@@ -7548,7 +7616,9 @@
 "return_length": 7,
 "snap_to_kick": null,
 "converted_los": 36,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.145,
+"score": 8.8
 },
 {
 "season": "2022",
@@ -7566,7 +7636,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 60,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.057,
+"score": 30.3
 },
 {
 "season": "2022",
@@ -7584,7 +7656,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 65,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.291,
+"score": 34.5
 },
 {
 "season": "2022",
@@ -7602,7 +7676,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.551,
+"score": 1.5
 },
 {
 "season": "2022",
@@ -7620,7 +7696,9 @@
 "return_length": 21,
 "snap_to_kick": null,
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.509,
+"score": 2.2
 },
 {
 "season": "2022",
@@ -7638,7 +7716,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 3,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.485,
+"score": 2.7
 },
 {
 "season": "2022",
@@ -7656,7 +7736,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 64,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.244,
+"score": 33.7
 },
 {
 "season": "2022",
@@ -7674,7 +7756,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2022",
@@ -7692,7 +7776,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.586,
+"score": 0.9
 },
 {
 "season": "2022",
@@ -7710,7 +7796,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 19,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.622,
+"score": 0.2
 },
 {
 "season": "2022",
@@ -7728,7 +7816,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.042,
+"score": 12.1
 },
 {
 "season": "2022",
@@ -7746,7 +7836,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 41,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.095,
+"score": 13.1
 },
 {
 "season": "2022",
@@ -7764,7 +7856,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 14,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.562,
+"score": 1.3
 },
 {
 "season": "2022",
@@ -7782,7 +7876,9 @@
 "return_length": 7,
 "snap_to_kick": null,
 "converted_los": 17,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.598,
+"score": 0.6
 },
 {
 "season": "2022",
@@ -7800,7 +7896,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 67,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 2.384,
+"score": 54.1
 },
 {
 "season": "2022",
@@ -7818,7 +7916,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 42,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.148,
+"score": 14
 },
 {
 "season": "2022",
@@ -7836,7 +7936,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 12,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.539,
+"score": 1.7
 },
 {
 "season": "2022",
@@ -7854,7 +7956,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 4,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.485,
+"score": 2.7
 },
 {
 "season": "2022",
@@ -7872,7 +7976,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 60,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.057,
+"score": 30.3
 },
 {
 "season": "2022",
@@ -7890,7 +7996,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.53,
+"score": 1.9
 },
 {
 "season": "2022",
@@ -7908,7 +8016,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 11,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.527,
+"score": 1.9
 },
 {
 "season": "2022",
@@ -7926,7 +8036,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 60,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.057,
+"score": 30.3
 },
 {
 "season": "2022",
@@ -7944,7 +8056,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 13,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.551,
+"score": 1.5
 },
 {
 "season": "2022",
@@ -7962,7 +8076,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 65,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.291,
+"score": 34.5
 },
 {
 "season": "2022",
@@ -7980,7 +8096,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.592,
+"score": 0.8
 },
 {
 "season": "2022",
@@ -7998,7 +8116,9 @@
 "return_length": 7,
 "snap_to_kick": null,
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.308,
+"score": 16.9
 },
 {
 "season": "2022",
@@ -8016,7 +8136,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 48,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.468,
+"score": 19.8
 },
 {
 "season": "2022",
@@ -8034,7 +8156,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 14,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.562,
+"score": 1.3
 },
 {
 "season": "2022",
@@ -8052,7 +8176,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2022",
@@ -8070,7 +8196,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.379,
+"score": 4.6
 },
 {
 "season": "2022",
@@ -8088,7 +8216,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 9,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.503,
+"score": 2.4
 },
 {
 "season": "2022",
@@ -8106,7 +8236,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.426,
+"score": 3.7
 },
 {
 "season": "2022",
@@ -8124,7 +8256,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 8,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.491,
+"score": 2.6
 },
 {
 "season": "2022",
@@ -8142,7 +8276,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.042,
+"score": 12.1
 },
 {
 "season": "2022",
@@ -8160,7 +8296,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 42,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.148,
+"score": 14
 },
 {
 "season": "2022",
@@ -8178,7 +8316,9 @@
 "return_length": 8,
 "snap_to_kick": null,
 "converted_los": 67,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.384,
+"score": 36.2
 },
 {
 "season": "2022",
@@ -8196,7 +8336,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.551,
+"score": 1.5
 },
 {
 "season": "2022",
@@ -8214,7 +8356,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.098,
+"score": 9.6
 },
 {
 "season": "2022",
@@ -8232,7 +8376,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 46,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.361,
+"score": 17.9
 },
 {
 "season": "2022",
@@ -8250,7 +8396,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 50,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.574,
+"score": 21.7
 },
 {
 "season": "2022",
@@ -8268,7 +8416,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 52,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.68,
+"score": 23.6
 },
 {
 "season": "2022",
@@ -8286,7 +8436,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.052,
+"score": 10.4
 },
 {
 "season": "2022",
@@ -8304,7 +8456,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 43,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.202,
+"score": 15
 },
 {
 "season": "2022",
@@ -8322,7 +8476,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.53,
+"score": 1.9
 },
 {
 "season": "2022",
@@ -8340,7 +8496,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 57,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.917,
+"score": 27.8
 },
 {
 "season": "2022",
@@ -8358,7 +8516,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.586,
+"score": 0.9
 },
 {
 "season": "2022",
@@ -8376,7 +8536,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2022",
@@ -8394,7 +8556,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 53,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 1.73,
+"score": 42.4
 },
 {
 "season": "2022",
@@ -8412,7 +8576,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.426,
+"score": 3.7
 },
 {
 "season": "2022",
@@ -8430,7 +8596,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 53,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.73,
+"score": 24.5
 },
 {
 "season": "2022",
@@ -8448,7 +8616,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 49,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.521,
+"score": 20.7
 },
 {
 "season": "2022",
@@ -8466,7 +8636,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 5,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.485,
+"score": 2.7
 },
 {
 "season": "2023",
@@ -8484,7 +8656,9 @@
 "return_length": 0,
 "snap_to_kick": 2.18,
 "converted_los": 48,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 1.468,
+"score": 37.7
 },
 {
 "season": "2023",
@@ -8502,7 +8676,9 @@
 "return_length": 20,
 "snap_to_kick": 1.99,
 "converted_los": 64,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.244,
+"score": 33.7
 },
 {
 "season": "2023",
@@ -8520,7 +8696,9 @@
 "return_length": 1,
 "snap_to_kick": 2.13,
 "converted_los": 44,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.255,
+"score": 15.9
 },
 {
 "season": "2023",
@@ -8538,7 +8716,9 @@
 "return_length": 0,
 "snap_to_kick": 2.23,
 "converted_los": 13,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.551,
+"score": 1.5
 },
 {
 "season": "2023",
@@ -8556,7 +8736,9 @@
 "return_length": 0,
 "snap_to_kick": 2.15,
 "converted_los": 64,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 2.244,
+"score": 51.6
 },
 {
 "season": "2023",
@@ -8574,7 +8756,9 @@
 "return_length": 0,
 "snap_to_kick": 2.15,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.042,
+"score": 12.1
 },
 {
 "season": "2023",
@@ -8592,7 +8776,9 @@
 "return_length": 0,
 "snap_to_kick": 2.53,
 "converted_los": 39,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.005,
+"score": 11.3
 },
 {
 "season": "2023",
@@ -8610,7 +8796,9 @@
 "return_length": 0,
 "snap_to_kick": 2.53,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.53,
+"score": 1.9
 },
 {
 "season": "2023",
@@ -8628,7 +8816,9 @@
 "return_length": 0,
 "snap_to_kick": 2.05,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.426,
+"score": 3.7
 },
 {
 "season": "2023",
@@ -8646,7 +8836,9 @@
 "return_length": 0,
 "snap_to_kick": 2.15,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.332,
+"score": 5.4
 },
 {
 "season": "2023",
@@ -8664,7 +8856,9 @@
 "return_length": -8,
 "snap_to_kick": 2.1,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.426,
+"score": 3.7
 },
 {
 "season": "2023",
@@ -8682,7 +8876,9 @@
 "return_length": 0,
 "snap_to_kick": 2.15,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.332,
+"score": 5.4
 },
 {
 "season": "2023",
@@ -8700,7 +8896,9 @@
 "return_length": 0,
 "snap_to_kick": 2.07,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.426,
+"score": 3.7
 },
 {
 "season": "2023",
@@ -8718,7 +8916,9 @@
 "return_length": 0,
 "snap_to_kick": 2.08,
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.447,
+"score": 3.4
 },
 {
 "season": "2023",
@@ -8736,7 +8936,9 @@
 "return_length": 15,
 "snap_to_kick": 2.26,
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.488,
+"score": 2.6
 },
 {
 "season": "2023",
@@ -8754,7 +8956,9 @@
 "return_length": 0,
 "snap_to_kick": 2.28,
 "converted_los": 72,
-"field_bucket": "71-80"
+"field_bucket": "71-80",
+"value": 2.617,
+"score": 58.3
 },
 {
 "season": "2023",
@@ -8772,7 +8976,9 @@
 "return_length": 0,
 "snap_to_kick": 2.36,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2023",
@@ -8790,7 +8996,9 @@
 "return_length": 0,
 "snap_to_kick": 2.15,
 "converted_los": 41,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.095,
+"score": 13.1
 },
 {
 "season": "2023",
@@ -8808,7 +9016,9 @@
 "return_length": 0,
 "snap_to_kick": 2.13,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2023",
@@ -8826,7 +9036,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.042,
+"score": 12.1
 },
 {
 "season": "2023",
@@ -8844,7 +9056,9 @@
 "return_length": 10,
 "snap_to_kick": 2.26,
 "converted_los": 64,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.244,
+"score": 33.7
 },
 {
 "season": "2023",
@@ -8862,7 +9076,9 @@
 "return_length": 0,
 "snap_to_kick": 2.37,
 "converted_los": 0,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": 4.94,
+"score": 100
 },
 {
 "season": "2023",
@@ -8880,7 +9096,9 @@
 "return_length": 0,
 "snap_to_kick": 2.08,
 "converted_los": 65,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.291,
+"score": 34.5
 },
 {
 "season": "2023",
@@ -8898,7 +9116,9 @@
 "return_length": 0,
 "snap_to_kick": 2.26,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.53,
+"score": 1.9
 },
 {
 "season": "2023",
@@ -8916,7 +9136,9 @@
 "return_length": 0,
 "snap_to_kick": 2.38,
 "converted_los": 50,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.574,
+"score": 21.7
 },
 {
 "season": "2023",
@@ -8934,7 +9156,9 @@
 "return_length": 11,
 "snap_to_kick": 2.27,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.592,
+"score": 0.8
 },
 {
 "season": "2023",
@@ -8952,7 +9176,9 @@
 "return_length": 0,
 "snap_to_kick": 2.23,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.042,
+"score": 12.1
 },
 {
 "season": "2023",
@@ -8970,7 +9196,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 51,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 1.627,
+"score": 40.6
 },
 {
 "season": "2023",
@@ -8988,7 +9216,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 11,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.527,
+"score": 1.9
 },
 {
 "season": "2023",
@@ -9006,7 +9236,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 9,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.503,
+"score": 2.4
 },
 {
 "season": "2023",
@@ -9024,7 +9256,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 1,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.485,
+"score": 2.7
 },
 {
 "season": "2023",
@@ -9042,7 +9276,9 @@
 "return_length": 15,
 "snap_to_kick": null,
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.308,
+"score": 16.9
 },
 {
 "season": "2023",
@@ -9060,7 +9296,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2023",
@@ -9078,7 +9316,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 48,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.468,
+"score": 19.8
 },
 {
 "season": "2023",
@@ -9096,7 +9336,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.61,
+"score": 0.4
 },
 {
 "season": "2023",
@@ -9114,7 +9356,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.332,
+"score": 5.4
 },
 {
 "season": "2023",
@@ -9132,7 +9376,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 39,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.005,
+"score": 11.3
 },
 {
 "season": "2023",
@@ -9150,7 +9396,9 @@
 "return_length": 20,
 "snap_to_kick": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.192,
+"score": 7.9
 },
 {
 "season": "2023",
@@ -9168,7 +9416,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 55,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.824,
+"score": 26.2
 },
 {
 "season": "2023",
@@ -9186,7 +9436,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.042,
+"score": 12.1
 },
 {
 "season": "2023",
@@ -9204,7 +9456,9 @@
 "return_length": 13,
 "snap_to_kick": null,
 "converted_los": 48,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.468,
+"score": 19.8
 },
 {
 "season": "2023",
@@ -9222,7 +9476,9 @@
 "return_length": 5,
 "snap_to_kick": null,
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.308,
+"score": 16.9
 },
 {
 "season": "2023",
@@ -9240,7 +9496,9 @@
 "return_length": 6,
 "snap_to_kick": null,
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.572,
+"score": 1.1
 },
 {
 "season": "2023",
@@ -9258,7 +9516,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.509,
+"score": 2.2
 },
 {
 "season": "2023",
@@ -9276,7 +9536,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 43,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.202,
+"score": 15
 },
 {
 "season": "2023",
@@ -9294,7 +9556,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 2,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.485,
+"score": 2.7
 },
 {
 "season": "2023",
@@ -9312,7 +9576,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 60,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.057,
+"score": 30.3
 },
 {
 "season": "2023",
@@ -9330,7 +9596,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 44,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.255,
+"score": 15.9
 },
 {
 "season": "2024",
@@ -9348,7 +9616,9 @@
 "return_length": 0,
 "snap_to_kick": 2.2,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.53,
+"score": 1.9
 },
 {
 "season": "2024",
@@ -9366,7 +9636,9 @@
 "return_length": 7,
 "snap_to_kick": 2.23,
 "converted_los": 49,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 1.521,
+"score": 38.7
 },
 {
 "season": "2024",
@@ -9384,7 +9656,9 @@
 "return_length": 0,
 "snap_to_kick": 2.21,
 "converted_los": 50,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.574,
+"score": 21.7
 },
 {
 "season": "2024",
@@ -9402,7 +9676,9 @@
 "return_length": 0,
 "snap_to_kick": 2.13,
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.447,
+"score": 3.4
 },
 {
 "season": "2024",
@@ -9420,7 +9696,9 @@
 "return_length": 0,
 "snap_to_kick": 2.16,
 "converted_los": 49,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.521,
+"score": 20.7
 },
 {
 "season": "2024",
@@ -9438,7 +9716,9 @@
 "return_length": 0,
 "snap_to_kick": 1.98,
 "converted_los": 50,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.574,
+"score": 21.7
 },
 {
 "season": "2024",
@@ -9456,7 +9736,9 @@
 "return_length": 9,
 "snap_to_kick": 2.1,
 "converted_los": 51,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.627,
+"score": 22.6
 },
 {
 "season": "2024",
@@ -9474,7 +9756,9 @@
 "return_length": 0,
 "snap_to_kick": 2.14,
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.572,
+"score": 1.1
 },
 {
 "season": "2024",
@@ -9492,7 +9776,9 @@
 "return_length": 18,
 "snap_to_kick": 2.22,
 "converted_los": 48,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.468,
+"score": 19.8
 },
 {
 "season": "2024",
@@ -9510,7 +9796,9 @@
 "return_length": 0,
 "snap_to_kick": 2.26,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2024",
@@ -9528,7 +9816,9 @@
 "return_length": 0,
 "snap_to_kick": 2.04,
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.572,
+"score": 1.1
 },
 {
 "season": "2024",
@@ -9546,7 +9836,9 @@
 "return_length": 0,
 "snap_to_kick": 3.29,
 "converted_los": 53,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.73,
+"score": 24.5
 },
 {
 "season": "2024",
@@ -9564,7 +9856,9 @@
 "return_length": 13,
 "snap_to_kick": 2.13,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.192,
+"score": 7.9
 },
 {
 "season": "2024",
@@ -9582,7 +9876,9 @@
 "return_length": 9,
 "snap_to_kick": 2.18,
 "converted_los": 70,
-"field_bucket": "71-80"
+"field_bucket": "71-80",
+"value": 1.524,
+"score": 38.7
 },
 {
 "season": "2024",
@@ -9600,7 +9896,9 @@
 "return_length": 0,
 "snap_to_kick": 2.24,
 "converted_los": 44,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.255,
+"score": 15.9
 },
 {
 "season": "2024",
@@ -9618,7 +9916,9 @@
 "return_length": 0,
 "snap_to_kick": 2.13,
 "converted_los": 52,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.68,
+"score": 23.6
 },
 {
 "season": "2024",
@@ -9636,7 +9936,9 @@
 "return_length": 0,
 "snap_to_kick": 2.18,
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.098,
+"score": 9.6
 },
 {
 "season": "2024",
@@ -9654,7 +9956,9 @@
 "return_length": 20,
 "snap_to_kick": 2.18,
 "converted_los": 65,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.291,
+"score": 34.5
 },
 {
 "season": "2024",
@@ -9672,7 +9976,9 @@
 "return_length": 0,
 "snap_to_kick": 2.18,
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.613,
+"score": 0.4
 },
 {
 "season": "2024",
@@ -9690,7 +9996,9 @@
 "return_length": 1,
 "snap_to_kick": 2.21,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.042,
+"score": 12.1
 },
 {
 "season": "2024",
@@ -9708,7 +10016,9 @@
 "return_length": 0,
 "snap_to_kick": 2.38,
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.098,
+"score": 9.6
 },
 {
 "season": "2024",
@@ -9726,7 +10036,9 @@
 "return_length": 17,
 "snap_to_kick": 2.45,
 "converted_los": 67,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.384,
+"score": 36.2
 },
 {
 "season": "2024",
@@ -9744,7 +10056,9 @@
 "return_length": 0,
 "snap_to_kick": 2.41,
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.308,
+"score": 16.9
 },
 {
 "season": "2024",
@@ -9762,7 +10076,9 @@
 "return_length": 0,
 "snap_to_kick": 2.42,
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.61,
+"score": 0.4
 },
 {
 "season": "2024",
@@ -9780,7 +10096,9 @@
 "return_length": 22,
 "snap_to_kick": 2.44,
 "converted_los": 71,
-"field_bucket": "71-80"
+"field_bucket": "71-80",
+"value": 1.571,
+"score": 39.6
 },
 {
 "season": "2024",
@@ -9798,7 +10116,9 @@
 "return_length": 0,
 "snap_to_kick": 2.17,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2024",
@@ -9816,7 +10136,9 @@
 "return_length": 0,
 "snap_to_kick": 2.92,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.042,
+"score": 12.1
 },
 {
 "season": "2024",
@@ -9834,7 +10156,9 @@
 "return_length": 0,
 "snap_to_kick": 2.25,
 "converted_los": 15,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.574,
+"score": 1.1
 },
 {
 "season": "2024",
@@ -9852,7 +10176,9 @@
 "return_length": 0,
 "snap_to_kick": 2.33,
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.613,
+"score": 0.4
 },
 {
 "season": "2024",
@@ -9870,7 +10196,9 @@
 "return_length": -10,
 "snap_to_kick": 2.46,
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.098,
+"score": 9.6
 },
 {
 "season": "2024",
@@ -9888,7 +10216,9 @@
 "return_length": 7,
 "snap_to_kick": 2.41,
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.586,
+"score": 0.9
 },
 {
 "season": "2024",
@@ -9906,7 +10236,9 @@
 "return_length": -1,
 "snap_to_kick": 2.56,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.042,
+"score": 12.1
 },
 {
 "season": "2024",
@@ -9924,7 +10256,9 @@
 "return_length": 13,
 "snap_to_kick": 2.44,
 "converted_los": 72,
-"field_bucket": "71-80"
+"field_bucket": "71-80",
+"value": 1.617,
+"score": 40.4
 },
 {
 "season": "2024",
@@ -9942,7 +10276,9 @@
 "return_length": 0,
 "snap_to_kick": 2.31,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2024",
@@ -9960,7 +10296,9 @@
 "return_length": 12,
 "snap_to_kick": 2.35,
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.098,
+"score": 9.6
 },
 {
 "season": "2024",
@@ -9978,7 +10316,9 @@
 "return_length": 45,
 "snap_to_kick": null,
 "converted_los": 0,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": 4.94,
+"score": 100
 },
 {
 "season": "2024",
@@ -9996,7 +10336,9 @@
 "return_length": 0,
 "snap_to_kick": 2.13,
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.468,
+"score": 3
 },
 {
 "season": "2024",
@@ -10014,7 +10356,9 @@
 "return_length": 0,
 "snap_to_kick": 2.46,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.192,
+"score": 7.9
 },
 {
 "season": "2024",
@@ -10032,7 +10376,9 @@
 "return_length": 4,
 "snap_to_kick": 2.07,
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.551,
+"score": 1.5
 },
 {
 "season": "2024",
@@ -10050,7 +10396,9 @@
 "return_length": 0,
 "snap_to_kick": 2.12,
 "converted_los": 2,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.485,
+"score": 2.7
 },
 {
 "season": "2024",
@@ -10068,7 +10416,9 @@
 "return_length": 0,
 "snap_to_kick": 2.25,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2024",
@@ -10086,7 +10436,9 @@
 "return_length": 0,
 "snap_to_kick": 2.29,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.042,
+"score": 12.1
 },
 {
 "season": "2024",
@@ -10104,7 +10456,9 @@
 "return_length": 0,
 "snap_to_kick": 2.56,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2024",
@@ -10122,7 +10476,9 @@
 "return_length": 0,
 "snap_to_kick": 2.59,
 "converted_los": 69,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.477,
+"score": 37.9
 },
 {
 "season": "2024",
@@ -10140,7 +10496,9 @@
 "return_length": 0,
 "snap_to_kick": 2.46,
 "converted_los": 62,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.151,
+"score": 32
 },
 {
 "season": "2025",
@@ -10158,7 +10516,9 @@
 "return_length": 0,
 "snap_to_kick": 2.85,
 "converted_los": 19,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.622,
+"score": 0.2
 },
 {
 "season": "2025",
@@ -10176,7 +10536,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 8,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.491,
+"score": 2.6
 },
 {
 "season": "2025",
@@ -10194,7 +10556,9 @@
 "return_length": 0,
 "snap_to_kick": 2.29,
 "converted_los": 15,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.574,
+"score": 1.1
 },
 {
 "season": "2025",
@@ -10212,7 +10576,9 @@
 "return_length": 20,
 "snap_to_kick": 2.2,
 "converted_los": 36,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.145,
+"score": 8.8
 },
 {
 "season": "2025",
@@ -10230,7 +10596,9 @@
 "return_length": 15,
 "snap_to_kick": 2.2,
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.098,
+"score": 9.6
 },
 {
 "season": "2025",
@@ -10248,7 +10616,9 @@
 "return_length": 7,
 "snap_to_kick": 2.27,
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.551,
+"score": 1.5
 },
 {
 "season": "2025",
@@ -10266,7 +10636,9 @@
 "return_length": 0,
 "snap_to_kick": 2.47,
 "converted_los": 50,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.574,
+"score": 21.7
 },
 {
 "season": "2025",
@@ -10284,7 +10656,9 @@
 "return_length": 0,
 "snap_to_kick": 2.48,
 "converted_los": 5,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.485,
+"score": 2.7
 },
 {
 "season": "2025",
@@ -10302,7 +10676,9 @@
 "return_length": 0,
 "snap_to_kick": 2.51,
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.286,
+"score": 6.2
 },
 {
 "season": "2025",
@@ -10320,7 +10696,9 @@
 "return_length": 0,
 "snap_to_kick": 2.43,
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.948,
+"score": 28.4
 },
 {
 "season": "2025",
@@ -10338,7 +10716,9 @@
 "return_length": 0,
 "snap_to_kick": 2.16,
 "converted_los": 77,
-"field_bucket": "71-80"
+"field_bucket": "71-80",
+"value": 1.851,
+"score": 44.6
 },
 {
 "season": "2025",
@@ -10356,7 +10736,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2025",
@@ -10374,7 +10756,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.53,
+"score": 1.9
 },
 {
 "season": "2025",
@@ -10392,7 +10776,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.586,
+"score": 0.9
 },
 {
 "season": "2025",
@@ -10410,7 +10796,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 48,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.468,
+"score": 19.8
 },
 {
 "season": "2025",
@@ -10428,7 +10816,9 @@
 "return_length": 0,
 "snap_to_kick": null,
 "converted_los": 56,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.87,
+"score": 27
 },
 {
 "season": "2025",
@@ -10446,7 +10836,9 @@
 "return_length": 0,
 "snap_to_kick": 2.36,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.634,
+"score": 0
 },
 {
 "season": "2025",
@@ -10464,7 +10856,9 @@
 "return_length": 0,
 "snap_to_kick": 2.85,
 "converted_los": 0,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.06,
+"score": 10.3
 },
 {
 "season": "2025",
@@ -10482,7 +10876,9 @@
 "return_length": 8,
 "snap_to_kick": 2.65,
 "converted_los": 11,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.527,
+"score": 1.9
 },
 {
 "season": "2025",
@@ -10500,7 +10896,9 @@
 "return_length": 0,
 "snap_to_kick": 2.9,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.53,
+"score": 1.9
 },
 {
 "season": "2025",
@@ -10518,7 +10916,9 @@
 "return_length": 14,
 "snap_to_kick": 2.63,
 "converted_los": 56,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.87,
+"score": 27
 },
 {
 "season": "2025",
@@ -10536,7 +10936,9 @@
 "return_length": 0,
 "snap_to_kick": 2.4,
 "converted_los": 12,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.539,
+"score": 1.7
 },
 {
 "season": "2025",
@@ -10554,7 +10956,9 @@
 "return_length": 9,
 "snap_to_kick": 2.29,
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.509,
+"score": 2.2
 },
 {
 "season": "2025",
@@ -10572,7 +10976,9 @@
 "return_length": 0,
 "snap_to_kick": 2.46,
 "converted_los": 52,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 0.68,
+"score": 23.6
 },
 {
 "season": "2025",
@@ -10590,7 +10996,9 @@
 "return_length": 0,
 "snap_to_kick": 2.44,
 "converted_los": 15,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.574,
+"score": 1.1
 },
 {
 "season": "2025",
@@ -10608,7 +11016,9 @@
 "return_length": 0,
 "snap_to_kick": 2.41,
 "converted_los": 6,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.485,
+"score": 2.7
 },
 {
 "season": "2025",
@@ -10626,7 +11036,9 @@
 "return_length": 0,
 "snap_to_kick": 2.5,
 "converted_los": 11,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.527,
+"score": 1.9
 },
 {
 "season": "2025",
@@ -10644,7 +11056,9 @@
 "return_length": 1,
 "snap_to_kick": 2.57,
 "converted_los": 9,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -0.503,
+"score": 2.4
 },
 {
 "season": "2025",
@@ -10662,7 +11076,9 @@
 "return_length": 0,
 "snap_to_kick": 2.46,
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": -0.286,
+"score": 6.2
 },
 {
 "season": "2025",
@@ -10680,7 +11096,9 @@
 "return_length": 0,
 "snap_to_kick": 2.55,
 "converted_los": 13,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.551,
+"score": 1.5
 }
 ],
 "kickoff": [
@@ -16990,7 +17408,9 @@
 "return_length": 6,
 "return_location": null,
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.943,
+"score": 13.9
 },
 {
 "season": "2021",
@@ -17008,7 +17428,9 @@
 "return_length": 13,
 "return_location": null,
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.841,
+"score": 15.4
 },
 {
 "season": "2021",
@@ -17026,7 +17448,9 @@
 "return_length": 17,
 "return_location": null,
 "converted_los": 10,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2021",
@@ -17044,7 +17468,9 @@
 "return_length": 44,
 "return_location": null,
 "converted_los": 65,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.681,
+"score": 52.8
 },
 {
 "season": "2021",
@@ -17062,7 +17488,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.875,
+"score": 14.9
 },
 {
 "season": "2021",
@@ -17080,7 +17508,9 @@
 "return_length": 26,
 "return_location": null,
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.033,
+"score": 27.4
 },
 {
 "season": "2021",
@@ -17098,7 +17528,9 @@
 "return_length": 39,
 "return_location": null,
 "converted_los": 47,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.875,
+"score": 40.8
 },
 {
 "season": "2021",
@@ -17116,7 +17548,9 @@
 "return_length": 30,
 "return_location": null,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.485,
+"score": 35.1
 },
 {
 "season": "2021",
@@ -17134,7 +17568,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2021",
@@ -17152,7 +17588,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2021",
@@ -17170,7 +17608,9 @@
 "return_length": 23,
 "return_location": null,
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.186,
+"score": 30.6
 },
 {
 "season": "2021",
@@ -17188,7 +17628,9 @@
 "return_length": 11,
 "return_location": null,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.762,
+"score": 16.6
 },
 {
 "season": "2021",
@@ -17206,7 +17648,9 @@
 "return_length": 15,
 "return_location": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.092,
+"score": 29.2
 },
 {
 "season": "2021",
@@ -17224,7 +17668,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2021",
@@ -17242,7 +17688,9 @@
 "return_length": 9,
 "return_location": null,
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.229,
+"score": 31.3
 },
 {
 "season": "2021",
@@ -17260,7 +17708,9 @@
 "return_length": 9,
 "return_location": null,
 "converted_los": 39,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.442,
+"score": 34.4
 },
 {
 "season": "2021",
@@ -17278,7 +17728,9 @@
 "return_length": 14,
 "return_location": null,
 "converted_los": 19,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.909,
+"score": 14.4
 },
 {
 "season": "2021",
@@ -17296,7 +17748,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2021",
@@ -17314,7 +17768,9 @@
 "return_length": 14,
 "return_location": null,
 "converted_los": 15,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2021",
@@ -17332,7 +17788,9 @@
 "return_length": 31,
 "return_location": null,
 "converted_los": 36,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.314,
+"score": 32.5
 },
 {
 "season": "2021",
@@ -17350,7 +17808,9 @@
 "return_length": 22,
 "return_location": null,
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.033,
+"score": 27.4
 },
 {
 "season": "2021",
@@ -17368,7 +17828,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 52,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 1.176,
+"score": 45.3
 },
 {
 "season": "2021",
@@ -17386,7 +17848,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2021",
@@ -17404,7 +17868,9 @@
 "return_length": 20,
 "return_location": null,
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.03,
+"score": 28.3
 },
 {
 "season": "2021",
@@ -17422,7 +17888,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2021",
@@ -17440,7 +17908,9 @@
 "return_length": 33,
 "return_location": null,
 "converted_los": 44,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.694,
+"score": 38.1
 },
 {
 "season": "2021",
@@ -17458,7 +17928,9 @@
 "return_length": 18,
 "return_location": null,
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.841,
+"score": 15.4
 },
 {
 "season": "2021",
@@ -17476,7 +17948,9 @@
 "return_length": 35,
 "return_location": null,
 "converted_los": 5,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2021",
@@ -17494,7 +17968,9 @@
 "return_length": 26,
 "return_location": null,
 "converted_los": 63,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.681,
+"score": 52.8
 },
 {
 "season": "2021",
@@ -17512,7 +17988,9 @@
 "return_length": 35,
 "return_location": null,
 "converted_los": 14,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2021",
@@ -17530,7 +18008,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 51,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 1.115,
+"score": 44.4
 },
 {
 "season": "2021",
@@ -17548,7 +18028,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 51,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": -1.881,
+"score": 0
 },
 {
 "season": "2021",
@@ -17566,7 +18048,9 @@
 "return_length": 8,
 "return_location": null,
 "converted_los": 13,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2021",
@@ -17584,7 +18068,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2021",
@@ -17602,7 +18088,9 @@
 "return_length": 18,
 "return_location": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.092,
+"score": 29.2
 },
 {
 "season": "2021",
@@ -17620,7 +18108,9 @@
 "return_length": 11,
 "return_location": null,
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.398,
+"score": 22
 },
 {
 "season": "2021",
@@ -17638,7 +18128,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2021",
@@ -17656,7 +18148,9 @@
 "return_length": 16,
 "return_location": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.875,
+"score": 14.9
 },
 {
 "season": "2021",
@@ -17674,7 +18168,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2021",
@@ -17692,7 +18188,9 @@
 "return_length": 19,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2021",
@@ -17710,7 +18208,9 @@
 "return_length": 7,
 "return_location": null,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.762,
+"score": 16.6
 },
 {
 "season": "2021",
@@ -17728,7 +18228,9 @@
 "return_length": 15,
 "return_location": null,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.485,
+"score": 35.1
 },
 {
 "season": "2021",
@@ -17746,7 +18248,9 @@
 "return_length": 50,
 "return_location": null,
 "converted_los": 74,
-"field_bucket": "71-80"
+"field_bucket": "71-80",
+"value": 1.681,
+"score": 52.8
 },
 {
 "season": "2021",
@@ -17764,7 +18268,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.155,
+"score": 30.2
 },
 {
 "season": "2021",
@@ -17782,7 +18288,9 @@
 "return_length": 10,
 "return_location": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.875,
+"score": 14.9
 },
 {
 "season": "2021",
@@ -17800,7 +18308,9 @@
 "return_length": 17,
 "return_location": null,
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.03,
+"score": 28.3
 },
 {
 "season": "2021",
@@ -17818,7 +18328,9 @@
 "return_length": 18,
 "return_location": null,
 "converted_los": 6,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2021",
@@ -17836,7 +18348,9 @@
 "return_length": 16,
 "return_location": null,
 "converted_los": 5,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2021",
@@ -17854,7 +18368,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2021",
@@ -17872,7 +18388,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2021",
@@ -17890,7 +18408,9 @@
 "return_length": 13,
 "return_location": null,
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.002,
+"score": 27.8
 },
 {
 "season": "2021",
@@ -17908,7 +18428,9 @@
 "return_length": 14,
 "return_location": null,
 "converted_los": 3,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2021",
@@ -17926,7 +18448,9 @@
 "return_length": 87,
 "return_location": null,
 "converted_los": 0,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": 4.869,
+"score": 100
 },
 {
 "season": "2021",
@@ -17944,7 +18468,9 @@
 "return_length": 11,
 "return_location": null,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.762,
+"score": 16.6
 },
 {
 "season": "2021",
@@ -17962,7 +18488,9 @@
 "return_length": 30,
 "return_location": null,
 "converted_los": 8,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2021",
@@ -17980,7 +18508,9 @@
 "return_length": 4,
 "return_location": null,
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.061,
+"score": 28.8
 },
 {
 "season": "2021",
@@ -17998,7 +18528,9 @@
 "return_length": 40,
 "return_location": null,
 "converted_los": 42,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.574,
+"score": 36.4
 },
 {
 "season": "2021",
@@ -18016,7 +18548,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.485,
+"score": 35.1
 },
 {
 "season": "2021",
@@ -18034,7 +18568,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2021",
@@ -18052,7 +18588,9 @@
 "return_length": 15,
 "return_location": null,
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.943,
+"score": 13.9
 },
 {
 "season": "2021",
@@ -18070,7 +18608,9 @@
 "return_length": 18,
 "return_location": null,
 "converted_los": 19,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.909,
+"score": 14.4
 },
 {
 "season": "2022",
@@ -18088,7 +18628,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.755,
+"score": 39.1
 },
 {
 "season": "2022",
@@ -18106,7 +18648,9 @@
 "return_length": 17,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2022",
@@ -18124,7 +18668,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 12,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2022",
@@ -18142,7 +18688,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2022",
@@ -18160,7 +18708,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2022",
@@ -18178,7 +18728,9 @@
 "return_length": 19,
 "return_location": null,
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.03,
+"score": 28.3
 },
 {
 "season": "2022",
@@ -18196,7 +18748,9 @@
 "return_length": 20,
 "return_location": null,
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.033,
+"score": 27.4
 },
 {
 "season": "2022",
@@ -18214,7 +18768,9 @@
 "return_length": 22,
 "return_location": null,
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.58,
+"score": 19.3
 },
 {
 "season": "2022",
@@ -18232,7 +18788,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 6,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2022",
@@ -18250,7 +18808,9 @@
 "return_length": 16,
 "return_location": null,
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.841,
+"score": 15.4
 },
 {
 "season": "2022",
@@ -18268,7 +18828,9 @@
 "return_length": 40,
 "return_location": null,
 "converted_los": 54,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 1.296,
+"score": 47.1
 },
 {
 "season": "2022",
@@ -18286,7 +18848,9 @@
 "return_length": 13,
 "return_location": null,
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.011,
+"score": 12.9
 },
 {
 "season": "2022",
@@ -18304,7 +18868,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2022",
@@ -18322,7 +18888,9 @@
 "return_length": 10,
 "return_location": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.875,
+"score": 14.9
 },
 {
 "season": "2022",
@@ -18340,7 +18908,9 @@
 "return_length": 16,
 "return_location": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.092,
+"score": 29.2
 },
 {
 "season": "2022",
@@ -18358,7 +18928,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 13,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2022",
@@ -18376,7 +18948,9 @@
 "return_length": 10,
 "return_location": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2022",
@@ -18394,7 +18968,9 @@
 "return_length": 7,
 "return_location": null,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.155,
+"score": 30.2
 },
 {
 "season": "2022",
@@ -18412,7 +18988,9 @@
 "return_length": 38,
 "return_location": null,
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.4,
+"score": 33.8
 },
 {
 "season": "2022",
@@ -18430,7 +19008,9 @@
 "return_length": 14,
 "return_location": null,
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.011,
+"score": 12.9
 },
 {
 "season": "2022",
@@ -18448,7 +19028,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2022",
@@ -18466,7 +19048,9 @@
 "return_length": 24,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2022",
@@ -18484,7 +19068,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2022",
@@ -18502,7 +19088,9 @@
 "return_length": 14,
 "return_location": null,
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.229,
+"score": 31.3
 },
 {
 "season": "2022",
@@ -18520,7 +19108,9 @@
 "return_length": 13,
 "return_location": null,
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.398,
+"score": 22
 },
 {
 "season": "2022",
@@ -18538,7 +19128,9 @@
 "return_length": 55,
 "return_location": null,
 "converted_los": 60,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.657,
+"score": 52.4
 },
 {
 "season": "2022",
@@ -18556,7 +19148,9 @@
 "return_length": 10,
 "return_location": null,
 "converted_los": 36,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.314,
+"score": 32.5
 },
 {
 "season": "2022",
@@ -18574,7 +19168,9 @@
 "return_length": 11,
 "return_location": null,
 "converted_los": 36,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.314,
+"score": 32.5
 },
 {
 "season": "2022",
@@ -18592,7 +19188,9 @@
 "return_length": 5,
 "return_location": null,
 "converted_los": 52,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 1.176,
+"score": 45.3
 },
 {
 "season": "2022",
@@ -18610,7 +19208,9 @@
 "return_length": 14,
 "return_location": null,
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.002,
+"score": 27.8
 },
 {
 "season": "2022",
@@ -18628,7 +19228,9 @@
 "return_length": 13,
 "return_location": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.875,
+"score": 14.9
 },
 {
 "season": "2022",
@@ -18646,7 +19248,9 @@
 "return_length": 15,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2022",
@@ -18664,7 +19268,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2022",
@@ -18682,7 +19288,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2022",
@@ -18700,7 +19308,9 @@
 "return_length": 10,
 "return_location": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.875,
+"score": 14.9
 },
 {
 "season": "2022",
@@ -18718,7 +19328,9 @@
 "return_length": 18,
 "return_location": null,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.762,
+"score": 16.6
 },
 {
 "season": "2022",
@@ -18736,7 +19348,9 @@
 "return_length": 14,
 "return_location": null,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.155,
+"score": 30.2
 },
 {
 "season": "2022",
@@ -18754,7 +19368,9 @@
 "return_length": 18,
 "return_location": null,
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.002,
+"score": 27.8
 },
 {
 "season": "2022",
@@ -18772,7 +19388,9 @@
 "return_length": 26,
 "return_location": null,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.485,
+"score": 35.1
 },
 {
 "season": "2022",
@@ -18790,7 +19408,9 @@
 "return_length": 19,
 "return_location": null,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.155,
+"score": 30.2
 },
 {
 "season": "2022",
@@ -18808,7 +19428,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2022",
@@ -18826,7 +19448,9 @@
 "return_length": 25,
 "return_location": null,
 "converted_los": 58,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 1.537,
+"score": 50.6
 },
 {
 "season": "2022",
@@ -18844,7 +19468,9 @@
 "return_length": 6,
 "return_location": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.875,
+"score": 14.9
 },
 {
 "season": "2022",
@@ -18862,7 +19488,9 @@
 "return_length": 18,
 "return_location": null,
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.4,
+"score": 33.8
 },
 {
 "season": "2022",
@@ -18880,7 +19508,9 @@
 "return_length": 8,
 "return_location": null,
 "converted_los": 42,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.574,
+"score": 36.4
 },
 {
 "season": "2022",
@@ -18898,7 +19528,9 @@
 "return_length": 15,
 "return_location": null,
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.398,
+"score": 22
 },
 {
 "season": "2022",
@@ -18916,7 +19548,9 @@
 "return_length": 18,
 "return_location": null,
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.755,
+"score": 39.1
 },
 {
 "season": "2022",
@@ -18934,7 +19568,9 @@
 "return_length": 25,
 "return_location": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.092,
+"score": 29.2
 },
 {
 "season": "2022",
@@ -18952,7 +19588,9 @@
 "return_length": 18,
 "return_location": null,
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.398,
+"score": 22
 },
 {
 "season": "2022",
@@ -18970,7 +19608,9 @@
 "return_length": 15,
 "return_location": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.875,
+"score": 14.9
 },
 {
 "season": "2022",
@@ -18988,7 +19628,9 @@
 "return_length": 24,
 "return_location": null,
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.186,
+"score": 30.6
 },
 {
 "season": "2022",
@@ -19006,7 +19648,9 @@
 "return_length": 9,
 "return_location": null,
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.061,
+"score": 28.8
 },
 {
 "season": "2022",
@@ -19024,7 +19668,9 @@
 "return_length": 12,
 "return_location": null,
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.03,
+"score": 28.3
 },
 {
 "season": "2022",
@@ -19042,7 +19688,9 @@
 "return_length": 25,
 "return_location": null,
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.755,
+"score": 39.1
 },
 {
 "season": "2023",
@@ -19060,7 +19708,9 @@
 "return_length": 27,
 "return_location": "LM",
 "converted_los": 52,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 1.176,
+"score": 45.3
 },
 {
 "season": "2023",
@@ -19078,7 +19728,9 @@
 "return_length": 19,
 "return_location": "RM",
 "converted_los": 17,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.977,
+"score": 13.4
 },
 {
 "season": "2023",
@@ -19096,7 +19748,9 @@
 "return_length": 20,
 "return_location": "RM",
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.762,
+"score": 16.6
 },
 {
 "season": "2023",
@@ -19114,7 +19768,9 @@
 "return_length": 17,
 "return_location": "M",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2023",
@@ -19132,7 +19788,9 @@
 "return_length": 21,
 "return_location": "M",
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.123,
+"score": 29.7
 },
 {
 "season": "2023",
@@ -19150,7 +19808,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2023",
@@ -19168,7 +19828,9 @@
 "return_length": 29,
 "return_location": "RM",
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.229,
+"score": 31.3
 },
 {
 "season": "2023",
@@ -19186,7 +19848,9 @@
 "return_length": 16,
 "return_location": "RM",
 "converted_los": 7,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2023",
@@ -19204,7 +19868,9 @@
 "return_length": 15,
 "return_location": "RM",
 "converted_los": 5,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2023",
@@ -19222,7 +19888,9 @@
 "return_length": 0,
 "return_location": "R",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2023",
@@ -19240,7 +19908,9 @@
 "return_length": 33,
 "return_location": "M",
 "converted_los": 8,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2023",
@@ -19258,7 +19928,9 @@
 "return_length": 0,
 "return_location": "OBR",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2023",
@@ -19276,7 +19948,9 @@
 "return_length": 8,
 "return_location": "R",
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.011,
+"score": 12.9
 },
 {
 "season": "2023",
@@ -19294,7 +19968,9 @@
 "return_length": 35,
 "return_location": "RM",
 "converted_los": 42,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.574,
+"score": 36.4
 },
 {
 "season": "2023",
@@ -19312,7 +19988,9 @@
 "return_length": 49,
 "return_location": "LM",
 "converted_los": 60,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.657,
+"score": 52.4
 },
 {
 "season": "2023",
@@ -19330,7 +20008,9 @@
 "return_length": 17,
 "return_location": "LM",
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.061,
+"score": 28.8
 },
 {
 "season": "2023",
@@ -19348,7 +20028,9 @@
 "return_length": 0,
 "return_location": "OBL",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2023",
@@ -19366,7 +20048,9 @@
 "return_length": 17,
 "return_location": "LM",
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.03,
+"score": 28.3
 },
 {
 "season": "2023",
@@ -19384,7 +20068,9 @@
 "return_length": 20,
 "return_location": "LM",
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.155,
+"score": 30.2
 },
 {
 "season": "2023",
@@ -19402,7 +20088,9 @@
 "return_length": 17,
 "return_location": "L",
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.061,
+"score": 28.8
 },
 {
 "season": "2023",
@@ -19420,7 +20108,9 @@
 "return_length": 46,
 "return_location": "RM",
 "converted_los": 50,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 1.055,
+"score": 43.5
 },
 {
 "season": "2023",
@@ -19438,7 +20128,9 @@
 "return_length": 38,
 "return_location": "RM",
 "converted_los": 39,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.442,
+"score": 34.4
 },
 {
 "season": "2023",
@@ -19456,7 +20148,9 @@
 "return_length": 0,
 "return_location": "R",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2023",
@@ -19474,7 +20168,9 @@
 "return_length": 0,
 "return_location": "L",
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.229,
+"score": 31.3
 },
 {
 "season": "2023",
@@ -19492,7 +20188,9 @@
 "return_length": 19,
 "return_location": "RM",
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.092,
+"score": 29.2
 },
 {
 "season": "2023",
@@ -19510,7 +20208,9 @@
 "return_length": 14,
 "return_location": "RM",
 "converted_los": 47,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.875,
+"score": 40.8
 },
 {
 "season": "2023",
@@ -19528,7 +20228,9 @@
 "return_length": 16,
 "return_location": "RM",
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.875,
+"score": 14.9
 },
 {
 "season": "2023",
@@ -19546,7 +20248,9 @@
 "return_length": 7,
 "return_location": "RM",
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.186,
+"score": 30.6
 },
 {
 "season": "2023",
@@ -19564,7 +20268,9 @@
 "return_length": 17,
 "return_location": "M",
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.002,
+"score": 27.8
 },
 {
 "season": "2023",
@@ -19582,7 +20288,9 @@
 "return_length": 17,
 "return_location": "LM",
 "converted_los": 42,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.574,
+"score": 36.4
 },
 {
 "season": "2023",
@@ -19600,7 +20308,9 @@
 "return_length": 0,
 "return_location": "M",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2023",
@@ -19618,7 +20328,9 @@
 "return_length": 39,
 "return_location": null,
 "converted_los": 69,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.681,
+"score": 52.8
 },
 {
 "season": "2023",
@@ -19636,7 +20348,9 @@
 "return_length": 25,
 "return_location": null,
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.123,
+"score": 29.7
 },
 {
 "season": "2023",
@@ -19654,7 +20368,9 @@
 "return_length": 13,
 "return_location": null,
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.011,
+"score": 12.9
 },
 {
 "season": "2023",
@@ -19672,7 +20388,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2023",
@@ -19690,7 +20408,9 @@
 "return_length": 23,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2023",
@@ -19708,7 +20428,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2023",
@@ -19726,7 +20448,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2023",
@@ -19744,7 +20468,9 @@
 "return_length": 16,
 "return_location": null,
 "converted_los": 17,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.977,
+"score": 13.4
 },
 {
 "season": "2023",
@@ -19762,7 +20488,9 @@
 "return_length": 15,
 "return_location": null,
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.011,
+"score": 12.9
 },
 {
 "season": "2023",
@@ -19780,7 +20508,9 @@
 "return_length": 15,
 "return_location": null,
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.03,
+"score": 28.3
 },
 {
 "season": "2023",
@@ -19798,7 +20528,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2023",
@@ -19816,7 +20548,9 @@
 "return_length": 14,
 "return_location": null,
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.002,
+"score": 27.8
 },
 {
 "season": "2023",
@@ -19834,7 +20568,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 41,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.528,
+"score": 35.7
 },
 {
 "season": "2023",
@@ -19852,7 +20588,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2023",
@@ -19870,7 +20608,9 @@
 "return_length": 33,
 "return_location": null,
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.229,
+"score": 31.3
 },
 {
 "season": "2023",
@@ -19888,7 +20628,9 @@
 "return_length": 25,
 "return_location": null,
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.755,
+"score": 39.1
 },
 {
 "season": "2023",
@@ -19906,7 +20648,9 @@
 "return_length": 27,
 "return_location": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.092,
+"score": 29.2
 },
 {
 "season": "2023",
@@ -19924,7 +20668,9 @@
 "return_length": 24,
 "return_location": null,
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.4,
+"score": 33.8
 },
 {
 "season": "2023",
@@ -19942,7 +20688,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 65,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.681,
+"score": 52.8
 },
 {
 "season": "2023",
@@ -19960,7 +20708,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2023",
@@ -19978,7 +20728,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2023",
@@ -19996,7 +20748,9 @@
 "return_length": 27,
 "return_location": null,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.155,
+"score": 30.2
 },
 {
 "season": "2023",
@@ -20014,7 +20768,9 @@
 "return_length": 10,
 "return_location": null,
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.061,
+"score": 28.8
 },
 {
 "season": "2024",
@@ -20032,7 +20788,9 @@
 "return_length": 17,
 "return_location": "RM",
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.03,
+"score": 28.3
 },
 {
 "season": "2024",
@@ -20050,7 +20808,9 @@
 "return_length": 15,
 "return_location": "RM",
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.943,
+"score": 13.9
 },
 {
 "season": "2024",
@@ -20068,7 +20828,9 @@
 "return_length": 17,
 "return_location": "L",
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.58,
+"score": 19.3
 },
 {
 "season": "2024",
@@ -20086,7 +20848,9 @@
 "return_length": 8,
 "return_location": "LM",
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.943,
+"score": 13.9
 },
 {
 "season": "2024",
@@ -20104,7 +20868,9 @@
 "return_length": 14,
 "return_location": "M",
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.229,
+"score": 31.3
 },
 {
 "season": "2024",
@@ -20122,7 +20888,9 @@
 "return_length": 0,
 "return_location": "OBR",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2024",
@@ -20140,7 +20908,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2024",
@@ -20158,7 +20928,9 @@
 "return_length": 28,
 "return_location": "RM",
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.061,
+"score": 28.8
 },
 {
 "season": "2024",
@@ -20176,7 +20948,9 @@
 "return_length": 22,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2024",
@@ -20194,7 +20968,9 @@
 "return_length": 13,
 "return_location": "M",
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.58,
+"score": 19.3
 },
 {
 "season": "2024",
@@ -20212,7 +20988,9 @@
 "return_length": 0,
 "return_location": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2024",
@@ -20230,7 +21008,9 @@
 "return_length": 19,
 "return_location": "LM",
 "converted_los": 1,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2024",
@@ -20248,7 +21028,9 @@
 "return_length": 0,
 "return_location": "LM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2024",
@@ -20266,7 +21048,9 @@
 "return_length": 12,
 "return_location": "L",
 "converted_los": 1,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2024",
@@ -20284,7 +21068,9 @@
 "return_length": 10,
 "return_location": "LM",
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.398,
+"score": 22
 },
 {
 "season": "2024",
@@ -20302,7 +21088,9 @@
 "return_length": 0,
 "return_location": "OBR",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2024",
@@ -20320,7 +21108,9 @@
 "return_length": 23,
 "return_location": "R",
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.03,
+"score": 28.3
 },
 {
 "season": "2024",
@@ -20338,7 +21128,9 @@
 "return_length": 23,
 "return_location": "M",
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.4,
+"score": 33.8
 },
 {
 "season": "2024",
@@ -20356,7 +21148,9 @@
 "return_length": 0,
 "return_location": "L",
 "converted_los": 11,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2024",
@@ -20374,7 +21168,9 @@
 "return_length": 23,
 "return_location": "LM",
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.229,
+"score": 31.3
 },
 {
 "season": "2024",
@@ -20392,7 +21188,9 @@
 "return_length": 38,
 "return_location": "R",
 "converted_los": 44,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.694,
+"score": 38.1
 },
 {
 "season": "2024",
@@ -20410,7 +21208,9 @@
 "return_length": 0,
 "return_location": "OBL",
 "converted_los": 65,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.681,
+"score": 52.8
 },
 {
 "season": "2024",
@@ -20428,7 +21228,9 @@
 "return_length": 28,
 "return_location": "RM",
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.4,
+"score": 33.8
 },
 {
 "season": "2024",
@@ -20446,7 +21248,9 @@
 "return_length": 22,
 "return_location": "L",
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.033,
+"score": 27.4
 },
 {
 "season": "2024",
@@ -20464,7 +21268,9 @@
 "return_length": 26,
 "return_location": "LM",
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.033,
+"score": 27.4
 },
 {
 "season": "2024",
@@ -20482,7 +21288,9 @@
 "return_length": 0,
 "return_location": "M",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2024",
@@ -20500,7 +21308,9 @@
 "return_length": 19,
 "return_location": "M",
 "converted_los": 19,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.909,
+"score": 14.4
 },
 {
 "season": "2024",
@@ -20518,7 +21328,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2024",
@@ -20536,7 +21348,9 @@
 "return_length": 22,
 "return_location": "RM",
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.002,
+"score": 27.8
 },
 {
 "season": "2024",
@@ -20554,7 +21368,9 @@
 "return_length": 0,
 "return_location": "OBL",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2024",
@@ -20572,7 +21388,9 @@
 "return_length": 13,
 "return_location": "RM",
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.011,
+"score": 12.9
 },
 {
 "season": "2024",
@@ -20590,7 +21408,9 @@
 "return_length": 0,
 "return_location": "R",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2024",
@@ -20608,7 +21428,9 @@
 "return_length": 21,
 "return_location": "RM",
 "converted_los": 2,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2024",
@@ -20626,7 +21448,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2024",
@@ -20644,7 +21468,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2024",
@@ -20662,7 +21488,9 @@
 "return_length": 26,
 "return_location": "RM",
 "converted_los": 6,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2024",
@@ -20680,7 +21508,9 @@
 "return_length": 12,
 "return_location": "RM",
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.841,
+"score": 15.4
 },
 {
 "season": "2024",
@@ -20698,7 +21528,9 @@
 "return_length": 17,
 "return_location": "RM",
 "converted_los": 15,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2024",
@@ -20716,7 +21548,9 @@
 "return_length": 0,
 "return_location": "R",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2024",
@@ -20734,7 +21568,9 @@
 "return_length": 54,
 "return_location": "M",
 "converted_los": 69,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.681,
+"score": 52.8
 },
 {
 "season": "2024",
@@ -20752,7 +21588,9 @@
 "return_length": 25,
 "return_location": "R",
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.092,
+"score": 29.2
 },
 {
 "season": "2024",
@@ -20770,7 +21608,9 @@
 "return_length": 0,
 "return_location": "OBR",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2024",
@@ -20788,7 +21628,9 @@
 "return_length": 34,
 "return_location": "R",
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.485,
+"score": 35.1
 },
 {
 "season": "2024",
@@ -20806,7 +21648,9 @@
 "return_length": 20,
 "return_location": "RM",
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.092,
+"score": 29.2
 },
 {
 "season": "2024",
@@ -20824,7 +21668,9 @@
 "return_length": 0,
 "return_location": "OBL",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2025",
@@ -20842,7 +21688,9 @@
 "return_length": 18,
 "return_location": "RM",
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.875,
+"score": 14.9
 },
 {
 "season": "2025",
@@ -20860,7 +21708,9 @@
 "return_length": 0,
 "return_location": "R",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -20878,7 +21728,9 @@
 "return_length": 32,
 "return_location": "RM",
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.357,
+"score": 33.2
 },
 {
 "season": "2025",
@@ -20896,7 +21748,9 @@
 "return_length": 0,
 "return_location": "M",
 "converted_los": 10,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2025",
@@ -20914,7 +21768,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -20932,7 +21788,9 @@
 "return_length": 25,
 "return_location": "RM",
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.002,
+"score": 27.8
 },
 {
 "season": "2025",
@@ -20950,7 +21808,9 @@
 "return_length": 26,
 "return_location": "RM",
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.186,
+"score": 30.6
 },
 {
 "season": "2025",
@@ -20968,7 +21828,9 @@
 "return_length": 16,
 "return_location": "M",
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.841,
+"score": 15.4
 },
 {
 "season": "2025",
@@ -20986,7 +21848,9 @@
 "return_length": 20,
 "return_location": "M",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21004,7 +21868,9 @@
 "return_length": 18,
 "return_location": "M",
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.155,
+"score": 30.2
 },
 {
 "season": "2025",
@@ -21022,7 +21888,9 @@
 "return_length": 5,
 "return_location": "M",
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.875,
+"score": 14.9
 },
 {
 "season": "2025",
@@ -21040,7 +21908,9 @@
 "return_length": 0,
 "return_location": "M",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21058,7 +21928,9 @@
 "return_length": 35,
 "return_location": "RM",
 "converted_los": 41,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.528,
+"score": 35.7
 },
 {
 "season": "2025",
@@ -21076,7 +21948,9 @@
 "return_length": 16,
 "return_location": "LM",
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.943,
+"score": 13.9
 },
 {
 "season": "2025",
@@ -21094,7 +21968,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21112,7 +21988,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21130,7 +22008,9 @@
 "return_length": 11,
 "return_location": "M",
 "converted_los": 11,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2025",
@@ -21148,7 +22028,9 @@
 "return_length": 15,
 "return_location": "L",
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.841,
+"score": 15.4
 },
 {
 "season": "2025",
@@ -21166,7 +22048,9 @@
 "return_length": 0,
 "return_location": "LM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21184,7 +22068,9 @@
 "return_length": 3,
 "return_location": "L",
 "converted_los": 13,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -1.035,
+"score": 12.5
 },
 {
 "season": "2025",
@@ -21202,7 +22088,9 @@
 "return_length": 0,
 "return_location": "LM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21220,7 +22108,9 @@
 "return_length": 0,
 "return_location": "LM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21238,7 +22128,9 @@
 "return_length": 0,
 "return_location": "M",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21256,7 +22148,9 @@
 "return_length": 15,
 "return_location": "LM",
 "converted_los": 17,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.977,
+"score": 13.4
 },
 {
 "season": "2025",
@@ -21274,7 +22168,9 @@
 "return_length": 10,
 "return_location": "RM",
 "converted_los": 17,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.977,
+"score": 13.4
 },
 {
 "season": "2025",
@@ -21292,7 +22188,9 @@
 "return_length": 0,
 "return_location": "R",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21310,7 +22208,9 @@
 "return_length": 38,
 "return_location": "RM",
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.4,
+"score": 33.8
 },
 {
 "season": "2025",
@@ -21328,7 +22228,9 @@
 "return_length": 0,
 "return_location": "L",
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.841,
+"score": 15.4
 },
 {
 "season": "2025",
@@ -21346,7 +22248,9 @@
 "return_length": 0,
 "return_location": "LM",
 "converted_los": 59,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 1.597,
+"score": 51.5
 },
 {
 "season": "2025",
@@ -21364,7 +22268,9 @@
 "return_length": 37,
 "return_location": null,
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.755,
+"score": 39.1
 },
 {
 "season": "2025",
@@ -21382,7 +22288,9 @@
 "return_length": 14,
 "return_location": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.875,
+"score": 14.9
 },
 {
 "season": "2025",
@@ -21400,7 +22308,9 @@
 "return_length": 0,
 "return_location": null,
 "converted_los": 55,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"value": 1.356,
+"score": 48
 },
 {
 "season": "2025",
@@ -21418,7 +22328,9 @@
 "return_length": 15,
 "return_location": "L",
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.092,
+"score": 29.2
 },
 {
 "season": "2025",
@@ -21436,7 +22348,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21454,7 +22368,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21472,7 +22388,9 @@
 "return_length": 49,
 "return_location": "LM",
 "converted_los": 65,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.681,
+"score": 52.8
 },
 {
 "season": "2025",
@@ -21490,7 +22408,9 @@
 "return_length": 27,
 "return_location": "RM",
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": 0.03,
+"score": 28.3
 },
 {
 "season": "2025",
@@ -21508,7 +22428,9 @@
 "return_length": 17,
 "return_location": "M",
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.943,
+"score": 13.9
 },
 {
 "season": "2025",
@@ -21526,7 +22448,9 @@
 "return_length": 21,
 "return_location": "L",
 "converted_los": 47,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.875,
+"score": 40.8
 },
 {
 "season": "2025",
@@ -21544,7 +22468,9 @@
 "return_length": 0,
 "return_location": "OBR",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2025",
@@ -21562,7 +22488,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.271,
+"score": 31.9
 },
 {
 "season": "2025",
@@ -21580,7 +22508,9 @@
 "return_length": 12,
 "return_location": null,
 "converted_los": 63,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"value": 1.681,
+"score": 52.8
 },
 {
 "season": "2025",
@@ -21598,7 +22528,9 @@
 "return_length": 17,
 "return_location": "RM",
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.002,
+"score": 27.8
 },
 {
 "season": "2025",
@@ -21616,7 +22548,9 @@
 "return_length": 23,
 "return_location": "RM",
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.155,
+"score": 30.2
 },
 {
 "season": "2025",
@@ -21634,7 +22568,9 @@
 "return_length": 13,
 "return_location": "M",
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.58,
+"score": 19.3
 },
 {
 "season": "2025",
@@ -21652,7 +22588,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21670,7 +22608,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21688,7 +22628,9 @@
 "return_length": 16,
 "return_location": "RM",
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.943,
+"score": 13.9
 },
 {
 "season": "2025",
@@ -21706,7 +22648,9 @@
 "return_length": 16,
 "return_location": "RM",
 "converted_los": 17,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.977,
+"score": 13.4
 },
 {
 "season": "2025",
@@ -21724,7 +22668,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21742,7 +22688,9 @@
 "return_length": 16,
 "return_location": "RM",
 "converted_los": 19,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"value": -0.909,
+"score": 14.4
 },
 {
 "season": "2025",
@@ -21760,7 +22708,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21778,7 +22728,9 @@
 "return_length": 27,
 "return_location": "RM",
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"value": 0.485,
+"score": 35.1
 },
 {
 "season": "2025",
@@ -21796,7 +22748,9 @@
 "return_length": 9,
 "return_location": "RM",
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.58,
+"score": 19.3
 },
 {
 "season": "2025",
@@ -21814,7 +22768,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 },
 {
 "season": "2025",
@@ -21832,7 +22788,9 @@
 "return_length": 22,
 "return_location": "RM",
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.092,
+"score": 29.2
 },
 {
 "season": "2025",
@@ -21850,7 +22808,9 @@
 "return_length": 19,
 "return_location": "M",
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.186,
+"score": 30.6
 },
 {
 "season": "2025",
@@ -21868,7 +22828,9 @@
 "return_length": 12,
 "return_location": "RM",
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"value": 0.123,
+"score": 29.7
 },
 {
 "season": "2025",
@@ -21886,7 +22848,9 @@
 "return_length": 0,
 "return_location": "RM",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"value": -0.215,
+"score": 24.7
 }
 ],
 "money_unit": [

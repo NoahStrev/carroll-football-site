@@ -1,9 +1,8 @@
 """
 Reads Lifting_Consolidated_AllYears.xlsx (sibling "Lifting Data" project) and
 writes ../data/lifting.json for the 4-tab Lifting & Strength dashboard:
-leaderboards (Combined Total / Bench / Squat / Clean) split by class year or by
-All-Time/Last-Session, plus per-athlete Height/Weight/lift time series for the
-Class Comparison tab.
+leaderboards split by class year or by All-Time/Last-Session, plus per-athlete
+time series for the Class Comparison tab.
 
 Class year (Freshman/Sophomore/Junior/Senior) isn't its own column in the Lifting
 Data output -- `years_with_program` is used as the proxy (confirmed identical to
@@ -11,6 +10,17 @@ the source's own CLASS field for every athlete checked in that project's own
 validation, see Lifting Data/.claude/skills/lifting-data/SKILL.md). Only populated
 2023-24 onward, so 2021-22/2022-23 athletes only appear in the All-Time/Last-Session
 tab, never a class-specific one.
+
+Extended 2026-07-30 (per the user, "reporting dashboards of the other metrics"):
+beyond the original 4 lift metrics, the Lifting Data pipeline also computes two
+composite z-score-based percentiles (Strength Score, Athleticism Score -- see
+that project's SKILL.md "Scores" section) and tracks three raw athletic-testing
+metrics (Broad Jump, Vertical, Pro Agility) that this dashboard never surfaced
+before. Team-scope scores only (not Position-scope) for this first pass -- see
+this project's README for why. Athleticism Score only exists for 2023-24/2025-26
+(its own "require all 6 metrics" gate -- Vertical/Pro Agility don't co-exist in
+every year); Pro Agility itself is entirely absent from 2024-25. Both are real
+source-data gaps carried straight through, not bugs to paper over.
 
 Re-run whenever the Lifting Data output changes:
     python build_lifting_data.py
@@ -26,7 +36,38 @@ OUT = Path(__file__).resolve().parent.parent / "data" / "lifting.json"
 
 PERIOD_ORDER = {"December": 0, "January": 1, "April": 2}
 CLASS_NAMES = {1: "Freshman", 2: "Sophomore", 3: "Junior", 4: "Senior"}
-LEADERBOARD_METRICS = ["Combined Total", "Bench", "Squat", "Clean"]
+
+STRENGTH_METRICS = ["Combined Total", "Bench", "Squat", "Clean", "Strength Score (Team)"]
+ATHLETIC_METRICS = ["Broad Jump", "Vertical", "Pro Agility", "Athleticism Score (Team)"]
+LEADERBOARD_METRICS = STRENGTH_METRICS + ATHLETIC_METRICS
+# Pro Agility is a timed sprint -- lower is faster/better, the one metric on this
+# page that isn't "bigger number wins" (matches Lifting Data's own LOWER_IS_BETTER
+# convention for its z-score math).
+LOWER_IS_BETTER = {"Pro Agility"}
+# Metrics whose real value is `value` directly (a percentile, or -- for Broad
+# Jump/Vertical/Pro Agility -- the specific attempt='Best' row's own value) rather
+# than `calculated_1rm` (the lift 1RM the original 4 metrics use).
+SCORE_METRICS = {"Strength Score (Team)", "Athleticism Score (Team)"}
+BEST_ATTEMPT_METRICS = {"Broad Jump", "Vertical", "Pro Agility"}
+
+
+def metric_value(r):
+    """The real per-row value for whichever of the LEADERBOARD_METRICS this row
+    is, or None if this specific row isn't the one to use (e.g. a Broad Jump
+    attempt=1/2 row, which exists alongside the attempt='Best' row this reads
+    instead -- using every attempt row too would just redundantly re-compare the
+    same session's already-known best against itself)."""
+    metric = r["metric"]
+    if metric in SCORE_METRICS:
+        return r["value"]
+    if metric in BEST_ATTEMPT_METRICS:
+        return r["value"] if r["attempt"] == "Best" else None
+    return r["calculated_1rm"]  # lifts + Combined Total
+
+
+def is_better(metric, v, cur):
+    """True if `v` should replace `cur` as the best-seen value for `metric`."""
+    return v < cur if metric in LOWER_IS_BETTER else v > cur
 
 
 def session_key(football_year, period):
@@ -85,11 +126,11 @@ def main():
             continue
         if r["testing_period"] is None:
             continue
-        v = r["calculated_1rm"]
+        v = metric_value(r)
         if v is None:
             continue
         key = (r["athlete_key"], r["football_year"], r["testing_period"], metric)
-        if key not in best or v > best[key]:
+        if key not in best or is_better(metric, v, best[key]):
             best[key] = v
 
     leaderboard_rows = []
@@ -103,8 +144,9 @@ def main():
             "metric": metric, "value": round(value, 1),
         })
 
-    # per-athlete time series (Height/Weight + best lift per session), sorted
-    # chronologically, for the Class Comparison tab's line charts.
+    # per-athlete time series (Height/Weight + best value per session for every
+    # leaderboard metric), sorted chronologically, for the Class Comparison tab's
+    # line charts.
     series_metrics = LEADERBOARD_METRICS + ["Height", "Weight"]
     series_points = {}
     for r in rows:
@@ -117,7 +159,7 @@ def main():
         if metric in ("Height", "Weight"):
             v = r["value"]
         else:
-            v = r["calculated_1rm"]
+            v = metric_value(r)
         if v is None:
             continue
         fy = r["football_year"]
@@ -128,7 +170,7 @@ def main():
             # collapse to one point per football_year so it still lines up on the
             # same x-axis as the other per-session metrics.
             key = (ak, fy, "—", metric)
-        if key not in series_points or v > series_points[key]:
+        if key not in series_points or is_better(metric, v, series_points[key]):
             series_points[key] = v
 
     athletes = {}

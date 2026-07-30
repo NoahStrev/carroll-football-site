@@ -43,11 +43,18 @@
       L/Short miss-location breakdown (only "Blocked" is currently tracked as a miss reason). Hangtime and
       snap-timing fields are hand-charted by the coaching staff and are real wherever populated — filters
       and charts here only ever use the rows that actually have a value, never an average padded with blanks.
+      <b>Team Overview</b> (added 2026-07-30) rolls all five units up into one cross-unit view using each
+      unit's own real "points added over expectation" <b>Value</b>/<b>Score</b> metric — Money Unit, Punt,
+      and Kickoff already had it; Punt Return and Kickoff Return actually have it too (real columns on
+      those sheets the pipeline never extracted before this pass, a same-shaped gap to the "Snap Location"
+      one caught earlier in this project). Score is the 0–100 rescale of Value, used here since it puts all
+      five differently-scaled units on one comparable axis.
     </p>
   </div>
 
   <div class="tabbar" id="unit-tabs">
-    <button class="tabbtn active" data-unit="money_unit">Money Unit</button>
+    <button class="tabbtn active" data-unit="overview">Team Overview</button>
+    <button class="tabbtn" data-unit="money_unit">Money Unit</button>
     <button class="tabbtn" data-unit="punt_return">Punt Return</button>
     <button class="tabbtn" data-unit="punt">Punt</button>
     <button class="tabbtn" data-unit="kickoff">Kickoff</button>
@@ -76,6 +83,116 @@ let DATA = null;
 /* gameTrend/renderTrendCard now live in js/charts.js (hoisted 2026-07-30 --
    Offense/Defense need the identical "Last Game vs Previous Game" trend
    card, don't re-add a local copy here). */
+
+/* ============================================================================
+   TEAM OVERVIEW (added 2026-07-30, per the user: "this is supposed to be a
+   view of the special teams units as a whole" -- every other tab on this page
+   is one unit at a time; this is the only place all 5 get compared directly,
+   using the Value/Score "points added over expectation" metric every unit's
+   own sheet already computes (Punt Return/Kickoff Return's real columns were
+   never wired into the pipeline before this pass -- see the intro copy).
+   ============================================================================ */
+
+const UNIT_KEYS = ['money_unit', 'punt', 'punt_return', 'kickoff', 'kickoff_return'];
+const UNIT_LABELS = {
+  money_unit: 'Money Unit', punt: 'Punt', punt_return: 'Punt Return',
+  kickoff: 'Kickoff', kickoff_return: 'Kickoff Return',
+};
+const OVERVIEW_FILTERS = [{ field: 'season', label: 'Season' }];
+
+function teamOverviewTab(root) {
+  const allSeasons = [...new Set(UNIT_KEYS.flatMap((u) => DATA.filters[u].season))].sort();
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Team Overview</h2></div>
+          <div class="sub">All 5 Special Teams Units · Carroll Special Teams</div>
+        </div>
+        <div class="shelf" id="to-shelf"></div>
+        <div class="body">
+          <div class="kpirow-5" id="to-kpis">
+            ${UNIT_KEYS.map((u) => kpiHTML(`to-${u}`, `${UNIT_LABELS[u]} Avg Score`)).join('')}
+          </div>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Avg Score by Unit</h3></div><div class="card-body" id="to-byunit"></div></div>
+            <div class="card"><div class="card-head"><h3>Avg Score by Season (all units combined)</h3></div><div class="card-body" id="to-byseason"></div></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Snap/Play Volume by Unit</h3></div>
+            <div class="card-body" id="to-volume"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Avg Score — unit × season</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Unit</th>${allSeasons.map((s) => `<th style="text-align:right;">${s}</th>`).join('')}<th style="text-align:right;">All Time</th></tr></thead>
+                <tbody id="to-table-body"></tbody>
+              </table>
+              <div class="insight">Avg Score (0–100 rescale of each unit's own Value metric) per season — always shows every season regardless of the Season filter above, which only scopes the KPIs/charts (this table's whole point is comparing across seasons at once). A dash means that unit has no charted plays that season.</div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: all 5 Carroll Special Teams sheets' own Value/Score columns ("points added over expectation" vs. an average Carroll attempt at that unit), Carroll_Special_Teams_2021_Current.xlsx.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('to-shelf').innerHTML = buildFilterPanel('to', OVERVIEW_FILTERS, { season: allSeasons });
+  wireFilterPanel('to', OVERVIEW_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('to', OVERVIEW_FILTERS);
+    const rowsByUnit = {};
+    UNIT_KEYS.forEach((u) => { rowsByUnit[u] = applyFilters(DATA.units[u], { season: state.season }); });
+    const totalRows = UNIT_KEYS.reduce((s, u) => s + rowsByUnit[u].length, 0);
+    document.getElementById('to-summary').textContent = `${totalRows} plays across all units in view`;
+
+    UNIT_KEYS.forEach((u) => {
+      const rows = rowsByUnit[u];
+      setKPI(`to-${u}`, fmt(mean(rows.map((r) => r.score)), 1), `${rows.length} plays`);
+    });
+
+    renderBar(document.getElementById('to-byunit'), {
+      categories: UNIT_KEYS.map((u) => UNIT_LABELS[u]),
+      values: UNIT_KEYS.map((u) => mean(rowsByUnit[u].map((r) => r.score))),
+      labelFmt: (v) => fmt(v, 0),
+      colorFn: (name, v) => (v === null ? cssVar('--muted') : v >= 50 ? cssVar('--good') : cssVar('--critical')),
+      xlab2: (name, i) => `n=${rowsByUnit[UNIT_KEYS[i]].length}`,
+    });
+
+    const allRows = UNIT_KEYS.flatMap((u) => rowsByUnit[u]);
+    const byseason = groupBy(allRows, 'season');
+    const seasonsInView = allSeasons.filter((s) => byseason.has(s));
+    renderBar(document.getElementById('to-byseason'), {
+      categories: seasonsInView,
+      values: seasonsInView.map((s) => mean(byseason.get(s).map((r) => r.score))),
+      labelFmt: (v) => fmt(v, 0),
+      colorFn: () => cssVar('--cat-1'),
+      xlab2: (s) => `n=${byseason.get(s).length}`,
+    });
+
+    renderBar(document.getElementById('to-volume'), {
+      categories: UNIT_KEYS.map((u) => UNIT_LABELS[u]),
+      values: UNIT_KEYS.map((u) => rowsByUnit[u].length),
+      labelFmt: (v) => String(v),
+      colorFn: (name, v, i) => catColor(i),
+    });
+
+    // Deliberately reads DATA.units directly, NOT the season-filtered
+    // rowsByUnit above -- see the table's own insight text.
+    const tbody = UNIT_KEYS.map((u) => {
+      const rows = DATA.units[u];
+      const byS = groupBy(rows, 'season');
+      const cells = allSeasons.map((s) => {
+        const g = byS.get(s);
+        return `<td style="text-align:right;">${g && g.length ? fmt(mean(g.map((r) => r.score)), 0) : '—'}</td>`;
+      }).join('');
+      return `<tr><td class="name">${UNIT_LABELS[u]}</td>${cells}<td style="text-align:right; font-weight:700;">${rows.length ? fmt(mean(rows.map((r) => r.score)), 0) : '—'}</td></tr>`;
+    }).join('');
+    document.getElementById('to-table-body').innerHTML = tbody;
+  }
+  render();
+}
 
 /* ============================================================================
    MONEY UNIT
@@ -654,6 +771,7 @@ function kickoffReturnTab(root) {
 /* ------------------------------------------------------------------ tabs ---- */
 
 const TAB_RENDERERS = {
+  overview: teamOverviewTab,
   money_unit: moneyUnitTab,
   punt_return: puntReturnTab,
   punt: puntTab,
@@ -675,7 +793,7 @@ fetch('../data/special-teams.json')
   .then((r) => r.json())
   .then((data) => {
     DATA = data;
-    showUnit('money_unit');
+    showUnit('overview');
   })
   .catch((err) => {
     document.getElementById('unit-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/special-teams.json — ${err}. Run scripts/build_special_teams_data.py first, and serve this folder over http:// rather than opening the file directly (fetch() of a local JSON file is blocked under file://).</div></div>`;
