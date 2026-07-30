@@ -89,7 +89,27 @@ based on.
      `kpiHTML`/`setKPI` into `js/charts.js` (was duplicated in
      `special-teams-overview.html`) for reuse across the remaining 4 position
      pages.
-   - Kickoff kicker, punter, short snapper, long snapper — not started.
+   - **Kickoff Kicker — done** (`dashboards/kickoff-kicker.html`, 2026-08-01). Same
+     3-tab shape and same real-data discipline as Placekicker: Touchback rate,
+     Inside-25 rate, distance, return allowed, and onside recovery are all
+     box-score-derived and 100% real for every row; Hangtime and Hash Kicked From
+     are hand-charted and real from 2023 onward (same phase-in pattern as every
+     other manually-charted field in this project — 0% in 2021-2022, ~90-100% by
+     2024-2025, verified column-by-column before building). Surfaces the real
+     `Kickoff Value`/`Score` metric the same way Placekicker surfaces `PAT/FG
+     Value`/`Score`. Distance and return-allowed are charted as two separate
+     single-metric bar charts rather than one dual-axis chart, per the dataviz
+     skill's "never two y-scales" rule. **Known data issue, not fixed here**: the
+     source has two spellings for what's almost certainly the same kicker —
+     `"Scofield"` (6 rows, 2021) and `"Sebastian Scofield"` (6 rows, 2021-2022) —
+     left as two separate kickers rather than silently merged, since resolving a
+     name-parsing gap is the `Special Teams Data` project's job (see that
+     project's `SKILL.md` "Overall/Season Number"/name-enrichment mechanism), not
+     something to guess at from this dashboard. Same category of issue as the
+     Lifting Data project's known spelling-variant duplicates. Hoisted
+     `renderTwoLine` (the two-series line chart from Placekicker's Head-to-Head)
+     into `js/charts.js` for reuse here.
+   - Punter, short snapper, long snapper — not started.
 3. **Phase 3 — offense &amp; defense**: no existing dashboard reference for either —
    design from scratch once we get here.
 4. **Phase 4 — report ingestion &amp; downloads** (lowest priority, added 2026-07-30

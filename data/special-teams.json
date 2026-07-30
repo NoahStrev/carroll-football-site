@@ -8724,7 +8724,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2021",
@@ -8742,7 +8748,13 @@
 "return_length": 5,
 "hash_kicked_from": null,
 "converted_los": 7,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2021",
@@ -8760,7 +8772,13 @@
 "return_length": 22,
 "hash_kicked_from": null,
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.083,
+"score": 56.5
 },
 {
 "season": "2021",
@@ -8778,7 +8796,13 @@
 "return_length": 14,
 "hash_kicked_from": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.305,
+"score": 58.9
 },
 {
 "season": "2021",
@@ -8796,7 +8820,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2021",
@@ -8814,7 +8844,13 @@
 "return_length": 13,
 "hash_kicked_from": null,
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2021",
@@ -8832,7 +8868,13 @@
 "return_length": 18,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2021",
@@ -8850,7 +8892,13 @@
 "return_length": 18,
 "hash_kicked_from": null,
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.259,
+"score": 58.4
 },
 {
 "season": "2021",
@@ -8868,7 +8916,13 @@
 "return_length": 15,
 "hash_kicked_from": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.148,
+"score": 57.2
 },
 {
 "season": "2021",
@@ -8886,7 +8940,13 @@
 "return_length": 21,
 "hash_kicked_from": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2021",
@@ -8904,7 +8964,13 @@
 "return_length": 10,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2021",
@@ -8922,7 +8988,13 @@
 "return_length": 15,
 "hash_kicked_from": null,
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.213,
+"score": 57.9
 },
 {
 "season": "2021",
@@ -8940,7 +9012,13 @@
 "return_length": 26,
 "hash_kicked_from": null,
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.112,
+"score": 54.3
 },
 {
 "season": "2021",
@@ -8958,7 +9036,13 @@
 "return_length": 16,
 "hash_kicked_from": null,
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.083,
+"score": 56.5
 },
 {
 "season": "2021",
@@ -8976,7 +9060,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2021",
@@ -8994,7 +9084,13 @@
 "return_length": 18,
 "hash_kicked_from": null,
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.251,
+"score": 58.3
 },
 {
 "season": "2021",
@@ -9012,7 +9108,13 @@
 "return_length": 19,
 "hash_kicked_from": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.148,
+"score": 57.2
 },
 {
 "season": "2021",
@@ -9030,7 +9132,13 @@
 "return_length": 25,
 "hash_kicked_from": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.148,
+"score": 57.2
 },
 {
 "season": "2021",
@@ -9048,7 +9156,13 @@
 "return_length": 69,
 "hash_kicked_from": null,
 "converted_los": 70,
-"field_bucket": "71-80"
+"field_bucket": "71-80",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2021",
@@ -9066,7 +9180,13 @@
 "return_length": 31,
 "hash_kicked_from": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2021",
@@ -9084,7 +9204,13 @@
 "return_length": 6,
 "hash_kicked_from": null,
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2021",
@@ -9102,7 +9228,13 @@
 "return_length": 26,
 "hash_kicked_from": null,
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.083,
+"score": 56.5
 },
 {
 "season": "2021",
@@ -9120,7 +9252,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2021",
@@ -9138,7 +9276,13 @@
 "return_length": 14,
 "hash_kicked_from": null,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.29,
+"score": 58.8
 },
 {
 "season": "2021",
@@ -9156,7 +9300,13 @@
 "return_length": 21,
 "hash_kicked_from": null,
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.259,
+"score": 58.4
 },
 {
 "season": "2021",
@@ -9174,7 +9324,13 @@
 "return_length": 20,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2021",
@@ -9192,7 +9348,13 @@
 "return_length": 12,
 "hash_kicked_from": null,
 "converted_los": 41,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.568,
+"score": 49.3
 },
 {
 "season": "2021",
@@ -9210,7 +9372,13 @@
 "return_length": 10,
 "hash_kicked_from": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.305,
+"score": 58.9
 },
 {
 "season": "2021",
@@ -9228,7 +9396,13 @@
 "return_length": 11,
 "hash_kicked_from": null,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.503,
+"score": 50
 },
 {
 "season": "2021",
@@ -9246,7 +9420,13 @@
 "return_length": 24,
 "hash_kicked_from": null,
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.251,
+"score": 58.3
 },
 {
 "season": "2021",
@@ -9264,7 +9444,13 @@
 "return_length": 19,
 "hash_kicked_from": null,
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.083,
+"score": 56.5
 },
 {
 "season": "2021",
@@ -9282,7 +9468,13 @@
 "return_length": 35,
 "hash_kicked_from": null,
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.828,
+"score": 46.4
 },
 {
 "season": "2021",
@@ -9300,7 +9492,13 @@
 "return_length": 33,
 "hash_kicked_from": null,
 "converted_los": 36,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.242,
+"score": 52.9
 },
 {
 "season": "2021",
@@ -9318,7 +9516,13 @@
 "return_length": 14,
 "hash_kicked_from": null,
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.259,
+"score": 58.4
 },
 {
 "season": "2021",
@@ -9336,7 +9540,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2021",
@@ -9354,7 +9564,13 @@
 "return_length": 45,
 "hash_kicked_from": null,
 "converted_los": 10,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2021",
@@ -9372,7 +9588,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.503,
+"score": 50
 },
 {
 "season": "2021",
@@ -9390,7 +9612,13 @@
 "return_length": 19,
 "hash_kicked_from": null,
 "converted_los": 4,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2021",
@@ -9408,7 +9636,13 @@
 "return_length": 19,
 "hash_kicked_from": null,
 "converted_los": 1,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2021",
@@ -9426,7 +9660,13 @@
 "return_length": 8,
 "hash_kicked_from": null,
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2021",
@@ -9444,7 +9684,13 @@
 "return_length": 12,
 "hash_kicked_from": null,
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2021",
@@ -9462,7 +9708,13 @@
 "return_length": 14,
 "hash_kicked_from": null,
 "converted_los": 12,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2021",
@@ -9480,7 +9732,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 11,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2021",
@@ -9498,7 +9756,13 @@
 "return_length": 20,
 "hash_kicked_from": null,
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.083,
+"score": 56.5
 },
 {
 "season": "2021",
@@ -9516,7 +9780,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2021",
@@ -9534,7 +9804,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2021",
@@ -9552,7 +9828,13 @@
 "return_length": 17,
 "hash_kicked_from": null,
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.244,
+"score": 58.3
 },
 {
 "season": "2021",
@@ -9570,7 +9852,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 52,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2021",
@@ -9588,7 +9876,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 17,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2022",
@@ -9606,7 +9900,13 @@
 "return_length": 18,
 "hash_kicked_from": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.305,
+"score": 58.9
 },
 {
 "season": "2022",
@@ -9624,7 +9924,13 @@
 "return_length": 14,
 "hash_kicked_from": null,
 "converted_los": 16,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2022",
@@ -9642,7 +9948,13 @@
 "return_length": 30,
 "hash_kicked_from": null,
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.308,
+"score": 52.2
 },
 {
 "season": "2022",
@@ -9660,7 +9972,13 @@
 "return_length": 20,
 "hash_kicked_from": null,
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.251,
+"score": 58.3
 },
 {
 "season": "2022",
@@ -9678,7 +9996,13 @@
 "return_length": 12,
 "hash_kicked_from": null,
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.274,
+"score": 58.6
 },
 {
 "season": "2022",
@@ -9696,7 +10020,13 @@
 "return_length": 9,
 "hash_kicked_from": null,
 "converted_los": 9,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2022",
@@ -9714,7 +10044,13 @@
 "return_length": 22,
 "hash_kicked_from": null,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.018,
+"score": 55.8
 },
 {
 "season": "2022",
@@ -9732,7 +10068,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2022",
@@ -9750,7 +10092,13 @@
 "return_length": 18,
 "hash_kicked_from": null,
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.259,
+"score": 58.4
 },
 {
 "season": "2022",
@@ -9768,7 +10116,13 @@
 "return_length": 22,
 "hash_kicked_from": null,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.29,
+"score": 58.8
 },
 {
 "season": "2022",
@@ -9786,7 +10140,13 @@
 "return_length": 27,
 "hash_kicked_from": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.148,
+"score": 57.2
 },
 {
 "season": "2022",
@@ -9804,7 +10164,13 @@
 "return_length": 14,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2022",
@@ -9822,7 +10188,13 @@
 "return_length": 21,
 "hash_kicked_from": null,
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.112,
+"score": 54.3
 },
 {
 "season": "2022",
@@ -9840,7 +10212,13 @@
 "return_length": 25,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2022",
@@ -9858,7 +10236,13 @@
 "return_length": 25,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2022",
@@ -9876,7 +10260,13 @@
 "return_length": 23,
 "hash_kicked_from": null,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.018,
+"score": 55.8
 },
 {
 "season": "2022",
@@ -9894,7 +10284,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2022",
@@ -9912,7 +10308,13 @@
 "return_length": 13,
 "hash_kicked_from": null,
 "converted_los": 13,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2022",
@@ -9930,7 +10332,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2022",
@@ -9948,7 +10356,13 @@
 "return_length": 18,
 "hash_kicked_from": null,
 "converted_los": 36,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.242,
+"score": 52.9
 },
 {
 "season": "2022",
@@ -9966,7 +10380,13 @@
 "return_length": 20,
 "hash_kicked_from": null,
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.297,
+"score": 58.8
 },
 {
 "season": "2022",
@@ -9984,7 +10404,13 @@
 "return_length": 9,
 "hash_kicked_from": null,
 "converted_los": 19,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.313,
+"score": 59
 },
 {
 "season": "2022",
@@ -10002,7 +10428,13 @@
 "return_length": 11,
 "hash_kicked_from": null,
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.305,
+"score": 58.9
 },
 {
 "season": "2022",
@@ -10020,7 +10452,13 @@
 "return_length": 19,
 "hash_kicked_from": null,
 "converted_los": 19,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.313,
+"score": 59
 },
 {
 "season": "2022",
@@ -10038,7 +10476,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2022",
@@ -10056,7 +10500,13 @@
 "return_length": 2,
 "hash_kicked_from": null,
 "converted_los": 14,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2022",
@@ -10074,7 +10524,13 @@
 "return_length": 29,
 "hash_kicked_from": null,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.018,
+"score": 55.8
 },
 {
 "season": "2022",
@@ -10092,7 +10548,13 @@
 "return_length": 92,
 "hash_kicked_from": null,
 "converted_los": 100,
-"field_bucket": "91-100"
+"field_bucket": "91-100",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -5.027,
+"score": 0
 },
 {
 "season": "2022",
@@ -10110,7 +10572,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2022",
@@ -10128,7 +10596,13 @@
 "return_length": 18,
 "hash_kicked_from": null,
 "converted_los": 19,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.313,
+"score": 59
 },
 {
 "season": "2022",
@@ -10146,7 +10620,13 @@
 "return_length": 37,
 "hash_kicked_from": null,
 "converted_los": 47,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2022",
@@ -10164,7 +10644,13 @@
 "return_length": 12,
 "hash_kicked_from": null,
 "converted_los": 17,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2022",
@@ -10182,7 +10668,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.148,
+"score": 57.2
 },
 {
 "season": "2022",
@@ -10200,7 +10692,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2022",
@@ -10218,7 +10716,13 @@
 "return_length": 4,
 "hash_kicked_from": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2022",
@@ -10236,7 +10740,13 @@
 "return_length": 10,
 "hash_kicked_from": null,
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.047,
+"score": 55
 },
 {
 "season": "2022",
@@ -10254,7 +10764,13 @@
 "return_length": 22,
 "hash_kicked_from": null,
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.274,
+"score": 58.6
 },
 {
 "season": "2022",
@@ -10272,7 +10788,13 @@
 "return_length": 12,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2022",
@@ -10290,7 +10812,13 @@
 "return_length": 36,
 "hash_kicked_from": null,
 "converted_los": 50,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2022",
@@ -10308,7 +10836,13 @@
 "return_length": 22,
 "hash_kicked_from": null,
 "converted_los": 39,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.438,
+"score": 50.7
 },
 {
 "season": "2022",
@@ -10326,7 +10860,13 @@
 "return_length": 19,
 "hash_kicked_from": null,
 "converted_los": 44,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.763,
+"score": 47.1
 },
 {
 "season": "2022",
@@ -10344,7 +10884,13 @@
 "return_length": 13,
 "hash_kicked_from": null,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.018,
+"score": 55.8
 },
 {
 "season": "2022",
@@ -10362,7 +10908,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2022",
@@ -10380,7 +10932,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2022",
@@ -10398,7 +10956,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2022",
@@ -10416,7 +10980,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2022",
@@ -10434,7 +11004,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2022",
@@ -10452,7 +11028,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.148,
+"score": 57.2
 },
 {
 "season": "2022",
@@ -10470,7 +11052,13 @@
 "return_length": 24,
 "hash_kicked_from": null,
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.259,
+"score": 58.4
 },
 {
 "season": "2022",
@@ -10488,7 +11076,13 @@
 "return_length": 13,
 "hash_kicked_from": null,
 "converted_los": 48,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2022",
@@ -10506,7 +11100,13 @@
 "return_length": 30,
 "hash_kicked_from": null,
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.112,
+"score": 54.3
 },
 {
 "season": "2023",
@@ -10524,7 +11124,13 @@
 "return_length": 13,
 "hash_kicked_from": "L",
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.29,
+"score": 58.8
 },
 {
 "season": "2023",
@@ -10542,7 +11148,13 @@
 "return_length": -1,
 "hash_kicked_from": "L",
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2023",
@@ -10560,7 +11172,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2023",
@@ -10578,7 +11196,13 @@
 "return_length": 19,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2023",
@@ -10596,7 +11220,13 @@
 "return_length": 10,
 "hash_kicked_from": "L",
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.305,
+"score": 58.9
 },
 {
 "season": "2023",
@@ -10614,7 +11244,13 @@
 "return_length": 37,
 "hash_kicked_from": "L",
 "converted_los": 49,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2023",
@@ -10632,7 +11268,13 @@
 "return_length": 15,
 "hash_kicked_from": "L",
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.274,
+"score": 58.6
 },
 {
 "season": "2023",
@@ -10650,7 +11292,13 @@
 "return_length": 10,
 "hash_kicked_from": "L",
 "converted_los": 17,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2023",
@@ -10668,7 +11316,13 @@
 "return_length": 27,
 "hash_kicked_from": "L",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2023",
@@ -10686,7 +11340,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.373,
+"score": 51.4
 },
 {
 "season": "2023",
@@ -10704,7 +11364,13 @@
 "return_length": 22,
 "hash_kicked_from": "L",
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.259,
+"score": 58.4
 },
 {
 "season": "2023",
@@ -10722,7 +11388,13 @@
 "return_length": 22,
 "hash_kicked_from": "L",
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.018,
+"score": 55.8
 },
 {
 "season": "2023",
@@ -10740,7 +11412,13 @@
 "return_length": 17,
 "hash_kicked_from": "L",
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.282,
+"score": 58.7
 },
 {
 "season": "2023",
@@ -10758,7 +11436,13 @@
 "return_length": 72,
 "hash_kicked_from": "L",
 "converted_los": 77,
-"field_bucket": "71-80"
+"field_bucket": "71-80",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2023",
@@ -10776,7 +11460,13 @@
 "return_length": 10,
 "hash_kicked_from": "L",
 "converted_los": 15,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2023",
@@ -10794,7 +11484,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2023",
@@ -10812,7 +11508,13 @@
 "return_length": 17,
 "hash_kicked_from": "L",
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.29,
+"score": 58.8
 },
 {
 "season": "2023",
@@ -10830,7 +11532,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2023",
@@ -10848,7 +11556,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2023",
@@ -10866,7 +11580,13 @@
 "return_length": 32,
 "hash_kicked_from": "L",
 "converted_los": 42,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.633,
+"score": 48.6
 },
 {
 "season": "2023",
@@ -10884,7 +11604,13 @@
 "return_length": 27,
 "hash_kicked_from": "L",
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.047,
+"score": 55
 },
 {
 "season": "2023",
@@ -10902,7 +11628,13 @@
 "return_length": 26,
 "hash_kicked_from": "L",
 "converted_los": 36,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.242,
+"score": 52.9
 },
 {
 "season": "2023",
@@ -10920,7 +11652,13 @@
 "return_length": 28,
 "hash_kicked_from": "L",
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.148,
+"score": 57.2
 },
 {
 "season": "2023",
@@ -10938,7 +11676,13 @@
 "return_length": 22,
 "hash_kicked_from": "L",
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.251,
+"score": 58.3
 },
 {
 "season": "2023",
@@ -10956,7 +11700,13 @@
 "return_length": 28,
 "hash_kicked_from": "L",
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.373,
+"score": 51.4
 },
 {
 "season": "2023",
@@ -10974,7 +11724,13 @@
 "return_length": 7,
 "hash_kicked_from": "L",
 "converted_los": 12,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2023",
@@ -10992,7 +11748,13 @@
 "return_length": 30,
 "hash_kicked_from": "L",
 "converted_los": 40,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.503,
+"score": 50
 },
 {
 "season": "2023",
@@ -11010,7 +11772,13 @@
 "return_length": 11,
 "hash_kicked_from": "L",
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.259,
+"score": 58.4
 },
 {
 "season": "2023",
@@ -11028,7 +11796,13 @@
 "return_length": 18,
 "hash_kicked_from": "L",
 "converted_los": 19,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.313,
+"score": 59
 },
 {
 "season": "2023",
@@ -11046,7 +11820,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2023",
@@ -11064,7 +11844,13 @@
 "return_length": 20,
 "hash_kicked_from": "L",
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.282,
+"score": 58.7
 },
 {
 "season": "2023",
@@ -11082,7 +11868,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2023",
@@ -11100,7 +11892,13 @@
 "return_length": 40,
 "hash_kicked_from": "L",
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.828,
+"score": 46.4
 },
 {
 "season": "2023",
@@ -11118,7 +11916,13 @@
 "return_length": 98,
 "hash_kicked_from": "L",
 "converted_los": 100,
-"field_bucket": "91-100"
+"field_bucket": "91-100",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -5.027,
+"score": 0
 },
 {
 "season": "2023",
@@ -11136,7 +11940,13 @@
 "return_length": 0,
 "hash_kicked_from": "M",
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.274,
+"score": 58.6
 },
 {
 "season": "2023",
@@ -11154,7 +11964,13 @@
 "return_length": 0,
 "hash_kicked_from": "M",
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.274,
+"score": 58.6
 },
 {
 "season": "2023",
@@ -11172,7 +11988,13 @@
 "return_length": 6,
 "hash_kicked_from": "L",
 "converted_los": 11,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2023",
@@ -11190,7 +12012,13 @@
 "return_length": 0,
 "hash_kicked_from": "R",
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.213,
+"score": 57.9
 },
 {
 "season": "2023",
@@ -11208,7 +12036,13 @@
 "return_length": 12,
 "hash_kicked_from": "L",
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.251,
+"score": 58.3
 },
 {
 "season": "2023",
@@ -11226,7 +12060,13 @@
 "return_length": 10,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2023",
@@ -11244,7 +12084,13 @@
 "return_length": 10,
 "hash_kicked_from": "L",
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.305,
+"score": 58.9
 },
 {
 "season": "2023",
@@ -11262,7 +12108,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2023",
@@ -11280,7 +12132,13 @@
 "return_length": 17,
 "hash_kicked_from": "L",
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.305,
+"score": 58.9
 },
 {
 "season": "2023",
@@ -11298,7 +12156,13 @@
 "return_length": 24,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2023",
@@ -11316,7 +12180,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2023",
@@ -11334,7 +12204,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.828,
+"score": 46.4
 },
 {
 "season": "2023",
@@ -11352,7 +12228,13 @@
 "return_length": 4,
 "hash_kicked_from": "L",
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2023",
@@ -11370,7 +12252,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.047,
+"score": 55
 },
 {
 "season": "2023",
@@ -11388,7 +12276,13 @@
 "return_length": 9,
 "hash_kicked_from": null,
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.112,
+"score": 54.3
 },
 {
 "season": "2023",
@@ -11406,7 +12300,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 50,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2023",
@@ -11424,7 +12324,13 @@
 "return_length": 43,
 "hash_kicked_from": null,
 "converted_los": 65,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2023",
@@ -11442,7 +12348,13 @@
 "return_length": 6,
 "hash_kicked_from": null,
 "converted_los": 78,
-"field_bucket": "71-80"
+"field_bucket": "71-80",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2023",
@@ -11460,7 +12372,13 @@
 "return_length": 12,
 "hash_kicked_from": null,
 "converted_los": 63,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2023",
@@ -11478,7 +12396,13 @@
 "return_length": 21,
 "hash_kicked_from": null,
 "converted_los": 74,
-"field_bucket": "71-80"
+"field_bucket": "71-80",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2023",
@@ -11496,7 +12420,13 @@
 "return_length": -4,
 "hash_kicked_from": null,
 "converted_los": 52,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2023",
@@ -11514,7 +12444,13 @@
 "return_length": 8,
 "hash_kicked_from": null,
 "converted_los": 64,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2023",
@@ -11532,7 +12468,13 @@
 "return_length": 25,
 "hash_kicked_from": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2023",
@@ -11550,7 +12492,13 @@
 "return_length": 12,
 "hash_kicked_from": null,
 "converted_los": 41,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.568,
+"score": 49.3
 },
 {
 "season": "2023",
@@ -11568,7 +12516,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2023",
@@ -11586,7 +12540,13 @@
 "return_length": 29,
 "hash_kicked_from": null,
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.308,
+"score": 52.2
 },
 {
 "season": "2023",
@@ -11604,7 +12564,13 @@
 "return_length": 40,
 "hash_kicked_from": null,
 "converted_los": 45,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.828,
+"score": 46.4
 },
 {
 "season": "2023",
@@ -11622,7 +12588,13 @@
 "return_length": 15,
 "hash_kicked_from": null,
 "converted_los": 42,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.633,
+"score": 48.6
 },
 {
 "season": "2023",
@@ -11640,7 +12612,13 @@
 "return_length": 0,
 "hash_kicked_from": null,
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.244,
+"score": 58.3
 },
 {
 "season": "2023",
@@ -11658,7 +12636,13 @@
 "return_length": 17,
 "hash_kicked_from": null,
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.244,
+"score": 58.3
 },
 {
 "season": "2023",
@@ -11676,7 +12660,13 @@
 "return_length": 23,
 "hash_kicked_from": null,
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.018,
+"score": 55.8
 },
 {
 "season": "2023",
@@ -11694,7 +12684,13 @@
 "return_length": 14,
 "hash_kicked_from": null,
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.112,
+"score": 54.3
 },
 {
 "season": "2023",
@@ -11712,7 +12708,13 @@
 "return_length": 22,
 "hash_kicked_from": null,
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.282,
+"score": 58.7
 },
 {
 "season": "2024",
@@ -11730,7 +12732,13 @@
 "return_length": 38,
 "hash_kicked_from": "L",
 "converted_los": 46,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2024",
@@ -11748,7 +12756,13 @@
 "return_length": 30,
 "hash_kicked_from": "L",
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.047,
+"score": 55
 },
 {
 "season": "2024",
@@ -11766,7 +12780,13 @@
 "return_length": 24,
 "hash_kicked_from": "L",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2024",
@@ -11784,7 +12804,13 @@
 "return_length": 23,
 "hash_kicked_from": "L",
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.282,
+"score": 58.7
 },
 {
 "season": "2024",
@@ -11802,7 +12828,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2024",
@@ -11820,7 +12852,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2024",
@@ -11838,7 +12876,13 @@
 "return_length": 30,
 "hash_kicked_from": "L",
 "converted_los": 1,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2024",
@@ -11856,7 +12900,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 51,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2024",
@@ -11874,7 +12924,13 @@
 "return_length": 4,
 "hash_kicked_from": "L",
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.018,
+"score": 55.8
 },
 {
 "season": "2024",
@@ -11892,7 +12948,13 @@
 "return_length": 3,
 "hash_kicked_from": "L",
 "converted_los": 5,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2024",
@@ -11910,7 +12972,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2024",
@@ -11928,7 +12996,13 @@
 "return_length": 12,
 "hash_kicked_from": "L",
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.244,
+"score": 58.3
 },
 {
 "season": "2024",
@@ -11946,7 +13020,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 52,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2024",
@@ -11964,7 +13044,13 @@
 "return_length": 22,
 "hash_kicked_from": "L",
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.308,
+"score": 52.2
 },
 {
 "season": "2024",
@@ -11982,7 +13068,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2024",
@@ -12000,7 +13092,13 @@
 "return_length": 9,
 "hash_kicked_from": "L",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2024",
@@ -12018,7 +13116,13 @@
 "return_length": 11,
 "hash_kicked_from": "L",
 "converted_los": 41,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.568,
+"score": 49.3
 },
 {
 "season": "2024",
@@ -12036,7 +13140,13 @@
 "return_length": 30,
 "hash_kicked_from": "L",
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.018,
+"score": 55.8
 },
 {
 "season": "2024",
@@ -12054,7 +13164,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2024",
@@ -12072,7 +13188,13 @@
 "return_length": 13,
 "hash_kicked_from": "L",
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2024",
@@ -12090,7 +13212,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2024",
@@ -12108,7 +13236,13 @@
 "return_length": 14,
 "hash_kicked_from": "L",
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.297,
+"score": 58.8
 },
 {
 "season": "2024",
@@ -12126,7 +13260,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2024",
@@ -12144,7 +13284,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2024",
@@ -12162,7 +13308,13 @@
 "return_length": -1,
 "hash_kicked_from": "L",
 "converted_los": 23,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.282,
+"score": 58.7
 },
 {
 "season": "2024",
@@ -12180,7 +13332,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2024",
@@ -12198,7 +13356,13 @@
 "return_length": 45,
 "hash_kicked_from": "L",
 "converted_los": 47,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2024",
@@ -12216,7 +13380,13 @@
 "return_length": 44,
 "hash_kicked_from": "L",
 "converted_los": 54,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2024",
@@ -12234,7 +13404,13 @@
 "return_length": 5,
 "hash_kicked_from": "L",
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.083,
+"score": 56.5
 },
 {
 "season": "2024",
@@ -12252,7 +13428,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.297,
+"score": 58.8
 },
 {
 "season": "2024",
@@ -12270,7 +13452,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.274,
+"score": 58.6
 },
 {
 "season": "2024",
@@ -12288,7 +13476,13 @@
 "return_length": 6,
 "hash_kicked_from": "L",
 "converted_los": 17,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2024",
@@ -12306,7 +13500,13 @@
 "return_length": 16,
 "hash_kicked_from": "L",
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.259,
+"score": 58.4
 },
 {
 "season": "2024",
@@ -12324,7 +13524,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.373,
+"score": 51.4
 },
 {
 "season": "2024",
@@ -12342,7 +13548,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 49,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2024",
@@ -12360,7 +13572,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.083,
+"score": 56.5
 },
 {
 "season": "2024",
@@ -12378,7 +13596,13 @@
 "return_length": 10,
 "hash_kicked_from": "L",
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.148,
+"score": 57.2
 },
 {
 "season": "2024",
@@ -12396,7 +13620,13 @@
 "return_length": 41,
 "hash_kicked_from": "L",
 "converted_los": 51,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2024",
@@ -12414,7 +13644,13 @@
 "return_length": 15,
 "hash_kicked_from": "L",
 "converted_los": 41,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.568,
+"score": 49.3
 },
 {
 "season": "2024",
@@ -12432,7 +13668,13 @@
 "return_length": 13,
 "hash_kicked_from": "L",
 "converted_los": 41,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.568,
+"score": 49.3
 },
 {
 "season": "2024",
@@ -12450,7 +13692,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.251,
+"score": 58.3
 },
 {
 "season": "2024",
@@ -12468,7 +13716,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 8,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2024",
@@ -12486,7 +13740,13 @@
 "return_length": 4,
 "hash_kicked_from": "L",
 "converted_los": 5,
-"field_bucket": "0-10"
+"field_bucket": "0-10",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2024",
@@ -12504,7 +13764,13 @@
 "return_length": 12,
 "hash_kicked_from": "L",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2024",
@@ -12522,7 +13788,13 @@
 "return_length": 39,
 "hash_kicked_from": "L",
 "converted_los": 43,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.698,
+"score": 47.9
 },
 {
 "season": "2024",
@@ -12540,7 +13812,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2024",
@@ -12558,7 +13836,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2024",
@@ -12576,7 +13860,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2024",
@@ -12594,7 +13884,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2024",
@@ -12612,7 +13908,13 @@
 "return_length": 14,
 "hash_kicked_from": "L",
 "converted_los": 15,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2025",
@@ -12630,7 +13932,13 @@
 "return_length": 17,
 "hash_kicked_from": "L",
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.305,
+"score": 58.9
 },
 {
 "season": "2025",
@@ -12648,7 +13956,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.244,
+"score": 58.3
 },
 {
 "season": "2025",
@@ -12666,7 +13980,13 @@
 "return_length": 31,
 "hash_kicked_from": "L",
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.047,
+"score": 55
 },
 {
 "season": "2025",
@@ -12684,7 +14004,13 @@
 "return_length": 29,
 "hash_kicked_from": "L",
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.213,
+"score": 57.9
 },
 {
 "season": "2025",
@@ -12702,7 +14028,13 @@
 "return_length": 100,
 "hash_kicked_from": "L",
 "converted_los": 100,
-"field_bucket": "91-100"
+"field_bucket": "91-100",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -5.027,
+"score": 0
 },
 {
 "season": "2025",
@@ -12720,7 +14052,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.213,
+"score": 57.9
 },
 {
 "season": "2025",
@@ -12738,7 +14076,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 34,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.112,
+"score": 54.3
 },
 {
 "season": "2025",
@@ -12756,7 +14100,13 @@
 "return_length": 4,
 "hash_kicked_from": "L",
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.308,
+"score": 52.2
 },
 {
 "season": "2025",
@@ -12774,7 +14124,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2025",
@@ -12792,7 +14148,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2025",
@@ -12810,7 +14172,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 55,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": true,
+"value": 4.02,
+"score": 100
 },
 {
 "season": "2025",
@@ -12828,7 +14196,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2025",
@@ -12846,7 +14220,13 @@
 "return_length": 18,
 "hash_kicked_from": "L",
 "converted_los": 18,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2025",
@@ -12864,7 +14244,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2025",
@@ -12882,7 +14268,13 @@
 "return_length": 14,
 "hash_kicked_from": "L",
 "converted_los": 14,
-"field_bucket": "11-20"
+"field_bucket": "11-20",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.319,
+"score": 59.1
 },
 {
 "season": "2025",
@@ -12900,7 +14292,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 25,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": true,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.267,
+"score": 58.5
 },
 {
 "season": "2025",
@@ -12918,7 +14316,13 @@
 "return_length": 12,
 "hash_kicked_from": null,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.29,
+"score": 58.8
 },
 {
 "season": "2025",
@@ -12936,7 +14340,13 @@
 "return_length": 17,
 "hash_kicked_from": null,
 "converted_los": 22,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.29,
+"score": 58.8
 },
 {
 "season": "2025",
@@ -12954,7 +14364,13 @@
 "return_length": 7,
 "hash_kicked_from": null,
 "converted_los": 31,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.083,
+"score": 56.5
 },
 {
 "season": "2025",
@@ -12972,7 +14388,13 @@
 "return_length": 6,
 "hash_kicked_from": null,
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2025",
@@ -12990,7 +14412,13 @@
 "return_length": 2,
 "hash_kicked_from": null,
 "converted_los": 30,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.148,
+"score": 57.2
 },
 {
 "season": "2025",
@@ -13008,7 +14436,13 @@
 "return_length": 31,
 "hash_kicked_from": "L",
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.308,
+"score": 52.2
 },
 {
 "season": "2025",
@@ -13026,7 +14460,13 @@
 "return_length": 12,
 "hash_kicked_from": "L",
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.308,
+"score": 52.2
 },
 {
 "season": "2025",
@@ -13044,7 +14484,13 @@
 "return_length": 4,
 "hash_kicked_from": "L",
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.259,
+"score": 58.4
 },
 {
 "season": "2025",
@@ -13062,7 +14508,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 38,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.373,
+"score": 51.4
 },
 {
 "season": "2025",
@@ -13080,7 +14532,13 @@
 "return_length": 11,
 "hash_kicked_from": "L",
 "converted_los": 43,
-"field_bucket": "41-50"
+"field_bucket": "41-50",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.698,
+"score": 47.9
 },
 {
 "season": "2025",
@@ -13098,7 +14556,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 53,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": true,
+"value": 4.02,
+"score": 100
 },
 {
 "season": "2025",
@@ -13116,7 +14580,13 @@
 "return_length": 18,
 "hash_kicked_from": "L",
 "converted_los": 28,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.244,
+"score": 58.3
 },
 {
 "season": "2025",
@@ -13134,7 +14604,13 @@
 "return_length": 14,
 "hash_kicked_from": "L",
 "converted_los": 20,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.305,
+"score": 58.9
 },
 {
 "season": "2025",
@@ -13152,7 +14628,13 @@
 "return_length": 17,
 "hash_kicked_from": "L",
 "converted_los": 24,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.274,
+"score": 58.6
 },
 {
 "season": "2025",
@@ -13170,7 +14652,13 @@
 "return_length": 15,
 "hash_kicked_from": "L",
 "converted_los": 27,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.251,
+"score": 58.3
 },
 {
 "season": "2025",
@@ -13188,7 +14676,13 @@
 "return_length": 18,
 "hash_kicked_from": "L",
 "converted_los": 29,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.213,
+"score": 57.9
 },
 {
 "season": "2025",
@@ -13206,7 +14700,13 @@
 "return_length": 10,
 "hash_kicked_from": "L",
 "converted_los": 21,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": true,
+"onside_obtained": false,
+"value": 0.297,
+"score": 58.8
 },
 {
 "season": "2025",
@@ -13224,7 +14724,13 @@
 "return_length": 28,
 "hash_kicked_from": "L",
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.018,
+"score": 55.8
 },
 {
 "season": "2025",
@@ -13242,7 +14748,13 @@
 "return_length": 9,
 "hash_kicked_from": "L",
 "converted_los": 37,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.308,
+"score": 52.2
 },
 {
 "season": "2025",
@@ -13260,7 +14772,13 @@
 "return_length": 9,
 "hash_kicked_from": "L",
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.018,
+"score": 55.8
 },
 {
 "season": "2025",
@@ -13278,7 +14796,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 35,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.177,
+"score": 53.6
 },
 {
 "season": "2025",
@@ -13296,7 +14820,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 54,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": true,
+"value": 4.02,
+"score": 100
 },
 {
 "season": "2025",
@@ -13314,7 +14844,13 @@
 "return_length": 10,
 "hash_kicked_from": "L",
 "converted_los": 32,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.018,
+"score": 55.8
 },
 {
 "season": "2025",
@@ -13332,7 +14868,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 57,
-"field_bucket": "51-60"
+"field_bucket": "51-60",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2025",
@@ -13350,7 +14892,13 @@
 "return_length": 20,
 "hash_kicked_from": "L",
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.259,
+"score": 58.4
 },
 {
 "season": "2025",
@@ -13368,7 +14916,13 @@
 "return_length": 9,
 "hash_kicked_from": "L",
 "converted_los": 33,
-"field_bucket": "31-40"
+"field_bucket": "31-40",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.047,
+"score": 55
 },
 {
 "season": "2025",
@@ -13386,7 +14940,13 @@
 "return_length": 16,
 "hash_kicked_from": "L",
 "converted_los": 26,
-"field_bucket": "21-30"
+"field_bucket": "21-30",
+"touchback": false,
+"out_of_bounds": false,
+"inside_25": false,
+"onside_obtained": false,
+"value": 0.259,
+"score": 58.4
 },
 {
 "season": "2025",
@@ -13404,7 +14964,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 65,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 },
 {
 "season": "2025",
@@ -13422,7 +14988,13 @@
 "return_length": 0,
 "hash_kicked_from": "L",
 "converted_los": 65,
-"field_bucket": "61-70"
+"field_bucket": "61-70",
+"touchback": false,
+"out_of_bounds": true,
+"inside_25": false,
+"onside_obtained": false,
+"value": -0.841,
+"score": 46.3
 }
 ],
 "kickoff_return": [

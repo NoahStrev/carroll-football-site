@@ -244,6 +244,8 @@ html, body {
 
 /* ---- KPI tiles + cards ---- */
 .kpirow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.kpirow-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
+.kpirow-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 16px; }
 .kpi {
   background: var(--page); border: 1px solid var(--border); border-radius: 10px;
   padding: 13px 15px; position: relative; overflow: hidden;
@@ -399,6 +401,8 @@ table.mini tbody tr:nth-child(1) .lb-rank { color: var(--cat-2); font-weight: 80
 @media (max-width: 900px) {
   .grid2, .colcard-2 { grid-template-columns: 1fr; }
   .kpi .value { font-size: 23px; }
+  .kpirow { grid-template-columns: repeat(2, 1fr); }
+  .kpirow-5, .kpirow-6 { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 640px) {
@@ -411,4 +415,7 @@ table.mini tbody tr:nth-child(1) .lb-rank { color: var(--cat-2); font-weight: 80
   table.mini th, table.mini td { padding: 6px; }
   .unit-header { padding: 14px 16px; }
   .unit-header h2 { font-size: 19px; }
+  .kpirow { grid-template-columns: 1fr; }
+  .kpirow-5, .kpirow-6 { grid-template-columns: repeat(2, 1fr); }
+  .mini-kpi-row { grid-template-columns: repeat(2, 1fr); }
 }

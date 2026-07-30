@@ -138,6 +138,9 @@ def build_kickoff(wb):
             "return_length": r["Return Length"], "hash_kicked_from": r["Hash Kicked From"],
             "converted_los": r["Converted Result LOS"],
             "field_bucket": field_bucket(r["Converted Result LOS"]),
+            "touchback": r["TB?"], "out_of_bounds": r["OB?"], "inside_25": r["I25?"],
+            "onside_obtained": r["Onside Obtained?"],
+            "value": r["Kickoff Value"], "score": r["Kickoff Score"],
         })
     return rows
 

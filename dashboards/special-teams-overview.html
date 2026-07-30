@@ -6,9 +6,8 @@
 <title>Special Teams Overview — Carroll Football Analytics</title>
 <link rel="stylesheet" href="../css/theme.css">
 <style>
-  /* .unit-header lives in css/theme.css -- identical in both dashboards, don't
-     re-declare it here (moved out 2026-07-30, was byte-duplicated in both files). */
-  .kpirow-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 16px; }
+  /* .unit-header and .kpirow-6 live in css/theme.css -- identical across pages,
+     don't re-declare them here (moved out 2026-07-30/2026-08-01). */
   .chartgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
   .chartgrid .card-body { min-height: 190px; }
   .data-note { font-size: 10.5px; color: var(--muted); margin-top: 6px; }
@@ -17,11 +16,9 @@
 
   /* ---- responsive (2026-07-29) ---- */
   @media (max-width: 900px) {
-    .kpirow-6 { grid-template-columns: repeat(3, 1fr); }
     .chartgrid { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) {
-    .kpirow-6 { grid-template-columns: repeat(2, 1fr); }
     .trend-body { grid-template-columns: 1fr; }
   }
 </style>

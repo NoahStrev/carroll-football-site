@@ -403,6 +403,56 @@ function renderSparkline(container, { values, labels, unit = '' }) {
   container.appendChild(axis);
 }
 
+/* ---------------------------------------------------------------- two-line -- */
+
+/** Small shared two-series line chart over a fixed category axis (e.g. seasons)
+ * -- simpler than the Lifting Class Comparison chart since there's no career-
+ * year realignment needed here, just a straight per-category plot. Hoisted
+ * 2026-08-01 from placekicker.html into here since the Kickoff Kicker page
+ * needs the identical thing. */
+function renderTwoLine(svg, categories, valuesA, valuesB, colorA, colorB, nameA, nameB, labelFmt) {
+  const svgns = 'http://www.w3.org/2000/svg';
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  const W = 1180, H = 150, PAD = 10;
+  const all = [...valuesA, ...valuesB].filter((v) => v !== null && v !== undefined);
+  const vMin = all.length ? Math.min(...all, 0) : 0;
+  const vMax = all.length ? Math.max(...all, 1) : 1;
+  const sx = (i) => PAD + (i / Math.max(1, categories.length - 1)) * (W - PAD * 2);
+  const sy = (v) => H - PAD - ((v - vMin) / (vMax - vMin || 1)) * (H - PAD * 2 - 16) - 10;
+
+  function line(values, color, name) {
+    for (let i = 1; i < values.length; i++) {
+      if (values[i - 1] === null || values[i] === null) continue;
+      const l = document.createElementNS(svgns, 'line');
+      l.setAttribute('x1', sx(i - 1)); l.setAttribute('y1', sy(values[i - 1]));
+      l.setAttribute('x2', sx(i)); l.setAttribute('y2', sy(values[i]));
+      l.setAttribute('stroke', color); l.setAttribute('stroke-width', '2'); l.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(l);
+    }
+    values.forEach((v, i) => {
+      if (v === null) return;
+      const c = document.createElementNS(svgns, 'circle');
+      c.setAttribute('cx', sx(i)); c.setAttribute('cy', sy(v)); c.setAttribute('r', 3.5);
+      c.setAttribute('fill', color);
+      c.style.cursor = 'pointer';
+      const html = `<div class="tt-title">${name} — ${categories[i]}</div><div class="tt-row"><span>${labelFmt(v)}</span></div>`;
+      c.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html));
+      c.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html));
+      c.addEventListener('mouseleave', hideTooltip);
+      svg.appendChild(c);
+    });
+  }
+  line(valuesA, colorA, nameA);
+  line(valuesB, colorB, nameB);
+  categories.forEach((cat, i) => {
+    const t = document.createElementNS(svgns, 'text');
+    t.setAttribute('x', sx(i)); t.setAttribute('y', H - 2); t.setAttribute('text-anchor', 'middle');
+    t.setAttribute('font-size', '10'); t.setAttribute('fill', cssVar('--muted'));
+    t.textContent = cat;
+    svg.appendChild(t);
+  });
+}
+
 /* --------------------------------------------------------------- grouping --- */
 
 function groupBy(rows, field) {
