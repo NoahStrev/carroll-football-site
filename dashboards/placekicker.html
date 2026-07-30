@@ -37,9 +37,9 @@
       film by the coaching staff and only exist from 2023 onward</b> (0% charted 2021–2022,
       effectively complete 2024–2025) — every chart using them only ever averages the rows that
       actually have a value, never padded with blanks for the uncharted years. <b>Snap Location is
-      a 1–3 rating whose scale isn't defined upstream yet</b> (the <code>Special Teams Data</code>
-      project's own docs note it shows ~zero correlation with anything tested so far) — shown here
-      as-is (buckets "1"/"2"/"3"), not relabeled as "good/bad" since that would be guessing.
+      a snap-quality ranking the coaching staff is charting</b> (scale may be 1-3 or 1-5, still
+      being finalized) — which end means "better" isn't confirmed yet, so it's shown as whatever
+      raw buckets exist rather than relabeled "good/bad".
       <b>Miss Location only distinguishes "Blocked" from everything else</b> — the source never
       records a wide-left/wide-right/short direction, so that breakdown isn't shown here rather
       than invented.
@@ -314,7 +314,7 @@ function deepTab(root) {
         </div>
         <div class="grid2" style="margin-bottom:14px;">
           <div class="card"><div class="card-head"><h3>FG make % by hash kicked from</h3></div><div class="card-body" id="pkd-hash"><div class="data-note">Charted 2023 onward only.</div></div></div>
-          <div class="card"><div class="card-head"><h3>FG make % by Snap Location</h3></div><div class="card-body" id="pkd-snaploc"><div class="data-note">Charted 2023 onward only. Snap Location is a 1-3 rating whose scale isn't defined upstream yet -- shown as-is, not relabeled.</div></div></div>
+          <div class="card"><div class="card-head"><h3>FG make % by Snap Location</h3></div><div class="card-body" id="pkd-snaploc"><div class="data-note">Charted 2023 onward only. Snap Location is a snap-quality ranking (scale may be 1-3 or 1-5) -- which end means "better" isn't confirmed yet, shown as-is.</div></div></div>
         </div>
         <div class="card" style="margin-bottom:14px;">
           <div class="card-head"><h3>Avg PAT/FG Score by season</h3></div><div class="card-body" id="pkd-scoretrend"></div>
@@ -398,7 +398,7 @@ function deepTab(root) {
       document.getElementById('pkd-hash').innerHTML = '<div class="data-note">No charted hash data in the current filter (2023 onward only).</div>';
     }
 
-    const snapLocs = ['1', '2', '3'];
+    const snapLocs = snapLocationScale(DATA.units.money_unit);
     const bySnapLoc = groupBy(fgRows.filter((r) => r.snap_location).map((r) => ({ ...r, snap_location: String(r.snap_location) })), 'snap_location');
     const snapLocsPresent = snapLocs.filter((s) => bySnapLoc.has(s));
     if (snapLocsPresent.length) {

@@ -36,8 +36,10 @@
       at, though PAT/FG make-rate KPIs still use every attempt. <b>Snap to Catch (snap time), Snap Location,
       and Catch to Kick are hand-charted from film and only exist from 2023 onward</b> (0% charted
       2021–2022, effectively complete 2024–2025) — every chart using them only ever averages the rows that
-      actually have a value. <b>Snap Location is a 1–3 rating whose scale isn't defined upstream yet</b>
-      (shown as buckets "1"/"2"/"3", not relabeled "good/bad"). Only 4 snappers are credited so far, so
+      actually have a value. <b>Snap Location is a snap-quality ranking the coaching staff is
+      charting</b> (scale may be 1-3 or 1-5, still being finalized — which end means "better" isn't
+      confirmed yet, so it's shown as whatever raw buckets exist rather than relabeled "good/bad").
+      Only 4 snappers are credited so far, so
       Head-to-Head has a small pool today — the comparison UI works the same regardless of how many real
       names exist, and fills in as more attempts get a snapper charted.
     </p>
@@ -199,7 +201,7 @@ function h2hTab(root) {
           </div>
           <div class="card">
             <div class="card-head"><h3>Snap Location distribution</h3></div>
-            <div class="card-body" id="ssh-snaploc"><div class="data-note">Charted 2023 onward only. Snap Location is a 1-3 rating whose scale isn't defined upstream yet.</div></div>
+            <div class="card-body" id="ssh-snaploc"><div class="data-note">Charted 2023 onward only. Snap Location is a snap-quality ranking (scale may be 1-3 or 1-5) -- which end means "better" isn't confirmed yet, shown as-is.</div></div>
           </div>
         </div>
       </div>
@@ -254,7 +256,7 @@ function h2hTab(root) {
     renderTwoLine(document.getElementById('ssh-trend-svg'), seasons, seasonFgRate(selA.value), seasonFgRate(selB.value), cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0));
 
     const snapLocRows = rows.filter((r) => (r.long_snapper === selA.value || r.long_snapper === selB.value) && r.snap_location);
-    const snapLocs = ['1', '2', '3'];
+    const snapLocs = snapLocationScale(DATA.units.money_unit);
     if (snapLocRows.length) {
       renderStacked(document.getElementById('ssh-snaploc'), {
         categories: snapLocs,
@@ -304,7 +306,7 @@ function deepTab(root) {
           </div>
         </div>
         <div class="grid2" style="margin-bottom:14px;">
-          <div class="card"><div class="card-head"><h3>Make % by Snap Location</h3></div><div class="card-body" id="ssd-snaploc"><div class="data-note">Charted 2023 onward only. Snap Location is a 1-3 rating whose scale isn't defined upstream yet.</div></div></div>
+          <div class="card"><div class="card-head"><h3>Make % by Snap Location</h3></div><div class="card-body" id="ssd-snaploc"><div class="data-note">Charted 2023 onward only. Snap Location is a snap-quality ranking (scale may be 1-3 or 1-5) -- which end means "better" isn't confirmed yet, shown as-is.</div></div></div>
           <div class="card"><div class="card-head"><h3>Avg PAT/FG Score by season</h3></div><div class="card-body" id="ssd-scoretrend"></div></div>
         </div>
         <div class="card">
@@ -364,7 +366,7 @@ function deepTab(root) {
       title: (snapper, season) => `${snapper}, ${season}`,
     });
 
-    const snapLocs = ['1', '2', '3'];
+    const snapLocs = snapLocationScale(DATA.units.money_unit);
     const bySnapLoc = groupBy(fgRows.filter((r) => r.snap_location).map((r) => ({ ...r, snap_location: String(r.snap_location) })), 'snap_location');
     const snapLocsPresent = snapLocs.filter((s) => bySnapLoc.has(s));
     if (snapLocsPresent.length) {

@@ -148,6 +148,36 @@ based on.
      `Snap Location` (a real 1-3 rating, previously incorrectly written off as
      having no source column — see the Placekicker entry above) now has its own
      chart on all three.
+   - **Long Snapper — done** (`dashboards/long-snapper.html`, 2026-08-01). Uses
+     the **Carroll Punt** sheet's own `Snapper Name` column — the true "long
+     snap" (~13-15 yards), distinct from Short Snapper's PAT-FG "short snap"
+     despite the confusingly similar column names. Only 122/247 punts have a
+     snapper credited (mostly 2023 onward), and **only one snapper, Brayden
+     Partlow, is credited at all so far** — same standing instruction as Short
+     Snapper: the full 3-tab structure (including Head-to-Head) is built anyway,
+     not reduced to 2 tabs the way the original mockup did (which had no
+     Head-to-Head tab, presumably because it was drafted when there was
+     obviously only one real snapper) — verified both sides of a Head-to-Head
+     comparison correctly show the same person's data with no crash when only
+     one name exists. Adds real `Blocked?`/`Punter Tackle?` fields (both
+     box-score-derived, 100% populated) to `build_special_teams_data.py`'s
+     `build_punt()` for protection-quality tracking, the whole point of a
+     snapper-focused page. **This completes Phase 2** — all 5 position pages
+     (Placekicker, Kickoff Kicker, Punter, Short Snapper, Long Snapper) are live.
+
+   **Snap Location scale correction (2026-08-01, per the user, after Long
+   Snapper)**: it's a snap-quality ranking the coaching staff is actively
+   charting, and the scale may end up 1-3 or 1-5 depending on how it's
+   finalized — not a fixed 1-3 as every page above initially assumed. Added
+   `snapLocationScale()` to `js/charts.js` (computes the real distinct values
+   from the full unit's data, sorted numerically, rather than a hardcoded
+   `['1','2','3']`) and updated all 6 call sites across Placekicker, Punter,
+   Short Snapper, and Long Snapper to use it, so a future 4 or 5 shows up
+   automatically without another code change. Verified with a simulated 5-point
+   scale that the dynamic logic handles gaps correctly (e.g. real values
+   `[1,2,3,5]` with no 4 charted yet shows exactly those four buckets, not five).
+   Direction (which end means "better") still isn't asserted anywhere, since
+   that's still unconfirmed upstream.
 3. **Phase 3 — offense &amp; defense**: no existing dashboard reference for either —
    design from scratch once we get here.
 4. **Phase 4 — report ingestion &amp; downloads** (lowest priority, added 2026-07-30

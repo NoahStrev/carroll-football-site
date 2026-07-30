@@ -466,6 +466,16 @@ function renderTwoLine(svg, categories, valuesA, valuesB, colorA, colorB, nameA,
   });
 }
 
+/** Snap Location's real scale, computed from the data instead of hardcoded --
+ * per the user (2026-08-01), it's a snap-quality ranking that may end up 1-3 or
+ * 1-5 depending on how it's charted going forward, so every position page reads
+ * whatever distinct values actually exist (from the full unit, not the current
+ * filter, so the axis stays stable as filters narrow) rather than assuming 3. */
+function snapLocationScale(rows) {
+  return [...new Set(rows.map((r) => r.snap_location).filter((v) => v !== null && v !== undefined))]
+    .map(String).sort((a, b) => Number(a) - Number(b));
+}
+
 /* --------------------------------------------------------------- grouping --- */
 
 function groupBy(rows, field) {

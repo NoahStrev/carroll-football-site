@@ -84,6 +84,7 @@ def build_punt(wb):
             "converted_los": r["Converted Result LOS"],
             "field_bucket": field_bucket(r["Converted Result LOS"]),
             "i20": r["I20?"],
+            "blocked": r["Blocked?"], "punter_tackle": r["Punter Tackle?"],
             "value": r["Punt Value"], "score": r["Punt Score"],
         })
     return rows
