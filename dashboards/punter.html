@@ -59,10 +59,7 @@
 <script>
 let DATA = null;
 
-function netOf(r) { return r.total_distance !== null && r.return_length !== null ? r.total_distance - r.return_length : null; }
-function avgNet(rows) { return mean(rows.map(netOf)); }
-function rate(rows, pred) { return rows.length ? rows.filter(pred).length / rows.length : null; }
-const OUTCOMES = ['Downed', 'Fair Catch', 'Touchback', 'Out of Bounds', 'Return', 'Return Touchdown', 'Muff'];
+/* netOf/avgNet/rate/PUNT_OUTCOMES now live in js/charts.js (shared with Long Snapper). */
 
 /* ------------------------------------------------------------------ tab: Executive Scorecard --- */
 
@@ -230,8 +227,8 @@ function h2hTab(root) {
     document.getElementById(`${prefix}-hang`).textContent = hangRows.length ? `${fmt(mean(hangRows.map((r) => r.hangtime)), 2)}s` : '—';
     const byOutcome = groupBy(pRows, 'kick_outcome');
     renderBar(document.getElementById(`${prefix}-outchart`), {
-      categories: OUTCOMES.filter((o) => byOutcome.has(o)),
-      values: OUTCOMES.filter((o) => byOutcome.has(o)).map((o) => byOutcome.get(o).length),
+      categories: PUNT_OUTCOMES.filter((o) => byOutcome.has(o)),
+      values: PUNT_OUTCOMES.filter((o) => byOutcome.has(o)).map((o) => byOutcome.get(o).length),
       labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-1'),
     });
   }

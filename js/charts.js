@@ -43,6 +43,37 @@ function mean(nums) {
   return vals.reduce((a, b) => a + b, 0) / vals.length;
 }
 
+/** Share of `rows` matching `pred`, or null for an empty set (never a fake 0%).
+ * Hoisted 2026-08-01 -- was duplicated (as a predicate-based 2-arg version) in
+ * Punter and Long Snapper verbatim; Kickoff Kicker had its own narrower
+ * field-truthiness-only 2-arg version with the same name, now standardized on
+ * this one (a predicate can express a field-truthiness check trivially, but not
+ * the reverse). */
+function rate(rows, pred) { return rows.length ? rows.filter(pred).length / rows.length : null; }
+
+/* --------------------------------------------------------- money_unit rows -- */
+// Shared by Placekicker and Short Snapper (both read DATA.units.money_unit).
+// Hoisted 2026-08-01 -- was duplicated verbatim between the two pages.
+
+function fgs(rows) { return rows.filter((r) => r.fg_exp === 'FG'); }
+function pats(rows) { return rows.filter((r) => r.fg_exp === 'EXP'); }
+function makes(rows) { return rows.filter((r) => r.make); }
+function makeRate(rows) { return rate(rows, (r) => r.make); }
+
+/* -------------------------------------------------------------- punt rows -- */
+// Shared by Punter and Long Snapper (both read DATA.units.punt). Hoisted
+// 2026-08-01 -- was duplicated verbatim between the two pages.
+
+function netOf(r) { return r.total_distance !== null && r.return_length !== null ? r.total_distance - r.return_length : null; }
+function avgNet(rows) { return mean(rows.map(netOf)); }
+const PUNT_OUTCOMES = ['Downed', 'Fair Catch', 'Touchback', 'Out of Bounds', 'Return', 'Return Touchdown', 'Muff'];
+
+/** FG distance buckets, used by every FG-make%-by-distance chart. Hoisted
+ * 2026-08-01 -- was duplicated (identical logic) in special-teams-overview.html
+ * (function-scoped) and placekicker.html (top-level). */
+const FG_DIST_BUCKETS = ['0-29', '30-39', '40-49', '50+'];
+function fgDistBucket(d) { return d < 30 ? '0-29' : d < 40 ? '30-39' : d < 50 ? '40-49' : '50+'; }
+
 function fmt(n, decimals = 1) {
   if (n === null || n === undefined || Number.isNaN(n)) return '—';
   return n.toFixed(decimals);

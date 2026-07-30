@@ -62,13 +62,8 @@
 <script src="../js/charts.js"></script>
 <script>
 let DATA = null;
-const DIST_BUCKETS = ['0-29', '30-39', '40-49', '50+'];
-const bucketOf = (d) => (d < 30 ? '0-29' : d < 40 ? '30-39' : d < 50 ? '40-49' : '50+');
-
-function fgs(rows) { return rows.filter((r) => r.fg_exp === 'FG'); }
-function pats(rows) { return rows.filter((r) => r.fg_exp === 'EXP'); }
-function makes(rows) { return rows.filter((r) => r.make); }
-function rate(rows) { return rows.length ? makes(rows).length / rows.length : null; }
+/* FG_DIST_BUCKETS/fgDistBucket (shared with special-teams-overview.html) and
+   fgs/pats/makes/makeRate (shared with Short Snapper) now live in js/charts.js. */
 
 /* ------------------------------------------------------------------ tab: Executive Scorecard --- */
 
@@ -108,8 +103,8 @@ function execTab(root) {
 
     const fgRows = fgs(rows), patRows = pats(rows);
     const fgMade = makes(fgRows);
-    setKPI('pke-pat', pct(rate(patRows)), `${makes(patRows).length}/${patRows.length} PATs`);
-    setKPI('pke-fg', pct(rate(fgRows)), `${fgMade.length}/${fgRows.length} field goals`);
+    setKPI('pke-pat', pct(makeRate(patRows)), `${makes(patRows).length}/${patRows.length} PATs`);
+    setKPI('pke-fg', pct(makeRate(fgRows)), `${fgMade.length}/${fgRows.length} field goals`);
     setKPI('pke-long', fgMade.length ? `${Math.max(...fgMade.map((r) => r.distance))} yds` : '—');
     setKPI('pke-n', String(rows.length));
     setKPI('pke-score', fmt(mean(rows.map((r) => r.score)), 0));
@@ -118,16 +113,16 @@ function execTab(root) {
     const byseason = groupBy(fgRows, 'season');
     renderBar(document.getElementById('pke-season'), {
       categories: seasons,
-      values: seasons.map((s) => { const g = byseason.get(s); return g && g.length ? rate(g) : null; }),
+      values: seasons.map((s) => { const g = byseason.get(s); return g && g.length ? makeRate(g) : null; }),
       labelFmt: (v) => pct(v, 0),
       colorFn: () => cssVar('--cat-1'),
       xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
     });
 
-    const byBucket = groupBy(fgRows.map((r) => ({ ...r, _b: bucketOf(r.distance) })), '_b');
+    const byBucket = groupBy(fgRows.map((r) => ({ ...r, _b: fgDistBucket(r.distance) })), '_b');
     renderBar(document.getElementById('pke-dist'), {
-      categories: DIST_BUCKETS,
-      values: DIST_BUCKETS.map((b) => { const g = byBucket.get(b); return g && g.length ? rate(g) : null; }),
+      categories: FG_DIST_BUCKETS,
+      values: FG_DIST_BUCKETS.map((b) => { const g = byBucket.get(b); return g && g.length ? makeRate(g) : null; }),
       labelFmt: (v) => pct(v, 0),
       colorFn: () => cssVar('--cat-3'),
       xlab2: (b) => `n=${(byBucket.get(b) || []).length}`,
@@ -230,14 +225,14 @@ function h2hTab(root) {
     const seasons = [...new Set(kRows.map((r) => r.season))].sort();
     document.getElementById(`${prefix}-years`).textContent = seasons.length ? (seasons.length === 1 ? seasons[0] : `${seasons[0]} – ${seasons[seasons.length - 1]}`) : 'no attempts in range';
     const kFg = fgs(kRows), kPat = pats(kRows), kFgMade = makes(kFg);
-    document.getElementById(`${prefix}-pat`).textContent = pct(rate(kPat));
-    document.getElementById(`${prefix}-fg`).textContent = pct(rate(kFg));
+    document.getElementById(`${prefix}-pat`).textContent = pct(makeRate(kPat));
+    document.getElementById(`${prefix}-fg`).textContent = pct(makeRate(kFg));
     document.getElementById(`${prefix}-long`).textContent = kFgMade.length ? `${Math.max(...kFgMade.map((r) => r.distance))} yds` : '—';
     document.getElementById(`${prefix}-score`).textContent = fmt(mean(kRows.map((r) => r.score)), 0);
-    const byBucket = groupBy(kFg.map((r) => ({ ...r, _b: bucketOf(r.distance) })), '_b');
+    const byBucket = groupBy(kFg.map((r) => ({ ...r, _b: fgDistBucket(r.distance) })), '_b');
     renderBar(document.getElementById(`${prefix}-distchart`), {
-      categories: DIST_BUCKETS,
-      values: DIST_BUCKETS.map((b) => (byBucket.get(b) || []).filter((r) => r.make).length),
+      categories: FG_DIST_BUCKETS,
+      values: FG_DIST_BUCKETS.map((b) => (byBucket.get(b) || []).filter((r) => r.make).length),
       labelFmt: (v) => String(v),
       colorFn: () => cssVar('--cat-1'),
       xlab2: (b) => `n=${(byBucket.get(b) || []).length}`,
@@ -259,7 +254,7 @@ function h2hTab(root) {
     const seasons = DATA.filters.money_unit.season;
     function seasonRates(kRows) {
       const byS = groupBy(fgs(kRows), 'season');
-      return seasons.map((s) => { const g = byS.get(s); return g && g.length ? rate(g) : null; });
+      return seasons.map((s) => { const g = byS.get(s); return g && g.length ? makeRate(g) : null; });
     }
     renderTwoLine(document.getElementById('pkh-trend-svg'), seasons, seasonRates(rowsA), seasonRates(rowsB), cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0));
 
@@ -342,19 +337,19 @@ function deepTab(root) {
     document.getElementById('pkd-summary').textContent = `${rows.length} kicks in view`;
 
     const fgRows = fgs(rows), patRows = pats(rows);
-    setKPI('pkd-fg', pct(rate(fgRows)), `${makes(fgRows).length}/${fgRows.length} field goals`);
+    setKPI('pkd-fg', pct(makeRate(fgRows)), `${makes(fgRows).length}/${fgRows.length} field goals`);
     setKPI('pkd-blocked', String(rows.filter((r) => r.miss_location === 'Blocked').length));
     const homeFg = fgRows.filter((r) => r.is_home), awayFg = fgRows.filter((r) => !r.is_home);
-    setKPI('pkd-homeaway', `${pct(rate(homeFg), 0)} / ${pct(rate(awayFg), 0)}`, 'home / away');
+    setKPI('pkd-homeaway', `${pct(makeRate(homeFg), 0)} / ${pct(makeRate(awayFg), 0)}`, 'home / away');
     const byQ = groupBy(fgRows, 'quarter');
     let bestQ = null, bestRate = -1;
-    byQ.forEach((g, q) => { if (g.length >= 3 && rate(g) > bestRate) { bestRate = rate(g); bestQ = q; } });
+    byQ.forEach((g, q) => { if (g.length >= 3 && makeRate(g) > bestRate) { bestRate = makeRate(g); bestQ = q; } });
     setKPI('pkd-bestq', bestQ !== null ? `Q${bestQ}` : '—', bestQ !== null ? `${pct(bestRate, 0)} (n=${byQ.get(bestQ).length})` : 'not enough attempts');
 
     const quarters = DATA.filters.money_unit.quarter.filter((q) => byQ.has(q));
     renderBar(document.getElementById('pkd-quarter'), {
       categories: quarters,
-      values: quarters.map((q) => rate(byQ.get(q))),
+      values: quarters.map((q) => makeRate(byQ.get(q))),
       labelFmt: (v) => pct(v, 0),
       colorFn: () => cssVar('--cat-2'),
       xlab2: (q) => `n=${byQ.get(q).length}`,
@@ -374,11 +369,11 @@ function deepTab(root) {
 
     const allSeasons = DATA.filters.money_unit.season;
     renderHeatmap(document.getElementById('pkd-heatmap'), {
-      rowLabels: DIST_BUCKETS, colLabels: allSeasons,
+      rowLabels: FG_DIST_BUCKETS, colLabels: allSeasons,
       cellFor: (bucket, season) => {
-        const g = fgRows.filter((r) => r.season === season && bucketOf(r.distance) === bucket);
+        const g = fgRows.filter((r) => r.season === season && fgDistBucket(r.distance) === bucket);
         if (!g.length) return null;
-        return { pct: rate(g), n: g.length, made: makes(g).length };
+        return { pct: makeRate(g), n: g.length, made: makes(g).length };
       },
       title: (bucket, season) => `${bucket} yds, ${season}`,
     });
@@ -389,7 +384,7 @@ function deepTab(root) {
     if (hashesPresent.length) {
       renderBar(document.getElementById('pkd-hash'), {
         categories: hashesPresent,
-        values: hashesPresent.map((h) => rate(byHash.get(h))),
+        values: hashesPresent.map((h) => makeRate(byHash.get(h))),
         labelFmt: (v) => pct(v, 0),
         colorFn: () => cssVar('--cat-3'),
         xlab2: (h) => `n=${byHash.get(h).length}`,
@@ -404,7 +399,7 @@ function deepTab(root) {
     if (snapLocsPresent.length) {
       renderBar(document.getElementById('pkd-snaploc'), {
         categories: snapLocsPresent,
-        values: snapLocsPresent.map((s) => rate(bySnapLoc.get(s))),
+        values: snapLocsPresent.map((s) => makeRate(bySnapLoc.get(s))),
         labelFmt: (v) => pct(v, 0),
         colorFn: () => cssVar('--cat-5'),
         xlab2: (s) => `n=${bySnapLoc.get(s).length}`,
@@ -433,9 +428,9 @@ function deepTab(root) {
         <td class="name">${k}</td>
         <td>${kSeasons.length === 1 ? kSeasons[0] : `${kSeasons[0]}–${kSeasons[kSeasons.length - 1]}`}</td>
         <td>${makes(kPat).length}/${kPat.length}</td>
-        <td>${pct(rate(kPat), 0)}</td>
+        <td>${pct(makeRate(kPat), 0)}</td>
         <td>${makes(kFg).length}/${kFg.length}</td>
-        <td>${pct(rate(kFg), 0)}</td>
+        <td>${pct(makeRate(kFg), 0)}</td>
         <td>${kFgMade.length ? Math.max(...kFgMade.map((r) => r.distance)) + ' yds' : '—'}</td>
         <td>${fmt(mean(kRows.map((r) => r.score)), 0)}</td>
         <td>${avgOp !== null ? fmt(avgOp, 2) + 's' : '—'}</td>

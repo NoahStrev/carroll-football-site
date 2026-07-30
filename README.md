@@ -411,6 +411,43 @@ Streamlining found in the two new pages:
 - One dead local variable (`maxDist`, computed and never read) removed from
   `kickoff-kicker.html`.
 
+## Full Phase 2 re-validation + second streamlining pass (2026-08-01)
+
+Re-checked all 5 position pages plus both Phase 1 dashboards after Long Snapper
+landed: every KPI on every page re-verified against independent Python
+recomputation (all exact matches, including the Kickoff Kicker "Best Quarter"
+KPI specifically, since it touched the variable-shadowing fix below), console
+errors and NaN-checks across every tab of all 7 dashboards, filter None/All and
+Head-to-Head same-entity edge cases spot-checked, and `build_special_teams_data.py`
+re-run with no drift against committed `data/special-teams.json`.
+
+Real duplication found and fixed — building 5 position pages independently let
+the same helper logic drift into near-copies without anyone noticing at
+build time:
+- `rate(rows, pred)` (generic predicate version) was byte-identical in Punter
+  and Long Snapper. **Kickoff Kicker had its own inconsistent 2-arg version**,
+  `rate(rows, field)` (field-truthiness only, less capable than a predicate) —
+  standardized every page on the predicate version and retrofitted Kickoff
+  Kicker's ~14 call sites (`rate(g, 'touchback')` → `rate(g, (r) => r.touchback)`).
+  This also surfaced a variable-shadowing readability issue in Kickoff Kicker's
+  "Best Quarter" KPI (`const r = rate(g, (r) => r.touchback)` — the arrow
+  function's own `r` parameter shadowed the outer `const r`; functionally
+  correct in JS but confusing, renamed to `tbRate`).
+- `fgs`/`pats`/`makes`/`makeRate` (money_unit-specific row helpers) were
+  byte-identical in Placekicker and Short Snapper.
+- `netOf`/`avgNet`/`PUNT_OUTCOMES` (punt-specific) were byte-identical in
+  Punter and Long Snapper.
+- `FG_DIST_BUCKETS`/`fgDistBucket` (FG distance-bucket logic) existed in three
+  places: `special-teams-overview.html` (function-scoped, inside `moneyUnitTab`'s
+  `render()`), and `placekicker.html` (top-level) — both identical.
+
+All five hoisted into `js/charts.js`, each with a comment at both the shared
+definition and every call site noting which pages share it — the same
+discipline this project has followed all along for cross-page duplication
+(`kpiHTML`/`initials`/`renderHeatmap`/`renderTwoLine`/`snapLocationScale`
+before this pass), just applied a second time now that there are 5 similarly-
+shaped pages instead of 2 to compare against each other.
+
 ## Data sources
 
 - `../Lifting Data/output/` — lifting/strength testing (Combined Total, Athleticism

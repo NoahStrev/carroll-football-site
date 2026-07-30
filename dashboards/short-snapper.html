@@ -58,11 +58,8 @@
 <script>
 let DATA = null;
 
+/* fgs/pats/makes/makeRate now live in js/charts.js (shared with Placekicker). */
 function withSnapper(rows) { return rows.filter((r) => r.long_snapper); }
-function fgs(rows) { return rows.filter((r) => r.fg_exp === 'FG'); }
-function pats(rows) { return rows.filter((r) => r.fg_exp === 'EXP'); }
-function makes(rows) { return rows.filter((r) => r.make); }
-function rate(rows) { return rows.length ? makes(rows).length / rows.length : null; }
 const OUTCOMES = ['Make', 'Miss', 'Blocked'];
 function outcomeOf(r) { return r.make ? 'Make' : (r.miss_location === 'Blocked' ? 'Blocked' : 'Miss'); }
 
@@ -107,8 +104,8 @@ function execTab(root) {
     document.getElementById('sse-summary').textContent = `${rows.length} attempts in view`;
 
     const fgRows = fgs(rows), patRows = pats(rows);
-    setKPI('sse-pat', pct(rate(patRows)), `${makes(patRows).length}/${patRows.length} PATs`);
-    setKPI('sse-fg', pct(rate(fgRows)), `${makes(fgRows).length}/${fgRows.length} field goals`);
+    setKPI('sse-pat', pct(makeRate(patRows)), `${makes(patRows).length}/${patRows.length} PATs`);
+    setKPI('sse-fg', pct(makeRate(fgRows)), `${makes(fgRows).length}/${fgRows.length} field goals`);
     setKPI('sse-n', String(rows.length));
     setKPI('sse-blocked', String(rows.filter((r) => r.miss_location === 'Blocked').length));
     setKPI('sse-score', fmt(mean(rows.map((r) => r.score)), 0));
@@ -116,11 +113,11 @@ function execTab(root) {
     const seasons = DATA.filters.money_unit.season.filter((s) => rows.some((r) => r.season === s));
     const patBySeason = groupBy(patRows, 'season'), fgBySeason = groupBy(fgRows, 'season');
     renderBar(document.getElementById('sse-patseason'), {
-      categories: seasons, values: seasons.map((s) => { const g = patBySeason.get(s); return g ? rate(g) : null; }),
+      categories: seasons, values: seasons.map((s) => { const g = patBySeason.get(s); return g ? makeRate(g) : null; }),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'), xlab2: (s) => `n=${(patBySeason.get(s) || []).length}`,
     });
     renderBar(document.getElementById('sse-fgseason'), {
-      categories: seasons, values: seasons.map((s) => { const g = fgBySeason.get(s); return g ? rate(g) : null; }),
+      categories: seasons, values: seasons.map((s) => { const g = fgBySeason.get(s); return g ? makeRate(g) : null; }),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), xlab2: (s) => `n=${(fgBySeason.get(s) || []).length}`,
     });
 
@@ -223,8 +220,8 @@ function h2hTab(root) {
     const sRows = rows.filter((r) => r.long_snapper === snapper);
     const seasons = [...new Set(sRows.map((r) => r.season))].sort();
     document.getElementById(`${prefix}-years`).textContent = seasons.length ? (seasons.length === 1 ? seasons[0] : `${seasons[0]} – ${seasons[seasons.length - 1]}`) : 'no snaps in range';
-    document.getElementById(`${prefix}-pat`).textContent = pct(rate(pats(sRows)));
-    document.getElementById(`${prefix}-fg`).textContent = pct(rate(fgs(sRows)));
+    document.getElementById(`${prefix}-pat`).textContent = pct(makeRate(pats(sRows)));
+    document.getElementById(`${prefix}-fg`).textContent = pct(makeRate(fgs(sRows)));
     document.getElementById(`${prefix}-n`).textContent = String(sRows.length);
     const timeRows = sRows.filter((r) => r.snap_to_catch !== null);
     document.getElementById(`${prefix}-time`).textContent = timeRows.length ? `${fmt(mean(timeRows.map((r) => r.snap_to_catch)), 2)}s` : '—';
@@ -251,7 +248,7 @@ function h2hTab(root) {
     function seasonFgRate(snapper) {
       const sFg = fgs(rows.filter((r) => r.long_snapper === snapper));
       const byS = groupBy(sFg, 'season');
-      return seasons.map((s) => { const g = byS.get(s); return g && g.length ? rate(g) : null; });
+      return seasons.map((s) => { const g = byS.get(s); return g && g.length ? makeRate(g) : null; });
     }
     renderTwoLine(document.getElementById('ssh-trend-svg'), seasons, seasonFgRate(selA.value), seasonFgRate(selB.value), cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0));
 
@@ -332,18 +329,18 @@ function deepTab(root) {
     document.getElementById('ssd-summary').textContent = `${rows.length} credited snaps in view`;
     const fgRows = fgs(rows);
 
-    setKPI('ssd-fg', pct(rate(fgRows)), `${makes(fgRows).length}/${fgRows.length} field goals`);
+    setKPI('ssd-fg', pct(makeRate(fgRows)), `${makes(fgRows).length}/${fgRows.length} field goals`);
     setKPI('ssd-blocked', pct(rows.length ? rows.filter((r) => r.miss_location === 'Blocked').length / rows.length : null));
     const homeFg = fgRows.filter((r) => r.is_home), awayFg = fgRows.filter((r) => !r.is_home);
-    setKPI('ssd-homeaway', `${pct(rate(homeFg), 0)} / ${pct(rate(awayFg), 0)}`, 'home / away');
+    setKPI('ssd-homeaway', `${pct(makeRate(homeFg), 0)} / ${pct(makeRate(awayFg), 0)}`, 'home / away');
     const byQ = groupBy(fgRows, 'quarter');
     let bestQ = null, bestRate = -1;
-    byQ.forEach((g, q) => { if (g.length >= 3 && rate(g) > bestRate) { bestRate = rate(g); bestQ = q; } });
+    byQ.forEach((g, q) => { if (g.length >= 3 && makeRate(g) > bestRate) { bestRate = makeRate(g); bestQ = q; } });
     setKPI('ssd-bestq', bestQ !== null ? `Q${bestQ}` : '—', bestQ !== null ? `${pct(bestRate, 0)} (n=${byQ.get(bestQ).length})` : 'not enough attempts');
 
     const quarters = DATA.filters.money_unit.quarter.filter((q) => byQ.has(q));
     renderBar(document.getElementById('ssd-quarter'), {
-      categories: quarters, values: quarters.map((q) => rate(byQ.get(q))),
+      categories: quarters, values: quarters.map((q) => makeRate(byQ.get(q))),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-2'), xlab2: (q) => `n=${byQ.get(q).length}`,
     });
 
@@ -361,7 +358,7 @@ function deepTab(root) {
       cellFor: (snapper, season) => {
         const g = fgRows.filter((r) => r.season === season && r.long_snapper === snapper);
         if (!g.length) return null;
-        return { pct: rate(g), n: g.length, made: makes(g).length };
+        return { pct: makeRate(g), n: g.length, made: makes(g).length };
       },
       title: (snapper, season) => `${snapper}, ${season}`,
     });
@@ -371,7 +368,7 @@ function deepTab(root) {
     const snapLocsPresent = snapLocs.filter((s) => bySnapLoc.has(s));
     if (snapLocsPresent.length) {
       renderBar(document.getElementById('ssd-snaploc'), {
-        categories: snapLocsPresent, values: snapLocsPresent.map((s) => rate(bySnapLoc.get(s))),
+        categories: snapLocsPresent, values: snapLocsPresent.map((s) => makeRate(bySnapLoc.get(s))),
         labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-5'), xlab2: (s) => `n=${bySnapLoc.get(s).length}`,
       });
     } else {
@@ -393,8 +390,8 @@ function deepTab(root) {
         <td class="name">${s}</td>
         <td>${sSeasons.length === 1 ? sSeasons[0] : `${sSeasons[0]}–${sSeasons[sSeasons.length - 1]}`}</td>
         <td>${sRows.length}</td>
-        <td>${pct(rate(pats(sRows)), 0)}</td>
-        <td>${pct(rate(fgs(sRows)), 0)}</td>
+        <td>${pct(makeRate(pats(sRows)), 0)}</td>
+        <td>${pct(makeRate(fgs(sRows)), 0)}</td>
         <td>${sRows.filter((r) => r.miss_location === 'Blocked').length}</td>
         <td>${fmt(mean(sRows.map((r) => r.score)), 0)}</td>
         <td>${timeRows.length ? fmt(mean(timeRows.map((r) => r.snap_to_catch)), 2) + 's' : '—'}</td>

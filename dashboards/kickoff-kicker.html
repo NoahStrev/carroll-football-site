@@ -57,8 +57,7 @@ let DATA = null;
 
 function deep(rows) { return rows.filter((r) => r.kick_type === 'Deep'); }
 function onside(rows) { return rows.filter((r) => r.kick_type === 'Onside'); }
-function rate(rows, field) { return rows.length ? rows.filter((r) => r[field]).length / rows.length : null; }
-/* initials() now lives in js/charts.js -- shared across position pages. */
+/* rate()/initials() now live in js/charts.js -- shared across position pages. */
 
 /* ------------------------------------------------------------------ tab: Executive Scorecard --- */
 
@@ -98,19 +97,19 @@ function execTab(root) {
     document.getElementById('kke-summary').textContent = `${rows.length} kickoffs in view`;
     const deepRows = deep(rows);
 
-    setKPI('kke-tb', pct(rate(deepRows, 'touchback')), `${deepRows.filter((r) => r.touchback).length}/${deepRows.length} deep kicks`);
-    setKPI('kke-i25', pct(rate(deepRows, 'inside_25')));
+    setKPI('kke-tb', pct(rate(deepRows, (r) => r.touchback)), `${deepRows.filter((r) => r.touchback).length}/${deepRows.length} deep kicks`);
+    setKPI('kke-i25', pct(rate(deepRows, (r) => r.inside_25)));
     setKPI('kke-dist', `${fmt(mean(deepRows.map((r) => r.total_distance)), 1)} yds`);
     setKPI('kke-ret', `${fmt(mean(deepRows.map((r) => r.return_length)), 1)} yds`);
 
     const seasons = DATA.filters.kickoff.season.filter((s) => rows.some((r) => r.season === s));
     const byseason = groupBy(deepRows, 'season');
     renderBar(document.getElementById('kke-tbseason'), {
-      categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g ? rate(g, 'touchback') : null; }),
+      categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g ? rate(g, (r) => r.touchback) : null; }),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
     });
     renderBar(document.getElementById('kke-i25season'), {
-      categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g ? rate(g, 'inside_25') : null; }),
+      categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g ? rate(g, (r) => r.inside_25) : null; }),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
     });
     renderBar(document.getElementById('kke-distseason'), {
@@ -220,8 +219,8 @@ function h2hTab(root) {
     const kDeep = deep(kRows);
     const seasons = [...new Set(kRows.map((r) => r.season))].sort();
     document.getElementById(`${prefix}-years`).textContent = seasons.length ? (seasons.length === 1 ? seasons[0] : `${seasons[0]} – ${seasons[seasons.length - 1]}`) : 'no kicks in range';
-    document.getElementById(`${prefix}-tb`).textContent = pct(rate(kDeep, 'touchback'));
-    document.getElementById(`${prefix}-i25`).textContent = pct(rate(kDeep, 'inside_25'));
+    document.getElementById(`${prefix}-tb`).textContent = pct(rate(kDeep, (r) => r.touchback));
+    document.getElementById(`${prefix}-i25`).textContent = pct(rate(kDeep, (r) => r.inside_25));
     document.getElementById(`${prefix}-dist`).textContent = `${fmt(mean(kDeep.map((r) => r.total_distance)), 1)} yds`;
     const hangRows = kRows.filter((r) => r.hangtime !== null);
     document.getElementById(`${prefix}-hang`).textContent = hangRows.length ? `${fmt(mean(hangRows.map((r) => r.hangtime)), 2)}s` : '—';
@@ -251,7 +250,7 @@ function h2hTab(root) {
       return seasons.map((s) => {
         const g = byS.get(s);
         if (!g || !g.length) return null;
-        return field === 'touchback' ? rate(g, 'touchback') : mean(g.map((r) => r.return_length));
+        return field === 'touchback' ? rate(g, (r) => r.touchback) : mean(g.map((r) => r.return_length));
       });
     }
     renderTwoLine(document.getElementById('kkh-tb-svg'), seasons, seasonVals(selA.value, 'touchback'), seasonVals(selB.value, 'touchback'), cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0));
@@ -318,19 +317,19 @@ function deepTab(root) {
     document.getElementById('kkd-summary').textContent = `${rows.length} kickoffs in view`;
     const deepRows = deep(rows);
 
-    setKPI('kkd-tb', pct(rate(deepRows, 'touchback')), `${deepRows.filter((r) => r.touchback).length}/${deepRows.length} deep kicks`);
+    setKPI('kkd-tb', pct(rate(deepRows, (r) => r.touchback)), `${deepRows.filter((r) => r.touchback).length}/${deepRows.length} deep kicks`);
     const homeTb = deepRows.filter((r) => r.is_home), awayTb = deepRows.filter((r) => !r.is_home);
-    setKPI('kkd-homeaway', `${pct(rate(homeTb, 'touchback'), 0)} / ${pct(rate(awayTb, 'touchback'), 0)}`, 'home / away');
+    setKPI('kkd-homeaway', `${pct(rate(homeTb, (r) => r.touchback), 0)} / ${pct(rate(awayTb, (r) => r.touchback), 0)}`, 'home / away');
     const byQ = groupBy(deepRows, 'quarter');
     let bestQ = null, bestRate = -1;
-    byQ.forEach((g, q) => { const r = rate(g, 'touchback'); if (g.length >= 3 && r > bestRate) { bestRate = r; bestQ = q; } });
+    byQ.forEach((g, q) => { const tbRate = rate(g, (r) => r.touchback); if (g.length >= 3 && tbRate > bestRate) { bestRate = tbRate; bestQ = q; } });
     setKPI('kkd-bestq', bestQ !== null ? `Q${bestQ}` : '—', bestQ !== null ? `${pct(bestRate, 0)} (n=${byQ.get(bestQ).length})` : 'not enough attempts');
     const onsideRows = onside(rows);
-    setKPI('kkd-onside', pct(rate(onsideRows, 'onside_obtained')), `${onsideRows.filter((r) => r.onside_obtained).length}/${onsideRows.length} attempts`);
+    setKPI('kkd-onside', pct(rate(onsideRows, (r) => r.onside_obtained)), `${onsideRows.filter((r) => r.onside_obtained).length}/${onsideRows.length} attempts`);
 
     const quarters = DATA.filters.kickoff.quarter.filter((q) => byQ.has(q));
     renderBar(document.getElementById('kkd-quarter'), {
-      categories: quarters, values: quarters.map((q) => rate(byQ.get(q), 'touchback')),
+      categories: quarters, values: quarters.map((q) => rate(byQ.get(q), (r) => r.touchback)),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-2'), xlab2: (q) => `n=${byQ.get(q).length}`,
     });
 
@@ -348,7 +347,7 @@ function deepTab(root) {
       cellFor: (kicker, season) => {
         const g = deepRows.filter((r) => r.season === season && r.kicker === kicker);
         if (!g.length) return null;
-        return { pct: rate(g, 'touchback'), n: g.length, made: g.filter((r) => r.touchback).length };
+        return { pct: rate(g, (r) => r.touchback), n: g.length, made: g.filter((r) => r.touchback).length };
       },
       title: (kicker, season) => `${kicker}, ${season}`,
     });
@@ -358,7 +357,7 @@ function deepTab(root) {
     const hashesPresent = hashes.filter((h) => byHash.has(h));
     if (hashesPresent.length) {
       renderBar(document.getElementById('kkd-hash'), {
-        categories: hashesPresent, values: hashesPresent.map((h) => rate(byHash.get(h), 'touchback')),
+        categories: hashesPresent, values: hashesPresent.map((h) => rate(byHash.get(h), (r) => r.touchback)),
         labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), xlab2: (h) => `n=${byHash.get(h).length}`,
       });
     } else {
@@ -381,8 +380,8 @@ function deepTab(root) {
         <td class="name">${k}</td>
         <td>${kSeasons.length === 1 ? kSeasons[0] : `${kSeasons[0]}–${kSeasons[kSeasons.length - 1]}`}</td>
         <td>${kRows.length}</td>
-        <td>${pct(rate(kDeep, 'touchback'), 0)}</td>
-        <td>${pct(rate(kDeep, 'inside_25'), 0)}</td>
+        <td>${pct(rate(kDeep, (r) => r.touchback), 0)}</td>
+        <td>${pct(rate(kDeep, (r) => r.inside_25), 0)}</td>
         <td>${fmt(mean(kDeep.map((r) => r.total_distance)), 1)} yds</td>
         <td>${fmt(mean(kDeep.map((r) => r.return_length)), 1)} yds</td>
         <td>${fmt(mean(kRows.map((r) => r.score)), 0)}</td>

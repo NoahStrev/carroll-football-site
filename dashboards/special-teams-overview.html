@@ -206,12 +206,10 @@ function moneyUnitTab(root) {
       colorMap: { Make: cssVar('--good'), Miss: cssVar('--critical') },
     });
 
-    const buckets = ['0-29', '30-39', '40-49', '50+'];
-    const bucketOf = (d) => (d < 30 ? '0-29' : d < 40 ? '30-39' : d < 50 ? '40-49' : '50+');
-    const fgByBucket = groupBy(fgs.map((r) => ({ ...r, _b: bucketOf(r.distance) })), '_b');
+    const fgByBucket = groupBy(fgs.map((r) => ({ ...r, _b: fgDistBucket(r.distance) })), '_b');
     renderBar(document.getElementById('mu-fgbucket'), {
-      categories: buckets,
-      values: buckets.map((b) => {
+      categories: FG_DIST_BUCKETS,
+      values: FG_DIST_BUCKETS.map((b) => {
         const g = fgByBucket.get(b);
         if (!g || !g.length) return null;
         return g.filter((r) => r.make).length / g.length;

@@ -57,11 +57,8 @@
 <script>
 let DATA = null;
 
+/* netOf/avgNet/rate/PUNT_OUTCOMES now live in js/charts.js (shared with Punter). */
 function withSnapper(rows) { return rows.filter((r) => r.snapper); }
-function netOf(r) { return r.total_distance !== null && r.return_length !== null ? r.total_distance - r.return_length : null; }
-function avgNet(rows) { return mean(rows.map(netOf)); }
-function rate(rows, pred) { return rows.length ? rows.filter(pred).length / rows.length : null; }
-const OUTCOMES = ['Downed', 'Fair Catch', 'Touchback', 'Out of Bounds', 'Return', 'Return Touchdown', 'Muff'];
 
 /* ------------------------------------------------------------------ tab: Executive Scorecard --- */
 
@@ -222,8 +219,8 @@ function h2hTab(root) {
     document.getElementById(`${prefix}-time`).textContent = timeRows.length ? `${fmt(mean(timeRows.map((r) => r.snap_to_catch)), 2)}s` : '—';
     const byOutcome = groupBy(sRows, 'kick_outcome');
     renderBar(document.getElementById(`${prefix}-outchart`), {
-      categories: OUTCOMES.filter((o) => byOutcome.has(o)),
-      values: OUTCOMES.filter((o) => byOutcome.has(o)).map((o) => byOutcome.get(o).length),
+      categories: PUNT_OUTCOMES.filter((o) => byOutcome.has(o)),
+      values: PUNT_OUTCOMES.filter((o) => byOutcome.has(o)).map((o) => byOutcome.get(o).length),
       labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-1'),
     });
   }
