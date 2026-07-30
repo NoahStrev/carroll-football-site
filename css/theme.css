@@ -23,8 +23,7 @@
   --grid: #e1e0d9;
   --baseline: #c3c2b7;
   --border: rgba(11, 11, 11, 0.10);
-  --series-1: #2a78d6;
-  --series-2: #1baf7a;
+  --accent: #2a78d6;
   --good: #0ca30c;
   --critical: #d03b3b;
   --warning: #fab219;
@@ -37,9 +36,13 @@
   --seq-500: #256abf;
   --seq-600: #184f95;
   /* Full 8-slot categorical order (dataviz skill's validated reference palette --
-     CVD-safe in this exact order; don't reorder). series-1/series-2 above are
-     kept for backward compat with the existing Special Teams mockups (blue +
-     aqua, i.e. cat-1 + cat-3) -- new charts needing 3+ categories should use
+     CVD-safe in this exact order; don't reorder). --accent above (renamed
+     2026-07-30 from --series-1, which also had a --series-2 sibling -- both were
+     leftover chart-series-1/2 naming from the Special Teams mockups, but the only
+     one actually used anywhere had long since become the general UI accent color
+     -- tab-active state, focus rings, active nav link, default bar color -- never
+     a literal "chart series." --series-2 was unused everywhere and just removed.)
+     is a plain alias for cat-1's blue; new charts needing 3+ categories should use
      cat-1..cat-8 directly in order rather than skipping slots. */
   --cat-1: #2a78d6; /* blue */
   --cat-2: #eb6834; /* orange -- Carroll's brand accent lives here */
@@ -66,8 +69,7 @@
     --grid: #2c2c2a;
     --baseline: #383835;
     --border: rgba(255, 255, 255, 0.10);
-    --series-1: #3987e5;
-    --series-2: #199e70;
+    --accent: #3987e5;
     --good: #0ca30c;
     --critical: #d03b3b;
     --warning: #fab219;
@@ -102,8 +104,7 @@
   --grid: #2c2c2a;
   --baseline: #383835;
   --border: rgba(255, 255, 255, 0.10);
-  --series-1: #3987e5;
-  --series-2: #199e70;
+  --accent: #3987e5;
   --good: #0ca30c;
   --critical: #d03b3b;
   --warning: #fab219;
@@ -149,8 +150,8 @@ html, body {
   color: var(--text-secondary); cursor: pointer;
   transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
 }
-.tabbtn:hover { border-color: var(--series-1); color: var(--text-primary); }
-.tabbtn.active { background: var(--series-1); color: #fff; border-color: var(--series-1); box-shadow: 0 2px 10px color-mix(in srgb, var(--series-1) 40%, transparent); }
+.tabbtn:hover { border-color: var(--accent); color: var(--text-primary); }
+.tabbtn.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 10px color-mix(in srgb, var(--accent) 40%, transparent); }
 .tabbtn .n { opacity: .7; font-weight: 500; }
 
 .stage { overflow-x: auto; padding: 4px 4px 30px; }
@@ -194,13 +195,13 @@ html, body {
 .fp-group:last-of-type { margin-bottom: 0; }
 .fp-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; margin-bottom: 7px; }
 .fp-chk { display: flex; align-items: center; gap: 8px; font-size: 12.5px; padding: 3px 0; cursor: pointer; user-select: none; }
-.fp-chk input { accent-color: var(--series-1); width: 13px; height: 13px; cursor: pointer; }
+.fp-chk input { accent-color: var(--accent); width: 13px; height: 13px; cursor: pointer; }
 .fp-select {
   width: 100%; font-size: 12.5px; padding: 7px 8px; border-radius: 6px; border: 1px solid var(--border);
   background: var(--page); color: var(--text-primary); font-family: inherit;
 }
 .fp-actions { display: flex; justify-content: flex-end; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--grid); }
-.fp-reset { font-family: inherit; font-size: 11.5px; color: var(--series-1); background: none; border: none; cursor: pointer; font-weight: 700; padding: 0; }
+.fp-reset { font-family: inherit; font-size: 11.5px; color: var(--accent); background: none; border: none; cursor: pointer; font-weight: 700; padding: 0; }
 .fp-reset:hover { text-decoration: underline; }
 
 /* ---- filter panel v2 (added 2026-07-30): checkbox lists, not multi-select ---- */
@@ -210,7 +211,7 @@ html, body {
 .fp-label-row .fp-label { margin-bottom: 0; }
 .fp-quick { display: flex; gap: 6px; }
 .fp-quick-btn {
-  font-family: inherit; font-size: 10px; font-weight: 700; color: var(--series-1); background: none;
+  font-family: inherit; font-size: 10px; font-weight: 700; color: var(--accent); background: none;
   border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: .03em;
 }
 .fp-quick-btn:hover { text-decoration: underline; }
@@ -231,7 +232,7 @@ html, body {
   width: 100%; font-family: inherit; font-size: 13px; font-weight: 600; padding: 7px 10px;
   border-radius: 7px; border: 1px solid var(--border); background: var(--page); color: var(--text-primary);
 }
-.combobox-input:focus { outline: 2px solid var(--series-1); outline-offset: -1px; }
+.combobox-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
 .combobox-list {
   position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 60; display: none;
   max-height: 240px; overflow-y: auto; background: var(--surface-1); border: 1px solid var(--border);
@@ -248,7 +249,7 @@ html, body {
   padding: 13px 15px; position: relative; overflow: hidden;
   transition: box-shadow .15s ease, transform .15s ease;
 }
-.kpi::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--kpi-accent, var(--series-1)); opacity: .6; }
+.kpi::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--kpi-accent, var(--accent)); opacity: .6; }
 .kpi:hover { box-shadow: 0 4px 16px rgba(0, 0, 0, .08); transform: translateY(-1px); }
 .kpi .label { font-size: 11px; color: var(--text-secondary); margin-bottom: 7px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
 .kpi .value { font-size: 27px; font-weight: 800; line-height: 1.05; letter-spacing: -.01em; }
@@ -265,7 +266,6 @@ html, body {
   justify-content: space-between; background: color-mix(in srgb, var(--surface-1) 55%, transparent);
 }
 .card-head h3 { font-size: 12.5px; margin: 0; font-weight: 700; }
-.card-head .grip { color: var(--muted); font-size: 11px; letter-spacing: 1px; opacity: .6; }
 .card-body { padding: 15px 16px 13px; }
 .card.illus { border-style: dashed; border-color: var(--muted); }
 
@@ -277,7 +277,7 @@ html, body {
 .barchart .gridlines { position: absolute; inset: 20px 0 22px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
 .barchart .gridlines div { border-top: 1px solid var(--grid); height: 0; }
 .barcol { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; justify-content: flex-end; height: 100%; position: relative; z-index: 1; }
-.bar { width: 22px; max-width: 24px; border-radius: 4px 4px 0 0; background: var(--series-1); position: relative; transition: height .35s ease, filter .1s ease, transform .1s ease; cursor: pointer; }
+.bar { width: 22px; max-width: 24px; border-radius: 4px 4px 0 0; background: var(--accent); position: relative; transition: height .35s ease, filter .1s ease, transform .1s ease; cursor: pointer; }
 .bar:hover { filter: brightness(1.12); transform: scaleX(1.08); }
 .seg { cursor: pointer; transition: filter .1s ease; }
 .seg:hover { filter: brightness(1.12); }
@@ -366,7 +366,7 @@ table.mini tbody tr:nth-child(1) .lb-rank { color: var(--cat-2); font-weight: 80
   padding: 7px 12px; border-radius: 999px; transition: background-color .15s ease, color .15s ease;
 }
 .sitenav .links a:hover { background: var(--grid); color: var(--text-primary); }
-.sitenav .links a.active { background: var(--series-1); color: #fff; }
+.sitenav .links a.active { background: var(--accent); color: #fff; }
 
 /* ---- unit header (2026-07-30): moved here from lifting-strength.html and
    special-teams-overview.html, where it was declared byte-identically in both

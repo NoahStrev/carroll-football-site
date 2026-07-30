@@ -114,7 +114,7 @@ function renderTrendCard(container, rows, field, unit, title) {
   const prevVal = values.length > 1 ? values[values.length - 2] : null;
   const delta = lastVal !== null && prevVal !== null ? lastVal - prevVal : null;
   container.innerHTML = `
-    <div class="card-head"><h3>${title}</h3><span class="grip">⋮⋮</span></div>
+    <div class="card-head"><h3>${title}</h3></div>
     <div class="card-body trend-body">
       <div>
         <div class="kpi small" style="border:none; padding:0; background:none;">
@@ -164,10 +164,10 @@ function moneyUnitTab(root) {
             ${kpiHTML('mu-blocked', 'Kicks Blocked', '--critical')}
           </div>
           <div class="chartgrid">
-            <div class="card"><div class="card-head"><h3>Snap to Kick vs Distance</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="mu-scatter"></div></div>
-            <div class="card"><div class="card-head"><h3>FG % by Distance Bucket</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="mu-fgbucket"></div></div>
-            <div class="card"><div class="card-head"><h3>Make % by Hash Kicked From</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="mu-hash"></div></div>
-            <div class="card"><div class="card-head"><h3>Misses by Location</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="mu-miss"><div class="data-note">Only "Blocked" is currently tracked as a miss reason in the source data (the Tableau version's L/Short breakdown isn't captured yet).</div></div></div>
+            <div class="card"><div class="card-head"><h3>Snap to Kick vs Distance</h3></div><div class="card-body" id="mu-scatter"></div></div>
+            <div class="card"><div class="card-head"><h3>FG % by Distance Bucket</h3></div><div class="card-body" id="mu-fgbucket"></div></div>
+            <div class="card"><div class="card-head"><h3>Make % by Hash Kicked From</h3></div><div class="card-body" id="mu-hash"></div></div>
+            <div class="card"><div class="card-head"><h3>Misses by Location</h3></div><div class="card-body" id="mu-miss"><div class="data-note">Only "Blocked" is currently tracked as a miss reason in the source data (the Tableau version's L/Short breakdown isn't captured yet).</div></div></div>
           </div>
           <div class="grid2">
             <div class="card"><div class="card-body" id="mu-snapcatch"></div></div>
@@ -289,10 +289,10 @@ function puntTab(root) {
             ${kpiHTML('pt-pts', 'Avg Points Scored')}
           </div>
           <div class="chartgrid">
-            <div class="card"><div class="card-head"><h3>Return Length vs Hangtime</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="pt-scatter"></div></div>
-            <div class="card"><div class="card-head"><h3>Punts by Outcome</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="pt-outcome"></div></div>
-            <div class="card"><div class="card-head"><h3>Drive Success by Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="pt-success"></div></div>
-            <div class="card"><div class="card-head"><h3>Outcome by Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="pt-outcomefp"></div></div>
+            <div class="card"><div class="card-head"><h3>Return Length vs Hangtime</h3></div><div class="card-body" id="pt-scatter"></div></div>
+            <div class="card"><div class="card-head"><h3>Punts by Outcome</h3></div><div class="card-body" id="pt-outcome"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Field Position</h3></div><div class="card-body" id="pt-success"></div></div>
+            <div class="card"><div class="card-head"><h3>Outcome by Field Position</h3></div><div class="card-body" id="pt-outcomefp"></div></div>
           </div>
           <div class="grid2">
             <div class="card"><div class="card-body" id="pt-s2ktrend"></div></div>
@@ -399,14 +399,14 @@ function puntReturnTab(root) {
             ${kpiHTML('prt-pts', 'Avg Points Scored')}
           </div>
           <div class="chartgrid">
-            <div class="card"><div class="card-head"><h3>Return Length vs Hangtime</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="prt-scatter"></div></div>
-            <div class="card"><div class="card-head"><h3>Punts by Outcome</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="prt-outcome"></div></div>
-            <div class="card"><div class="card-head"><h3>Drive Success by Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="prt-successfp"></div></div>
-            <div class="card"><div class="card-head"><h3>Drive Success by Return Length</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="prt-successrl"></div></div>
+            <div class="card"><div class="card-head"><h3>Return Length vs Hangtime</h3></div><div class="card-body" id="prt-scatter"></div></div>
+            <div class="card"><div class="card-head"><h3>Punts by Outcome</h3></div><div class="card-body" id="prt-outcome"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Field Position</h3></div><div class="card-body" id="prt-successfp"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Return Length</h3></div><div class="card-body" id="prt-successrl"></div></div>
           </div>
           <div class="grid2">
             <div class="card"><div class="card-body" id="prt-rettrend"></div></div>
-            <div class="card"><div class="card-head"><h3>Field Position by Outcome</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="prt-fpoutcome"></div></div>
+            <div class="card"><div class="card-head"><h3>Field Position by Outcome</h3></div><div class="card-body" id="prt-fpoutcome"></div></div>
           </div>
         </div>
         <div class="footer-note">Source: Carroll Punt Return sheet, Carroll_Special_Teams_2021_Current.xlsx (209 rows). "Punts by Outcome" is derived from the sheet's TB/FC/Muff/Blocked flags plus return length (no single outcome column on this sheet).</div>
@@ -513,10 +513,10 @@ function kickoffTab(root) {
             ${kpiHTML('ko-pts', 'Avg Points Scored')}
           </div>
           <div class="chartgrid">
-            <div class="card"><div class="card-head"><h3>Kick Distance vs Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="ko-scatter"></div></div>
-            <div class="card"><div class="card-head"><h3>Avg Field Position by Kick Type</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="ko-typefp"></div></div>
-            <div class="card"><div class="card-head"><h3>Drive Success by Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="ko-success"></div></div>
-            <div class="card"><div class="card-head"><h3>Drive Success by Kick Type</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="ko-typesuccess"></div></div>
+            <div class="card"><div class="card-head"><h3>Kick Distance vs Field Position</h3></div><div class="card-body" id="ko-scatter"></div></div>
+            <div class="card"><div class="card-head"><h3>Avg Field Position by Kick Type</h3></div><div class="card-body" id="ko-typefp"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Field Position</h3></div><div class="card-body" id="ko-success"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Kick Type</h3></div><div class="card-body" id="ko-typesuccess"></div></div>
           </div>
           <div class="grid2">
             <div class="card"><div class="card-body" id="ko-fptrend"></div></div>
@@ -618,10 +618,10 @@ function kickoffReturnTab(root) {
             ${kpiHTML('kor-pts', 'Avg Points Scored')}
           </div>
           <div class="chartgrid">
-            <div class="card"><div class="card-head"><h3>Field Position by Return Length</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="kor-scatter"></div></div>
-            <div class="card"><div class="card-head"><h3>Drive Success by Return Location</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="kor-location"></div></div>
-            <div class="card"><div class="card-head"><h3>Drive Success by Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="kor-success"></div></div>
-            <div class="card"><div class="card-head"><h3>Outcome by Field Position</h3><span class="grip">⋮⋮</span></div><div class="card-body" id="kor-outcomefp"></div></div>
+            <div class="card"><div class="card-head"><h3>Field Position by Return Length</h3></div><div class="card-body" id="kor-scatter"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Return Location</h3></div><div class="card-body" id="kor-location"></div></div>
+            <div class="card"><div class="card-head"><h3>Drive Success by Field Position</h3></div><div class="card-body" id="kor-success"></div></div>
+            <div class="card"><div class="card-head"><h3>Outcome by Field Position</h3></div><div class="card-body" id="kor-outcomefp"></div></div>
           </div>
           <div class="grid2">
             <div class="card"><div class="card-body" id="kor-fptrend"></div></div>

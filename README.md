@@ -235,6 +235,17 @@ metrics, with no NaN coordinates for any tested athlete pair.
   responsive pass.
 - **Removed `renderKPI()` from `js/charts.js`** — defined but never called from
   either dashboard (each builds its own KPI markup directly).
+- **`--series-1`/`--series-2` renamed to `--accent`** (`css/theme.css`,
+  `index.html`) — leftover chart-series naming from the Special Teams mockups.
+  `--series-1` had long since become the site's general interactive/accent color
+  (active tab, focus rings, active nav link, default bar color) with zero actual
+  chart-series usages left; `--series-2` was completely unused everywhere and
+  just dropped.
+- **Removed the decorative `⋮⋮` "grip" icon** from all ~22 chart cards in
+  `special-teams-overview.html` (and the now-unused `.grip` rule in theme.css) —
+  copied from the mockups, implied drag-to-reorder that was never built. The
+  Lifting leaderboard cards already got this treatment incidentally when their
+  header gained a real count badge earlier this session.
 
 ## Data sources
 
