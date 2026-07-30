@@ -70,18 +70,25 @@ based on.
      combobox), Situational Deep Dive (quarter/season/hash breakdowns, distance ×
      season heatmap, kicker detail table). **Deliberately does not port the
      mockup's fabricated widgets** — the mockup used a hash-based jitter model to
-     invent Operation Time, Hash Kicked From, snap quality, and a miss-reason
-     split, all tagged "sample data," because those fields were blank when the
-     mockup was drafted. They aren't blank anymore: `Snap to Catch`/
-     `Catch to Kick`/`Hash Kicked From` are hand-charted by the coaching staff and
-     real from 2023 onward (0% charted 2021-2022, ~90-100% 2024-2025, confirmed by
-     checking the actual workbook column-by-column before building anything) — so
-     this page charts the **real** values wherever charted, same "never average-
-     padded with blanks" rule as Phase 1's Money Unit tab, instead of fabricating
-     a statistical model. Two exceptions with no real equivalent were dropped
-     entirely rather than reinterpreted: full miss-reason direction (still only
-     "Blocked" vs. everything else, matching Phase 1) and "snap quality" (no such
-     column exists anywhere in the source). Also surfaces `PAT/FG Value`/`Score` —
+     invent Operation Time, Hash Kicked From, snap quality/accuracy, and a
+     miss-reason split, all tagged "sample data," because those fields were blank
+     when the mockup was drafted. They aren't blank anymore: `Snap to Catch`/
+     `Catch to Kick`/`Hash Kicked From`/`Snap Location` are hand-charted by the
+     coaching staff and real from 2023 onward (0% charted 2021-2022, ~90-100%
+     2024-2025, confirmed by checking the actual workbook column-by-column before
+     building anything) — so this page charts the **real** values wherever
+     charted, same "never average-padded with blanks" rule as Phase 1's Money
+     Unit tab, instead of fabricating a statistical model. **Correction,
+     2026-08-01**: an earlier version of this page (and this README) incorrectly
+     said "snap quality" had no real equivalent — it does: `Snap Location` (a 1-3
+     rating on both the PAT-FG and Punt sheets) is exactly that field, just missed
+     on the first pass. Added back as "FG make % by Snap Location," shown as
+     buckets "1"/"2"/"3" without relabeling them "good/bad," since the
+     `Special Teams Data` project's own docs say that scale's meaning isn't
+     resolved upstream yet (~zero correlation found with anything tested so far).
+     The one exception still genuinely dropped: full miss-reason direction (still
+     only "Blocked" vs. everything else, matching Phase 1 — no column anywhere
+     records wide-left/wide-right/short). Also surfaces `PAT/FG Value`/`Score` —
      a real, fully-computed "points added over expectation" metric already in the
      source workbook (see `Special Teams Data/rules/carroll_pat_fg_rules.md`) that
      no dashboard on this site had used before. `scripts/build_special_teams_data.py`
@@ -123,7 +130,24 @@ based on.
      `Special Teams Data` project's own `SKILL.md` already documents (bug #8) but
      hasn't fully backfilled for this one punter's 2021 games. Left unmerged, same
      policy as the Kickoff Kicker page's `"Scofield"`/`"Sebastian Scofield"`.
-   - Short snapper, long snapper — not started.
+   - **Short Snapper — done** (`dashboards/short-snapper.html`, 2026-08-01). Uses
+     the `Long Snapper` column on the **Carroll PAT-FG** sheet — despite the
+     column's name, it's the FG/PAT ("short") snap, not the punt snap (that one's
+     the Punt sheet's own `Snapper Name`, tracked on the upcoming Long Snapper
+     page instead). Snapper is only credited on 175/236 attempts (2021 and part
+     of 2022 predate crediting) — excluded from snapper-specific views, but PAT/FG
+     make-rate KPIs still use every attempt. Same real-data discipline: Snap to
+     Catch (snap time) and Snap Location are hand-charted and real from 2023
+     onward. **Per the user, explicitly builds the full comparison UI even where
+     current data is sparse** — only 4 snappers are credited so far (2 with just
+     1 attempt each), so Head-to-Head's searchable-combobox infrastructure is
+     built exactly like Placekicker's, not simplified down, since more attempts
+     will get a snapper credited over time and the page should already work once
+     they do. Verified this doesn't crash or misbehave with genuine 1-row
+     samples. **Also fixed on this page and Placekicker** (and added to Punter):
+     `Snap Location` (a real 1-3 rating, previously incorrectly written off as
+     having no source column — see the Placekicker entry above) now has its own
+     chart on all three.
 3. **Phase 3 — offense &amp; defense**: no existing dashboard reference for either —
    design from scratch once we get here.
 4. **Phase 4 — report ingestion &amp; downloads** (lowest priority, added 2026-07-30

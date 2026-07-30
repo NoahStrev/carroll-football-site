@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Short Snapper — Carroll Football Analytics</title>
+<link rel="stylesheet" href="../css/theme.css">
+<style>
+  /* .unit-header, .kpirow/.kpirow-5/.kpirow-6, .colcard-2/.kicker-col/etc.,
+     .heat, .grid2, .linewrap svg all already live in css/theme.css. */
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="../index.html">Overview</a>
+      <a href="special-teams-overview.html">Special Teams</a>
+      <a href="lifting-strength.html">Lifting &amp; Strength</a>
+    </div>
+  </nav>
+
+  <div class="intro">
+    <h1>Short Snapper</h1>
+    <p>
+      Individual short-snapper (PAT/FG snap) breakdown from the real <code>Long Snapper</code>
+      column on the <code>Carroll PAT-FG</code> sheet in <code>Carroll_Special_Teams_2021_Current.xlsx</code>
+      — position 4a of the special-teams series, alongside <a href="placekicker.html">Placekicker</a>,
+      <a href="kickoff-kicker.html">Kickoff Kicker</a>, and <a href="punter.html">Punter</a>. Despite the
+      sheet calling this column "Long Snapper," it's the FG/PAT ("short") snap, not the punt snap — that
+      one lives on the Punt sheet's own <code>Snapper Name</code> column and is tracked on the upcoming
+      Long Snapper page instead. The snapper is only credited on 175 of 236 attempts (2021 and part of
+      2022 never had one charted) — the rest are excluded from snapper-specific views rather than guessed
+      at, though PAT/FG make-rate KPIs still use every attempt. <b>Snap to Catch (snap time), Snap Location,
+      and Catch to Kick are hand-charted from film and only exist from 2023 onward</b> (0% charted
+      2021–2022, effectively complete 2024–2025) — every chart using them only ever averages the rows that
+      actually have a value. <b>Snap Location is a 1–3 rating whose scale isn't defined upstream yet</b>
+      (shown as buckets "1"/"2"/"3", not relabeled "good/bad"). Only 4 snappers are credited so far, so
+      Head-to-Head has a small pool today — the comparison UI works the same regardless of how many real
+      names exist, and fills in as more attempts get a snapper charted.
+    </p>
+  </div>
+
+  <div class="tabbar" id="ss-tabs">
+    <button class="tabbtn active" data-tab="exec">Executive Scorecard</button>
+    <button class="tabbtn" data-tab="h2h">Snapper Head-to-Head</button>
+    <button class="tabbtn" data-tab="deep">Situational Deep Dive</button>
+  </div>
+
+  <div class="stage" id="ss-stage"></div>
+</div>
+
+<script src="../js/charts.js"></script>
+<script>
+let DATA = null;
+
+function withSnapper(rows) { return rows.filter((r) => r.long_snapper); }
+function fgs(rows) { return rows.filter((r) => r.fg_exp === 'FG'); }
+function pats(rows) { return rows.filter((r) => r.fg_exp === 'EXP'); }
+function makes(rows) { return rows.filter((r) => r.make); }
+function rate(rows) { return rows.length ? makes(rows).length / rows.length : null; }
+const OUTCOMES = ['Make', 'Miss', 'Blocked'];
+function outcomeOf(r) { return r.make ? 'Make' : (r.miss_location === 'Blocked' ? 'Blocked' : 'Miss'); }
+
+/* ------------------------------------------------------------------ tab: Executive Scorecard --- */
+
+const EXEC_FILTERS = [
+  { field: 'season', label: 'Season' },
+  { field: 'long_snapper', label: 'Snapper' },
+];
+
+function execTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Short Snapper</h2></div><div class="sub">Executive Scorecard</div></div>
+      <div class="shelf" id="sse-shelf"></div>
+      <div class="body">
+        <div class="kpirow-5" id="sse-kpis">
+          ${kpiHTML('sse-pat', 'PAT Make Rate', '--good')}
+          ${kpiHTML('sse-fg', 'FG Make Rate', '--critical')}
+          ${kpiHTML('sse-n', 'Snaps in View')}
+          ${kpiHTML('sse-blocked', 'Blocked Kicks')}
+          ${kpiHTML('sse-score', 'Avg PAT/FG Score')}
+        </div>
+        <div class="grid2" style="margin-bottom:14px;">
+          <div class="card"><div class="card-head"><h3>PAT % by Season</h3></div><div class="card-body" id="sse-patseason"></div></div>
+          <div class="card"><div class="card-head"><h3>FG % by Season</h3></div><div class="card-body" id="sse-fgseason"></div></div>
+        </div>
+        <div class="grid2">
+          <div class="card"><div class="card-head"><h3>Snaps by Snapper</h3></div><div class="card-body" id="sse-bysnap"></div></div>
+          <div class="card"><div class="card-head"><h3>Avg Snap Time by Season</h3></div><div class="card-body" id="sse-timeseason"><div class="data-note">Charted 2023 onward only.</div></div></div>
+        </div>
+      </div>
+      <div class="footer-note">Source: Carroll PAT-FG sheet, Carroll_Special_Teams_2021_Current.xlsx. Snapper only credited on 175/236 attempts -- "Snaps by Snapper" and the filter's Snapper options reflect only those; PAT%/FG% KPIs use every attempt regardless of whether a snapper is credited.</div>
+    </div></div>`;
+
+  document.getElementById('sse-shelf').innerHTML = buildFilterPanel('sse', EXEC_FILTERS, DATA.filters.money_unit);
+  wireFilterPanel('sse', EXEC_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('sse', EXEC_FILTERS);
+    const rows = applyFilters(DATA.units.money_unit, state);
+    document.getElementById('sse-summary').textContent = `${rows.length} attempts in view`;
+
+    const fgRows = fgs(rows), patRows = pats(rows);
+    setKPI('sse-pat', pct(rate(patRows)), `${makes(patRows).length}/${patRows.length} PATs`);
+    setKPI('sse-fg', pct(rate(fgRows)), `${makes(fgRows).length}/${fgRows.length} field goals`);
+    setKPI('sse-n', String(rows.length));
+    setKPI('sse-blocked', String(rows.filter((r) => r.miss_location === 'Blocked').length));
+    setKPI('sse-score', fmt(mean(rows.map((r) => r.score)), 0));
+
+    const seasons = DATA.filters.money_unit.season.filter((s) => rows.some((r) => r.season === s));
+    const patBySeason = groupBy(patRows, 'season'), fgBySeason = groupBy(fgRows, 'season');
+    renderBar(document.getElementById('sse-patseason'), {
+      categories: seasons, values: seasons.map((s) => { const g = patBySeason.get(s); return g ? rate(g) : null; }),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'), xlab2: (s) => `n=${(patBySeason.get(s) || []).length}`,
+    });
+    renderBar(document.getElementById('sse-fgseason'), {
+      categories: seasons, values: seasons.map((s) => { const g = fgBySeason.get(s); return g ? rate(g) : null; }),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), xlab2: (s) => `n=${(fgBySeason.get(s) || []).length}`,
+    });
+
+    const snappers = DATA.filters.money_unit.long_snapper.filter((s) => rows.some((r) => r.long_snapper === s));
+    const bySnapper = groupBy(withSnapper(rows), 'long_snapper');
+    renderBar(document.getElementById('sse-bysnap'), {
+      categories: snappers, values: snappers.map((s) => (bySnapper.get(s) || []).length),
+      labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-4'),
+    });
+
+    const timeBySeason = groupBy(rows.filter((r) => r.snap_to_catch !== null), 'season');
+    renderBar(document.getElementById('sse-timeseason'), {
+      categories: seasons, values: seasons.map((s) => { const g = timeBySeason.get(s); return g && g.length ? mean(g.map((r) => r.snap_to_catch)) : null; }),
+      labelFmt: (v) => `${fmt(v, 2)}s`, colorFn: () => cssVar('--cat-5'), xlab2: (s) => `n=${(timeBySeason.get(s) || []).length}`,
+    });
+  }
+  render();
+}
+
+/* ------------------------------------------------------------------ tab: Snapper Head-to-Head --- */
+
+const H2H_FILTERS = [{ field: 'season', label: 'Season' }];
+
+function h2hTab(root) {
+  const snappers = DATA.filters.money_unit.long_snapper;
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Short Snapper</h2></div><div class="sub">Snapper Head-to-Head</div></div>
+      <div class="shelf" id="ssh-shelf"></div>
+      <div class="body">
+        <div class="colcard-2" style="margin-bottom:14px;">
+          <div class="kicker-col">
+            <div class="kicker-head">
+              <div class="avatar" id="ssh-A-avatar" style="background:var(--cat-6);"></div>
+              <div style="flex:1; min-width:0;"><div id="ssh-A-sel"></div><div class="yrs" id="ssh-A-years"></div></div>
+            </div>
+            <div class="kicker-body">
+              <div class="mini-kpi-row">
+                <div class="mini-kpi"><div class="l">PAT%</div><div class="v" id="ssh-A-pat">—</div></div>
+                <div class="mini-kpi"><div class="l">FG%</div><div class="v" id="ssh-A-fg">—</div></div>
+                <div class="mini-kpi"><div class="l">Snaps</div><div class="v" id="ssh-A-n">—</div></div>
+                <div class="mini-kpi"><div class="l">Snap time <span style="font-size:9px; color:var(--muted); font-weight:400;">(2023+)</span></div><div class="v" id="ssh-A-time">—</div></div>
+              </div>
+              <div class="card-head" style="padding:0 0 6px; border:none;"><h3>Outcome mix</h3></div>
+              <div class="barchart" style="height:110px; padding-top:14px;">
+                <div class="gridlines"><div></div><div></div><div></div></div>
+                <div id="ssh-A-outchart" style="display:contents;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="kicker-col">
+            <div class="kicker-head">
+              <div class="avatar" id="ssh-B-avatar" style="background:var(--cat-3);"></div>
+              <div style="flex:1; min-width:0;"><div id="ssh-B-sel"></div><div class="yrs" id="ssh-B-years"></div></div>
+            </div>
+            <div class="kicker-body">
+              <div class="mini-kpi-row">
+                <div class="mini-kpi"><div class="l">PAT%</div><div class="v" id="ssh-B-pat">—</div></div>
+                <div class="mini-kpi"><div class="l">FG%</div><div class="v" id="ssh-B-fg">—</div></div>
+                <div class="mini-kpi"><div class="l">Snaps</div><div class="v" id="ssh-B-n">—</div></div>
+                <div class="mini-kpi"><div class="l">Snap time <span style="font-size:9px; color:var(--muted); font-weight:400;">(2023+)</span></div><div class="v" id="ssh-B-time">—</div></div>
+              </div>
+              <div class="card-head" style="padding:0 0 6px; border:none;"><h3>Outcome mix</h3></div>
+              <div class="barchart" style="height:110px; padding-top:14px;">
+                <div class="gridlines"><div></div><div></div><div></div></div>
+                <div id="ssh-B-outchart" style="display:contents;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-head"><h3>FG % by season — selected snappers</h3></div>
+            <div class="card-body">
+              <div class="legend" id="ssh-trend-legend"></div>
+              <div class="linewrap"><svg id="ssh-trend-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Snap Location distribution</h3></div>
+            <div class="card-body" id="ssh-snaploc"><div class="data-note">Charted 2023 onward only. Snap Location is a 1-3 rating whose scale isn't defined upstream yet.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">Source: Carroll PAT-FG sheet, Carroll_Special_Teams_2021_Current.xlsx. Only 4 snappers are credited so far -- pick any two; the comparison works the same as more attempts get a snapper charted.</div>
+    </div></div>`;
+
+  document.getElementById('ssh-shelf').innerHTML = buildFilterPanel('ssh', H2H_FILTERS, DATA.filters.money_unit);
+  wireFilterPanel('ssh', H2H_FILTERS, render);
+
+  const selA = makeSearchCombobox(document.getElementById('ssh-A-sel'), {
+    options: snappers.map((s) => ({ value: s, label: s })), value: snappers[0], onChange: render, placeholder: 'Search snapper…',
+  });
+  const selB = makeSearchCombobox(document.getElementById('ssh-B-sel'), {
+    options: snappers.map((s) => ({ value: s, label: s })), value: snappers[1] || snappers[0], onChange: render, placeholder: 'Search snapper…',
+  });
+
+  function renderSide(prefix, snapper, rows) {
+    document.getElementById(`${prefix}-avatar`).textContent = initials(snapper);
+    const sRows = rows.filter((r) => r.long_snapper === snapper);
+    const seasons = [...new Set(sRows.map((r) => r.season))].sort();
+    document.getElementById(`${prefix}-years`).textContent = seasons.length ? (seasons.length === 1 ? seasons[0] : `${seasons[0]} – ${seasons[seasons.length - 1]}`) : 'no snaps in range';
+    document.getElementById(`${prefix}-pat`).textContent = pct(rate(pats(sRows)));
+    document.getElementById(`${prefix}-fg`).textContent = pct(rate(fgs(sRows)));
+    document.getElementById(`${prefix}-n`).textContent = String(sRows.length);
+    const timeRows = sRows.filter((r) => r.snap_to_catch !== null);
+    document.getElementById(`${prefix}-time`).textContent = timeRows.length ? `${fmt(mean(timeRows.map((r) => r.snap_to_catch)), 2)}s` : '—';
+    const byOutcome = groupBy(sRows.map((r) => ({ ...r, _o: outcomeOf(r) })), '_o');
+    renderBar(document.getElementById(`${prefix}-outchart`), {
+      categories: OUTCOMES.filter((o) => byOutcome.has(o)),
+      values: OUTCOMES.filter((o) => byOutcome.has(o)).map((o) => byOutcome.get(o).length),
+      labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-1'),
+    });
+  }
+
+  function render() {
+    const state = readFilterState('ssh', H2H_FILTERS);
+    const rows = withSnapper(applyFilters(DATA.units.money_unit, state));
+    document.getElementById('ssh-summary').textContent = `${rows.length} credited snaps in view`;
+    renderSide('ssh-A', selA.value, rows);
+    renderSide('ssh-B', selB.value, rows);
+
+    document.getElementById('ssh-trend-legend').innerHTML = `
+      <span class="sw"><span class="dot" style="background:var(--cat-6)"></span>${selA.value}</span>
+      <span class="sw"><span class="dot" style="background:var(--cat-3)"></span>${selB.value}</span>`;
+
+    const seasons = DATA.filters.money_unit.season;
+    function seasonFgRate(snapper) {
+      const sFg = fgs(rows.filter((r) => r.long_snapper === snapper));
+      const byS = groupBy(sFg, 'season');
+      return seasons.map((s) => { const g = byS.get(s); return g && g.length ? rate(g) : null; });
+    }
+    renderTwoLine(document.getElementById('ssh-trend-svg'), seasons, seasonFgRate(selA.value), seasonFgRate(selB.value), cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0));
+
+    const snapLocRows = rows.filter((r) => (r.long_snapper === selA.value || r.long_snapper === selB.value) && r.snap_location);
+    const snapLocs = ['1', '2', '3'];
+    if (snapLocRows.length) {
+      renderStacked(document.getElementById('ssh-snaploc'), {
+        categories: snapLocs,
+        series: {
+          [selA.value]: snapLocs.map((sl) => snapLocRows.filter((r) => r.long_snapper === selA.value && String(r.snap_location) === sl).length),
+          [selB.value]: snapLocs.map((sl) => snapLocRows.filter((r) => r.long_snapper === selB.value && String(r.snap_location) === sl).length),
+        },
+        order: [selA.value, selB.value],
+        colors: { [selA.value]: cssVar('--cat-6'), [selB.value]: cssVar('--cat-3') },
+      });
+    } else {
+      document.getElementById('ssh-snaploc').innerHTML = '<div class="data-note">No charted Snap Location data for either snapper in the current filter (2023 onward only).</div>';
+    }
+  }
+  render();
+}
+
+/* ------------------------------------------------------------------ tab: Situational Deep Dive --- */
+
+const DEEP_FILTERS = [
+  { field: 'season', label: 'Season' },
+  { field: 'long_snapper', label: 'Snapper' },
+  { field: 'quarter', label: 'Quarter' },
+];
+
+function deepTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Short Snapper</h2></div><div class="sub">Situational Deep Dive</div></div>
+      <div class="shelf" id="ssd-shelf"></div>
+      <div class="body">
+        <div class="kpirow" id="ssd-kpis">
+          ${kpiHTML('ssd-fg', 'FG Make Rate', '--critical')}
+          ${kpiHTML('ssd-blocked', 'Blocked Rate')}
+          ${kpiHTML('ssd-homeaway', 'Home vs Away FG%')}
+          ${kpiHTML('ssd-bestq', 'Best Quarter (FG%)')}
+        </div>
+        <div class="grid2" style="margin-bottom:14px;">
+          <div class="card"><div class="card-head"><h3>FG make % &amp; volume by quarter</h3></div><div class="card-body" id="ssd-quarter"></div></div>
+          <div class="card"><div class="card-head"><h3>Snap volume by season</h3></div><div class="card-body" id="ssd-volume"></div></div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-head"><h3>FG make % — snapper × season</h3></div>
+          <div class="card-body">
+            <div class="heat" id="ssd-heatmap"></div>
+            <div class="insight">Sequential blue = FG make%; text = made/attempted. Columns always show all five seasons — only the Quarter filter narrows this grid (Snapper filter hides non-matching rows).</div>
+          </div>
+        </div>
+        <div class="grid2" style="margin-bottom:14px;">
+          <div class="card"><div class="card-head"><h3>Make % by Snap Location</h3></div><div class="card-body" id="ssd-snaploc"><div class="data-note">Charted 2023 onward only. Snap Location is a 1-3 rating whose scale isn't defined upstream yet.</div></div></div>
+          <div class="card"><div class="card-head"><h3>Avg PAT/FG Score by season</h3></div><div class="card-body" id="ssd-scoretrend"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Snapper detail</h3></div>
+          <div class="card-body">
+            <table class="mini">
+              <thead><tr><th>Snapper</th><th>Seasons</th><th>Snaps</th><th>PAT%</th><th>FG%</th><th>Blocked</th><th>Avg Score</th><th>Snap Time</th></tr></thead>
+              <tbody id="ssd-table-body"></tbody>
+            </table>
+            <div class="insight">Snaps/PAT%/FG%/Blocked/Score are real and respect the filters above. Snap Time only reflects charted rows (2023 onward) — shows "—" for a snapper with none in view.</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">Source: Carroll PAT-FG sheet, Carroll_Special_Teams_2021_Current.xlsx (236 rows, 175 with a credited snapper).</div>
+    </div></div>`;
+
+  document.getElementById('ssd-shelf').innerHTML = buildFilterPanel('ssd', DEEP_FILTERS, DATA.filters.money_unit);
+  wireFilterPanel('ssd', DEEP_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('ssd', DEEP_FILTERS);
+    const rows = withSnapper(applyFilters(DATA.units.money_unit, state));
+    document.getElementById('ssd-summary').textContent = `${rows.length} credited snaps in view`;
+    const fgRows = fgs(rows);
+
+    setKPI('ssd-fg', pct(rate(fgRows)), `${makes(fgRows).length}/${fgRows.length} field goals`);
+    setKPI('ssd-blocked', pct(rows.length ? rows.filter((r) => r.miss_location === 'Blocked').length / rows.length : null));
+    const homeFg = fgRows.filter((r) => r.is_home), awayFg = fgRows.filter((r) => !r.is_home);
+    setKPI('ssd-homeaway', `${pct(rate(homeFg), 0)} / ${pct(rate(awayFg), 0)}`, 'home / away');
+    const byQ = groupBy(fgRows, 'quarter');
+    let bestQ = null, bestRate = -1;
+    byQ.forEach((g, q) => { if (g.length >= 3 && rate(g) > bestRate) { bestRate = rate(g); bestQ = q; } });
+    setKPI('ssd-bestq', bestQ !== null ? `Q${bestQ}` : '—', bestQ !== null ? `${pct(bestRate, 0)} (n=${byQ.get(bestQ).length})` : 'not enough attempts');
+
+    const quarters = DATA.filters.money_unit.quarter.filter((q) => byQ.has(q));
+    renderBar(document.getElementById('ssd-quarter'), {
+      categories: quarters, values: quarters.map((q) => rate(byQ.get(q))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-2'), xlab2: (q) => `n=${byQ.get(q).length}`,
+    });
+
+    const seasons = DATA.filters.money_unit.season.filter((s) => rows.some((r) => r.season === s));
+    const byseason = groupBy(rows, 'season');
+    renderBar(document.getElementById('ssd-volume'), {
+      categories: seasons, values: seasons.map((s) => (byseason.get(s) || []).length),
+      labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-4'),
+    });
+
+    const allSeasons = DATA.filters.money_unit.season;
+    const snappers = DATA.filters.money_unit.long_snapper.filter((s) => rows.some((r) => r.long_snapper === s));
+    renderHeatmap(document.getElementById('ssd-heatmap'), {
+      rowLabels: snappers, colLabels: allSeasons,
+      cellFor: (snapper, season) => {
+        const g = fgRows.filter((r) => r.season === season && r.long_snapper === snapper);
+        if (!g.length) return null;
+        return { pct: rate(g), n: g.length, made: makes(g).length };
+      },
+      title: (snapper, season) => `${snapper}, ${season}`,
+    });
+
+    const snapLocs = ['1', '2', '3'];
+    const bySnapLoc = groupBy(fgRows.filter((r) => r.snap_location).map((r) => ({ ...r, snap_location: String(r.snap_location) })), 'snap_location');
+    const snapLocsPresent = snapLocs.filter((s) => bySnapLoc.has(s));
+    if (snapLocsPresent.length) {
+      renderBar(document.getElementById('ssd-snaploc'), {
+        categories: snapLocsPresent, values: snapLocsPresent.map((s) => rate(bySnapLoc.get(s))),
+        labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-5'), xlab2: (s) => `n=${bySnapLoc.get(s).length}`,
+      });
+    } else {
+      document.getElementById('ssd-snaploc').innerHTML = '<div class="data-note">No charted Snap Location data in the current filter (2023 onward only).</div>';
+    }
+
+    const scoreBySeason = groupBy(rows, 'season');
+    renderBar(document.getElementById('ssd-scoretrend'), {
+      categories: seasons, values: seasons.map((s) => mean((scoreBySeason.get(s) || []).map((r) => r.score))),
+      labelFmt: (v) => fmt(v, 0), colorFn: (s, v) => (v >= 50 ? cssVar('--good') : cssVar('--critical')),
+      xlab2: (s) => `n=${(scoreBySeason.get(s) || []).length}`,
+    });
+
+    const tbody = snappers.map((s) => {
+      const sRows = rows.filter((r) => r.long_snapper === s);
+      const sSeasons = [...new Set(sRows.map((r) => r.season))].sort();
+      const timeRows = sRows.filter((r) => r.snap_to_catch !== null);
+      return `<tr>
+        <td class="name">${s}</td>
+        <td>${sSeasons.length === 1 ? sSeasons[0] : `${sSeasons[0]}–${sSeasons[sSeasons.length - 1]}`}</td>
+        <td>${sRows.length}</td>
+        <td>${pct(rate(pats(sRows)), 0)}</td>
+        <td>${pct(rate(fgs(sRows)), 0)}</td>
+        <td>${sRows.filter((r) => r.miss_location === 'Blocked').length}</td>
+        <td>${fmt(mean(sRows.map((r) => r.score)), 0)}</td>
+        <td>${timeRows.length ? fmt(mean(timeRows.map((r) => r.snap_to_catch)), 2) + 's' : '—'}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('ssd-table-body').innerHTML = tbody || '<tr><td colspan="8" style="text-align:center; color:var(--muted);">No snappers in current filter.</td></tr>';
+  }
+  render();
+}
+
+/* ------------------------------------------------------------------------ tabs ---- */
+
+const TAB_RENDERERS = { exec: execTab, h2h: h2hTab, deep: deepTab };
+
+function showTab(tab) {
+  document.querySelectorAll('#ss-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  TAB_RENDERERS[tab](document.getElementById('ss-stage'));
+}
+
+document.querySelectorAll('#ss-tabs .tabbtn').forEach((btn) => {
+  btn.addEventListener('click', () => showTab(btn.dataset.tab));
+});
+
+fetch('../data/special-teams.json')
+  .then((r) => r.json())
+  .then((data) => { DATA = data; showTab('exec'); })
+  .catch((err) => {
+    document.getElementById('ss-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/special-teams.json — ${err}. Run scripts/build_special_teams_data.py first, and serve over http:// not file://.</div></div>`;
+  });
+</script>
+</body>
+</html>
