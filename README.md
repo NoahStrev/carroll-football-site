@@ -239,10 +239,57 @@ based on.
    per the user): get the program's existing generated reports (CCIW Buddah Report,
    National Buddah Report, Game Analysis, National/CCIW Game Prep Report — the
    sibling projects under `Football/`) into this site and downloadable, not just
-   living in each project's own output folder. Design/scope TBD once we get here —
-   likely a per-report-type listing page with download links, possibly filterable
-   by season/opponent; may need its own data/build step per report type the same
-   way Phase 1 does.
+   living in each project's own output folder.
+   - **Rankings — done, first report** (`dashboards/rankings.html`,
+     `scripts/build_rankings_data.py`, 2026-07-30). Four tabs — **Overall**,
+     **Offensive**, **Defensive**, **Special Teams** (added same day, per the
+     user, once the other three were confirmed working) — each showing
+     Carroll's own CCIW conference rankings (cciw.org, out of 9-10 teams) and
+     NCAA D3 national rankings (NCAA.com, out of ~200+ teams) side by side,
+     both source workbooks downloadable in full. Special Teams here
+     complements rather than duplicates the existing `special-teams-overview.html`
+     dashboard (that page goes far deeper per-unit but has no CCIW/national
+     ranking context of its own). Reads directly from the `CCIW Buddah Report` and
+     `National Buddah Report` sibling projects' own already-scraped, already-
+     classified output workbooks (`output_carroll/Carroll_Football_AllTime.xlsx`,
+     `CCIW_D3_Football_Stats/Carroll/Carroll_AllYears.xlsx`) rather than
+     re-scraping either source — per the user's own "since the data is already
+     there make some updates so those reports are appearing" framing. Verified
+     by directly reading (not just skimming the SKILL.md prose for) both
+     projects' currently-generated PDFs before writing any code — this caught a
+     real mismatch with the initial ask ("just an Overall section, need
+     Offense/Defense") that didn't match either PDF's actual current state
+     (CCIW's has Offense/Defense/Special Teams but no Overall; National's
+     already has all four) — confirmed with the user before proceeding rather
+     than guessing.
+     - **Real, permanent asymmetry, not a bug**: CCIW's own classification
+       (see that project's `classification-rules.md`) never produces an
+       "Overall" phase — cciw.org doesn't publish Turnover Margin/Win%/
+       Penalties as their own ranked category the way NCAA.com does. The
+       Overall tab's CCIW panel is always empty by design, called out
+       explicitly in the page's own intro text and empty-state message.
+     - National's phase classification (Category string -&gt; Offense/Defense/
+       Special Teams/Overall) has no first-class field of its own to read —
+       ported verbatim from `National Game Prep Report/pull_matchup_data.ps1`'s
+       50-metric `$Metrics` mapping (already proven correct against a real
+       generated PDF), extended by a handful of near-duplicate categories that
+       script doesn't cover (e.g. "Fewest Penalties" alongside its own
+       "Fewest Penalties Per Game") using the same judgment-call pattern CCIW's
+       own classification doc already established. Zero unmapped categories
+       on the actual Carroll data (would print a warning at build time if a
+       future season introduces a new one).
+     - Team-level only for this first pass — no individual-leader rankings yet
+       (Overall has no individual-player equivalent, so scoping the whole page
+       to team-level keeps all three tabs symmetric).
+     - **Not automated** — per the user's explicit scope call ("site ingestion
+       only for now"), this reads a point-in-time copy of each source
+       project's output; re-running `build_rankings_data.py` after either
+       source refreshes is still manual. Both underlying scrape pipelines
+       already run on a weekly cron (`cciw-org-conference-weekly-scrape`,
+       `ncaa-d3-national-weekly-scrape`) — wiring this project's own rebuild +
+       the report-generation step into that schedule is a deferred follow-up.
+   - Game Analysis and the two Game Prep Report PDFs (per-opponent scouting
+     reports) aren't ingested yet. Design/scope TBD for those.
 
 ## Testing notes (Special Teams Overview)
 
@@ -610,6 +657,14 @@ pre-existing tabs/metrics.
   play-by-play (self-scout `Plays` sheet + official scraped `OfficialPlayByPlay`
   sheet, matched per game via that project's own `GameMatchLog` sheet) — see
   that project's `SKILL.md` for the full column reference and known data gaps.
+- `../CCIW Buddah Report/output_carroll/Carroll_Football_AllTime.xlsx` — CCIW
+  conference rankings (cciw.org), already classified into Offense-Team/
+  Defense-Team/SpecialTeams-Team sheets by that project's own scraper.
+- `../National Buddah Report/CCIW_D3_Football_Stats/Carroll/Carroll_AllYears.xlsx` —
+  NCAA D3 national rankings (NCAA.com), `Team Stats` sheet, phase-classified by
+  this project's own `scripts/build_rankings_data.py` (see that script's
+  `CATEGORY_SECTION` mapping, ported from `National Game Prep Report`'s own
+  metric classification).
 
 ## Running locally
 

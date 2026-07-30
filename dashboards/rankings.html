@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rankings — Carroll Football Analytics</title>
+<link rel="stylesheet" href="../css/theme.css">
+<style>
+  /* .unit-header, .kpirow, .lb-scroll-wrap/table.lb-scroll, .tag all already
+     live in css/theme.css. */
+  .rankgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .rankgrid .card-body { padding: 0; }
+  .rank-shelf { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 15px; border-bottom: 1px solid var(--grid); flex-wrap: wrap; }
+  .rank-scroll { max-height: 480px; overflow-y: auto; padding: 0 15px 13px; }
+  table.rank-table thead th { position: sticky; top: 0; z-index: 1; background: var(--page); box-shadow: 0 1px 0 var(--grid); }
+  .download-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+  .download-btn {
+    font-family: inherit; font-size: 12px; font-weight: 600; padding: 7px 13px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .download-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  @media (max-width: 900px) {
+    .rankgrid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="../index.html">Overview</a>
+      <a href="special-teams-overview.html">Special Teams</a>
+      <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html">Offense</a>
+      <a href="defense.html">Defense</a>
+      <a href="rankings.html" class="active">Rankings</a>
+    </div>
+  </nav>
+
+  <div class="intro">
+    <h1>Rankings</h1>
+    <p>
+      Carroll's own conference and national statistical rankings, read directly from the
+      <code>CCIW Buddah Report</code> and <code>National Buddah Report</code> projects' own
+      already-scraped, already-classified output — this page doesn't re-scrape either source
+      itself. <b>CCIW Rankings</b> (cciw.org, out of the conference's 9–10 teams, 2016–2025 except
+      2020) apply whenever an opponent is a CCIW conference team; <b>National Rankings</b>
+      (NCAA.com D3, out of ~200+ programs nationally, 2021/2023–2025) apply to any opponent,
+      conference or not. <b>Overall has no CCIW-scope data</b> — a real, permanent gap, not a bug:
+      cciw.org's own site never publishes Turnover Margin, Winning %, or Penalties as their own
+      ranked category the way NCAA.com does, so that tab only ever has a National-scope table.
+      Special Teams rounds out the four phases the source data actually splits into (matching what
+      each report's own PDF already shows) — it complements rather than duplicates the
+      <a href="special-teams-overview.html">Special Teams Overview</a> dashboard, which goes far
+      deeper per-unit but has no CCIW/national ranking context of its own. Team-level only for this
+      first pass (no individual-leader rankings yet). Both source
+      workbooks are downloadable in full below each table. <b>Not yet automated</b>: both
+      pipelines' own weekly data scrapes already run on a schedule, but re-generating this page's
+      data from their output is still a manual step (<code>python scripts/build_rankings_data.py</code>) —
+      wiring that up end-to-end is a deferred follow-up, not built here.
+    </p>
+  </div>
+
+  <div class="tabbar" id="rank-tabs">
+    <button class="tabbtn active" data-tab="overall">Overall</button>
+    <button class="tabbtn" data-tab="offense">Offensive</button>
+    <button class="tabbtn" data-tab="defense">Defensive</button>
+    <button class="tabbtn" data-tab="special_teams">Special Teams</button>
+  </div>
+
+  <div class="stage" id="rank-stage"></div>
+</div>
+
+<script src="../js/charts.js"></script>
+<script>
+let DATA = null;
+
+const PHASE_TITLES = { overall: 'Overall', offense: 'Offensive', defense: 'Defensive', special_teams: 'Special Teams' };
+
+function rankTag(rank, outOf) {
+  if (rank <= 3) return `<span class="tag good">#${rank} of ${outOf}</span>`;
+  if (outOf - rank < 3) return `<span class="tag crit">#${rank} of ${outOf}</span>`;
+  return `#${rank} of ${outOf}`;
+}
+
+function cciwTable(rows, season) {
+  const filtered = (season ? rows.filter((r) => r.season === season) : rows).slice().sort((a, b) => a.rank - b.rank);
+  if (!filtered.length) return '<div class="lb-empty">No CCIW-scope rows for this selection.</div>';
+  const body = filtered.map((r) => `
+    <tr>
+      <td class="name">${r.category}</td>
+      <td>${r.metric}</td>
+      <td style="text-align:right;">${r.value}</td>
+      <td style="text-align:right;">${rankTag(r.rank, r.out_of)}</td>
+    </tr>`).join('');
+  return `
+    <table class="mini rank-table">
+      <thead><tr><th>Category</th><th>Metric</th><th style="text-align:right;">Value</th><th style="text-align:right;">CCIW Rank</th></tr></thead>
+      <tbody>${body}</tbody>
+    </table>`;
+}
+
+function nationalTable(rows, season) {
+  const filtered = (season ? rows.filter((r) => r.season === season) : rows).slice().sort((a, b) => a.rank - b.rank);
+  if (!filtered.length) return '<div class="lb-empty">No National-scope rows for this selection.</div>';
+  const body = filtered.map((r) => `
+    <tr>
+      <td class="name">${r.category}</td>
+      <td>${r.stat}</td>
+      <td style="text-align:right;">${r.value}</td>
+      <td style="text-align:right;">#${r.rank}</td>
+    </tr>`).join('');
+  return `
+    <table class="mini rank-table">
+      <thead><tr><th>Category</th><th>Stat</th><th style="text-align:right;">Value</th><th style="text-align:right;">National Rank</th></tr></thead>
+      <tbody>${body}</tbody>
+    </table>`;
+}
+
+function seasonSelectHTML(id, seasons) {
+  return `<select class="fp-select-inline" id="${id}"><option value="">All seasons</option>${seasons.map((s) => `<option value="${s}">${s}</option>`).join('')}</select>`;
+}
+
+function rankingsTab(phase, root) {
+  const cciwRows = DATA.cciw.rows.filter((r) => r.phase === phase);
+  const nationalRows = DATA.national.rows.filter((r) => r.phase === phase);
+  const cciwSeasons = [...new Set(cciwRows.map((r) => r.season))].sort().reverse();
+  const nationalSeasons = [...new Set(nationalRows.map((r) => r.season))].sort().reverse();
+  const title = PHASE_TITLES[phase];
+
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>${title}</h2></div>
+          <div class="sub">CCIW &amp; National Rankings · Carroll Football</div>
+        </div>
+        <div class="body">
+          ${phase === 'overall' ? '<div class="insight" style="margin-bottom:14px;">CCIW-scope has no Overall category — see the intro above for why. Only National Rankings apply to this tab.</div>' : ''}
+          <div class="rankgrid">
+            <div class="card">
+              <div class="card-head"><h3>CCIW Rankings</h3></div>
+              <div class="card-body">
+                <div class="rank-shelf">
+                  <span class="filters-summary" id="${phase}-cciw-summary"></span>
+                  ${cciwSeasons.length ? seasonSelectHTML(`${phase}-cciw-season`, cciwSeasons) : ''}
+                </div>
+                <div class="rank-scroll" id="${phase}-cciw-table"></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h3>National Rankings</h3></div>
+              <div class="card-body">
+                <div class="rank-shelf">
+                  <span class="filters-summary" id="${phase}-national-summary"></span>
+                  ${nationalSeasons.length ? seasonSelectHTML(`${phase}-national-season`, nationalSeasons) : ''}
+                </div>
+                <div class="rank-scroll" id="${phase}-national-table"></div>
+              </div>
+            </div>
+          </div>
+          <div class="download-row">
+            <a class="download-btn" href="../data/downloads/CCIW_Rankings_AllTime.xlsx" download>&#8595; Download full CCIW workbook (.xlsx)</a>
+            <a class="download-btn" href="../data/downloads/National_Rankings_AllYears.xlsx" download>&#8595; Download full National workbook (.xlsx)</a>
+          </div>
+        </div>
+        <div class="footer-note">Source: CCIW Buddah Report's Carroll_Football_AllTime.xlsx (cciw.org) and National Buddah Report's Carroll_AllYears.xlsx (NCAA.com D3) — both read as-is, not re-scraped by this site.</div>
+      </div>
+    </div>`;
+
+  function renderCciw() {
+    const season = document.getElementById(`${phase}-cciw-season`)?.value || '';
+    document.getElementById(`${phase}-cciw-table`).innerHTML = cciwTable(cciwRows, season);
+    const shown = season ? cciwRows.filter((r) => r.season === season).length : cciwRows.length;
+    document.getElementById(`${phase}-cciw-summary`).textContent = `${shown} rows`;
+  }
+  function renderNational() {
+    const season = document.getElementById(`${phase}-national-season`)?.value || '';
+    document.getElementById(`${phase}-national-table`).innerHTML = nationalTable(nationalRows, season);
+    const shown = season ? nationalRows.filter((r) => r.season === season).length : nationalRows.length;
+    document.getElementById(`${phase}-national-summary`).textContent = `${shown} rows`;
+  }
+
+  document.getElementById(`${phase}-cciw-season`)?.addEventListener('change', renderCciw);
+  document.getElementById(`${phase}-national-season`)?.addEventListener('change', renderNational);
+  renderCciw();
+  renderNational();
+}
+
+const TAB_RENDERERS = {
+  overall: (root) => rankingsTab('overall', root),
+  offense: (root) => rankingsTab('offense', root),
+  defense: (root) => rankingsTab('defense', root),
+  special_teams: (root) => rankingsTab('special_teams', root),
+};
+
+function showTab(tab) {
+  document.querySelectorAll('#rank-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  TAB_RENDERERS[tab](document.getElementById('rank-stage'));
+}
+
+document.querySelectorAll('#rank-tabs .tabbtn').forEach((btn) => {
+  btn.addEventListener('click', () => showTab(btn.dataset.tab));
+});
+
+fetch('../data/rankings.json')
+  .then((r) => r.json())
+  .then((data) => { DATA = data; showTab('overall'); })
+  .catch((err) => {
+    document.getElementById('rank-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/rankings.json — ${err}. Run scripts/build_rankings_data.py first, and serve over http:// not file://.</div></div>`;
+  });
+</script>
+</body>
+</html>
