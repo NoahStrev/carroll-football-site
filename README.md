@@ -339,18 +339,27 @@ charts — all cross-checked against independent Python recomputation, all clean
 Re-ran `build_special_teams_data.py` and diffed against committed
 `data/special-teams.json` — byte-identical, no drift.
 
-One real finding, not fixed (systemic, not a Phase 2 regression): every chart
-color across the **whole site** is resolved to a literal RGB value at render
-time via `cssVar()` and baked into an inline style or SVG attribute — toggling
-`data-theme` doesn't repaint an already-rendered chart until the next filter
-change or tab switch re-runs its `render()`. Low severity (self-corrects on the
-next interaction, and the primary theme switch is OS-level `prefers-color-scheme`
-anyway) but real; a proper fix would mean threading actual `var(--x)` references
-through every `renderBar`/`renderStacked`/`renderScatter`/`renderHeatmap` call
-site instead of resolved colors, which is a bigger, riskier change than this pass
-scoped in for (SVG presentation attributes don't reliably support custom
-properties the way inline CSS properties do) — flagged for a dedicated pass if
-it's ever worth doing.
+One real finding from this pass, **fixed 2026-08-01** (was flagged but not yet
+fixed when first found): every chart color across the whole site was resolved
+to a literal RGB value at render time via `cssVar()` and baked into an inline
+style or SVG attribute, so toggling `data-theme` didn't repaint an
+already-rendered chart until the next filter change or tab switch re-ran its
+`render()`. Before fixing it site-wide, tested directly in the browser whether
+an SVG presentation attribute (e.g. `fill="var(--cat-1)"`, set via
+`setAttribute`, not `.style`) actually re-evaluates a custom property live —
+confirmed it does in this project's target browsers, contradicting the
+original assumption that SVG attributes don't reliably support `var()`.
+Audited every `cssVar()` call site first (`grep -rn "cssVar("` across the whole
+`Carroll Football Site` tree) and confirmed all ~70 of them are used exclusively
+to set a color (a CSS property or an SVG presentation attribute), never in any
+numeric/comparison logic — so the fix was safe to apply globally in one place:
+`cssVar()` (`js/charts.js`) now returns the string `var(${name})` instead of
+resolving it via `getComputedStyle`, matching the pattern `catColor()` (used for
+per-name categorical colors) already used correctly. Verified end-to-end on the
+live page after the fix: a bar chart's color now changes instantly when
+`data-theme` toggles, with no re-render needed. Re-checked every tab of every
+dashboard (console errors, NaN, and no raw `"var(--...)"` string leaking into
+visible text) after the change — all clean.
 
 Streamlining found in the two new pages:
 - **A real naming/semantics bug**: `kickoff-kicker.html` reused `.illus-tag` (the

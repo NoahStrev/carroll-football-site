@@ -12,8 +12,16 @@
 
 const CAT_COLORS = ['--cat-1', '--cat-2', '--cat-3', '--cat-4', '--cat-5', '--cat-6', '--cat-7', '--cat-8'];
 
+/** Returns a live `var(--x)` reference, not a resolved literal color -- every
+ * call site only ever assigns the result to a CSS color property or an SVG
+ * presentation attribute (fill/stroke/background), both of which re-evaluate
+ * var() live, so a chart painted before a data-theme toggle repaints itself
+ * automatically instead of staying stuck with the color from its last render.
+ * Fixed 2026-08-01 (previously resolved via getComputedStyle, which froze the
+ * literal color at render time -- catColor() below already did this correctly,
+ * cssVar() was the inconsistent one). */
 function cssVar(name) {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return `var(${name})`;
 }
 
 function catColor(index) {
