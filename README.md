@@ -109,7 +109,21 @@ based on.
      Lifting Data project's known spelling-variant duplicates. Hoisted
      `renderTwoLine` (the two-series line chart from Placekicker's Head-to-Head)
      into `js/charts.js` for reuse here.
-   - Punter, short snapper, long snapper — not started.
+   - **Punter — done** (`dashboards/punter.html`, 2026-08-01). Same 3-tab shape
+     and real-data discipline as the other two: gross/net distance (net = gross −
+     return yardage), Inside-20 rate, touchback rate, and outcome mix (Downed/Fair
+     Catch/Touchback/Out of Bounds/Return/Return Touchdown/Muff, read directly from
+     the sheet's own `Kick Outcome` column) are 100% box-score-real; Hangtime,
+     Snap to Catch, Catch to Kick, and Hash Kicked From are hand-charted and real
+     from 2023 onward, same phase-in pattern as every other manually-charted field
+     in this project. Surfaces the real `Punt Value`/`Score`. **Known data issue,
+     not fixed here**: a bare-surname capture, `"Streveler"` (4 rows, 2021 only),
+     alongside the full name `"Noah Streveler"` (145 rows, 2022-2024) — almost
+     certainly the same person, split by the exact bare-last-name parsing gap the
+     `Special Teams Data` project's own `SKILL.md` already documents (bug #8) but
+     hasn't fully backfilled for this one punter's 2021 games. Left unmerged, same
+     policy as the Kickoff Kicker page's `"Scofield"`/`"Sebastian Scofield"`.
+   - Short snapper, long snapper — not started.
 3. **Phase 3 — offense &amp; defense**: no existing dashboard reference for either —
    design from scratch once we get here.
 4. **Phase 4 — report ingestion &amp; downloads** (lowest priority, added 2026-07-30

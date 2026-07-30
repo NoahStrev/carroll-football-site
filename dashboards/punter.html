@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Punter — Carroll Football Analytics</title>
+<link rel="stylesheet" href="../css/theme.css">
+<style>
+  /* .unit-header, .kpirow/.kpirow-5/.kpirow-6, .colcard-2/.kicker-col/etc.,
+     .heat, .grid2, .linewrap svg all already live in css/theme.css. */
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="../index.html">Overview</a>
+      <a href="special-teams-overview.html">Special Teams</a>
+      <a href="lifting-strength.html">Lifting &amp; Strength</a>
+    </div>
+  </nav>
+
+  <div class="intro">
+    <h1>Punter</h1>
+    <p>
+      Individual punter breakdown from the real <code>Carroll Punt</code> sheet in
+      <code>Carroll_Special_Teams_2021_Current.xlsx</code> (247 punts, 2021–2025) — position 3 of the
+      special-teams series, alongside <a href="placekicker.html">Placekicker</a> and
+      <a href="kickoff-kicker.html">Kickoff Kicker</a>. Gross distance, net distance (gross − return
+      yardage), Inside-20 rate, touchback rate, outcome mix, and quarter/season splits are all
+      box-score-derived and fully real for every row. <b>Hangtime, Snap to Catch, Catch to Kick, and
+      Hash Kicked From are hand-charted from film and only exist from 2023 onward</b> (0% charted
+      2021–2022, effectively complete by 2024–2025) — charts using them only ever average the rows
+      actually charted. <b>Punt Value/Score</b> is a real, fully-computed "points added over expectation"
+      metric already in the source workbook. <b>Known data issue, not fixed here</b> — the source has a
+      bare-surname capture, <code>"Streveler"</code> (4 rows, 2021 only), alongside the full name
+      <code>"Noah Streveler"</code> (145 rows, 2022–2024) for what's almost certainly the same punter
+      (a documented name-parsing gap in the <code>Special Teams Data</code> project, not something to
+      merge here — see the Placekicker/Kickoff Kicker pages for the same category of issue). Snapper
+      Name is blank for every punt in this sheet — tracked instead on the upcoming Long Snapper page.
+    </p>
+  </div>
+
+  <div class="tabbar" id="pt-tabs">
+    <button class="tabbtn active" data-tab="exec">Executive Scorecard</button>
+    <button class="tabbtn" data-tab="h2h">Punter Head-to-Head</button>
+    <button class="tabbtn" data-tab="deep">Situational Deep Dive</button>
+  </div>
+
+  <div class="stage" id="pt-stage"></div>
+</div>
+
+<script src="../js/charts.js"></script>
+<script>
+let DATA = null;
+
+function netOf(r) { return r.total_distance !== null && r.return_length !== null ? r.total_distance - r.return_length : null; }
+function avgNet(rows) { return mean(rows.map(netOf)); }
+function rate(rows, pred) { return rows.length ? rows.filter(pred).length / rows.length : null; }
+const OUTCOMES = ['Downed', 'Fair Catch', 'Touchback', 'Out of Bounds', 'Return', 'Return Touchdown', 'Muff'];
+
+/* ------------------------------------------------------------------ tab: Executive Scorecard --- */
+
+const EXEC_FILTERS = [
+  { field: 'season', label: 'Season' },
+  { field: 'punter', label: 'Punter' },
+];
+
+function execTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Punter</h2></div><div class="sub">Executive Scorecard</div></div>
+      <div class="shelf" id="pte-shelf"></div>
+      <div class="body">
+        <div class="kpirow-5" id="pte-kpis">
+          ${kpiHTML('pte-net', 'Avg Net Punt')}
+          ${kpiHTML('pte-i20', 'Inside-20 Rate', '--good')}
+          ${kpiHTML('pte-tb', 'Touchback Rate', '--critical')}
+          ${kpiHTML('pte-n', 'Punts in View')}
+          ${kpiHTML('pte-score', 'Avg Punt Score')}
+        </div>
+        <div class="grid2" style="margin-bottom:14px;">
+          <div class="card"><div class="card-head"><h3>Net Punt Yardage by Season</h3></div><div class="card-body" id="pte-netseason"></div></div>
+          <div class="card"><div class="card-head"><h3>Gross Punt Distance by Season</h3></div><div class="card-body" id="pte-grossseason"></div></div>
+        </div>
+        <div class="grid2">
+          <div class="card"><div class="card-head"><h3>Inside-20 % by Season</h3></div><div class="card-body" id="pte-i20season"></div></div>
+          <div class="card"><div class="card-head"><h3>Touchback % by Season</h3></div><div class="card-body" id="pte-tbseason"></div></div>
+        </div>
+      </div>
+      <div class="footer-note">Source: Carroll Punt sheet, Carroll_Special_Teams_2021_Current.xlsx (247 rows). Net = gross distance − return yardage. Gross/net charted as two separate charts rather than one dual-axis chart.</div>
+    </div></div>`;
+
+  document.getElementById('pte-shelf').innerHTML = buildFilterPanel('pte', EXEC_FILTERS, DATA.filters.punt);
+  wireFilterPanel('pte', EXEC_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('pte', EXEC_FILTERS);
+    const rows = applyFilters(DATA.units.punt, state);
+    document.getElementById('pte-summary').textContent = `${rows.length} punts in view`;
+
+    setKPI('pte-net', `${fmt(avgNet(rows), 1)} yds`);
+    setKPI('pte-i20', pct(rate(rows, (r) => r.i20)));
+    setKPI('pte-tb', pct(rate(rows, (r) => r.kick_outcome === 'Touchback')));
+    setKPI('pte-n', String(rows.length));
+    setKPI('pte-score', fmt(mean(rows.map((r) => r.score)), 0));
+
+    const seasons = DATA.filters.punt.season.filter((s) => rows.some((r) => r.season === s));
+    const byseason = groupBy(rows, 'season');
+    renderBar(document.getElementById('pte-netseason'), {
+      categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g && g.length ? avgNet(g) : null; }),
+      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--cat-1'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+    });
+    renderBar(document.getElementById('pte-grossseason'), {
+      categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g && g.length ? mean(g.map((r) => r.total_distance)) : null; }),
+      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--cat-4'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+    });
+    renderBar(document.getElementById('pte-i20season'), {
+      categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g ? rate(g, (r) => r.i20) : null; }),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--good'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+    });
+    renderBar(document.getElementById('pte-tbseason'), {
+      categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g ? rate(g, (r) => r.kick_outcome === 'Touchback') : null; }),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--critical'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+    });
+  }
+  render();
+}
+
+/* ------------------------------------------------------------------ tab: Punter Head-to-Head --- */
+
+const H2H_FILTERS = [{ field: 'season', label: 'Season' }];
+
+function h2hTab(root) {
+  const punters = DATA.filters.punt.punter;
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Punter</h2></div><div class="sub">Punter Head-to-Head</div></div>
+      <div class="shelf" id="pth-shelf"></div>
+      <div class="body">
+        <div class="colcard-2" style="margin-bottom:14px;">
+          <div class="kicker-col">
+            <div class="kicker-head">
+              <div class="avatar" id="pth-A-avatar" style="background:var(--cat-6);"></div>
+              <div style="flex:1; min-width:0;"><div id="pth-A-sel"></div><div class="yrs" id="pth-A-years"></div></div>
+            </div>
+            <div class="kicker-body">
+              <div class="mini-kpi-row">
+                <div class="mini-kpi"><div class="l">Net avg</div><div class="v" id="pth-A-net">—</div></div>
+                <div class="mini-kpi"><div class="l">I20%</div><div class="v" id="pth-A-i20">—</div></div>
+                <div class="mini-kpi"><div class="l">TB%</div><div class="v" id="pth-A-tb">—</div></div>
+                <div class="mini-kpi"><div class="l">Hangtime <span style="font-size:9px; color:var(--muted); font-weight:400;">(2023+)</span></div><div class="v" id="pth-A-hang">—</div></div>
+              </div>
+              <div class="card-head" style="padding:0 0 6px; border:none;"><h3>Outcome mix</h3></div>
+              <div class="barchart" style="height:110px; padding-top:14px;">
+                <div class="gridlines"><div></div><div></div><div></div></div>
+                <div id="pth-A-outchart" style="display:contents;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="kicker-col">
+            <div class="kicker-head">
+              <div class="avatar" id="pth-B-avatar" style="background:var(--cat-3);"></div>
+              <div style="flex:1; min-width:0;"><div id="pth-B-sel"></div><div class="yrs" id="pth-B-years"></div></div>
+            </div>
+            <div class="kicker-body">
+              <div class="mini-kpi-row">
+                <div class="mini-kpi"><div class="l">Net avg</div><div class="v" id="pth-B-net">—</div></div>
+                <div class="mini-kpi"><div class="l">I20%</div><div class="v" id="pth-B-i20">—</div></div>
+                <div class="mini-kpi"><div class="l">TB%</div><div class="v" id="pth-B-tb">—</div></div>
+                <div class="mini-kpi"><div class="l">Hangtime <span style="font-size:9px; color:var(--muted); font-weight:400;">(2023+)</span></div><div class="v" id="pth-B-hang">—</div></div>
+              </div>
+              <div class="card-head" style="padding:0 0 6px; border:none;"><h3>Outcome mix</h3></div>
+              <div class="barchart" style="height:110px; padding-top:14px;">
+                <div class="gridlines"><div></div><div></div><div></div></div>
+                <div id="pth-B-outchart" style="display:contents;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-head"><h3>Net punt yardage by season — selected punters</h3></div>
+          <div class="card-body">
+            <div class="legend" id="pth-trend-legend"></div>
+            <div class="linewrap"><svg id="pth-trend-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Operation time build-up, snap → kick</h3></div>
+          <div class="card-body">
+            <div class="legend">
+              <span class="sw"><span class="dot" style="background:var(--cat-1);"></span>Snap → catch</span>
+              <span class="sw"><span class="dot" style="background:var(--cat-4);"></span>Catch → kick</span>
+            </div>
+            <div class="stacked" style="height:120px;">
+              <div class="gridlines"><div></div><div></div><div></div></div>
+              <div id="pth-optime-chart" style="display:contents;"></div>
+            </div>
+            <div class="data-note">Only charted 2023 onward — bars use whichever of the selected punters' rows actually have Snap to Catch/Catch to Kick logged, never padded with blanks for 2021–2022.</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">Source: Carroll Punt sheet, Carroll_Special_Teams_2021_Current.xlsx.</div>
+    </div></div>`;
+
+  document.getElementById('pth-shelf').innerHTML = buildFilterPanel('pth', H2H_FILTERS, DATA.filters.punt);
+  wireFilterPanel('pth', H2H_FILTERS, render);
+
+  const selA = makeSearchCombobox(document.getElementById('pth-A-sel'), {
+    options: punters.map((p) => ({ value: p, label: p })), value: punters[0], onChange: render, placeholder: 'Search punter…',
+  });
+  const selB = makeSearchCombobox(document.getElementById('pth-B-sel'), {
+    options: punters.map((p) => ({ value: p, label: p })), value: punters[1] || punters[0], onChange: render, placeholder: 'Search punter…',
+  });
+
+  function renderSide(prefix, punter, rows) {
+    document.getElementById(`${prefix}-avatar`).textContent = initials(punter);
+    const pRows = rows.filter((r) => r.punter === punter);
+    const seasons = [...new Set(pRows.map((r) => r.season))].sort();
+    document.getElementById(`${prefix}-years`).textContent = seasons.length ? (seasons.length === 1 ? seasons[0] : `${seasons[0]} – ${seasons[seasons.length - 1]}`) : 'no punts in range';
+    document.getElementById(`${prefix}-net`).textContent = `${fmt(avgNet(pRows), 1)} yds`;
+    document.getElementById(`${prefix}-i20`).textContent = pct(rate(pRows, (r) => r.i20));
+    document.getElementById(`${prefix}-tb`).textContent = pct(rate(pRows, (r) => r.kick_outcome === 'Touchback'));
+    const hangRows = pRows.filter((r) => r.hangtime !== null);
+    document.getElementById(`${prefix}-hang`).textContent = hangRows.length ? `${fmt(mean(hangRows.map((r) => r.hangtime)), 2)}s` : '—';
+    const byOutcome = groupBy(pRows, 'kick_outcome');
+    renderBar(document.getElementById(`${prefix}-outchart`), {
+      categories: OUTCOMES.filter((o) => byOutcome.has(o)),
+      values: OUTCOMES.filter((o) => byOutcome.has(o)).map((o) => byOutcome.get(o).length),
+      labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-1'),
+    });
+  }
+
+  function render() {
+    const state = readFilterState('pth', H2H_FILTERS);
+    const rows = applyFilters(DATA.units.punt, state);
+    document.getElementById('pth-summary').textContent = `${rows.length} punts in view`;
+    renderSide('pth-A', selA.value, rows);
+    renderSide('pth-B', selB.value, rows);
+
+    document.getElementById('pth-trend-legend').innerHTML = `
+      <span class="sw"><span class="dot" style="background:var(--cat-6)"></span>${selA.value}</span>
+      <span class="sw"><span class="dot" style="background:var(--cat-3)"></span>${selB.value}</span>`;
+
+    const seasons = DATA.filters.punt.season;
+    function seasonNet(punter) {
+      const pRows = rows.filter((r) => r.punter === punter);
+      const byS = groupBy(pRows, 'season');
+      return seasons.map((s) => { const g = byS.get(s); return g && g.length ? avgNet(g) : null; });
+    }
+    renderTwoLine(document.getElementById('pth-trend-svg'), seasons, seasonNet(selA.value), seasonNet(selB.value), cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => `${fmt(v, 1)} yds`);
+
+    const opRows = rows.filter((r) => r.punter === selA.value || r.punter === selB.value);
+    renderStacked(document.getElementById('pth-optime-chart'), {
+      categories: [selA.value, selB.value],
+      series: {
+        'Snap → catch': [selA.value, selB.value].map((p) => mean(opRows.filter((r) => r.punter === p).map((r) => r.snap_to_catch)) || 0),
+        'Catch → kick': [selA.value, selB.value].map((p) => mean(opRows.filter((r) => r.punter === p).map((r) => r.catch_to_kick)) || 0),
+      },
+      order: ['Snap → catch', 'Catch → kick'],
+      colors: { 'Snap → catch': cssVar('--cat-1'), 'Catch → kick': cssVar('--cat-4') },
+      legend: false,
+    });
+  }
+  render();
+}
+
+/* ------------------------------------------------------------------ tab: Situational Deep Dive --- */
+
+const DEEP_FILTERS = [
+  { field: 'season', label: 'Season' },
+  { field: 'punter', label: 'Punter' },
+  { field: 'quarter', label: 'Quarter' },
+];
+
+function deepTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Punter</h2></div><div class="sub">Situational Deep Dive</div></div>
+      <div class="shelf" id="ptd-shelf"></div>
+      <div class="body">
+        <div class="kpirow" id="ptd-kpis">
+          ${kpiHTML('ptd-net', 'Avg Net Punt')}
+          ${kpiHTML('ptd-homeaway', 'Home vs Away Net')}
+          ${kpiHTML('ptd-bestq', 'Best Quarter (Net)')}
+          ${kpiHTML('ptd-tb', 'Touchback Rate', '--critical')}
+        </div>
+        <div class="grid2" style="margin-bottom:14px;">
+          <div class="card"><div class="card-head"><h3>Avg net punt by quarter</h3></div><div class="card-body" id="ptd-quarter"></div></div>
+          <div class="card"><div class="card-head"><h3>Avg hangtime by season</h3></div><div class="card-body" id="ptd-hangseason"><div class="data-note">Charted 2023 onward only.</div></div></div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-head"><h3>Inside-20 % — punter × season</h3></div>
+          <div class="card-body">
+            <div class="heat" id="ptd-heatmap"></div>
+            <div class="insight">Sequential blue = I20%; text = I20/punts. Columns always show all five seasons — only the Quarter filter narrows this grid (Punter filter hides non-matching rows).</div>
+          </div>
+        </div>
+        <div class="grid2" style="margin-bottom:14px;">
+          <div class="card"><div class="card-head"><h3>Inside-20 % by hash kicked from</h3></div><div class="card-body" id="ptd-hash"><div class="data-note">Charted 2023 onward only.</div></div></div>
+          <div class="card"><div class="card-head"><h3>Avg Punt Score by season</h3></div><div class="card-body" id="ptd-scoretrend"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Punter detail</h3></div>
+          <div class="card-body">
+            <table class="mini">
+              <thead><tr><th>Punter</th><th>Seasons</th><th>Punts</th><th>Net avg</th><th>Gross avg</th><th>I20%</th><th>TB%</th><th>Avg Score</th><th>Hangtime</th></tr></thead>
+              <tbody id="ptd-table-body"></tbody>
+            </table>
+            <div class="insight">Punts/Net/Gross/I20%/TB%/Score are real and respect the filters above. Hangtime only reflects charted rows (2023 onward) — shows "—" for a punter with none in view.</div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">Source: Carroll Punt sheet, Carroll_Special_Teams_2021_Current.xlsx (247 rows).</div>
+    </div></div>`;
+
+  document.getElementById('ptd-shelf').innerHTML = buildFilterPanel('ptd', DEEP_FILTERS, DATA.filters.punt);
+  wireFilterPanel('ptd', DEEP_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('ptd', DEEP_FILTERS);
+    const rows = applyFilters(DATA.units.punt, state);
+    document.getElementById('ptd-summary').textContent = `${rows.length} punts in view`;
+
+    setKPI('ptd-net', `${fmt(avgNet(rows), 1)} yds`);
+    const homeRows = rows.filter((r) => r.is_home), awayRows = rows.filter((r) => !r.is_home);
+    setKPI('ptd-homeaway', `${fmt(avgNet(homeRows), 0)} / ${fmt(avgNet(awayRows), 0)} yds`, 'home / away');
+    const byQ = groupBy(rows, 'quarter');
+    let bestQ = null, bestNet = -Infinity;
+    byQ.forEach((g, q) => { const n = avgNet(g); if (g.length >= 3 && n !== null && n > bestNet) { bestNet = n; bestQ = q; } });
+    setKPI('ptd-bestq', bestQ !== null ? `Q${bestQ}` : '—', bestQ !== null ? `${fmt(bestNet, 1)} yds (n=${byQ.get(bestQ).length})` : 'not enough punts');
+    setKPI('ptd-tb', pct(rate(rows, (r) => r.kick_outcome === 'Touchback')));
+
+    const quarters = DATA.filters.punt.quarter.filter((q) => byQ.has(q));
+    renderBar(document.getElementById('ptd-quarter'), {
+      categories: quarters, values: quarters.map((q) => avgNet(byQ.get(q))),
+      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--cat-2'), xlab2: (q) => `n=${byQ.get(q).length}`,
+    });
+
+    const seasons = DATA.filters.punt.season.filter((s) => rows.some((r) => r.season === s));
+    const byseason = groupBy(rows, 'season');
+    const hangBySeason = groupBy(rows.filter((r) => r.hangtime !== null), 'season');
+    renderBar(document.getElementById('ptd-hangseason'), {
+      categories: seasons, values: seasons.map((s) => { const g = hangBySeason.get(s); return g && g.length ? mean(g.map((r) => r.hangtime)) : null; }),
+      labelFmt: (v) => `${fmt(v, 2)}s`, colorFn: () => cssVar('--cat-5'), xlab2: (s) => `n=${(hangBySeason.get(s) || []).length}`,
+    });
+
+    const allSeasons = DATA.filters.punt.season;
+    const punters = DATA.filters.punt.punter.filter((p) => rows.some((r) => r.punter === p));
+    renderHeatmap(document.getElementById('ptd-heatmap'), {
+      rowLabels: punters, colLabels: allSeasons,
+      cellFor: (punter, season) => {
+        const g = rows.filter((r) => r.season === season && r.punter === punter);
+        if (!g.length) return null;
+        return { pct: rate(g, (r) => r.i20), n: g.length, made: g.filter((r) => r.i20).length };
+      },
+      title: (punter, season) => `${punter}, ${season}`,
+    });
+
+    const hashes = ['L', 'LM', 'M', 'RM', 'R'];
+    const byHash = groupBy(rows.filter((r) => r.hash_kicked_from), 'hash_kicked_from');
+    const hashesPresent = hashes.filter((h) => byHash.has(h));
+    if (hashesPresent.length) {
+      renderBar(document.getElementById('ptd-hash'), {
+        categories: hashesPresent, values: hashesPresent.map((h) => rate(byHash.get(h), (r) => r.i20)),
+        labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), xlab2: (h) => `n=${byHash.get(h).length}`,
+      });
+    } else {
+      document.getElementById('ptd-hash').innerHTML = '<div class="data-note">No charted hash data in the current filter (2023 onward only).</div>';
+    }
+
+    const scoreBySeason = groupBy(rows, 'season');
+    renderBar(document.getElementById('ptd-scoretrend'), {
+      categories: seasons, values: seasons.map((s) => mean((scoreBySeason.get(s) || []).map((r) => r.score))),
+      labelFmt: (v) => fmt(v, 0), colorFn: (s, v) => (v >= 50 ? cssVar('--good') : cssVar('--critical')),
+      xlab2: (s) => `n=${(scoreBySeason.get(s) || []).length}`,
+    });
+
+    const tbody = punters.map((p) => {
+      const pRows = rows.filter((r) => r.punter === p);
+      const pSeasons = [...new Set(pRows.map((r) => r.season))].sort();
+      const hangRows = pRows.filter((r) => r.hangtime !== null);
+      return `<tr>
+        <td class="name">${p}</td>
+        <td>${pSeasons.length === 1 ? pSeasons[0] : `${pSeasons[0]}–${pSeasons[pSeasons.length - 1]}`}</td>
+        <td>${pRows.length}</td>
+        <td>${fmt(avgNet(pRows), 1)} yds</td>
+        <td>${fmt(mean(pRows.map((r) => r.total_distance)), 1)} yds</td>
+        <td>${pct(rate(pRows, (r) => r.i20), 0)}</td>
+        <td>${pct(rate(pRows, (r) => r.kick_outcome === 'Touchback'), 0)}</td>
+        <td>${fmt(mean(pRows.map((r) => r.score)), 0)}</td>
+        <td>${hangRows.length ? fmt(mean(hangRows.map((r) => r.hangtime)), 2) + 's' : '—'}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('ptd-table-body').innerHTML = tbody || '<tr><td colspan="9" style="text-align:center; color:var(--muted);">No punters in current filter.</td></tr>';
+  }
+  render();
+}
+
+/* ------------------------------------------------------------------------ tabs ---- */
+
+const TAB_RENDERERS = { exec: execTab, h2h: h2hTab, deep: deepTab };
+
+function showTab(tab) {
+  document.querySelectorAll('#pt-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  TAB_RENDERERS[tab](document.getElementById('pt-stage'));
+}
+
+document.querySelectorAll('#pt-tabs .tabbtn').forEach((btn) => {
+  btn.addEventListener('click', () => showTab(btn.dataset.tab));
+});
+
+fetch('../data/special-teams.json')
+  .then((r) => r.json())
+  .then((data) => { DATA = data; showTab('exec'); })
+  .catch((err) => {
+    document.getElementById('pt-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/special-teams.json — ${err}. Run scripts/build_special_teams_data.py first, and serve over http:// not file://.</div></div>`;
+  });
+</script>
+</body>
+</html>

@@ -79,9 +79,12 @@ def build_punt(wb):
             "next_drive_outcome": outcome_bucket(pts), "drive_success": drive_success(pts),
             "hangtime": r["Hangtime"], "total_distance": r["Total Distance"],
             "return_length": r["Return Length"], "snap_to_kick": snap_to_kick,
+            "snap_to_catch": r["Snap to Catch"], "catch_to_kick": r["Catch to Kick"],
+            "hash_kicked_from": r["Hash Kicked From"],
             "converted_los": r["Converted Result LOS"],
             "field_bucket": field_bucket(r["Converted Result LOS"]),
             "i20": r["I20?"],
+            "value": r["Punt Value"], "score": r["Punt Score"],
         })
     return rows
 

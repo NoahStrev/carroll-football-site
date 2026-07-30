@@ -18,9 +18,14 @@
 "total_distance": 29,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 27,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.245,
+"score": 70.1
 },
 {
 "season": "2021",
@@ -38,9 +43,14 @@
 "total_distance": 26,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 46,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.56,
+"score": 58.2
 },
 {
 "season": "2021",
@@ -58,9 +68,14 @@
 "total_distance": 49,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 2,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2021",
@@ -78,9 +93,14 @@
 "total_distance": 32,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 29,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.199,
+"score": 69.4
 },
 {
 "season": "2021",
@@ -98,9 +118,14 @@
 "total_distance": 50,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2021",
@@ -118,9 +143,14 @@
 "total_distance": 40,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 28,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.222,
+"score": 69.8
 },
 {
 "season": "2021",
@@ -138,9 +168,14 @@
 "total_distance": 52,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2021",
@@ -158,9 +193,14 @@
 "total_distance": 25,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 15,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.55,
+"score": 74.6
 },
 {
 "season": "2021",
@@ -178,9 +218,14 @@
 "total_distance": 29,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 41,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.172,
+"score": 63.9
 },
 {
 "season": "2021",
@@ -198,9 +243,14 @@
 "total_distance": 27,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 23,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.337,
+"score": 71.5
 },
 {
 "season": "2021",
@@ -218,9 +268,14 @@
 "total_distance": 33,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 35,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.041,
+"score": 67.1
 },
 {
 "season": "2021",
@@ -238,9 +293,14 @@
 "total_distance": 26,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": true
+"i20": true,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2021",
@@ -258,9 +318,14 @@
 "total_distance": 34,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 39,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": -0.067,
+"score": 65.5
 },
 {
 "season": "2021",
@@ -278,9 +343,14 @@
 "total_distance": 18,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 58,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.116,
+"score": 50
 },
 {
 "season": "2021",
@@ -298,9 +368,14 @@
 "total_distance": 25,
 "return_length": 4,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 21,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.383,
+"score": 72.1
 },
 {
 "season": "2021",
@@ -318,9 +393,14 @@
 "total_distance": 28,
 "return_length": 5,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 28,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.222,
+"score": 69.8
 },
 {
 "season": "2021",
@@ -338,9 +418,14 @@
 "total_distance": 31,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 26,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.268,
+"score": 70.4
 },
 {
 "season": "2021",
@@ -358,9 +443,14 @@
 "total_distance": 34,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 11,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.665,
+"score": 76.3
 },
 {
 "season": "2021",
@@ -378,9 +468,14 @@
 "total_distance": 41,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 2,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2021",
@@ -398,9 +493,14 @@
 "total_distance": 30,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 32,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.122,
+"score": 68.3
 },
 {
 "season": "2021",
@@ -418,9 +518,14 @@
 "total_distance": 34,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 55,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.088,
+"score": 50.4
 },
 {
 "season": "2021",
@@ -438,9 +543,14 @@
 "total_distance": 19,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 73,
 "field_bucket": "71-80",
-"i20": false
+"i20": false,
+"value": -1.258,
+"score": 47.9
 },
 {
 "season": "2021",
@@ -458,9 +568,14 @@
 "total_distance": 17,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 60,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.135,
+"score": 49.7
 },
 {
 "season": "2021",
@@ -478,9 +593,14 @@
 "total_distance": 29,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 45,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.482,
+"score": 59.3
 },
 {
 "season": "2021",
@@ -498,9 +618,14 @@
 "total_distance": 19,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 26,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.268,
+"score": 70.4
 },
 {
 "season": "2021",
@@ -518,9 +643,14 @@
 "total_distance": 0,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 100,
 "field_bucket": "91-100",
-"i20": false
+"i20": false,
+"value": -4.494,
+"score": 0
 },
 {
 "season": "2021",
@@ -538,9 +668,14 @@
 "total_distance": 29,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 33,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.095,
+"score": 67.9
 },
 {
 "season": "2021",
@@ -558,9 +693,14 @@
 "total_distance": 25,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": true
+"i20": true,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2021",
@@ -578,9 +718,14 @@
 "total_distance": 12,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 37,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": -0.013,
+"score": 66.3
 },
 {
 "season": "2021",
@@ -598,9 +743,14 @@
 "total_distance": 52,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 27,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.245,
+"score": 70.1
 },
 {
 "season": "2021",
@@ -618,9 +768,14 @@
 "total_distance": 31,
 "return_length": 22,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 55,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.088,
+"score": 50.4
 },
 {
 "season": "2021",
@@ -638,9 +793,14 @@
 "total_distance": 30,
 "return_length": 13,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 58,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.116,
+"score": 50
 },
 {
 "season": "2021",
@@ -658,9 +818,14 @@
 "total_distance": 26,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 63,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.163,
+"score": 49.3
 },
 {
 "season": "2021",
@@ -678,9 +843,14 @@
 "total_distance": 35,
 "return_length": 3,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 10,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.694,
+"score": 76.7
 },
 {
 "season": "2021",
@@ -698,9 +868,14 @@
 "total_distance": 34,
 "return_length": 14,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 32,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.122,
+"score": 68.3
 },
 {
 "season": "2021",
@@ -718,9 +893,14 @@
 "total_distance": 40,
 "return_length": 12,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2021",
@@ -738,9 +918,14 @@
 "total_distance": 38,
 "return_length": 11,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 53,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.069,
+"score": 50.7
 },
 {
 "season": "2021",
@@ -758,9 +943,14 @@
 "total_distance": 48,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 10,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.694,
+"score": 76.7
 },
 {
 "season": "2021",
@@ -778,9 +968,14 @@
 "total_distance": 33,
 "return_length": 8,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 46,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.56,
+"score": 58.2
 },
 {
 "season": "2021",
@@ -798,9 +993,14 @@
 "total_distance": 35,
 "return_length": 2,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 26,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.268,
+"score": 70.4
 },
 {
 "season": "2021",
@@ -818,9 +1018,14 @@
 "total_distance": 19,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 58,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.116,
+"score": 50
 },
 {
 "season": "2021",
@@ -838,9 +1043,14 @@
 "total_distance": 66,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2021",
@@ -858,9 +1068,14 @@
 "total_distance": 30,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 55,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.088,
+"score": 50.4
 },
 {
 "season": "2021",
@@ -878,9 +1093,14 @@
 "total_distance": 40,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 34,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.068,
+"score": 67.5
 },
 {
 "season": "2021",
@@ -898,9 +1118,14 @@
 "total_distance": 36,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 10,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.694,
+"score": 76.7
 },
 {
 "season": "2021",
@@ -918,9 +1143,14 @@
 "total_distance": 14,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 43,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.327,
+"score": 61.6
 },
 {
 "season": "2021",
@@ -938,9 +1168,14 @@
 "total_distance": 27,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 11,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.665,
+"score": 76.3
 },
 {
 "season": "2021",
@@ -958,9 +1193,14 @@
 "total_distance": 39,
 "return_length": 2,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 3,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2021",
@@ -978,9 +1218,14 @@
 "total_distance": 35,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 21,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.383,
+"score": 72.1
 },
 {
 "season": "2021",
@@ -998,9 +1243,14 @@
 "total_distance": 30,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 43,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.327,
+"score": 61.6
 },
 {
 "season": "2022",
@@ -1018,9 +1268,14 @@
 "total_distance": 31,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 48,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.715,
+"score": 55.9
 },
 {
 "season": "2022",
@@ -1038,9 +1293,14 @@
 "total_distance": 46,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 1,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2022",
@@ -1058,9 +1318,14 @@
 "total_distance": 19,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 65,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.182,
+"score": 49
 },
 {
 "season": "2022",
@@ -1078,9 +1343,14 @@
 "total_distance": 51,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 23,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.337,
+"score": 71.5
 },
 {
 "season": "2022",
@@ -1098,9 +1368,14 @@
 "total_distance": 46,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 18,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.464,
+"score": 73.3
 },
 {
 "season": "2022",
@@ -1118,9 +1393,14 @@
 "total_distance": 24,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 42,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.249,
+"score": 62.8
 },
 {
 "season": "2022",
@@ -1138,9 +1418,14 @@
 "total_distance": 44,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 19,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.435,
+"score": 72.9
 },
 {
 "season": "2022",
@@ -1158,9 +1443,14 @@
 "total_distance": 33,
 "return_length": 54,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 81,
 "field_bucket": "81-90",
-"i20": false
+"i20": false,
+"value": -1.324,
+"score": 46.9
 },
 {
 "season": "2022",
@@ -1178,9 +1468,14 @@
 "total_distance": 18,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 28,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.222,
+"score": 69.8
 },
 {
 "season": "2022",
@@ -1198,9 +1493,14 @@
 "total_distance": 70,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2022",
@@ -1218,9 +1518,14 @@
 "total_distance": 46,
 "return_length": 75,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 99,
 "field_bucket": "91-100",
-"i20": false
+"i20": false,
+"value": -1.324,
+"score": 46.9
 },
 {
 "season": "2022",
@@ -1238,9 +1543,14 @@
 "total_distance": 45,
 "return_length": 6,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 35,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.041,
+"score": 67.1
 },
 {
 "season": "2022",
@@ -1258,9 +1568,14 @@
 "total_distance": 19,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 43,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.327,
+"score": 61.6
 },
 {
 "season": "2022",
@@ -1278,9 +1593,14 @@
 "total_distance": 40,
 "return_length": 14,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 40,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.094,
+"score": 65.1
 },
 {
 "season": "2022",
@@ -1298,9 +1618,14 @@
 "total_distance": 30,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": true
+"i20": true,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2022",
@@ -1318,9 +1643,14 @@
 "total_distance": 26,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 28,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.222,
+"score": 69.8
 },
 {
 "season": "2022",
@@ -1338,9 +1668,14 @@
 "total_distance": 36,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 36,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.014,
+"score": 66.7
 },
 {
 "season": "2022",
@@ -1358,9 +1693,14 @@
 "total_distance": 45,
 "return_length": 16,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 55,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.088,
+"score": 50.4
 },
 {
 "season": "2022",
@@ -1378,9 +1718,14 @@
 "total_distance": 52,
 "return_length": 4,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 14,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.579,
+"score": 75
 },
 {
 "season": "2022",
@@ -1398,9 +1743,14 @@
 "total_distance": 24,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 12,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.636,
+"score": 75.9
 },
 {
 "season": "2022",
@@ -1418,9 +1768,14 @@
 "total_distance": 10,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 52,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.025,
+"score": 51.3
 },
 {
 "season": "2022",
@@ -1438,9 +1793,14 @@
 "total_distance": 28,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 54,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.078,
+"score": 50.5
 },
 {
 "season": "2022",
@@ -1458,9 +1818,14 @@
 "total_distance": 34,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 25,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.291,
+"score": 70.8
 },
 {
 "season": "2022",
@@ -1478,9 +1843,14 @@
 "total_distance": 33,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2022",
@@ -1498,9 +1868,14 @@
 "total_distance": 47,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 40,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.094,
+"score": 65.1
 },
 {
 "season": "2022",
@@ -1518,9 +1893,14 @@
 "total_distance": 35,
 "return_length": 6,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 37,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": -0.013,
+"score": 66.3
 },
 {
 "season": "2022",
@@ -1538,9 +1918,14 @@
 "total_distance": 36,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 24,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.314,
+"score": 71.1
 },
 {
 "season": "2022",
@@ -1558,9 +1943,14 @@
 "total_distance": 14,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2022",
@@ -1578,9 +1968,14 @@
 "total_distance": 33,
 "return_length": 6,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 35,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.041,
+"score": 67.1
 },
 {
 "season": "2022",
@@ -1598,9 +1993,14 @@
 "total_distance": 29,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 48,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.715,
+"score": 55.9
 },
 {
 "season": "2022",
@@ -1618,9 +2018,14 @@
 "total_distance": 50,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2022",
@@ -1638,9 +2043,14 @@
 "total_distance": 33,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 29,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.199,
+"score": 69.4
 },
 {
 "season": "2022",
@@ -1658,9 +2068,14 @@
 "total_distance": 32,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 46,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.56,
+"score": 58.2
 },
 {
 "season": "2022",
@@ -1678,9 +2093,14 @@
 "total_distance": 35,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 50,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -0.87,
+"score": 53.6
 },
 {
 "season": "2022",
@@ -1698,9 +2118,14 @@
 "total_distance": 37,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2022",
@@ -1718,9 +2143,14 @@
 "total_distance": 41,
 "return_length": 9,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 45,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.482,
+"score": 59.3
 },
 {
 "season": "2022",
@@ -1738,9 +2168,14 @@
 "total_distance": 33,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 40,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.094,
+"score": 65.1
 },
 {
 "season": "2022",
@@ -1758,9 +2193,14 @@
 "total_distance": 36,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 55,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.088,
+"score": 50.4
 },
 {
 "season": "2022",
@@ -1778,9 +2218,14 @@
 "total_distance": 37,
 "return_length": 5,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 23,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.337,
+"score": 71.5
 },
 {
 "season": "2022",
@@ -1798,9 +2243,14 @@
 "total_distance": 36,
 "return_length": 1,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 11,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.665,
+"score": 76.3
 },
 {
 "season": "2022",
@@ -1818,9 +2268,14 @@
 "total_distance": 42,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 9,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.723,
+"score": 77.2
 },
 {
 "season": "2022",
@@ -1838,9 +2293,14 @@
 "total_distance": 49,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 7,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2022",
@@ -1858,9 +2318,14 @@
 "total_distance": 58,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2022",
@@ -1878,9 +2343,14 @@
 "total_distance": 28,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2022",
@@ -1898,9 +2368,14 @@
 "total_distance": 16,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 64,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.173,
+"score": 49.1
 },
 {
 "season": "2022",
@@ -1918,9 +2393,14 @@
 "total_distance": 22,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 54,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.078,
+"score": 50.5
 },
 {
 "season": "2022",
@@ -1938,9 +2418,14 @@
 "total_distance": 49,
 "return_length": 13,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 50,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -0.87,
+"score": 53.6
 },
 {
 "season": "2022",
@@ -1958,9 +2443,14 @@
 "total_distance": 50,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2022",
@@ -1978,9 +2468,14 @@
 "total_distance": 42,
 "return_length": -3,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2022",
@@ -1998,9 +2493,14 @@
 "total_distance": 19,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 56,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.097,
+"score": 50.3
 },
 {
 "season": "2022",
@@ -2018,9 +2518,14 @@
 "total_distance": 13,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 48,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.715,
+"score": 55.9
 },
 {
 "season": "2022",
@@ -2038,9 +2543,14 @@
 "total_distance": 31,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 12,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.636,
+"score": 75.9
 },
 {
 "season": "2022",
@@ -2058,9 +2568,14 @@
 "total_distance": 38,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 23,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.337,
+"score": 71.5
 },
 {
 "season": "2022",
@@ -2078,9 +2593,14 @@
 "total_distance": 31,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 35,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.041,
+"score": 67.1
 },
 {
 "season": "2022",
@@ -2098,9 +2618,14 @@
 "total_distance": 39,
 "return_length": 15,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 40,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.094,
+"score": 65.1
 },
 {
 "season": "2022",
@@ -2118,9 +2643,14 @@
 "total_distance": 30,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 51,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -0.948,
+"score": 52.5
 },
 {
 "season": "2022",
@@ -2138,9 +2668,14 @@
 "total_distance": 44,
 "return_length": 13,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 34,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.068,
+"score": 67.5
 },
 {
 "season": "2023",
@@ -2158,9 +2693,14 @@
 "total_distance": 34,
 "return_length": 0,
 "snap_to_kick": 2.18,
+"snap_to_catch": 0.94,
+"catch_to_kick": 1.24,
+"hash_kicked_from": "L",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": true
+"i20": true,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2023",
@@ -2178,9 +2718,14 @@
 "total_distance": 26,
 "return_length": 0,
 "snap_to_kick": 2.33,
+"snap_to_catch": 0.96,
+"catch_to_kick": 1.37,
+"hash_kicked_from": "R",
 "converted_los": 26,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.268,
+"score": 70.4
 },
 {
 "season": "2023",
@@ -2198,9 +2743,14 @@
 "total_distance": 37,
 "return_length": 0,
 "snap_to_kick": 2.27,
+"snap_to_catch": 1.03,
+"catch_to_kick": 1.239999999999999,
+"hash_kicked_from": "L",
 "converted_los": 34,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.068,
+"score": 67.5
 },
 {
 "season": "2023",
@@ -2218,9 +2768,14 @@
 "total_distance": 49,
 "return_length": 6,
 "snap_to_kick": 1.88,
+"snap_to_catch": 0.94,
+"catch_to_kick": 0.94,
+"hash_kicked_from": "R",
 "converted_los": 28,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.222,
+"score": 69.8
 },
 {
 "season": "2023",
@@ -2238,9 +2793,14 @@
 "total_distance": 42,
 "return_length": 13,
 "snap_to_kick": 2.05,
+"snap_to_catch": 0.94,
+"catch_to_kick": 1.11,
+"hash_kicked_from": "R",
 "converted_los": 39,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": -0.067,
+"score": 65.5
 },
 {
 "season": "2023",
@@ -2258,9 +2818,14 @@
 "total_distance": 42,
 "return_length": 0,
 "snap_to_kick": 2.01,
+"snap_to_catch": 1,
+"catch_to_kick": 1.01,
+"hash_kicked_from": "R",
 "converted_los": 17,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.492,
+"score": 73.8
 },
 {
 "season": "2023",
@@ -2278,9 +2843,14 @@
 "total_distance": 35,
 "return_length": 0,
 "snap_to_kick": 2.25,
+"snap_to_catch": 0.9500000000000001,
+"catch_to_kick": 1.3,
+"hash_kicked_from": "R",
 "converted_los": 15,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.55,
+"score": 74.6
 },
 {
 "season": "2023",
@@ -2298,9 +2868,14 @@
 "total_distance": 36,
 "return_length": 30,
 "snap_to_kick": 2.05,
+"snap_to_catch": 0.9400000000000004,
+"catch_to_kick": 1.11,
+"hash_kicked_from": "R",
 "converted_los": 61,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.144,
+"score": 49.6
 },
 {
 "season": "2023",
@@ -2318,9 +2893,14 @@
 "total_distance": 58,
 "return_length": 0,
 "snap_to_kick": 2.13,
+"snap_to_catch": 0.9799999999999995,
+"catch_to_kick": 1.15,
+"hash_kicked_from": "R",
 "converted_los": 1,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2023",
@@ -2338,9 +2918,14 @@
 "total_distance": 47,
 "return_length": 11,
 "snap_to_kick": 2.17,
+"snap_to_catch": 0.98,
+"catch_to_kick": 1.19,
+"hash_kicked_from": "RM",
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2023",
@@ -2358,9 +2943,14 @@
 "total_distance": 43,
 "return_length": 0,
 "snap_to_kick": 2.26,
+"snap_to_catch": 0.9800000000000004,
+"catch_to_kick": 1.279999999999999,
+"hash_kicked_from": "L",
 "converted_los": 34,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.068,
+"score": 67.5
 },
 {
 "season": "2023",
@@ -2378,9 +2968,14 @@
 "total_distance": 44,
 "return_length": 0,
 "snap_to_kick": 2.22,
+"snap_to_catch": 0.9899999999999998,
+"catch_to_kick": 1.23,
+"hash_kicked_from": "R",
 "converted_los": 31,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.149,
+"score": 68.7
 },
 {
 "season": "2023",
@@ -2398,9 +2993,14 @@
 "total_distance": 39,
 "return_length": 4,
 "snap_to_kick": 2.15,
+"snap_to_catch": 0.9199999999999999,
+"catch_to_kick": 1.23,
+"hash_kicked_from": "RM",
 "converted_los": 19,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.435,
+"score": 72.9
 },
 {
 "season": "2023",
@@ -2418,9 +3018,14 @@
 "total_distance": 28,
 "return_length": 0,
 "snap_to_kick": 2.05,
+"snap_to_catch": 0.96,
+"catch_to_kick": 1.09,
+"hash_kicked_from": "LM",
 "converted_los": 32,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.122,
+"score": 68.3
 },
 {
 "season": "2023",
@@ -2438,9 +3043,14 @@
 "total_distance": 35,
 "return_length": 0,
 "snap_to_kick": 2.12,
+"snap_to_catch": 0.9599999999999997,
+"catch_to_kick": 1.16,
+"hash_kicked_from": "R",
 "converted_los": 14,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.579,
+"score": 75
 },
 {
 "season": "2023",
@@ -2458,9 +3068,14 @@
 "total_distance": 45,
 "return_length": 0,
 "snap_to_kick": 2.12,
+"snap_to_catch": 0.9900000000000002,
+"catch_to_kick": 1.13,
+"hash_kicked_from": "L",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2023",
@@ -2478,9 +3093,14 @@
 "total_distance": 38,
 "return_length": 0,
 "snap_to_kick": 2.04,
+"snap_to_catch": 0.9799999999999995,
+"catch_to_kick": 1.06,
+"hash_kicked_from": "L",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": true
+"i20": true,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2023",
@@ -2498,9 +3118,14 @@
 "total_distance": 58,
 "return_length": 0,
 "snap_to_kick": 1.96,
+"snap_to_catch": 0.9099999999999997,
+"catch_to_kick": 1.05,
+"hash_kicked_from": "LM",
 "converted_los": 29,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.199,
+"score": 69.4
 },
 {
 "season": "2023",
@@ -2518,9 +3143,14 @@
 "total_distance": 55,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 9,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.723,
+"score": 77.2
 },
 {
 "season": "2023",
@@ -2538,9 +3168,14 @@
 "total_distance": 40,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 26,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.268,
+"score": 70.4
 },
 {
 "season": "2023",
@@ -2558,9 +3193,14 @@
 "total_distance": 38,
 "return_length": 7,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 68,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.211,
+"score": 48.6
 },
 {
 "season": "2023",
@@ -2578,9 +3218,14 @@
 "total_distance": 31,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 41,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.172,
+"score": 63.9
 },
 {
 "season": "2023",
@@ -2598,9 +3243,14 @@
 "total_distance": 55,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 16,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.521,
+"score": 74.2
 },
 {
 "season": "2023",
@@ -2618,9 +3268,14 @@
 "total_distance": 35,
 "return_length": 9,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 66,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.192,
+"score": 48.8
 },
 {
 "season": "2023",
@@ -2638,9 +3293,14 @@
 "total_distance": 41,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 41,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.172,
+"score": 63.9
 },
 {
 "season": "2023",
@@ -2658,9 +3318,14 @@
 "total_distance": 13,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 55,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.088,
+"score": 50.4
 },
 {
 "season": "2023",
@@ -2678,9 +3343,14 @@
 "total_distance": 36,
 "return_length": 10,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 51,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -0.948,
+"score": 52.5
 },
 {
 "season": "2023",
@@ -2698,9 +3368,14 @@
 "total_distance": 30,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 55,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.088,
+"score": 50.4
 },
 {
 "season": "2023",
@@ -2718,9 +3393,14 @@
 "total_distance": 40,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 90,
 "field_bucket": "91-100",
-"i20": false
+"i20": false,
+"value": -1.324,
+"score": 46.9
 },
 {
 "season": "2023",
@@ -2738,9 +3418,14 @@
 "total_distance": 56,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2023",
@@ -2758,9 +3443,14 @@
 "total_distance": 41,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": true
+"i20": true,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2023",
@@ -2778,9 +3468,14 @@
 "total_distance": 46,
 "return_length": 1,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 8,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.752,
+"score": 77.6
 },
 {
 "season": "2023",
@@ -2798,9 +3493,14 @@
 "total_distance": 38,
 "return_length": 14,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2023",
@@ -2818,9 +3518,14 @@
 "total_distance": 47,
 "return_length": 16,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 26,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.268,
+"score": 70.4
 },
 {
 "season": "2023",
@@ -2838,9 +3543,14 @@
 "total_distance": 20,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 25,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.291,
+"score": 70.8
 },
 {
 "season": "2023",
@@ -2858,9 +3568,14 @@
 "total_distance": 53,
 "return_length": 18,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 37,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": -0.013,
+"score": 66.3
 },
 {
 "season": "2024",
@@ -2878,9 +3593,14 @@
 "total_distance": 38,
 "return_length": 33,
 "snap_to_kick": 2.09,
+"snap_to_catch": 0.9899999999999993,
+"catch_to_kick": 1.100000000000001,
+"hash_kicked_from": "LM",
 "converted_los": 67,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.201,
+"score": 48.7
 },
 {
 "season": "2024",
@@ -2898,9 +3618,14 @@
 "total_distance": 47,
 "return_length": 0,
 "snap_to_kick": 2.12,
+"snap_to_catch": 0.8300000000000001,
+"catch_to_kick": 1.29,
+"hash_kicked_from": "LM",
 "converted_los": 18,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 1.964,
+"score": 95.5
 },
 {
 "season": "2024",
@@ -2918,9 +3643,14 @@
 "total_distance": 56,
 "return_length": 3,
 "snap_to_kick": 2.11,
+"snap_to_catch": 0.8799999999999999,
+"catch_to_kick": 1.23,
+"hash_kicked_from": "L",
 "converted_los": 18,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.464,
+"score": 73.3
 },
 {
 "season": "2024",
@@ -2938,9 +3668,14 @@
 "total_distance": 49,
 "return_length": 0,
 "snap_to_kick": 2.01,
+"snap_to_catch": 0.9300000000000006,
+"catch_to_kick": 1.079999999999999,
+"hash_kicked_from": "R",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2024",
@@ -2958,9 +3693,14 @@
 "total_distance": 47,
 "return_length": 6,
 "snap_to_kick": 1.95,
+"snap_to_catch": 0.8900000000000006,
+"catch_to_kick": 1.06,
+"hash_kicked_from": "L",
 "converted_los": 43,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.327,
+"score": 61.6
 },
 {
 "season": "2024",
@@ -2978,9 +3718,14 @@
 "total_distance": 35,
 "return_length": 0,
 "snap_to_kick": 2.15,
+"snap_to_catch": 0.96,
+"catch_to_kick": 1.19,
+"hash_kicked_from": "L",
 "converted_los": 19,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.435,
+"score": 72.9
 },
 {
 "season": "2024",
@@ -2998,9 +3743,14 @@
 "total_distance": 41,
 "return_length": 16,
 "snap_to_kick": 1.95,
+"snap_to_catch": 0.8300000000000001,
+"catch_to_kick": 1.12,
+"hash_kicked_from": "L",
 "converted_los": 38,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": -0.04,
+"score": 65.9
 },
 {
 "season": "2024",
@@ -3018,9 +3768,14 @@
 "total_distance": 38,
 "return_length": 0,
 "snap_to_kick": 1.86,
+"snap_to_catch": 0.8499999999999996,
+"catch_to_kick": 1.010000000000002,
+"hash_kicked_from": "LM",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2024",
@@ -3038,9 +3793,14 @@
 "total_distance": 46,
 "return_length": 0,
 "snap_to_kick": 1.83,
+"snap_to_catch": 0.8600000000000003,
+"catch_to_kick": 0.9699999999999998,
+"hash_kicked_from": "R",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2024",
@@ -3058,9 +3818,14 @@
 "total_distance": 39,
 "return_length": -4,
 "snap_to_kick": 2.17,
+"snap_to_catch": 0.96,
+"catch_to_kick": 1.21,
+"hash_kicked_from": "R",
 "converted_los": 10,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.694,
+"score": 76.7
 },
 {
 "season": "2024",
@@ -3078,9 +3843,14 @@
 "total_distance": 41,
 "return_length": -6,
 "snap_to_kick": 2.01,
+"snap_to_catch": 0.9600000000000009,
+"catch_to_kick": 1.05,
+"hash_kicked_from": "L",
 "converted_los": 22,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.36,
+"score": 71.8
 },
 {
 "season": "2024",
@@ -3098,9 +3868,14 @@
 "total_distance": 30,
 "return_length": 0,
 "snap_to_kick": 2.01,
+"snap_to_catch": 0.9200000000000004,
+"catch_to_kick": 1.089999999999999,
+"hash_kicked_from": "R",
 "converted_los": 41,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.172,
+"score": 63.9
 },
 {
 "season": "2024",
@@ -3118,9 +3893,14 @@
 "total_distance": 40,
 "return_length": 0,
 "snap_to_kick": 1.98,
+"snap_to_catch": 0.8799999999999999,
+"catch_to_kick": 1.100000000000001,
+"hash_kicked_from": "L",
 "converted_los": 33,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.095,
+"score": 67.9
 },
 {
 "season": "2024",
@@ -3138,9 +3918,14 @@
 "total_distance": 40,
 "return_length": 6,
 "snap_to_kick": 1.95,
+"snap_to_catch": 0.9099999999999997,
+"catch_to_kick": 1.04,
+"hash_kicked_from": "R",
 "converted_los": 33,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.095,
+"score": 67.9
 },
 {
 "season": "2024",
@@ -3158,9 +3943,14 @@
 "total_distance": 55,
 "return_length": 0,
 "snap_to_kick": 1.94,
+"snap_to_catch": 0.9000000000000004,
+"catch_to_kick": 1.04,
+"hash_kicked_from": "R",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2024",
@@ -3178,9 +3968,14 @@
 "total_distance": 47,
 "return_length": 22,
 "snap_to_kick": 2.07,
+"snap_to_catch": 0.94,
+"catch_to_kick": 1.13,
+"hash_kicked_from": "M",
 "converted_los": 45,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.482,
+"score": 59.3
 },
 {
 "season": "2024",
@@ -3198,9 +3993,14 @@
 "total_distance": 42,
 "return_length": 0,
 "snap_to_kick": 1.96,
+"snap_to_catch": 0.9099999999999993,
+"catch_to_kick": 1.050000000000001,
+"hash_kicked_from": "R",
 "converted_los": 29,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.199,
+"score": 69.4
 },
 {
 "season": "2024",
@@ -3218,9 +4018,14 @@
 "total_distance": 43,
 "return_length": 0,
 "snap_to_kick": 2.02,
+"snap_to_catch": 0.8899999999999988,
+"catch_to_kick": 1.130000000000001,
+"hash_kicked_from": "RM",
 "converted_los": 24,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 1.814,
+"score": 93.3
 },
 {
 "season": "2024",
@@ -3238,9 +4043,14 @@
 "total_distance": 59,
 "return_length": -4,
 "snap_to_kick": 2.16,
+"snap_to_catch": 0.96,
+"catch_to_kick": 1.2,
+"hash_kicked_from": "R",
 "converted_los": 25,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.291,
+"score": 70.8
 },
 {
 "season": "2024",
@@ -3258,9 +4068,14 @@
 "total_distance": 46,
 "return_length": 0,
 "snap_to_kick": 2.14,
+"snap_to_catch": 0.9000000000000004,
+"catch_to_kick": 1.239999999999999,
+"hash_kicked_from": "L",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2024",
@@ -3278,9 +4093,14 @@
 "total_distance": 56,
 "return_length": 0,
 "snap_to_kick": 2.22,
+"snap_to_catch": 0.9800000000000004,
+"catch_to_kick": 1.239999999999999,
+"hash_kicked_from": "R",
 "converted_los": 4,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2024",
@@ -3298,9 +4118,14 @@
 "total_distance": 42,
 "return_length": 0,
 "snap_to_kick": 2.11,
+"snap_to_catch": 0.96,
+"catch_to_kick": 1.149999999999999,
+"hash_kicked_from": "M",
 "converted_los": 2,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2024",
@@ -3318,9 +4143,14 @@
 "total_distance": 39,
 "return_length": 0,
 "snap_to_kick": 2.16,
+"snap_to_catch": 0.8899999999999997,
+"catch_to_kick": 1.27,
+"hash_kicked_from": "L",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2024",
@@ -3338,9 +4168,14 @@
 "total_distance": 45,
 "return_length": 28,
 "snap_to_kick": 2.05,
+"snap_to_catch": 0.8799999999999999,
+"catch_to_kick": 1.17,
+"hash_kicked_from": "L",
 "converted_los": 45,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.482,
+"score": 59.3
 },
 {
 "season": "2024",
@@ -3358,9 +4193,14 @@
 "total_distance": 33,
 "return_length": 0,
 "snap_to_kick": 2.35,
+"snap_to_catch": 1,
+"catch_to_kick": 1.35,
+"hash_kicked_from": "R",
 "converted_los": 5,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2024",
@@ -3378,9 +4218,14 @@
 "total_distance": 40,
 "return_length": 0,
 "snap_to_kick": 2.08,
+"snap_to_catch": 0.8900000000000001,
+"catch_to_kick": 1.19,
+"hash_kicked_from": "LM",
 "converted_los": 14,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.579,
+"score": 75
 },
 {
 "season": "2024",
@@ -3398,9 +4243,14 @@
 "total_distance": 43,
 "return_length": 2,
 "snap_to_kick": 2.18,
+"snap_to_catch": 0.9800000000000004,
+"catch_to_kick": 1.2,
+"hash_kicked_from": "R",
 "converted_los": 18,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.464,
+"score": 73.3
 },
 {
 "season": "2024",
@@ -3418,9 +4268,14 @@
 "total_distance": 37,
 "return_length": 15,
 "snap_to_kick": 2.09,
+"snap_to_catch": 0.9500000000000002,
+"catch_to_kick": 1.14,
+"hash_kicked_from": "L",
 "converted_los": 58,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.116,
+"score": 50
 },
 {
 "season": "2024",
@@ -3438,9 +4293,14 @@
 "total_distance": 38,
 "return_length": 0,
 "snap_to_kick": 2.01,
+"snap_to_catch": 0.9099999999999997,
+"catch_to_kick": 1.100000000000001,
+"hash_kicked_from": "R",
 "converted_los": 8,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.752,
+"score": 77.6
 },
 {
 "season": "2024",
@@ -3458,9 +4318,14 @@
 "total_distance": 38,
 "return_length": 0,
 "snap_to_kick": 1.91,
+"snap_to_catch": 0.85,
+"catch_to_kick": 1.06,
+"hash_kicked_from": "RM",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2024",
@@ -3478,9 +4343,14 @@
 "total_distance": 44,
 "return_length": 0,
 "snap_to_kick": 1.9,
+"snap_to_catch": 0.870000000000001,
+"catch_to_kick": 1.029999999999999,
+"hash_kicked_from": "L",
 "converted_los": 5,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2024",
@@ -3498,9 +4368,14 @@
 "total_distance": 41,
 "return_length": 0,
 "snap_to_kick": 2.17,
+"snap_to_catch": 0.9299999999999997,
+"catch_to_kick": 1.24,
+"hash_kicked_from": "LM",
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2024",
@@ -3518,9 +4393,14 @@
 "total_distance": 50,
 "return_length": 0,
 "snap_to_kick": 2.18,
+"snap_to_catch": 0.8999999999999999,
+"catch_to_kick": 1.28,
+"hash_kicked_from": "L",
 "converted_los": 33,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.095,
+"score": 67.9
 },
 {
 "season": "2024",
@@ -3538,9 +4418,14 @@
 "total_distance": 56,
 "return_length": 0,
 "snap_to_kick": 2.08,
+"snap_to_catch": 0.94,
+"catch_to_kick": 1.14,
+"hash_kicked_from": "L",
 "converted_los": 9,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.723,
+"score": 77.2
 },
 {
 "season": "2024",
@@ -3558,9 +4443,14 @@
 "total_distance": 29,
 "return_length": 0,
 "snap_to_kick": 2.22,
+"snap_to_catch": 0.94,
+"catch_to_kick": 1.28,
+"hash_kicked_from": "L",
 "converted_los": 25,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.291,
+"score": 70.8
 },
 {
 "season": "2024",
@@ -3578,9 +4468,14 @@
 "total_distance": 49,
 "return_length": 5,
 "snap_to_kick": 2.23,
+"snap_to_catch": 0.9099999999999999,
+"catch_to_kick": 1.32,
+"hash_kicked_from": "R",
 "converted_los": 15,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.55,
+"score": 74.6
 },
 {
 "season": "2024",
@@ -3598,9 +4493,14 @@
 "total_distance": 45,
 "return_length": 0,
 "snap_to_kick": 2.32,
+"snap_to_catch": 0.9700000000000006,
+"catch_to_kick": 1.35,
+"hash_kicked_from": "R",
 "converted_los": 10,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.694,
+"score": 76.7
 },
 {
 "season": "2024",
@@ -3618,9 +4518,14 @@
 "total_distance": 39,
 "return_length": 0,
 "snap_to_kick": 2.17,
+"snap_to_catch": 1.000000000000001,
+"catch_to_kick": 1.17,
+"hash_kicked_from": "L",
 "converted_los": 6,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2024",
@@ -3638,9 +4543,14 @@
 "total_distance": 36,
 "return_length": 0,
 "snap_to_kick": 2.11,
+"snap_to_catch": 0.9600000000000009,
+"catch_to_kick": 1.15,
+"hash_kicked_from": "R",
 "converted_los": 49,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.792,
+"score": 54.8
 },
 {
 "season": "2024",
@@ -3658,9 +4568,14 @@
 "total_distance": 21,
 "return_length": 0,
 "snap_to_kick": 2.24,
+"snap_to_catch": 0.9600000000000009,
+"catch_to_kick": 1.279999999999999,
+"hash_kicked_from": "L",
 "converted_los": 64,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.173,
+"score": 49.1
 },
 {
 "season": "2024",
@@ -3678,9 +4593,14 @@
 "total_distance": 42,
 "return_length": 0,
 "snap_to_kick": 2.19,
+"snap_to_catch": 0.9900000000000002,
+"catch_to_kick": 1.199999999999999,
+"hash_kicked_from": "R",
 "converted_los": 28,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.222,
+"score": 69.8
 },
 {
 "season": "2024",
@@ -3698,9 +4618,14 @@
 "total_distance": 43,
 "return_length": 60,
 "snap_to_kick": 2.25,
+"snap_to_catch": 0.9700000000000006,
+"catch_to_kick": 1.279999999999999,
+"hash_kicked_from": "RM",
 "converted_los": 8,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.752,
+"score": 77.6
 },
 {
 "season": "2024",
@@ -3718,9 +4643,14 @@
 "total_distance": 40,
 "return_length": 0,
 "snap_to_kick": 2.24,
+"snap_to_catch": 0.9900000000000002,
+"catch_to_kick": 1.25,
+"hash_kicked_from": "L",
 "converted_los": 28,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.222,
+"score": 69.8
 },
 {
 "season": "2024",
@@ -3738,9 +4668,14 @@
 "total_distance": 62,
 "return_length": 0,
 "snap_to_kick": 2.18,
+"snap_to_catch": 0.9499999999999993,
+"catch_to_kick": 1.23,
+"hash_kicked_from": "LM",
 "converted_los": 3,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2024",
@@ -3758,9 +4693,14 @@
 "total_distance": 37,
 "return_length": 0,
 "snap_to_kick": 2.0,
+"snap_to_catch": 0.910000000000001,
+"catch_to_kick": 1.09,
+"hash_kicked_from": "RM",
 "converted_los": 23,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.337,
+"score": 71.5
 },
 {
 "season": "2024",
@@ -3778,9 +4718,14 @@
 "total_distance": 37,
 "return_length": 10,
 "snap_to_kick": 2.02,
+"snap_to_catch": 0.9199999999999999,
+"catch_to_kick": 1.1,
+"hash_kicked_from": "RM",
 "converted_los": 47,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.637,
+"score": 57.1
 },
 {
 "season": "2024",
@@ -3798,9 +4743,14 @@
 "total_distance": 37,
 "return_length": -1,
 "snap_to_kick": 2.15,
+"snap_to_catch": 0.9399999999999995,
+"catch_to_kick": 1.21,
+"hash_kicked_from": "L",
 "converted_los": 57,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.107,
+"score": 50.1
 },
 {
 "season": "2024",
@@ -3818,9 +4768,14 @@
 "total_distance": 31,
 "return_length": 0,
 "snap_to_kick": 2.21,
+"snap_to_catch": 1.020000000000001,
+"catch_to_kick": 1.19,
+"hash_kicked_from": "L",
 "converted_los": 35,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.041,
+"score": 67.1
 },
 {
 "season": "2024",
@@ -3838,9 +4793,14 @@
 "total_distance": 42,
 "return_length": 0,
 "snap_to_kick": 2.29,
+"snap_to_catch": 1,
+"catch_to_kick": 1.29,
+"hash_kicked_from": "M",
 "converted_los": 2,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2024",
@@ -3858,9 +4818,14 @@
 "total_distance": 38,
 "return_length": 1,
 "snap_to_kick": 2.15,
+"snap_to_catch": 0.9900000000000002,
+"catch_to_kick": 1.16,
+"hash_kicked_from": "R",
 "converted_los": 25,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.291,
+"score": 70.8
 },
 {
 "season": "2024",
@@ -3878,9 +4843,14 @@
 "total_distance": 49,
 "return_length": 0,
 "snap_to_kick": 2.15,
+"snap_to_catch": 0.96,
+"catch_to_kick": 1.19,
+"hash_kicked_from": "L",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2024",
@@ -3898,9 +4868,14 @@
 "total_distance": 34,
 "return_length": 0,
 "snap_to_kick": 2.26,
+"snap_to_catch": 1.02,
+"catch_to_kick": 1.24,
+"hash_kicked_from": "L",
 "converted_los": 18,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.464,
+"score": 73.3
 },
 {
 "season": "2025",
@@ -3918,9 +4893,14 @@
 "total_distance": 27,
 "return_length": 0,
 "snap_to_kick": 2.33,
+"snap_to_catch": 1.06,
+"catch_to_kick": 1.27,
+"hash_kicked_from": "M",
 "converted_los": 19,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.435,
+"score": 72.9
 },
 {
 "season": "2025",
@@ -3938,9 +4918,14 @@
 "total_distance": 26,
 "return_length": 0,
 "snap_to_kick": 1.94,
+"snap_to_catch": 1,
+"catch_to_kick": 0.9400000000000004,
+"hash_kicked_from": "L",
 "converted_los": 55,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.088,
+"score": 50.4
 },
 {
 "season": "2025",
@@ -3958,9 +4943,14 @@
 "total_distance": 28,
 "return_length": 0,
 "snap_to_kick": 2.56,
+"snap_to_catch": 1.08,
+"catch_to_kick": 1.48,
+"hash_kicked_from": "L",
 "converted_los": 42,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.249,
+"score": 62.8
 },
 {
 "season": "2025",
@@ -3978,9 +4968,14 @@
 "total_distance": 19,
 "return_length": 0,
 "snap_to_kick": 2.08,
+"snap_to_catch": 1,
+"catch_to_kick": 1.08,
+"hash_kicked_from": "L",
 "converted_los": 54,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.078,
+"score": 50.5
 },
 {
 "season": "2025",
@@ -3998,9 +4993,14 @@
 "total_distance": 41,
 "return_length": 14,
 "snap_to_kick": 1.98,
+"snap_to_catch": 0.9999999999999996,
+"catch_to_kick": 0.9800000000000004,
+"hash_kicked_from": "R",
 "converted_los": 32,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.122,
+"score": 68.3
 },
 {
 "season": "2025",
@@ -4018,9 +5018,14 @@
 "total_distance": 27,
 "return_length": 0,
 "snap_to_kick": 2.12,
+"snap_to_catch": 1.01,
+"catch_to_kick": 1.11,
+"hash_kicked_from": "L",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": true
+"i20": true,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2025",
@@ -4038,9 +5043,14 @@
 "total_distance": 27,
 "return_length": 0,
 "snap_to_kick": 2.31,
+"snap_to_catch": 1.029999999999999,
+"catch_to_kick": 1.280000000000001,
+"hash_kicked_from": "RM",
 "converted_los": 50,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -0.87,
+"score": 53.6
 },
 {
 "season": "2025",
@@ -4058,9 +5068,14 @@
 "total_distance": 33,
 "return_length": 0,
 "snap_to_kick": 2.24,
+"snap_to_catch": 0.9900000000000002,
+"catch_to_kick": 1.25,
+"hash_kicked_from": "R",
 "converted_los": 28,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 1.722,
+"score": 92
 },
 {
 "season": "2025",
@@ -4078,9 +5093,14 @@
 "total_distance": 32,
 "return_length": 0,
 "snap_to_kick": 2.06,
+"snap_to_catch": 0.9399999999999995,
+"catch_to_kick": 1.12,
+"hash_kicked_from": "R",
 "converted_los": 34,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.068,
+"score": 67.5
 },
 {
 "season": "2025",
@@ -4098,9 +5118,14 @@
 "total_distance": 26,
 "return_length": 0,
 "snap_to_kick": 2.02,
+"snap_to_catch": 0.9799999999999995,
+"catch_to_kick": 1.04,
+"hash_kicked_from": "L",
 "converted_los": 55,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.088,
+"score": 50.4
 },
 {
 "season": "2025",
@@ -4118,9 +5143,14 @@
 "total_distance": 8,
 "return_length": 0,
 "snap_to_kick": 2.01,
+"snap_to_catch": 0.95,
+"catch_to_kick": 1.06,
+"hash_kicked_from": "R",
 "converted_los": 67,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.201,
+"score": 48.7
 },
 {
 "season": "2025",
@@ -4138,9 +5168,14 @@
 "total_distance": 24,
 "return_length": 0,
 "snap_to_kick": 2.18,
+"snap_to_catch": 1.01,
+"catch_to_kick": 1.170000000000001,
+"hash_kicked_from": "L",
 "converted_los": 52,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": 0.475,
+"score": 73.5
 },
 {
 "season": "2025",
@@ -4158,9 +5193,14 @@
 "total_distance": 36,
 "return_length": 0,
 "snap_to_kick": 2.11,
+"snap_to_catch": 0.9900000000000002,
+"catch_to_kick": 1.119999999999999,
+"hash_kicked_from": "R",
 "converted_los": 13,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.608,
+"score": 75.5
 },
 {
 "season": "2025",
@@ -4178,9 +5218,14 @@
 "total_distance": 35,
 "return_length": 0,
 "snap_to_kick": 2.4,
+"snap_to_catch": 1.02,
+"catch_to_kick": 1.380000000000001,
+"hash_kicked_from": "R",
 "converted_los": 35,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.041,
+"score": 67.1
 },
 {
 "season": "2025",
@@ -4198,9 +5243,14 @@
 "total_distance": 30,
 "return_length": 0,
 "snap_to_kick": 2.12,
+"snap_to_catch": 1.030000000000001,
+"catch_to_kick": 1.09,
+"hash_kicked_from": "L",
 "converted_los": 28,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.222,
+"score": 69.8
 },
 {
 "season": "2025",
@@ -4218,9 +5268,14 @@
 "total_distance": 37,
 "return_length": -2,
 "snap_to_kick": 2.08,
+"snap_to_catch": 1.02,
+"catch_to_kick": 1.06,
+"hash_kicked_from": "L",
 "converted_los": 33,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.095,
+"score": 67.9
 },
 {
 "season": "2025",
@@ -4238,9 +5293,14 @@
 "total_distance": 48,
 "return_length": 0,
 "snap_to_kick": 2.25,
+"snap_to_catch": 0.9899999999999993,
+"catch_to_kick": 1.260000000000001,
+"hash_kicked_from": "R",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": true
+"i20": true,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2025",
@@ -4258,9 +5318,14 @@
 "total_distance": 30,
 "return_length": 0,
 "snap_to_kick": 2.15,
+"snap_to_catch": 1.08,
+"catch_to_kick": 1.07,
+"hash_kicked_from": "L",
 "converted_los": 9,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.723,
+"score": 77.2
 },
 {
 "season": "2025",
@@ -4278,9 +5343,14 @@
 "total_distance": 26,
 "return_length": 0,
 "snap_to_kick": 2.02,
+"snap_to_catch": 0.9500000000000011,
+"catch_to_kick": 1.069999999999999,
+"hash_kicked_from": "R",
 "converted_los": 67,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.201,
+"score": 48.7
 },
 {
 "season": "2025",
@@ -4298,9 +5368,14 @@
 "total_distance": 23,
 "return_length": 0,
 "snap_to_kick": 2.09,
+"snap_to_catch": 0.95,
+"catch_to_kick": 1.14,
+"hash_kicked_from": "R",
 "converted_los": 45,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.482,
+"score": 59.3
 },
 {
 "season": "2025",
@@ -4318,9 +5393,14 @@
 "total_distance": 33,
 "return_length": 0,
 "snap_to_kick": 2.12,
+"snap_to_catch": 1.06,
+"catch_to_kick": 1.06,
+"hash_kicked_from": "R",
 "converted_los": 33,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.095,
+"score": 67.9
 },
 {
 "season": "2025",
@@ -4338,9 +5418,14 @@
 "total_distance": 36,
 "return_length": 0,
 "snap_to_kick": 1.99,
+"snap_to_catch": 0.9799999999999995,
+"catch_to_kick": 1.01,
+"hash_kicked_from": "L",
 "converted_los": 43,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.327,
+"score": 61.6
 },
 {
 "season": "2025",
@@ -4358,9 +5443,14 @@
 "total_distance": 55,
 "return_length": 9,
 "snap_to_kick": 2.1,
+"snap_to_catch": 1.09,
+"catch_to_kick": 1.01,
+"hash_kicked_from": "L",
 "converted_los": 41,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.172,
+"score": 63.9
 },
 {
 "season": "2025",
@@ -4378,9 +5468,14 @@
 "total_distance": 47,
 "return_length": 11,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 18,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.464,
+"score": 73.3
 },
 {
 "season": "2025",
@@ -4398,9 +5493,14 @@
 "total_distance": 39,
 "return_length": 9,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 27,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.245,
+"score": 70.1
 },
 {
 "season": "2025",
@@ -4418,9 +5518,14 @@
 "total_distance": 38,
 "return_length": 20,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 48,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.715,
+"score": 55.9
 },
 {
 "season": "2025",
@@ -4438,9 +5543,14 @@
 "total_distance": 50,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 10,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.694,
+"score": 76.7
 },
 {
 "season": "2025",
@@ -4458,9 +5568,14 @@
 "total_distance": 24,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 55,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.088,
+"score": 50.4
 },
 {
 "season": "2025",
@@ -4478,9 +5593,14 @@
 "total_distance": 34,
 "return_length": 14,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 75,
 "field_bucket": "71-80",
-"i20": false
+"i20": false,
+"value": -1.277,
+"score": 47.6
 },
 {
 "season": "2025",
@@ -4498,9 +5618,14 @@
 "total_distance": 41,
 "return_length": 0,
 "snap_to_kick": null,
+"snap_to_catch": null,
+"catch_to_kick": null,
+"hash_kicked_from": null,
 "converted_los": 1,
 "field_bucket": "0-10",
-"i20": true
+"i20": true,
+"value": 0.766,
+"score": 77.8
 },
 {
 "season": "2025",
@@ -4518,9 +5643,14 @@
 "total_distance": 41,
 "return_length": 0,
 "snap_to_kick": 2.0,
+"snap_to_catch": 1.05,
+"catch_to_kick": 0.9500000000000002,
+"hash_kicked_from": "L",
 "converted_los": 20,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.406,
+"score": 72.5
 },
 {
 "season": "2025",
@@ -4538,9 +5668,14 @@
 "total_distance": 32,
 "return_length": 0,
 "snap_to_kick": 2.2,
+"snap_to_catch": 1.12,
+"catch_to_kick": 1.08,
+"hash_kicked_from": "L",
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2025",
@@ -4558,9 +5693,14 @@
 "total_distance": 24,
 "return_length": 0,
 "snap_to_kick": 2.12,
+"snap_to_catch": 1.069999999999999,
+"catch_to_kick": 1.050000000000001,
+"hash_kicked_from": "L",
 "converted_los": 19,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.435,
+"score": 72.9
 },
 {
 "season": "2025",
@@ -4578,9 +5718,14 @@
 "total_distance": 32,
 "return_length": 0,
 "snap_to_kick": 2.17,
+"snap_to_catch": 1.049999999999999,
+"catch_to_kick": 1.120000000000001,
+"hash_kicked_from": "R",
 "converted_los": 61,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.144,
+"score": 49.6
 },
 {
 "season": "2025",
@@ -4598,9 +5743,14 @@
 "total_distance": 43,
 "return_length": 0,
 "snap_to_kick": 2.13,
+"snap_to_catch": 0.9700000000000006,
+"catch_to_kick": 1.16,
+"hash_kicked_from": "R",
 "converted_los": 34,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.068,
+"score": 67.5
 },
 {
 "season": "2025",
@@ -4618,9 +5768,14 @@
 "total_distance": 41,
 "return_length": 8,
 "snap_to_kick": 2.25,
+"snap_to_catch": 1.079999999999999,
+"catch_to_kick": 1.17,
+"hash_kicked_from": "L",
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2025",
@@ -4638,9 +5793,14 @@
 "total_distance": 40,
 "return_length": 43,
 "snap_to_kick": 2.21,
+"snap_to_catch": 0.9199999999999999,
+"catch_to_kick": 1.289999999999999,
+"hash_kicked_from": "R",
 "converted_los": 79,
 "field_bucket": "71-80",
-"i20": false
+"i20": false,
+"value": -1.315,
+"score": 47
 },
 {
 "season": "2025",
@@ -4658,9 +5818,14 @@
 "total_distance": 34,
 "return_length": 24,
 "snap_to_kick": 2.3,
+"snap_to_catch": 1.080000000000001,
+"catch_to_kick": 1.219999999999999,
+"hash_kicked_from": "RM",
 "converted_los": 56,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.097,
+"score": 50.3
 },
 {
 "season": "2025",
@@ -4678,9 +5843,14 @@
 "total_distance": 42,
 "return_length": 12,
 "snap_to_kick": 2.24,
+"snap_to_catch": 1.07,
+"catch_to_kick": 1.17,
+"hash_kicked_from": "L",
 "converted_los": 50,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -0.87,
+"score": 53.6
 },
 {
 "season": "2025",
@@ -4698,9 +5868,14 @@
 "total_distance": 27,
 "return_length": 13,
 "snap_to_kick": 2.25,
+"snap_to_catch": 1.09,
+"catch_to_kick": 1.16,
+"hash_kicked_from": "R",
 "converted_los": 48,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.715,
+"score": 55.9
 },
 {
 "season": "2025",
@@ -4718,9 +5893,14 @@
 "total_distance": 33,
 "return_length": 51,
 "snap_to_kick": 2.18,
+"snap_to_catch": 1.059999999999999,
+"catch_to_kick": 1.120000000000001,
+"hash_kicked_from": "R",
 "converted_los": 100,
 "field_bucket": "91-100",
-"i20": false
+"i20": false,
+"value": -4.494,
+"score": 0
 },
 {
 "season": "2025",
@@ -4738,9 +5918,14 @@
 "total_distance": 34,
 "return_length": 9,
 "snap_to_kick": 2.2,
+"snap_to_catch": 1.07,
+"catch_to_kick": 1.13,
+"hash_kicked_from": "L",
 "converted_los": 26,
 "field_bucket": "21-30",
-"i20": false
+"i20": false,
+"value": 0.268,
+"score": 70.4
 },
 {
 "season": "2025",
@@ -4758,9 +5943,14 @@
 "total_distance": 39,
 "return_length": 0,
 "snap_to_kick": 2.31,
+"snap_to_catch": 1.02,
+"catch_to_kick": 1.29,
+"hash_kicked_from": "L",
 "converted_los": 33,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.095,
+"score": 67.9
 },
 {
 "season": "2025",
@@ -4778,9 +5968,14 @@
 "total_distance": 35,
 "return_length": 0,
 "snap_to_kick": 2.23,
+"snap_to_catch": 1,
+"catch_to_kick": 1.23,
+"hash_kicked_from": "R",
 "converted_los": 12,
 "field_bucket": "11-20",
-"i20": true
+"i20": true,
+"value": 0.636,
+"score": 75.9
 },
 {
 "season": "2025",
@@ -4798,9 +5993,14 @@
 "total_distance": 23,
 "return_length": 0,
 "snap_to_kick": 2.47,
+"snap_to_catch": 1.03,
+"catch_to_kick": 1.44,
+"hash_kicked_from": "R",
 "converted_los": 45,
 "field_bucket": "41-50",
-"i20": false
+"i20": false,
+"value": -0.482,
+"score": 59.3
 },
 {
 "season": "2025",
@@ -4818,9 +6018,14 @@
 "total_distance": 19,
 "return_length": 0,
 "snap_to_kick": 2.36,
+"snap_to_catch": 1.04,
+"catch_to_kick": 1.32,
+"hash_kicked_from": "L",
 "converted_los": 30,
 "field_bucket": "31-40",
-"i20": false
+"i20": false,
+"value": 0.176,
+"score": 69.1
 },
 {
 "season": "2025",
@@ -4838,9 +6043,14 @@
 "total_distance": 39,
 "return_length": 8,
 "snap_to_kick": 2.18,
+"snap_to_catch": 1.01,
+"catch_to_kick": 1.17,
+"hash_kicked_from": "R",
 "converted_los": 84,
 "field_bucket": "81-90",
-"i20": false
+"i20": false,
+"value": -1.324,
+"score": 46.9
 },
 {
 "season": "2025",
@@ -4858,9 +6068,14 @@
 "total_distance": 24,
 "return_length": 0,
 "snap_to_kick": 2.1,
+"snap_to_catch": 0.96,
+"catch_to_kick": 1.140000000000001,
+"hash_kicked_from": "RM",
 "converted_los": 70,
 "field_bucket": "71-80",
-"i20": false
+"i20": false,
+"value": -1.229,
+"score": 48.3
 },
 {
 "season": "2025",
@@ -4878,9 +6093,14 @@
 "total_distance": 26,
 "return_length": 0,
 "snap_to_kick": 2.28,
+"snap_to_catch": 1.010000000000001,
+"catch_to_kick": 1.27,
+"hash_kicked_from": "LM",
 "converted_los": 56,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.097,
+"score": 50.3
 },
 {
 "season": "2025",
@@ -4898,9 +6118,14 @@
 "total_distance": 29,
 "return_length": 0,
 "snap_to_kick": 2.2,
+"snap_to_catch": 0.9500000000000011,
+"catch_to_kick": 1.25,
+"hash_kicked_from": "R",
 "converted_los": 60,
 "field_bucket": "61-70",
-"i20": false
+"i20": false,
+"value": -1.135,
+"score": 49.7
 },
 {
 "season": "2025",
@@ -4918,9 +6143,14 @@
 "total_distance": 32,
 "return_length": 0,
 "snap_to_kick": 3.4,
+"snap_to_catch": 1.01,
+"catch_to_kick": 2.39,
+"hash_kicked_from": "R",
 "converted_los": 52,
 "field_bucket": "51-60",
-"i20": false
+"i20": false,
+"value": -1.025,
+"score": 51.3
 },
 {
 "season": "2025",
@@ -4938,9 +6168,14 @@
 "total_distance": 24,
 "return_length": 0,
 "snap_to_kick": 2.06,
+"snap_to_catch": 1,
+"catch_to_kick": 1.06,
+"hash_kicked_from": "R",
 "converted_los": 70,
 "field_bucket": "71-80",
-"i20": false
+"i20": false,
+"value": -1.229,
+"score": 48.3
 }
 ],
 "punt_return": [
