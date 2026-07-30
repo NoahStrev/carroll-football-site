@@ -323,8 +323,7 @@ function deepTab(root) {
     const homeTb = deepRows.filter((r) => r.is_home), awayTb = deepRows.filter((r) => !r.is_home);
     setKPI('kkd-homeaway', `${pct(rate(homeTb, (r) => r.touchback), 0)} / ${pct(rate(awayTb, (r) => r.touchback), 0)}`, 'home / away');
     const byQ = groupBy(deepRows, 'quarter');
-    let bestQ = null, bestRate = -1;
-    byQ.forEach((g, q) => { const tbRate = rate(g, (r) => r.touchback); if (g.length >= 3 && tbRate > bestRate) { bestRate = tbRate; bestQ = q; } });
+    const { key: bestQ, value: bestRate } = bestByGroup(byQ, (g) => rate(g, (r) => r.touchback));
     setKPI('kkd-bestq', bestQ !== null ? `Q${bestQ}` : '—', bestQ !== null ? `${pct(bestRate, 0)} (n=${byQ.get(bestQ).length})` : 'not enough attempts');
     const onsideRows = onside(rows);
     setKPI('kkd-onside', pct(rate(onsideRows, (r) => r.onside_obtained)), `${onsideRows.filter((r) => r.onside_obtained).length}/${onsideRows.length} attempts`);
@@ -363,7 +362,7 @@ function deepTab(root) {
       title: (kicker, season) => `${kicker}, ${season}`,
     });
 
-    const hashes = ['L', 'LM', 'M', 'RM', 'R'];
+    const hashes = HASH_ORDER;
     const byHash = groupBy(deepRows.filter((r) => r.hash_kicked_from), 'hash_kicked_from');
     const hashesPresent = hashes.filter((h) => byHash.has(h));
     if (hashesPresent.length) {

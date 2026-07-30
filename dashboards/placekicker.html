@@ -344,8 +344,7 @@ function deepTab(root) {
     const homeFg = fgRows.filter((r) => r.is_home), awayFg = fgRows.filter((r) => !r.is_home);
     setKPI('pkd-homeaway', `${pct(makeRate(homeFg), 0)} / ${pct(makeRate(awayFg), 0)}`, 'home / away');
     const byQ = groupBy(fgRows, 'quarter');
-    let bestQ = null, bestRate = -1;
-    byQ.forEach((g, q) => { if (g.length >= 3 && makeRate(g) > bestRate) { bestRate = makeRate(g); bestQ = q; } });
+    const { key: bestQ, value: bestRate } = bestByGroup(byQ, makeRate);
     setKPI('pkd-bestq', bestQ !== null ? `Q${bestQ}` : '—', bestQ !== null ? `${pct(bestRate, 0)} (n=${byQ.get(bestQ).length})` : 'not enough attempts');
 
     const quarters = DATA.filters.money_unit.quarter.filter((q) => byQ.has(q));
@@ -388,7 +387,7 @@ function deepTab(root) {
       title: (bucket, season) => `${bucket} yds, ${season}`,
     });
 
-    const hashes = ['L', 'LM', 'M', 'RM', 'R'];
+    const hashes = HASH_ORDER;
     const byHash = groupBy(fgRows.filter((r) => r.hash_kicked_from), 'hash_kicked_from');
     const hashesPresent = hashes.filter((h) => byHash.has(h));
     if (hashesPresent.length) {

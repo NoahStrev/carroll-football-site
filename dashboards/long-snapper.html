@@ -327,8 +327,7 @@ function deepTab(root) {
     const homeRows = rows.filter((r) => r.is_home), awayRows = rows.filter((r) => !r.is_home);
     setKPI('lsd-homeaway', `${fmt(avgNet(homeRows), 0)} / ${fmt(avgNet(awayRows), 0)} yds`, 'home / away');
     const byQ = groupBy(rows, 'quarter');
-    let bestQ = null, bestNet = -Infinity;
-    byQ.forEach((g, q) => { const n = avgNet(g); if (g.length >= 3 && n !== null && n > bestNet) { bestNet = n; bestQ = q; } });
+    const { key: bestQ, value: bestNet } = bestByGroup(byQ, avgNet);
     setKPI('lsd-bestq', bestQ !== null ? `Q${bestQ}` : '—', bestQ !== null ? `${fmt(bestNet, 1)} yds (n=${byQ.get(bestQ).length})` : 'not enough punts');
 
     const quarters = DATA.filters.punt.quarter.filter((q) => byQ.has(q));

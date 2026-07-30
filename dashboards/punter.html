@@ -333,8 +333,7 @@ function deepTab(root) {
     const homeRows = rows.filter((r) => r.is_home), awayRows = rows.filter((r) => !r.is_home);
     setKPI('ptd-homeaway', `${fmt(avgNet(homeRows), 0)} / ${fmt(avgNet(awayRows), 0)} yds`, 'home / away');
     const byQ = groupBy(rows, 'quarter');
-    let bestQ = null, bestNet = -Infinity;
-    byQ.forEach((g, q) => { const n = avgNet(g); if (g.length >= 3 && n !== null && n > bestNet) { bestNet = n; bestQ = q; } });
+    const { key: bestQ, value: bestNet } = bestByGroup(byQ, avgNet);
     setKPI('ptd-bestq', bestQ !== null ? `Q${bestQ}` : '—', bestQ !== null ? `${fmt(bestNet, 1)} yds (n=${byQ.get(bestQ).length})` : 'not enough punts');
     setKPI('ptd-tb', pct(rate(rows, (r) => r.kick_outcome === 'Touchback')));
 
@@ -373,7 +372,7 @@ function deepTab(root) {
       title: (punter, season) => `${punter}, ${season}`,
     });
 
-    const hashes = ['L', 'LM', 'M', 'RM', 'R'];
+    const hashes = HASH_ORDER;
     const byHash = groupBy(rows.filter((r) => r.hash_kicked_from), 'hash_kicked_from');
     const hashesPresent = hashes.filter((h) => byHash.has(h));
     if (hashesPresent.length) {

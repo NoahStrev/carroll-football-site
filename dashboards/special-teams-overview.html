@@ -132,18 +132,24 @@ function moneyUnitTab(root) {
     const rows = applyFilters(DATA.units.money_unit, state);
     document.getElementById('mu-summary').textContent = `${rows.length} kicks in view`;
 
-    const makes = rows.filter((r) => r.make);
-    const fgs = rows.filter((r) => r.fg_exp === 'FG');
-    const pats = rows.filter((r) => r.fg_exp === 'EXP');
-    const fgMakes = fgs.filter((r) => r.make).length;
-    const patMakes = pats.filter((r) => r.make).length;
+    // Real duplication found in the 2026-07-30 optimization pass: this page
+    // predates fgs()/pats()/makes() being hoisted into js/charts.js (they
+    // were only ever wired up for Placekicker/Short Snapper), and re-implemented
+    // the identical filters inline with local names that happened to shadow
+    // the global helpers -- functionally fine but a silent duplicate of logic
+    // that already lives in one shared place. Now calls the shared helpers.
+    const madeRows = makes(rows);
+    const fgRows = fgs(rows);
+    const patRows = pats(rows);
+    const fgMakes = fgRows.filter((r) => r.make).length;
+    const patMakes = patRows.filter((r) => r.make).length;
     const s2k = mean(rows.map((r) => r.snap_to_kick));
-    const fgDist = mean(fgs.map((r) => r.distance));
+    const fgDist = mean(fgRows.map((r) => r.distance));
     const blocked = rows.filter((r) => r.miss_location === 'Blocked').length;
 
-    setKPI('mu-att', `${makes.length}/${rows.length}`, 'made / attempted');
-    setKPI('mu-fgpct', pct(fgs.length ? fgMakes / fgs.length : null), `${fgMakes}/${fgs.length} field goals`);
-    setKPI('mu-patpct', pct(pats.length ? patMakes / pats.length : null), `${patMakes}/${pats.length} PATs`);
+    setKPI('mu-att', `${madeRows.length}/${rows.length}`, 'made / attempted');
+    setKPI('mu-fgpct', pct(fgRows.length ? fgMakes / fgRows.length : null), `${fgMakes}/${fgRows.length} field goals`);
+    setKPI('mu-patpct', pct(patRows.length ? patMakes / patRows.length : null), `${patMakes}/${patRows.length} PATs`);
     setKPI('mu-s2k', `${fmt(s2k, 2)}s`, `${rows.filter((r) => r.snap_to_kick !== null).length} charted`);
     setKPI('mu-fgdist', `${fmt(fgDist, 1)} yds`);
     setKPI('mu-blocked', String(blocked));
@@ -163,7 +169,7 @@ function moneyUnitTab(root) {
       colorMap: { Make: cssVar('--good'), Miss: cssVar('--critical') },
     });
 
-    const fgByBucket = groupBy(fgs.map((r) => ({ ...r, _b: fgDistBucket(r.distance) })), '_b');
+    const fgByBucket = groupBy(fgRows.map((r) => ({ ...r, _b: fgDistBucket(r.distance) })), '_b');
     renderBar(document.getElementById('mu-fgbucket'), {
       categories: FG_DIST_BUCKETS,
       values: FG_DIST_BUCKETS.map((b) => {
@@ -176,7 +182,7 @@ function moneyUnitTab(root) {
       xlab2: (b) => `n=${(fgByBucket.get(b) || []).length}`,
     });
 
-    const hashes = ['L', 'LM', 'M', 'RM', 'R'];
+    const hashes = HASH_ORDER;
     const byHash = groupBy(rows.filter((r) => r.hash_kicked_from), 'hash_kicked_from');
     renderBar(document.getElementById('mu-hash'), {
       categories: hashes.filter((h) => byHash.has(h)),

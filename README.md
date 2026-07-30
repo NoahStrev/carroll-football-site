@@ -503,6 +503,47 @@ discipline this project has followed all along for cross-page duplication
 before this pass), just applied a second time now that there are 5 similarly-
 shaped pages instead of 2 to compare against each other.
 
+## Optimization + dataviz-skill review pass (2026-07-30, after Phase 3)
+
+Ran the `dataviz` skill's anti-pattern checklist against every chart on the
+site (color/encoding, form, marks/chrome, interaction/accessibility) — nothing
+flagged. The categorical/sequential/status palette in `css/theme.css` is
+already that skill's validated reference instance (confirmed prior session),
+so no re-validation needed there. Legends, tooltips, table-view-equivalent
+heatmap cell text, and single-axis charts were all already in place site-wide.
+
+Code duplication found and hoisted into `js/charts.js`:
+- `distanceBucket()`/`DIST_BUCKETS`/`DOWNS`/`SITUATIONS`/`FIELD_ZONES`/
+  `isSuccess()` — byte-identical in `offense.html` and `defense.html`.
+- `bestByGroup()` — a near-identical inline "best-scoring group with a minimum
+  sample size" loop existed separately in Placekicker/Kickoff Kicker/Punter/
+  Short Snapper/Long Snapper's "Best Quarter" KPI (5 occurrences, each with
+  its own metric function baked in).
+- `HASH_ORDER` (`['L','LM','M','RM','R']`) — duplicated verbatim in
+  `special-teams-overview.html`, `placekicker.html`, `kickoff-kicker.html`,
+  and `punter.html`.
+- `special-teams-overview.html`'s Money Unit tab had its own inline
+  re-implementation of `fgs()`/`pats()`/`makes()` (predating those being
+  hoisted for Placekicker/Short Snapper) with local variable names that
+  happened to shadow the global functions — functionally harmless but a
+  silent duplicate of logic that already lived in one shared place. Now calls
+  the shared helpers directly.
+
+Performance check: a full filter-triggered re-render on `defense.html`
+(the largest dataset, ~3,250 official rows + ~3,500 play rows) measured
+~46ms via `performance.now()` — well within an instant-feeling interaction,
+no optimization needed there.
+
+Re-verified all 9 dashboard pages in the browser after the refactor (console
+errors, KPI values cross-checked against pre-refactor values) — all clean,
+no regressions. One dev-environment-only false alarm hit during this pass:
+the preview browser served a stale cached copy of `js/charts.js` from
+mid-edit, throwing `ReferenceError: HASH_ORDER is not defined` — confirmed
+via `curl` that the actual server response was correct the whole time; the
+documented cache-bust-the-script-src workaround (see workflow notes)
+resolved it for verification, and the temporary `?cbtest=1` suffix was
+removed again before landing.
+
 ## Data sources
 
 - `../Lifting Data/output/` — lifting/strength testing (Combined Total, Athleticism

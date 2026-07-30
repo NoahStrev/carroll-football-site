@@ -74,6 +74,12 @@ const PUNT_OUTCOMES = ['Downed', 'Fair Catch', 'Touchback', 'Out of Bounds', 'Re
 const FG_DIST_BUCKETS = ['0-29', '30-39', '40-49', '50+'];
 function fgDistBucket(d) { return d < 30 ? '0-29' : d < 40 ? '30-39' : d < 50 ? '40-49' : '50+'; }
 
+/** Hash-mark-at-snap category order, used by every "make/touchback %% by hash"
+ * chart. Hoisted 2026-07-30 (2026-07-30 optimization pass) -- was duplicated
+ * verbatim in special-teams-overview.html, placekicker.html, kickoff-kicker.html,
+ * and punter.html. */
+const HASH_ORDER = ['L', 'LM', 'M', 'RM', 'R'];
+
 function fmt(n, decimals = 1) {
   if (n === null || n === undefined || Number.isNaN(n)) return '—';
   return n.toFixed(decimals);
@@ -583,6 +589,34 @@ function renderTrendCard(container, rows, field, unit, title) {
     </div>`;
   renderSparkline(container.querySelector('.trend-chart'), { values, labels, unit });
 }
+
+/** Best-scoring key in a groupBy() Map by a metric function, gated on a
+ * minimum sample size -- hoisted 2026-07-30 (was a near-identical inline
+ * `let best=null,bestVal=-1; map.forEach(...)` loop in each of Placekicker/
+ * Kickoff Kicker/Punter/Short Snapper/Long Snapper's "Best Quarter" KPI).
+ * Returns {key, value} (value is null if nothing meets minN) rather than
+ * throwing on an empty map. */
+function bestByGroup(byGroupMap, metricFn, minN = 3) {
+  let bestKey = null, bestVal = -Infinity;
+  byGroupMap.forEach((g, k) => {
+    const v = metricFn(g);
+    if (g.length >= minN && v !== null && v > bestVal) { bestVal = v; bestKey = k; }
+  });
+  return { key: bestKey, value: bestKey !== null ? bestVal : null };
+}
+
+/* ---------------------------------------------------- Offense/Defense shared --
+   Hoisted 2026-07-30 -- was byte-identical in offense.html and defense.html. */
+
+function distanceBucket(d) {
+  if (d === null || d === undefined) return null;
+  return d <= 3 ? '1-3' : d <= 6 ? '4-6' : d <= 9 ? '7-9' : '10+';
+}
+const DIST_BUCKETS = ['1-3', '4-6', '7-9', '10+'];
+const DOWNS = [1, 2, 3, 4];
+const SITUATIONS = ['Standard Down', 'Passing Down', 'Money Down'];
+const FIELD_ZONES = ['Backed Up', 'Own Territory', 'Midfield', 'Opponent Territory', 'Red Zone'];
+function isSuccess(eff) { return eff === 'Successful' || eff === 'Explosive'; }
 
 /** Top N keys of a groupBy() Map, ordered by descending row count -- for
  * open-ended categorical fields (formation, personnel, defensive front,

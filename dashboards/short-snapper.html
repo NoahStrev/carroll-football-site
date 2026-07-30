@@ -336,8 +336,7 @@ function deepTab(root) {
     const homeFg = fgRows.filter((r) => r.is_home), awayFg = fgRows.filter((r) => !r.is_home);
     setKPI('ssd-homeaway', `${pct(makeRate(homeFg), 0)} / ${pct(makeRate(awayFg), 0)}`, 'home / away');
     const byQ = groupBy(fgRows, 'quarter');
-    let bestQ = null, bestRate = -1;
-    byQ.forEach((g, q) => { if (g.length >= 3 && makeRate(g) > bestRate) { bestRate = makeRate(g); bestQ = q; } });
+    const { key: bestQ, value: bestRate } = bestByGroup(byQ, makeRate);
     setKPI('ssd-bestq', bestQ !== null ? `Q${bestQ}` : '—', bestQ !== null ? `${pct(bestRate, 0)} (n=${byQ.get(bestQ).length})` : 'not enough attempts');
 
     const quarters = DATA.filters.money_unit.quarter.filter((q) => byQ.has(q));
