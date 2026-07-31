@@ -277,40 +277,48 @@ function classTab(root, classA, classB, subtitle) {
 
 /* ---------------------------------------------------------------- tab: class comparison --- */
 
+// Up to 4 athletes (2026-07-31, per the user) -- fixed categorical order per
+// the dataviz skill (cat-1..cat-4, never reassigned/cycled), one slot per
+// index. Slots 1-2 default to the first two athletes (today's minimum useful
+// comparison); slots 3-4 default to a real "— None —" option rather than an
+// arbitrary third/fourth athlete, since a coach may only want 2 or 3.
+const COMPARE_SLOT_COUNT = 4;
+const COMPARE_SLOT_COLORS = ['--cat-1', '--cat-2', '--cat-3', '--cat-4'];
+const COMPARE_NONE_OPTION = { value: '', label: '— None —' };
+
 function compareTab(root) {
   const names = DATA.athletes
     .map((a) => ({ key: a.athlete_key, label: `${a.first_name} ${a.last_name}` }))
     .sort((a, b) => a.label.localeCompare(b.label));
+  const slotIndexes = [...Array(COMPARE_SLOT_COUNT).keys()];
   root.innerHTML = `
     <div class="frame-wrap active"><div class="slide">
       <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Offseason Lifting</h2></div><div class="sub">Class Comparison</div></div>
       <div class="shelf">
         <div class="fp-group" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-          <div class="fp-label" style="margin:0;">Athlete A</div>
-          <div id="cmp-a" style="min-width:220px;"></div>
-          <div class="fp-label" style="margin:0;">Athlete B</div>
-          <div id="cmp-b" style="min-width:220px;"></div>
+          ${slotIndexes.map((i) => `
+            <div class="fp-label" style="margin:0;">Athlete ${i + 1}</div>
+            <div id="cmp-${i}" style="min-width:220px;"></div>
+          `).join('')}
         </div>
       </div>
       <div class="body">
         <div class="compare-legend" id="cmp-legend"></div>
         <div class="comparegrid" id="cmp-charts"></div>
       </div>
-      <div class="footer-note">Source: Lifting Data project — Combined Total, Bench, Squat, Clean, Strength Score, Broad Jump, Vertical, Pro Agility, Athleticism Score (best per session), Weight (per session), Height (per football year). X-axis is each athlete's own Year 1/Year 2/... (their first, second, ... recorded season in this dataset), not calendar year — a Year 1 point lines up with the other athlete's Year 1 regardless of what actual football year each was in. Hover a point for the real session and class year (Freshman/Sophomore/Junior/Senior, where known — only populated 2023-24 onward).</div>
+      <div class="footer-note">Source: Lifting Data project — Combined Total, Bench, Squat, Clean, Strength Score, Broad Jump, Vertical, Pro Agility, Athleticism Score (best per session), Weight (per session), Height (per football year). X-axis is each athlete's own Year 1/Year 2/... (their first, second, ... recorded season in this dataset), not calendar year — a Year 1 point lines up with another athlete's Year 1 regardless of what actual football year each was in. Hover a point for the real session and class year (Freshman/Sophomore/Junior/Senior, where known — only populated 2023-24 onward).</div>
     </div></div>`;
 
   // Searchable combobox instead of a plain <select> -- scrolling through 230+
   // names alphabetically was exactly the "filtering/selection isn't intuitive"
   // complaint applied to athlete selection specifically. Type to narrow, click
   // to pick.
-  const selA = makeSearchCombobox(document.getElementById('cmp-a'), {
-    options: names.map((n) => ({ value: n.key, label: n.label })),
-    value: names[0]?.key, onChange: () => render(), placeholder: 'Search athlete…',
-  });
-  const selB = makeSearchCombobox(document.getElementById('cmp-b'), {
-    options: names.map((n) => ({ value: n.key, label: n.label })),
-    value: names[1]?.key, onChange: () => render(), placeholder: 'Search athlete…',
-  });
+  const sels = slotIndexes.map((i) => makeSearchCombobox(document.getElementById(`cmp-${i}`), {
+    options: i < 2 ? names.map((n) => ({ value: n.key, label: n.label })) : [COMPARE_NONE_OPTION, ...names.map((n) => ({ value: n.key, label: n.label }))],
+    value: i < 2 ? names[i]?.key : '',
+    onChange: () => render(), placeholder: 'Search athlete…',
+  }));
+
   function seriesFor(athleteKey, metric) {
     const a = DATA.athletes.find((x) => x.athlete_key === athleteKey);
     if (!a) return { points: [], name: '' };
@@ -330,18 +338,17 @@ function compareTab(root) {
     return { points, name: `${a.first_name} ${a.last_name}` };
   }
 
-  function renderCompareChart(container, metric, colorA, colorB) {
-    const a = seriesFor(selA.value, metric);
-    const b = seriesFor(selB.value, metric);
+  function renderCompareChart(container, metric, activeSlots) {
+    const seriesList = activeSlots.map(({ athleteKey, color }) => ({ ...seriesFor(athleteKey, metric), color }));
     // Aligned by career-year (each athlete's own Year 1/2/3...), not calendar
     // date -- see the "career-year alignment" note above seriesFor.
-    const allKeys = [...new Set([...a.points.map((p) => p.key), ...b.points.map((p) => p.key)])]
+    const allKeys = [...new Set(seriesList.flatMap((s) => s.points.map((p) => p.key)))]
       .sort((k1, k2) => {
         const [y1, p1] = k1.split('.').map(Number), [y2, p2] = k2.split('.').map(Number);
         return y1 - y2 || p1 - p2;
       });
     const W = 380, H = 130, PAD = 8;
-    const allVals = [...a.points.map((p) => p.value), ...b.points.map((p) => p.value)];
+    const allVals = seriesList.flatMap((s) => s.points.map((p) => p.value));
     if (!allVals.length) { container.innerHTML = `<div class="card-body"><div class="lb-empty">No data.</div></div>`; return; }
     const vMin = Math.min(...allVals), vMax = Math.max(...allVals);
     const sx = (i) => PAD + (i / Math.max(1, allKeys.length - 1)) * (W - PAD * 2);
@@ -383,10 +390,7 @@ function compareTab(root) {
     const svg = document.createElementNS(svgns, 'svg');
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     svg.style.width = '100%'; svg.style.height = `${H}px`;
-    const ga = pathFor(a, colorA);
-    const gb = pathFor(b, colorB);
-    if (ga) svg.appendChild(ga);
-    if (gb) svg.appendChild(gb);
+    seriesList.forEach((s) => { const g = pathFor(s, s.color); if (g) svg.appendChild(g); });
 
     container.innerHTML = `<div class="card-head"><h3>${metric} Comparison</h3></div><div class="card-body"></div>`;
     const body = container.querySelector('.card-body');
@@ -399,19 +403,26 @@ function compareTab(root) {
   }
 
   function render() {
-    const aName = names.find((n) => n.key === selA.value)?.label || '—';
-    const bName = names.find((n) => n.key === selB.value)?.label || '—';
-    const colorA = cssVar('--cat-6'); // dark green
-    const colorB = cssVar('--cat-3'); // aqua/light green
-    document.getElementById('cmp-legend').innerHTML = `
-      <span class="sw"><span class="dot" style="background:${colorA}"></span>${aName}</span>
-      <span class="sw"><span class="dot" style="background:${colorB}"></span>${bName}</span>`;
+    // Only slots with a real athlete picked (a "— None —" slot is skipped
+    // entirely, not rendered as an empty series) -- lets 2, 3, or 4 athletes
+    // all work the same way instead of assuming exactly 2.
+    const activeSlots = sels
+      .map((sel, i) => ({ athleteKey: sel.value, color: cssVar(COMPARE_SLOT_COLORS[i]), name: names.find((n) => n.key === sel.value)?.label }))
+      .filter((s) => s.athleteKey);
+
+    document.getElementById('cmp-legend').innerHTML = activeSlots
+      .map((s) => `<span class="sw"><span class="dot" style="background:${s.color}"></span>${s.name || '—'}</span>`)
+      .join('');
     const chartsEl = document.getElementById('cmp-charts');
     chartsEl.innerHTML = '';
+    if (!activeSlots.length) {
+      chartsEl.innerHTML = '<div class="lb-empty">Pick at least one athlete above to compare.</div>';
+      return;
+    }
     [...STRENGTH_METRICS, 'Weight', 'Height', ...ATHLETIC_METRICS].forEach((metric) => {
       const card = el('div', 'card');
       chartsEl.appendChild(card);
-      renderCompareChart(card, metric, colorA, colorB);
+      renderCompareChart(card, metric, activeSlots);
     });
   }
   render();
