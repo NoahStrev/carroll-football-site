@@ -233,6 +233,14 @@ Visual language originates from the `Special Teams Data/mockups/*.html` prototyp
      `Plays` fields feed Tendencies) and `data/game-data.json` for the row-level
      output — same "row-level JSON, filter/aggregate client-side" pattern as
      every other dashboard on this site.
+   - **Extended 2026-07-31**: both pages grew from 2 tabs to 7 — a **Play
+     Outcomes** tab (breakdown of `play_outcome` by volume) plus 4
+     **position-group coach views** each (Defensive Line/Linebackers/
+     Cornerbacks/Safeties on Defense; Quarterbacks/Running Backs/Receivers/
+     Offensive Line on Offense) — see the dedicated 2026-07-31 section below
+     for the full detail, including why these are schematic/situational
+     views rather than individual-player stat pages (no player-level
+     attribution exists in this data).
 4. **Phase 4 — report ingestion &amp; downloads** (lowest priority, added 2026-07-30
    per the user): get the program's existing generated reports (CCIW Buddah Report,
    National Buddah Report, Game Analysis, National/CCIW Game Prep Report — the
@@ -286,6 +294,27 @@ Visual language originates from the `Special Teams Data/mockups/*.html` prototyp
        already run on a weekly cron (`cciw-org-conference-weekly-scrape`,
        `ncaa-d3-national-weekly-scrape`) — wiring this project's own rebuild +
        the report-generation step into that schedule is a deferred follow-up.
+   - **Extended since the initial build** (undocumented here until this
+     pass — backfilled 2026-07-31): the "Overall" tab was renamed
+     **"Additional Metrics"** (reads as a catch-all otherwise) and moved to
+     the *last* tab position, after Offensive/Defensive/Special Teams.
+     Downloads switched from raw `.xlsx` links to a dynamic per-panel PDF
+     export (`window.print()` + print CSS, isolating one card via a
+     `print-target` class) so a coach can grab just the section/season they
+     need instead of the whole source workbook. A **"This Week"** tab
+     (`build_this_week()` in `build_rankings_data.py`, reads
+     `../Schedule/schedule.json`) was added as the new default/first tab —
+     Carroll vs. the next unplayed opponent, CCIW + National scope,
+     rank-for-rank side by side; gracefully shows "no ranking data
+     available" (never a guessed/empty table) when the opponent isn't
+     tracked by either source (confirmed working for the real 2026 season:
+     the next opponent, St. Norbert College, is non-conference and
+     correctly flagged unavailable). This Week's own PDF export was later
+     split into two scope-specific buttons (CCIW PDF / National PDF, each
+     isolating that scope's cards across all 4 stacked phase sections via a
+     `#rank-stage` print class) since This Week — unlike the phase tabs —
+     has 4 separate rankgrids rather than one to isolate a single card
+     within.
    - Game Analysis and the two Game Prep Report PDFs (per-opponent scouting
      reports) aren't ingested yet. Design/scope TBD for those.
 
@@ -643,6 +672,177 @@ real: every leaderboard/comparison value renders with its correct unit
 Both pages re-verified live after landing (console errors, KPI/table values,
 filter interactions, mobile width, dark mode) — clean, no regressions on the
 pre-existing tabs/metrics.
+
+## Sitewide navigation restructure: Positions as its own top-level section (2026-07-31)
+
+The 5 Special Teams position pages (Placekicker, Kickoff Kicker, Punter,
+Short Snapper, Long Snapper) were only reachable from `index.html`'s card
+tiles — no other page linked to them or to each other, so once a coach
+navigated away to any other dashboard there was no way back except returning
+to the homepage. Fixed in stages, the final shape:
+
+- A shared position sub-nav (`.subnav-label` + a `.tabbar` of `<a>` links,
+  reusing the same pill styling as every in-page tab bar) added to Special
+  Teams Overview and all 5 position pages, so they're all one click apart.
+- **"Positions" promoted to its own top-level `sitenav` link** (landing on
+  `placekicker.html`), separate from "Special Teams" — the position pages
+  have their own 3-tab structure (Executive Scorecard/Head-to-Head/
+  Situational Deep Dive) entirely unlike Special Teams Overview's in-page
+  unit tabs, so marking "Special Teams" active on them mischaracterized them
+  as nested inside that page rather than a section of their own alongside
+  it. The position sub-nav's self-referencing "Team Overview" pill was
+  renamed to just "Overview" to stop colliding with Special Teams Overview's
+  own "Team Overview" unit tab one row below it on that page.
+- The now-redundant position sub-nav was removed from Special Teams Overview
+  itself once "Positions" existed as its own sitenav link — that single
+  top-nav button is the one way to cross over, not a duplicated 6-pill row.
+- `index.html`'s "Special Teams · By Position" tile section renamed to
+  "Positions" to match.
+
+## Sitewide chart/tooltip/filtering audit (2026-07-31, per the user)
+
+A full pass across every dashboard, prompted by direct feedback ("graphs
+don't fill up the full space," "overlap with the blue strip," "I want to
+know who we're playing," combobox spellcheck popups, and a general "double
+check everything" ask). Real, confirmed bugs found and fixed — same
+"actually click through and inspect real values" discipline as every
+earlier validation pass on this site, not a re-read of the diff:
+
+- **Offense/Defense's "Drive Result Mix" chart was counting play-rows, not
+  drives.** `drive_result` is copied onto every play of a drive (the same
+  reason the Red Zone TD% KPI already dedupes via a
+  `game_label|drive_num` key), so a 15-play touchdown drive outweighed a
+  3-and-out punt 5-to-1 — Touchdown looked like the top outcome (1046 rows,
+  34%) when Punt is actually the most common real result (244/607 distinct
+  drives, 40%; Touchdown is second at 173/607, 28%). Fixed with a new
+  `uniqueByKey(rows, keyFn)` in `js/charts.js`.
+- **`.stacked` (the stacked-bar component) had no `justify-content`, and
+  `.stackcol` caps at `max-width: 90px`** (unlike `.barcol`'s uncapped
+  `flex: 1`) — any stacked chart with few categories (the position pages'
+  H2H "Op time build-up" chart always has exactly 2) left-hugged with all
+  the leftover space dumped on the right. Now centered.
+- **`renderTrendCard`'s mini "Last Game Avg"/"Last vs Previous Game" KPI
+  tiles zeroed out `.kpi`'s padding/border/background inline but never
+  suppressed its `::before` accent strip**, which kept rendering flush at
+  the now-padding-less left edge, sitting directly under the label/value
+  text. Added a `.kpi-plain` modifier class that hides the strip.
+- **The shared `makeSearchCombobox` had no `spellcheck`/`autocomplete`/
+  `autocorrect` attributes** — an athlete/kicker/punter name the browser's
+  dictionary doesn't recognize (most of them) could pop the native
+  spellcheck UI and eat a quick click meant to select a dropdown item.
+  **It also hard-capped rendered matches at 40** regardless of how many
+  existed — this function's own docstring cites "230+ athlete names" as the
+  reason it exists, yet silently hid anything past the first 40 unfiltered
+  results (confirmed: Lifting & Strength's roster is 237 names, all now
+  render and scroll correctly).
+- **Every per-game trend/sparkline tooltip showed only a bare date, no
+  opponent** — `gameTrend()` now also returns `opponents` (every dataset
+  it's called on already carries the field on each row, just wasn't
+  surfaced) and `seasons` (fixes a latent ambiguity too: a trend spanning
+  multiple seasons could show the same day/month label for two different
+  years with nothing to tell them apart).
+- Filter-panel completeness re-audited field-by-field against each page's
+  real data schema (same method as the Hash/Direction/Play Type gap below):
+  Special Teams Overview's Punt Return tab was missing a **Kick Outcome**
+  filter (already charted, just never exposed); every position page's
+  Situational Deep Dive tab was missing **Home/Away**; Punter/Long Snapper/
+  Kickoff Kicker's Deep Dive tabs were also missing **Opponent** (present in
+  their underlying punt/kickoff data — Placekicker/Short Snapper's
+  `money_unit` data genuinely has no opponent column, a real data
+  limitation, not an oversight left unfixed).
+- **Every Season filter site-wide now defaults to only the most recent
+  year checked**, not every year — `buildFilterPanel` (`js/charts.js`)
+  gained an opt-in `defaultLatestOnly` flag (every other field still
+  defaults fully checked), applied to all 25 season filter definitions
+  across every dashboard. Rankings' "All seasons" dropdown option also
+  dropped its "(no rank shown)" qualifier.
+
+Delegated a duplication/consistency subagent pass alongside the manual
+browser verification (a pattern worth reusing for future large audits):
+confirmed the new `outcomesTab` duplication between `offense.html`/
+`defense.html` (below) matches this project's long-standing, deliberate
+choice to keep whole-tab renderer functions per-page rather than hoisted —
+only the pure, parameter-driven helpers underneath get shared — and found
+zero dead code, zero missed `defaultLatestOnly` instances, and no other
+newly-introduced duplication.
+
+## Offense & Defense: Hash/Direction/Play Type filters, Play Outcomes tab, position-group coach views (2026-07-31, per the user)
+
+**Filter completion**: re-audited Offense/Defense's filter panels against
+`game-data.json`'s actual field list and found `hash`/`play_type`
+(hand-charted `Plays` sheet) and `direction` (official play-by-play) existed
+in the data but were never exposed as filters — added Hash/Play Type to both
+pages' Play-Calling & Tendencies tab and Direction to both pages' Executive
+Scorecard tab (matching which dataset each tab actually reads).
+
+**Play Outcomes tab** (`outcomesTab`, both pages): a third tab, per the
+user asking for a dashboard "filtered by play type... shows the breakdown
+of the outcome of the play." Reuses Tendencies' exact filter set (Play Type
+already included) and the same `Plays` sheet, but the main chart groups by
+`play_outcome` itself (Touchdown, Interception, Sack, Complete, Incomplete,
+Fumble, ...) via the existing `topKeysByCount()` — same real-but-messy-value
+treatment already given to Play Call/Formation/Personnel (some rows are
+compound strings like `"Rush, TD"`, shown exactly as charted, not split or
+normalized). Each page's tab has a KPI row, the outcome-breakdown bar chart,
+an outcome-by-play-type stacked chart, and a full detail table. Defense's
+turnover KPI reads "Takeaway Rate" (`--good`) rather than "Turnover Rate"
+(`--critical`) — a turnover on a defensive snap is a Carroll takeaway, not
+a giveaway, matching the Executive Scorecard tab's own framing.
+
+**Position-group coach views** (8 new tabs, 4 per page): per the user —
+*"getting specific views for each position group... from the view of a
+linebacker coach, or a corner coach"*, explicitly **not** individual-player
+stat pages. Checked first, before building anything: no player-level
+attribution exists anywhere in this data — `Game Analysis`'s own `SKILL.md`
+confirms `Plays`/`OfficialPlayByPlay` are charted at the play level (who
+ran what call, not who touched the ball) — a genuine box-score `player_stats`
+key with real per-player rushing/receiving/passing/tackle lines *does* exist
+in the sibling `Special Teams Data` project's already-scraped raw game JSONs
+(`../Special Teams Data/raw/*.json`), and a rough name-match against the
+Lifting Data roster's own `position` field got ~79% coverage — but the user
+confirmed they didn't want individual-player data at all, just each
+position group's own schematic/situational lens on the same charted fields
+already on this site. That made the whole cross-project player-name-matching
+question moot; these 8 tabs read only `game-data.json`, already loaded.
+
+- **Defense** (`defense.html`): Defensive Line (front calls, run efficiency
+  allowed by front, sack rate, movement/stunt calls), Linebackers (run
+  efficiency/explosive-rate allowed by front and hash, blitz calls),
+  Cornerbacks (pass efficiency/explosive-rate allowed by direction and
+  depth, pass-yards trend by game), Safeties (explosive-rate allowed by
+  field zone and play type, yards-allowed trend by game).
+- **Offense** (`offense.html`): Quarterbacks (pass efficiency by coverage
+  faced, protection calls, sack rate), Running Backs (run efficiency by
+  front faced and formation, backfield alignment), Receivers (coverage
+  shell faced, pass efficiency by personnel, formation usage on pass
+  plays), Offensive Line (fronts/stunts faced, run efficiency by front,
+  sack rate allowed).
+- Defensive Line/Linebackers/Quarterbacks/Running Backs/Receivers/
+  Offensive Line read the hand-charted `Plays` sheet (front/blitz/
+  protection/coverage/personnel/formation only exist there); Cornerbacks/
+  Safeties read the official play-by-play instead, since direction/
+  pass_depth/field_zone (their relevant fields) only exist there — there's
+  no separate "coverage type" field for Carroll's own defensive calls
+  (`front_d`/`tag_d`/`movement`/`blitz_d` are Carroll's own playbook call
+  *names*, e.g. fronts named `OVER`/`ODD`/`BEAR`, blitzes named after
+  states/cities — not a `Cover 2`-style scheme label the way the offense's
+  `coverage`/`cov_shell` fields are for what opponents show Carroll).
+
+All 8 new tabs plus the filter/Play Outcomes changes verified live in the
+browser (console errors, real KPI/chart values, filter narrowing, mobile
+width for both pages' now-7-tab bars) before committing.
+
+## Lifting & Strength: up to 4 athletes in Class Comparison (2026-07-31, per the user)
+
+Was hardcoded to exactly two athletes (A/B). Now 4 combobox slots
+(`COMPARE_SLOT_COUNT`) — the first two default to real athletes like
+before, the last two default to a real `"— None —"` option so a coach can
+compare 2, 3, or 4 without being forced into 4. Colors switched from an
+ad-hoc pair (`--cat-6`/`--cat-3`) to the dataviz skill's fixed
+`--cat-1`..`--cat-4` categorical order, needed anyway once there's more
+than 2 series — `renderCompareChart` and `render()` generalized to loop
+over however many slots have a real athlete picked, rather than two
+hardcoded A/B variables.
 
 ## Data sources
 
