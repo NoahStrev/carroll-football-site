@@ -397,9 +397,9 @@ function renderHeatmap(container, { rowLabels, colLabels, cellFor, title = (r, c
 /** values: [number...] (chronological); labels: [string...] same length. Colors
  * each segment green if it's rising toward/above the running average, red if
  * falling below -- matches the reference dashboards' red/green trend lines. */
-function renderSparkline(container, { values, labels, unit = '' }) {
+function renderSparkline(container, { values, labels, unit = '', seasons, opponents }) {
   container.innerHTML = '';
-  const pts = values.map((v, i) => ({ v, l: labels[i] })).filter((p) => p.v !== null && p.v !== undefined);
+  const pts = values.map((v, i) => ({ v, l: labels[i], season: seasons && seasons[i], opponent: opponents && opponents[i] })).filter((p) => p.v !== null && p.v !== undefined);
   if (pts.length < 2) {
     container.appendChild(el('div', 'foot', 'Not enough data points.'));
     return;
@@ -450,7 +450,8 @@ function renderSparkline(container, { values, labels, unit = '' }) {
     const delta = prev !== null ? p.v - prev : null;
     const vsAvg = p.v - avg;
     const html = () => [
-      `<div class="tt-title">${p.l}</div>`,
+      `<div class="tt-title">${p.l}${p.season ? `, ${p.season}` : ''}</div>`,
+      p.opponent ? `<div class="tt-row"><span>Opponent</span><span>${p.opponent}</span></div>` : '',
       `<div class="tt-row"><span>Value</span><span>${fmt(p.v)}${unit}</span></div>`,
       delta !== null ? `<div class="tt-row"><span>Vs previous</span><span style="color:${delta >= 0 ? 'var(--delta-good)' : 'var(--critical)'}">${delta >= 0 ? '+' : ''}${fmt(delta)}${unit}</span></div>` : '',
       `<div class="tt-muted">${vsAvg >= 0 ? '+' : ''}${fmt(vsAvg)}${unit} vs average (${fmt(avg)}${unit})</div>`,
@@ -593,15 +594,25 @@ function formatGameDateLabel(d) {
 }
 
 /** Groups rows by (season, date) chronologically, averages `field`, returns
- * {values, labels} for renderSparkline -- games/weeks. Hoisted 2026-07-30
- * from special-teams-overview.html into here since Offense/Defense need the
- * identical thing. */
+ * {values, labels, seasons, opponents} for renderSparkline -- games/weeks.
+ * Hoisted 2026-07-30 from special-teams-overview.html into here since
+ * Offense/Defense need the identical thing. `seasons`/`opponents` added
+ * 2026-07-31 per the user ("I want to know who we're playing") -- every
+ * dataset renderTrendCard is called with already carries `opponent` on each
+ * row even where it isn't exposed as a filter (money_unit, offense/defense
+ * official), so there's no reason the trend tooltip couldn't show it. Also
+ * fixes a latent ambiguity: the on-chart label is day/month only ("9/5"), so
+ * a multi-season trend (e.g. "All seasons" selected) could show the same
+ * label twice for two different years with no way to tell them apart --
+ * `seasons` lets the tooltip disambiguate even though the axis label doesn't. */
 function gameTrend(rows, field) {
   const byGame = groupBy(rows.map((r) => ({ ...r, _gk: `${r.season}|${r.date}` })), '_gk');
   const games = [...byGame.keys()].sort((a, b) => parseGameDate(a.split('|')[1]) - parseGameDate(b.split('|')[1]));
   const values = games.map((g) => mean(byGame.get(g).map((r) => r[field])));
   const labels = games.map((g) => formatGameDateLabel(g.split('|')[1]));
-  return { values, labels };
+  const seasons = games.map((g) => g.split('|')[0]);
+  const opponents = games.map((g) => byGame.get(g)[0].opponent || null);
+  return { values, labels, seasons, opponents };
 }
 
 /** Card with a "Last Game" KPI + "Last vs Previous Game" delta + sparkline --
@@ -610,7 +621,7 @@ function gameTrend(rows, field) {
  * original Tableau dashboards (comparing to the immediately-prior game, not
  * a season average). */
 function renderTrendCard(container, rows, field, unit, title) {
-  const { values, labels } = gameTrend(rows, field);
+  const { values, labels, seasons, opponents } = gameTrend(rows, field);
   const lastVal = values.length ? values[values.length - 1] : null;
   const prevVal = values.length > 1 ? values[values.length - 2] : null;
   const delta = lastVal !== null && prevVal !== null ? lastVal - prevVal : null;
@@ -618,18 +629,18 @@ function renderTrendCard(container, rows, field, unit, title) {
     <div class="card-head"><h3>${title}</h3></div>
     <div class="card-body trend-body">
       <div>
-        <div class="kpi small" style="border:none; padding:0; background:none;">
+        <div class="kpi small kpi-plain" style="border:none; padding:0; background:none;">
           <div class="label">Last Game Avg</div>
           <div class="value">${fmt(lastVal)}${unit}</div>
         </div>
-        <div class="kpi small" style="border:none; padding:0; background:none; margin-top:10px;">
+        <div class="kpi small kpi-plain" style="border:none; padding:0; background:none; margin-top:10px;">
           <div class="label">Last vs Previous Game</div>
           <div class="value" style="font-size:15px; color:${delta === null ? 'inherit' : (delta >= 0 ? 'var(--delta-good)' : 'var(--critical)')}">${delta === null ? '—' : (delta >= 0 ? '+' : '') + fmt(delta)}</div>
         </div>
       </div>
       <div class="trend-chart"></div>
     </div>`;
-  renderSparkline(container.querySelector('.trend-chart'), { values, labels, unit });
+  renderSparkline(container.querySelector('.trend-chart'), { values, labels, unit, seasons, opponents });
 }
 
 /** Best-scoring key in a groupBy() Map by a metric function, gated on a

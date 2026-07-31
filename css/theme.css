@@ -268,6 +268,12 @@ html, body {
   transition: box-shadow .15s ease, transform .15s ease;
 }
 .kpi::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--kpi-accent, var(--accent)); opacity: .6; }
+/* Real bug found 2026-07-31: renderTrendCard's mini KPI tiles (Last Game Avg /
+   Last vs Previous Game) reuse .kpi but zero out its padding/border/background
+   inline to sit flush in the trend card -- they never zeroed out the ::before
+   accent strip above, which still rendered flush at the padding-less left
+   edge, sitting directly under the label/value text instead of beside it. */
+.kpi.kpi-plain::before { display: none; }
 .kpi:hover { box-shadow: 0 4px 16px rgba(0, 0, 0, .08); transform: translateY(-1px); }
 .kpi .label { font-size: 11px; color: var(--text-secondary); margin-bottom: 7px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
 .kpi .value { font-size: 27px; font-weight: 800; line-height: 1.05; letter-spacing: -.01em; }
@@ -317,7 +323,13 @@ html, body {
 .barcol .xlab { font-size: 10.5px; color: var(--muted); margin-top: 6px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 .barcol .xlab2 { font-size: 9.5px; color: var(--muted); margin-top: 2px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
-.stacked { display: flex; align-items: flex-end; gap: 18px; height: 150px; padding-top: 20px; position: relative; }
+/* justify-content:center added 2026-07-31 -- real bug found: .stackcol's own
+   max-width:90px means few-category charts (the H2H "op time build-up" chart
+   always has exactly 2 columns) never fill the row width the way .barcol's
+   flex:1-with-no-cap does, and with no justify-content the flex row defaulted
+   to flex-start, dumping all the leftover space on the right instead of
+   spreading it evenly around the (intentionally bar-width-capped) columns. */
+.stacked { display: flex; align-items: flex-end; justify-content: center; gap: 18px; height: 150px; padding-top: 20px; position: relative; }
 .stacked .gridlines { position: absolute; inset: 18px 0 20px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
 .stacked .gridlines div { border-top: 1px solid var(--grid); height: 0; }
 .stackcol { flex: 1; max-width: 90px; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; z-index: 1; }
