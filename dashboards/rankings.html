@@ -284,6 +284,10 @@ function thisWeekTab(root) {
 
   const haLabel = tw.home_away === 'home' ? 'vs.' : tw.home_away === 'away' ? 'at' : '';
   const confLabel = tw.is_conference ? 'CCIW conference game' : 'non-conference game';
+  const whenWhere = [
+    tw.date_text, tw.time_text,
+    [tw.venue, tw.city].filter(Boolean).join(', '),
+  ].filter(Boolean).join(' · ');
 
   const phases = ['overall', 'offense', 'defense', 'special_teams'];
   const panelsHTML = phases.map((phase) => {
@@ -312,7 +316,7 @@ function thisWeekTab(root) {
       <div class="slide">
         <div class="unit-header">
           <div class="brandmark"><span class="crest">CU</span><h2>This Week</h2></div>
-          <div class="sub">${haLabel} ${tw.opponent} · ${tw.date_text || ''} · ${confLabel}</div>
+          <div class="sub">${haLabel} ${tw.opponent} · ${whenWhere} · ${confLabel}</div>
         </div>
         <div class="body">
           ${!tw.opponent_data_available ? `<div class="insight">No ranking data available for ${tw.opponent} — not tracked by either CCIW Buddah Report or National Buddah Report (non-conference opponent). Carroll's own current standing is shown below regardless.</div>` : ''}

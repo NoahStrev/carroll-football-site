@@ -158,6 +158,22 @@ def _latest_per_group(rows, group_keys):
     return list(latest.values())
 
 
+def _resolve_current(finalized, latest_finalized, weekly_rows, weekly_season):
+    """-> (season, rows): prefer the latest in-season week's rows over the latest
+    finalized season -- a finalized season's own file is only ever rebuilt once
+    that season is fully over, so a newer weekly snapshot always wins when both
+    exist. Shared tail of team_cciw_rows()/team_national_rows() below, which only
+    differ in how they read their own source workbook, not in this decision."""
+    if weekly_rows:
+        for r in weekly_rows:
+            del r["week"]
+            r["season"] = weekly_season
+        return weekly_season, weekly_rows
+    if latest_finalized:
+        return latest_finalized, [r for r in finalized if r["season"] == latest_finalized]
+    return None, []
+
+
 def team_cciw_rows(team):
     """-> (season, [rows]) for `team`'s most current CCIW standing, reading the
     multi-team CCIW_TopPerformer_AllTime.xlsx (+ its _Weekly.xlsx sibling if a
@@ -202,14 +218,7 @@ def team_cciw_rows(team):
             weekly_season = season
             weekly_rows = _latest_per_group(season_rows, ("phase", "category", "metric"))
 
-    if weekly_rows:
-        for r in weekly_rows:
-            del r["week"]
-            r["season"] = weekly_season
-        return weekly_season, weekly_rows
-    if latest_finalized:
-        return latest_finalized, [r for r in finalized if r["season"] == latest_finalized]
-    return None, []
+    return _resolve_current(finalized, latest_finalized, weekly_rows, weekly_season)
 
 
 def team_national_rows(team):
@@ -260,14 +269,7 @@ def team_national_rows(team):
             weekly_season = season
             weekly_rows = _latest_per_group(season_rows, ("phase", "category", "stat"))
 
-    if weekly_rows:
-        for r in weekly_rows:
-            del r["week"]
-            r["season"] = weekly_season
-        return weekly_season, weekly_rows
-    if latest_finalized:
-        return latest_finalized, [r for r in finalized if r["season"] == latest_finalized]
-    return None, []
+    return _resolve_current(finalized, latest_finalized, weekly_rows, weekly_season)
 
 
 def latest_snapshot_for_season(rows, season):
@@ -310,6 +312,9 @@ def build_this_week(cciw_rows, national_rows):
     return {
         "opponent": game["opponent"],
         "date_text": game["date_text"],
+        "time_text": game.get("time_text"),
+        "city": game.get("city"),
+        "venue": game.get("venue"),
         "home_away": game["home_away"],
         "is_conference": game["is_conference"],
         "opponent_data_available": bool(opp_cciw_team or opp_nat_team),
