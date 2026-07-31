@@ -42,10 +42,14 @@
   @media print {
     .sitenav, .intro, .tabbar, .no-print, select, .week-tabs { display: none !important; }
     /* Only a rankgrid that actually HAS a marked card (the Rankings phase tabs'
-       "print just this one panel" case) hides its other card -- This Week's PDF
-       button prints the whole tab as-is (8 cards, none individually marked), so
-       none of ITS rankgrids match this and nothing in them gets hidden. */
+       "print just this one panel" case) hides its other card. */
     .rankgrid:has(.print-target) .card:not(.print-target) { display: none !important; }
+    /* This Week's CCIW/National PDF buttons isolate by scope across all 4
+       stacked phase sections at once (#rank-stage.tw-print-cciw/-national, set
+       by printThisWeekScope()) -- unlike the phase tabs' single rankgrid, This
+       Week has 4, so this can't reuse the per-card print-target mechanism above. */
+    #rank-stage.tw-print-cciw .tw-national,
+    #rank-stage.tw-print-national .tw-cciw { display: none !important; }
     .rankgrid { display: block !important; }
     .rank-scroll { max-height: none !important; overflow: visible !important; }
     .print-only { display: inline !important; }
@@ -217,6 +221,18 @@ function printPage(filenameTitle) {
   document.title = filenameTitle;
   window.print();
   document.title = prevTitle;
+}
+
+// This Week stacks all 4 phase sections in one page (unlike the phase tabs'
+// single rankgrid), so isolating "just CCIW" or "just National" needs a
+// page-wide scope instead of the phase tabs' per-card printCard() isolation --
+// a class on #rank-stage that the print CSS below uses to hide every card of
+// the other scope across all 4 sections at once.
+function printThisWeekScope(scope, filenameTitle) {
+  const stage = document.getElementById('rank-stage');
+  stage.classList.add(`tw-print-${scope}`);
+  printPage(filenameTitle);
+  stage.classList.remove(`tw-print-${scope}`);
 }
 
 function footerSourceText() {
@@ -396,11 +412,11 @@ function thisWeekTab(root) {
     return `
       <h3 style="margin:18px 0 8px;">${PHASE_TITLES[phase]}</h3>
       <div class="rankgrid">
-        <div class="card">
+        <div class="card tw-cciw">
           <div class="card-head"><h3>CCIW Rankings${tw.carroll.cciw.season ? ` (${tw.carroll.cciw.season})` : ''}</h3></div>
           <div class="card-body"><div class="rank-scroll">${phase === 'overall' ? '<div class="lb-empty">CCIW-scope has no Additional Metrics category.</div>' : thisWeekTable(cciwJoined, false)}</div></div>
         </div>
-        <div class="card">
+        <div class="card tw-national">
           <div class="card-head"><h3>National Rankings${tw.carroll.national.season ? ` (${tw.carroll.national.season})` : ''}</h3></div>
           <div class="card-body"><div class="rank-scroll">${thisWeekTable(natJoined, true)}</div></div>
         </div>
@@ -416,7 +432,8 @@ function thisWeekTab(root) {
         </div>
         <div class="body">
           <div class="download-row no-print" style="margin-bottom:14px;">
-            <button type="button" class="download-btn" id="tw-pdf">&#8595; PDF</button>
+            <button type="button" class="download-btn" id="tw-cciw-pdf">&#8595; CCIW PDF</button>
+            <button type="button" class="download-btn" id="tw-national-pdf">&#8595; National PDF</button>
           </div>
           ${!tw.opponent_data_available ? `<div class="insight">No ranking data available for ${tw.opponent} — not tracked by either CCIW Buddah Report or National Buddah Report (non-conference opponent). Carroll's own current standing is shown below regardless.</div>` : ''}
           ${panelsHTML}
@@ -425,8 +442,11 @@ function thisWeekTab(root) {
       </div>
     </div>`;
 
-  document.getElementById('tw-pdf').addEventListener('click', () =>
-    printPage(`This Week - ${haLabel === 'at' ? 'at' : 'vs'} ${tw.opponent} - Carroll Football`));
+  const oppLabel = `${haLabel === 'at' ? 'at' : 'vs'} ${tw.opponent}`;
+  document.getElementById('tw-cciw-pdf').addEventListener('click', () =>
+    printThisWeekScope('cciw', `This Week CCIW - ${oppLabel} - Carroll Football`));
+  document.getElementById('tw-national-pdf').addEventListener('click', () =>
+    printThisWeekScope('national', `This Week National - ${oppLabel} - Carroll Football`));
 }
 
 const TAB_RENDERERS = {
