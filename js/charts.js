@@ -176,7 +176,7 @@ function setKPI(id, value, foot) {
  * tooltip HTML, overrides the default entirely if given. xlab2(cat, i): a sample-size
  * caption under the x-axis label -- also folded into the default tooltip automatically
  * (e.g. "n=85 punts") so hovering shows the same context as the caption. */
-function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1), colorFn, tooltipFmt, xlab2, seriesName }) {
+function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1), colorFn, tooltipFmt, xlab2, tooltipExtra, seriesName }) {
   container.innerHTML = '';
   const wrap = el('div', 'barchart');
   const max = Math.max(1e-9, ...values.filter((v) => v !== null && !Number.isNaN(v)));
@@ -184,17 +184,22 @@ function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1),
   for (let i = 0; i < 4; i++) gridlines.appendChild(document.createElement('div'));
   wrap.appendChild(gridlines);
 
+  // xlab2 is a second, always-visible caption line under the bar (e.g. "avg 5.2 yds").
+  // tooltipExtra is hover-only supplementary context (e.g. sample size) that doesn't
+  // deserve permanent on-chart real estate -- shown in the tooltip alongside the value.
   function defaultTooltip(cat, v, i) {
     if (v === null || Number.isNaN(v)) return `<b>${cat}</b><br>No data`;
     const rows = [`<div class="tt-title">${cat}${seriesName ? ` — ${seriesName}` : ''}</div>`,
       `<div class="tt-row"><span>${labelFmt(v)}</span></div>`];
     if (xlab2) rows.push(`<div class="tt-row tt-muted">${xlab2(cat, i)}</div>`);
+    if (tooltipExtra) rows.push(`<div class="tt-row tt-muted">${tooltipExtra(cat, i)}</div>`);
     return rows.join('');
   }
 
   categories.forEach((cat, i) => {
     const v = values[i];
     const col = el('div', 'barcol');
+    const plot = el('div', 'barplot');
     const barH = v === null || Number.isNaN(v) ? 0 : Math.max(2, (v / max) * 100);
     const bar = el('div', 'bar');
     bar.style.height = `${barH}%`;
@@ -204,9 +209,17 @@ function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1),
     bar.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, tt()));
     bar.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, tt()));
     bar.addEventListener('mouseleave', hideTooltip);
-    col.appendChild(bar);
-    col.appendChild(el('div', 'xlab', cat));
-    if (xlab2) col.appendChild(el('div', 'xlab2', xlab2(cat, i)));
+    plot.appendChild(bar);
+    col.appendChild(plot);
+    const xlabEl = el('div', 'xlab', cat);
+    xlabEl.title = cat;
+    col.appendChild(xlabEl);
+    if (xlab2) {
+      const xlab2Text = xlab2(cat, i);
+      const xlab2El = el('div', 'xlab2', xlab2Text);
+      xlab2El.title = xlab2Text;
+      col.appendChild(xlab2El);
+    }
     wrap.appendChild(col);
   });
   container.appendChild(wrap);
@@ -240,6 +253,7 @@ function renderStacked(container, { categories, series, order, colors, legend = 
     const col = el('div', 'stackcol');
     const total = totals[i];
     col.appendChild(el('div', 'cap', total ? String(total) : ''));
+    const plot = el('div', 'stackplot');
     const bar = el('div', 'stackbar');
     bar.style.height = `${Math.max(2, (total / max) * 100)}%`;
     order.forEach((name) => {
@@ -259,8 +273,11 @@ function renderStacked(container, { categories, series, order, colors, legend = 
       seg.addEventListener('mouseleave', hideTooltip);
       bar.appendChild(seg);
     });
-    col.appendChild(bar);
-    col.appendChild(el('div', 'xlab', cat));
+    plot.appendChild(bar);
+    col.appendChild(plot);
+    const xlabEl = el('div', 'xlab', cat);
+    xlabEl.title = cat;
+    col.appendChild(xlabEl);
     wrap.appendChild(col);
   });
   container.appendChild(wrap);

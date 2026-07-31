@@ -119,7 +119,7 @@ function execTab(root) {
       values: seasons.map((s) => { const g = byseason.get(s); return g && g.length ? makeRate(g) : null; }),
       labelFmt: (v) => pct(v, 0),
       colorFn: () => cssVar('--cat-1'),
-      xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+      tooltipExtra: (s) => `${(byseason.get(s) || []).length} kicks`,
     });
 
     const byBucket = groupBy(fgRows.map((r) => ({ ...r, _b: fgDistBucket(r.distance) })), '_b');
@@ -128,7 +128,7 @@ function execTab(root) {
       values: FG_DIST_BUCKETS.map((b) => { const g = byBucket.get(b); return g && g.length ? makeRate(g) : null; }),
       labelFmt: (v) => pct(v, 0),
       colorFn: () => cssVar('--cat-3'),
-      xlab2: (b) => `n=${(byBucket.get(b) || []).length}`,
+      tooltipExtra: (b) => `${(byBucket.get(b) || []).length} kicks`,
     });
   }
   render();
@@ -238,7 +238,7 @@ function h2hTab(root) {
       values: FG_DIST_BUCKETS.map((b) => (byBucket.get(b) || []).filter((r) => r.make).length),
       labelFmt: (v) => String(v),
       colorFn: () => cssVar('--cat-1'),
-      xlab2: (b) => `n=${(byBucket.get(b) || []).length}`,
+      tooltipExtra: (b) => `${(byBucket.get(b) || []).length} kicks`,
     });
     return kRows;
   }
@@ -354,7 +354,7 @@ function deepTab(root) {
       values: quarters.map((q) => makeRate(byQ.get(q))),
       labelFmt: (v) => pct(v, 0),
       colorFn: () => cssVar('--cat-2'),
-      xlab2: (q) => `n=${byQ.get(q).length}`,
+      tooltipExtra: (q) => `${byQ.get(q).length} kicks`,
     });
 
     const seasons = DATA.filters.money_unit.season.filter((s) => rows.some((r) => r.season === s));
@@ -397,7 +397,7 @@ function deepTab(root) {
         values: hashesPresent.map((h) => makeRate(byHash.get(h))),
         labelFmt: (v) => pct(v, 0),
         colorFn: () => cssVar('--cat-3'),
-        xlab2: (h) => `n=${byHash.get(h).length}`,
+        tooltipExtra: (h) => `${byHash.get(h).length} kicks`,
       });
     } else {
       document.getElementById('pkd-hash').innerHTML = '<div class="data-note">No charted hash data in the current filter (2023 onward only).</div>';
@@ -412,7 +412,7 @@ function deepTab(root) {
         values: snapLocsPresent.map((s) => makeRate(bySnapLoc.get(s))),
         labelFmt: (v) => pct(v, 0),
         colorFn: () => cssVar('--cat-5'),
-        xlab2: (s) => `n=${bySnapLoc.get(s).length}`,
+        tooltipExtra: (s) => `${bySnapLoc.get(s).length} kicks`,
       });
     } else {
       document.getElementById('pkd-snaploc').innerHTML = '<div class="data-note">No charted Snap Location data in the current filter (2023 onward only).</div>';
@@ -424,7 +424,7 @@ function deepTab(root) {
       values: seasons.map((s) => mean((scoreBySeason.get(s) || []).map((r) => r.score))),
       labelFmt: (v) => fmt(v, 0),
       colorFn: (s, v) => (v >= 50 ? cssVar('--good') : cssVar('--critical')),
-      xlab2: (s) => `n=${(scoreBySeason.get(s) || []).length}`,
+      tooltipExtra: (s) => `${(scoreBySeason.get(s) || []).length} kicks`,
     });
 
     const kickers = DATA.filters.money_unit.kicker.filter((k) => rows.some((r) => r.kicker === k));

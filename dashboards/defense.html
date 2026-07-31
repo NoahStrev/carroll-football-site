@@ -158,21 +158,21 @@ function execTab(root) {
     const byDown = groupBy(rows, 'down');
     renderBar(document.getElementById('de-down'), {
       categories: downs, values: downs.map((d) => mean(byDown.get(d).map((r) => r.yards))),
-      labelFmt: (v) => fmt(v, 1), colorFn: () => cssVar('--critical'), xlab2: (d) => `n=${byDown.get(d).length}`,
+      labelFmt: (v) => fmt(v, 1), colorFn: () => cssVar('--critical'), tooltipExtra: (d) => `${byDown.get(d).length} plays`,
     });
 
     const bySituation = groupBy(withEff, 'situation');
     const situations = SITUATIONS.filter((s) => bySituation.has(s));
     renderBar(document.getElementById('de-situation'), {
       categories: situations, values: situations.map((s) => rate(bySituation.get(s), (r) => isSuccess(r.play_efficiency))),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--serious'), xlab2: (s) => `n=${bySituation.get(s).length}`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--serious'), tooltipExtra: (s) => `${bySituation.get(s).length} plays`,
     });
 
     const byZone = groupBy(withEff, 'field_zone');
     const zones = FIELD_ZONES.filter((z) => byZone.has(z));
     renderBar(document.getElementById('de-zone'), {
       categories: zones, values: zones.map((z) => rate(byZone.get(z), (r) => r.play_efficiency === 'Explosive')),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-8'), xlab2: (z) => `n=${byZone.get(z).length}`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-8'), tooltipExtra: (z) => `${byZone.get(z).length} plays`,
     });
 
     const byResult = groupBy(rows.filter((r) => r.drive_result), 'drive_result');

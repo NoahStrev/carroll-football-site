@@ -275,29 +275,42 @@ html, body {
 .colcard-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
 /* ---- charts (hand-drawn, no chart library) ---- */
+/* .barplot/.stackplot are fixed-height plot areas, isolated from the label rows below
+   (and, for .stackcol, the .cap row above) via flex-shrink:0 on every sibling. Bar/
+   stackbar height:X% must resolve against a height that's immune to label content --
+   previously bar/xlab/xlab2 shared one flex column with default flex-shrink, so a
+   category name long enough to wrap .xlab2 to 2 lines (e.g. "COLORADO", "MICHIGAN")
+   silently shrank the bar itself, decoupling rendered height from the actual data
+   (found 2026-07-30: a 67.5%-value bar rendered TALLER than 75%/76.25%-value bars
+   purely because its label was short enough to fit on one line). Labels are also
+   forced to a single line (ellipsis) so every column's label-row height is identical
+   regardless of text length -- that's what keeps the plot heights comparable/aligned
+   with the gridlines at all, not just proportionally correct within one chart. */
 .barchart { display: flex; align-items: flex-end; gap: 12px; height: 150px; padding-top: 20px; position: relative; }
-.barchart .gridlines { position: absolute; inset: 20px 0 22px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
+.barchart .gridlines { position: absolute; inset: 20px 0 34px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
 .barchart .gridlines div { border-top: 1px solid var(--grid); height: 0; }
-.barcol { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; justify-content: flex-end; height: 100%; position: relative; z-index: 1; }
-.bar { width: 22px; max-width: 24px; border-radius: 4px 4px 0 0; background: var(--accent); position: relative; transition: height .35s ease, filter .1s ease, transform .1s ease; cursor: pointer; }
+.barcol { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; z-index: 1; }
+.barplot { flex-shrink: 0; height: 96px; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
+.bar { width: 22px; max-width: 24px; border-radius: 4px 4px 0 0; background: var(--accent); position: relative; transition: height .35s ease, filter .1s ease, transform .1s ease; cursor: pointer; flex-shrink: 0; }
 .bar:hover { filter: brightness(1.12); transform: scaleX(1.08); }
 .seg { cursor: pointer; transition: filter .1s ease; }
 .seg:hover { filter: brightness(1.12); }
 .bar.crit { background: var(--critical); }
 .bar.good { background: var(--good); }
 .bar .cap { position: absolute; top: -17px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 600; white-space: nowrap; color: var(--text-primary); }
-.barcol .xlab { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
-.barcol .xlab2 { font-size: 9.5px; color: var(--muted); }
+.barcol .xlab { font-size: 10.5px; color: var(--muted); margin-top: 6px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.barcol .xlab2 { font-size: 9.5px; color: var(--muted); margin-top: 2px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
 .stacked { display: flex; align-items: flex-end; gap: 18px; height: 150px; padding-top: 20px; position: relative; }
-.stacked .gridlines { position: absolute; inset: 20px 0 22px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
+.stacked .gridlines { position: absolute; inset: 18px 0 20px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
 .stacked .gridlines div { border-top: 1px solid var(--grid); height: 0; }
-.stackcol { flex: 1; max-width: 90px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; z-index: 1; }
+.stackcol { flex: 1; max-width: 90px; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; z-index: 1; }
+.stackplot { flex-shrink: 0; height: 92px; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
 .stackbar { width: 34px; display: flex; flex-direction: column-reverse; }
 .stackbar .seg { width: 100%; }
 .stackbar .seg:last-child { border-radius: 4px 4px 0 0; }
-.stackcol .cap { font-size: 11px; font-weight: 600; margin-bottom: 4px; }
-.stackcol .xlab { font-size: 10.5px; color: var(--muted); margin-top: 6px; }
+.stackcol .cap { font-size: 11px; font-weight: 600; margin-bottom: 4px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.stackcol .xlab { font-size: 10.5px; color: var(--muted); margin-top: 6px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
 .linewrap { position: relative; }
 .linewrap svg { display: block; width: 100%; height: 150px; overflow: visible; }

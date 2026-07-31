@@ -43,30 +43,32 @@
 
   <div class="intro">
     <h1>Rankings</h1>
-    <p>
+    <p id="rank-intro-text">
       Carroll's own conference and national statistical rankings, read directly from the
       <code>CCIW Buddah Report</code> and <code>National Buddah Report</code> projects' own
       already-scraped, already-classified output — this page doesn't re-scrape either source
-      itself. <b>CCIW Rankings</b> (cciw.org, out of the conference's 9–10 teams, 2016–2025 except
-      2020) apply whenever an opponent is a CCIW conference team; <b>National Rankings</b>
-      (NCAA.com D3, out of ~200+ programs nationally, 2021/2023–2025) apply to any opponent,
-      conference or not. <b>Overall has no CCIW-scope data</b> — a real, permanent gap, not a bug:
+      itself. <b>CCIW Rankings</b> (cciw.org, out of the conference's 9–10 teams,
+      <span id="cciw-season-range">…</span>) apply whenever an opponent is a CCIW conference team;
+      <b>National Rankings</b> (NCAA.com D3, out of ~200+ programs nationally,
+      <span id="national-season-range">…</span>) apply to any opponent, conference or not.
+      <b>Overall has no CCIW-scope data</b> — a real, permanent gap, not a bug:
       cciw.org's own site never publishes Turnover Margin, Winning %, or Penalties as their own
       ranked category the way NCAA.com does, so that tab only ever has a National-scope table.
       Special Teams rounds out the four phases the source data actually splits into (matching what
       each report's own PDF already shows) — it complements rather than duplicates the
       <a href="special-teams-overview.html">Special Teams Overview</a> dashboard, which goes far
       deeper per-unit but has no CCIW/national ranking context of its own. Team-level only for this
-      first pass (no individual-leader rankings yet). Both source
-      workbooks are downloadable in full below each table. <b>Not yet automated</b>: both
-      pipelines' own weekly data scrapes already run on a schedule, but re-generating this page's
-      data from their output is still a manual step (<code>python scripts/build_rankings_data.py</code>) —
-      wiring that up end-to-end is a deferred follow-up, not built here.
+      first pass (no individual-leader rankings yet). All source workbooks used to build this page
+      are downloadable in full below each table, including in-season weekly progression files when
+      the current season is still underway (those don't have Overall/Offense/Defense/Special
+      Teams finalized into the all-time workbooks until the season ends). Refreshed automatically
+      every Monday in-season, after both pipelines' own weekly scrapes run.
     </p>
   </div>
 
   <div class="tabbar" id="rank-tabs">
-    <button class="tabbtn active" data-tab="overall">Overall</button>
+    <button class="tabbtn active" data-tab="this_week">This Week</button>
+    <button class="tabbtn" data-tab="overall">Overall</button>
     <button class="tabbtn" data-tab="offense">Offensive</button>
     <button class="tabbtn" data-tab="defense">Defensive</button>
     <button class="tabbtn" data-tab="special_teams">Special Teams</button>
@@ -87,10 +89,10 @@ function rankTag(rank, outOf) {
   return `#${rank} of ${outOf}`;
 }
 
-function cciwTable(rows, season) {
-  const filtered = (season ? rows.filter((r) => r.season === season) : rows).slice().sort((a, b) => a.rank - b.rank);
-  if (!filtered.length) return '<div class="lb-empty">No CCIW-scope rows for this selection.</div>';
-  const body = filtered.map((r) => `
+function cciwTable(rows) {
+  if (!rows.length) return '<div class="lb-empty">No CCIW-scope rows for this selection.</div>';
+  const sorted = rows.slice().sort((a, b) => a.rank - b.rank);
+  const body = sorted.map((r) => `
     <tr>
       <td class="name">${r.category}</td>
       <td>${r.metric}</td>
@@ -104,10 +106,10 @@ function cciwTable(rows, season) {
     </table>`;
 }
 
-function nationalTable(rows, season) {
-  const filtered = (season ? rows.filter((r) => r.season === season) : rows).slice().sort((a, b) => a.rank - b.rank);
-  if (!filtered.length) return '<div class="lb-empty">No National-scope rows for this selection.</div>';
-  const body = filtered.map((r) => `
+function nationalTable(rows) {
+  if (!rows.length) return '<div class="lb-empty">No National-scope rows for this selection.</div>';
+  const sorted = rows.slice().sort((a, b) => a.rank - b.rank);
+  const body = sorted.map((r) => `
     <tr>
       <td class="name">${r.category}</td>
       <td>${r.stat}</td>
@@ -121,8 +123,60 @@ function nationalTable(rows, season) {
     </table>`;
 }
 
+// season === '' means "All seasons": each season's own in-progress weeks are
+// collapsed to their latest week so the combined view doesn't show one category
+// several times over. A specific season with weekly data needs an explicit week
+// (defaults to the latest) since showing every week stacked together would do the
+// same thing within a single season.
+function prepareRows(rows, season, week) {
+  const rowKey = (r) => `${r.season}|${r.phase}|${r.category}|${r.metric ?? r.stat}`;
+  if (!season) {
+    const latestPerKey = new Map();
+    rows.forEach((r) => {
+      const existing = latestPerKey.get(rowKey(r));
+      if (!existing || (r.week ?? -1) > (existing.week ?? -1)) latestPerKey.set(rowKey(r), r);
+    });
+    return [...latestPerKey.values()];
+  }
+  const seasonRows = rows.filter((r) => r.season === season);
+  const hasWeeks = seasonRows.some((r) => r.week !== null);
+  if (!hasWeeks) return seasonRows;
+  const w = week !== null && week !== undefined && week !== '' ? Number(week) : Math.max(...seasonRows.map((r) => r.week));
+  return seasonRows.filter((r) => r.week === w);
+}
+
 function seasonSelectHTML(id, seasons) {
   return `<select class="fp-select-inline" id="${id}"><option value="">All seasons</option>${seasons.map((s) => `<option value="${s}">${s}</option>`).join('')}</select>`;
+}
+
+function weekSelectHTML(id, weeks) {
+  if (!weeks || !weeks.length) return '';
+  const latest = weeks[weeks.length - 1].week;
+  return `<select class="fp-select-inline" id="${id}">${weeks.map((w) => `<option value="${w.week}"${w.week === latest ? ' selected' : ''}>Wk${w.week} (${w.date})</option>`).join('')}</select>`;
+}
+
+function seasonRangeText(seasons) {
+  const nums = seasons.map(Number).filter((n) => !isNaN(n)).sort((a, b) => a - b);
+  if (!nums.length) return 'no seasons yet';
+  const parts = [];
+  let start = nums[0], prev = nums[0];
+  for (let i = 1; i <= nums.length; i++) {
+    const n = nums[i];
+    if (n === prev + 1) { prev = n; continue; }
+    parts.push(start === prev ? `${start}` : `${start}–${prev}`);
+    start = prev = n;
+  }
+  return parts.join(', ');
+}
+
+function downloadRowHTML() {
+  return DATA.downloads.map((d) => `<a class="download-btn" href="../data/downloads/${d.file}" download>&#8595; ${d.label}</a>`).join('');
+}
+
+function footerSourceText() {
+  const cciw = DATA.generated_from.cciw.join(', ');
+  const national = DATA.generated_from.national.join(', ');
+  return `CCIW Buddah Report's ${cciw} (cciw.org) and National Buddah Report's ${national} (NCAA.com D3) — all read as-is, not re-scraped by this site.`;
 }
 
 function rankingsTab(phase, root) {
@@ -148,6 +202,7 @@ function rankingsTab(phase, root) {
                 <div class="rank-shelf">
                   <span class="filters-summary" id="${phase}-cciw-summary"></span>
                   ${cciwSeasons.length ? seasonSelectHTML(`${phase}-cciw-season`, cciwSeasons) : ''}
+                  <span id="${phase}-cciw-week-wrap"></span>
                 </div>
                 <div class="rank-scroll" id="${phase}-cciw-table"></div>
               </div>
@@ -158,40 +213,153 @@ function rankingsTab(phase, root) {
                 <div class="rank-shelf">
                   <span class="filters-summary" id="${phase}-national-summary"></span>
                   ${nationalSeasons.length ? seasonSelectHTML(`${phase}-national-season`, nationalSeasons) : ''}
+                  <span id="${phase}-national-week-wrap"></span>
                 </div>
                 <div class="rank-scroll" id="${phase}-national-table"></div>
               </div>
             </div>
           </div>
-          <div class="download-row">
-            <a class="download-btn" href="../data/downloads/CCIW_Rankings_AllTime.xlsx" download>&#8595; Download full CCIW workbook (.xlsx)</a>
-            <a class="download-btn" href="../data/downloads/National_Rankings_AllYears.xlsx" download>&#8595; Download full National workbook (.xlsx)</a>
-          </div>
+          <div class="download-row">${downloadRowHTML()}</div>
         </div>
-        <div class="footer-note">Source: CCIW Buddah Report's Carroll_Football_AllTime.xlsx (cciw.org) and National Buddah Report's Carroll_AllYears.xlsx (NCAA.com D3) — both read as-is, not re-scraped by this site.</div>
+        <div class="footer-note">Source: ${footerSourceText()}</div>
       </div>
     </div>`;
 
   function renderCciw() {
     const season = document.getElementById(`${phase}-cciw-season`)?.value || '';
-    document.getElementById(`${phase}-cciw-table`).innerHTML = cciwTable(cciwRows, season);
-    const shown = season ? cciwRows.filter((r) => r.season === season).length : cciwRows.length;
-    document.getElementById(`${phase}-cciw-summary`).textContent = `${shown} rows`;
+    const weekSel = document.getElementById(`${phase}-cciw-week`);
+    const filtered = prepareRows(cciwRows, season, weekSel ? weekSel.value : null);
+    document.getElementById(`${phase}-cciw-table`).innerHTML = cciwTable(filtered);
+    document.getElementById(`${phase}-cciw-summary`).textContent = `${filtered.length} rows`;
+  }
+  function onCciwSeasonChange() {
+    const season = document.getElementById(`${phase}-cciw-season`)?.value || '';
+    const weeks = season ? DATA.cciw.weeks[season] : null;
+    const wrap = document.getElementById(`${phase}-cciw-week-wrap`);
+    wrap.innerHTML = weekSelectHTML(`${phase}-cciw-week`, weeks);
+    document.getElementById(`${phase}-cciw-week`)?.addEventListener('change', renderCciw);
+    renderCciw();
   }
   function renderNational() {
     const season = document.getElementById(`${phase}-national-season`)?.value || '';
-    document.getElementById(`${phase}-national-table`).innerHTML = nationalTable(nationalRows, season);
-    const shown = season ? nationalRows.filter((r) => r.season === season).length : nationalRows.length;
-    document.getElementById(`${phase}-national-summary`).textContent = `${shown} rows`;
+    const weekSel = document.getElementById(`${phase}-national-week`);
+    const filtered = prepareRows(nationalRows, season, weekSel ? weekSel.value : null);
+    document.getElementById(`${phase}-national-table`).innerHTML = nationalTable(filtered);
+    document.getElementById(`${phase}-national-summary`).textContent = `${filtered.length} rows`;
+  }
+  function onNationalSeasonChange() {
+    const season = document.getElementById(`${phase}-national-season`)?.value || '';
+    const weeks = season ? DATA.national.weeks[season] : null;
+    const wrap = document.getElementById(`${phase}-national-week-wrap`);
+    wrap.innerHTML = weekSelectHTML(`${phase}-national-week`, weeks);
+    document.getElementById(`${phase}-national-week`)?.addEventListener('change', renderNational);
+    renderNational();
   }
 
-  document.getElementById(`${phase}-cciw-season`)?.addEventListener('change', renderCciw);
-  document.getElementById(`${phase}-national-season`)?.addEventListener('change', renderNational);
-  renderCciw();
-  renderNational();
+  document.getElementById(`${phase}-cciw-season`)?.addEventListener('change', onCciwSeasonChange);
+  document.getElementById(`${phase}-national-season`)?.addEventListener('change', onNationalSeasonChange);
+  onCciwSeasonChange();
+  onNationalSeasonChange();
+}
+
+function joinTeamRows(carrollRows, opponentRows, keyFn) {
+  const oppMap = new Map(opponentRows.map((r) => [keyFn(r), r]));
+  const seen = new Set();
+  const joined = [];
+  carrollRows.forEach((cr) => {
+    const key = keyFn(cr);
+    seen.add(key);
+    joined.push({ ...cr, opponentRow: oppMap.get(key) || null });
+  });
+  opponentRows.forEach((or) => {
+    const key = keyFn(or);
+    if (seen.has(key)) return;
+    joined.push({ category: or.category, metric: or.metric, stat: or.stat, rank: null, out_of: null, opponentRow: or });
+  });
+  return joined;
+}
+
+function thisWeekTable(joined, isNational) {
+  if (!joined.length) return '<div class="lb-empty">No rows for this selection.</div>';
+  const sorted = joined.slice().sort((a, b) => {
+    const ak = a.category + (a.metric ?? a.stat ?? ''), bk = b.category + (b.metric ?? b.stat ?? '');
+    return ak.localeCompare(bk);
+  });
+  const body = sorted.map((r) => {
+    const metricLabel = r.metric ?? r.stat ?? '';
+    const carrollCell = r.rank != null ? (isNational ? `#${r.rank}` : rankTag(r.rank, r.out_of)) : '—';
+    const oppCell = r.opponentRow ? (isNational ? `#${r.opponentRow.rank}` : rankTag(r.opponentRow.rank, r.opponentRow.out_of)) : '—';
+    return `
+    <tr>
+      <td class="name">${r.category}</td>
+      <td>${metricLabel}</td>
+      <td style="text-align:right;">${carrollCell}</td>
+      <td style="text-align:right;">${oppCell}</td>
+    </tr>`;
+  }).join('');
+  return `
+    <table class="mini rank-table">
+      <thead><tr><th>Category</th><th>Metric</th><th style="text-align:right;">Carroll</th><th style="text-align:right;">Opponent</th></tr></thead>
+      <tbody>${body}</tbody>
+    </table>`;
+}
+
+function thisWeekTab(root) {
+  const tw = DATA.this_week;
+  if (!tw) {
+    root.innerHTML = `
+      <div class="frame-wrap active">
+        <div class="slide">
+          <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>This Week</h2></div></div>
+          <div class="body"><div class="insight">No schedule data yet — run <code>Schedule/scrape_schedule.py</code>, or the 2026 season is fully played out.</div></div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const haLabel = tw.home_away === 'home' ? 'vs.' : tw.home_away === 'away' ? 'at' : '';
+  const confLabel = tw.is_conference ? 'CCIW conference game' : 'non-conference game';
+
+  const phases = ['overall', 'offense', 'defense', 'special_teams'];
+  const panelsHTML = phases.map((phase) => {
+    const carrollCciw = tw.carroll.cciw.rows.filter((r) => r.phase === phase);
+    const carrollNat = tw.carroll.national.rows.filter((r) => r.phase === phase);
+    const oppCciw = tw.opponent_rows.cciw.rows.filter((r) => r.phase === phase);
+    const oppNat = tw.opponent_rows.national.rows.filter((r) => r.phase === phase);
+    const cciwJoined = joinTeamRows(carrollCciw, oppCciw, (r) => `${r.category}|${r.metric}`);
+    const natJoined = joinTeamRows(carrollNat, oppNat, (r) => `${r.category}|${r.stat}`);
+    return `
+      <h3 style="margin:18px 0 8px;">${PHASE_TITLES[phase]}</h3>
+      <div class="rankgrid">
+        <div class="card">
+          <div class="card-head"><h3>CCIW Rankings${tw.carroll.cciw.season ? ` (${tw.carroll.cciw.season})` : ''}</h3></div>
+          <div class="card-body"><div class="rank-scroll">${phase === 'overall' ? '<div class="lb-empty">CCIW-scope has no Overall category.</div>' : thisWeekTable(cciwJoined, false)}</div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>National Rankings${tw.carroll.national.season ? ` (${tw.carroll.national.season})` : ''}</h3></div>
+          <div class="card-body"><div class="rank-scroll">${thisWeekTable(natJoined, true)}</div></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>This Week</h2></div>
+          <div class="sub">${haLabel} ${tw.opponent} · ${tw.date_text || ''} · ${confLabel}</div>
+        </div>
+        <div class="body">
+          ${!tw.opponent_data_available ? `<div class="insight">No ranking data available for ${tw.opponent} — not tracked by either CCIW Buddah Report or National Buddah Report (non-conference opponent). Carroll's own current standing is shown below regardless.</div>` : ''}
+          ${panelsHTML}
+        </div>
+        <div class="footer-note">Schedule: Schedule/schedule.json (gopios.com). Ranks: most current season/week available for each team from the same sources as the tabs after this one.</div>
+      </div>
+    </div>`;
 }
 
 const TAB_RENDERERS = {
+  this_week: (root) => thisWeekTab(root),
   overall: (root) => rankingsTab('overall', root),
   offense: (root) => rankingsTab('offense', root),
   defense: (root) => rankingsTab('defense', root),
@@ -209,7 +377,12 @@ document.querySelectorAll('#rank-tabs .tabbtn').forEach((btn) => {
 
 fetch('../data/rankings.json')
   .then((r) => r.json())
-  .then((data) => { DATA = data; showTab('overall'); })
+  .then((data) => {
+    DATA = data;
+    document.getElementById('cciw-season-range').textContent = seasonRangeText(DATA.cciw.seasons);
+    document.getElementById('national-season-range').textContent = seasonRangeText(DATA.national.seasons);
+    showTab('this_week');
+  })
   .catch((err) => {
     document.getElementById('rank-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/rankings.json — ${err}. Run scripts/build_rankings_data.py first, and serve over http:// not file://.</div></div>`;
   });

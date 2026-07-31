@@ -114,19 +114,19 @@ function execTab(root) {
     const byseason = groupBy(rows, 'season');
     renderBar(document.getElementById('pte-netseason'), {
       categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g && g.length ? avgNet(g) : null; }),
-      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--cat-1'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--cat-1'), tooltipExtra: (s) => `${(byseason.get(s) || []).length} punts`,
     });
     renderBar(document.getElementById('pte-grossseason'), {
       categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g && g.length ? mean(g.map((r) => r.total_distance)) : null; }),
-      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--cat-4'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--cat-4'), tooltipExtra: (s) => `${(byseason.get(s) || []).length} punts`,
     });
     renderBar(document.getElementById('pte-i20season'), {
       categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g ? rate(g, (r) => r.i20) : null; }),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--good'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--good'), tooltipExtra: (s) => `${(byseason.get(s) || []).length} punts`,
     });
     renderBar(document.getElementById('pte-tbseason'), {
       categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g ? rate(g, (r) => r.kick_outcome === 'Touchback') : null; }),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--critical'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--critical'), tooltipExtra: (s) => `${(byseason.get(s) || []).length} punts`,
     });
   }
   render();
@@ -341,7 +341,7 @@ function deepTab(root) {
     const quarters = DATA.filters.punt.quarter.filter((q) => byQ.has(q));
     renderBar(document.getElementById('ptd-quarter'), {
       categories: quarters, values: quarters.map((q) => avgNet(byQ.get(q))),
-      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--cat-2'), xlab2: (q) => `n=${byQ.get(q).length}`,
+      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--cat-2'), tooltipExtra: (q) => `${byQ.get(q).length} punts`,
     });
 
     const seasons = DATA.filters.punt.season.filter((s) => rows.some((r) => r.season === s));
@@ -349,7 +349,7 @@ function deepTab(root) {
     const hangBySeason = groupBy(rows.filter((r) => r.hangtime !== null), 'season');
     renderBar(document.getElementById('ptd-hangseason'), {
       categories: seasons, values: seasons.map((s) => { const g = hangBySeason.get(s); return g && g.length ? mean(g.map((r) => r.hangtime)) : null; }),
-      labelFmt: (v) => `${fmt(v, 2)}s`, colorFn: () => cssVar('--cat-5'), xlab2: (s) => `n=${(hangBySeason.get(s) || []).length}`,
+      labelFmt: (v) => `${fmt(v, 2)}s`, colorFn: () => cssVar('--cat-5'), tooltipExtra: (s) => `${(hangBySeason.get(s) || []).length} punts`,
     });
 
     const allSeasons = DATA.filters.punt.season;
@@ -379,7 +379,7 @@ function deepTab(root) {
     if (hashesPresent.length) {
       renderBar(document.getElementById('ptd-hash'), {
         categories: hashesPresent, values: hashesPresent.map((h) => rate(byHash.get(h), (r) => r.i20)),
-        labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), xlab2: (h) => `n=${byHash.get(h).length}`,
+        labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), tooltipExtra: (h) => `${byHash.get(h).length} punts`,
       });
     } else {
       document.getElementById('ptd-hash').innerHTML = '<div class="data-note">No charted hash data in the current filter (2023 onward only).</div>';
@@ -391,7 +391,7 @@ function deepTab(root) {
     if (snapLocsPresent.length) {
       renderBar(document.getElementById('ptd-snaploc'), {
         categories: snapLocsPresent, values: snapLocsPresent.map((s) => rate(bySnapLoc.get(s), (r) => r.i20)),
-        labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-5'), xlab2: (s) => `n=${bySnapLoc.get(s).length}`,
+        labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-5'), tooltipExtra: (s) => `${bySnapLoc.get(s).length} punts`,
       });
     } else {
       document.getElementById('ptd-snaploc').innerHTML = '<div class="data-note">No charted Snap Location data in the current filter (2023 onward only).</div>';
@@ -401,7 +401,7 @@ function deepTab(root) {
     renderBar(document.getElementById('ptd-scoretrend'), {
       categories: seasons, values: seasons.map((s) => mean((scoreBySeason.get(s) || []).map((r) => r.score))),
       labelFmt: (v) => fmt(v, 0), colorFn: (s, v) => (v >= 50 ? cssVar('--good') : cssVar('--critical')),
-      xlab2: (s) => `n=${(scoreBySeason.get(s) || []).length}`,
+      tooltipExtra: (s) => `${(scoreBySeason.get(s) || []).length} punts`,
     });
 
     const tbody = punters.map((p) => {

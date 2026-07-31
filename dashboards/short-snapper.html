@@ -117,11 +117,11 @@ function execTab(root) {
     const patBySeason = groupBy(patRows, 'season'), fgBySeason = groupBy(fgRows, 'season');
     renderBar(document.getElementById('sse-patseason'), {
       categories: seasons, values: seasons.map((s) => { const g = patBySeason.get(s); return g ? makeRate(g) : null; }),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'), xlab2: (s) => `n=${(patBySeason.get(s) || []).length}`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'), tooltipExtra: (s) => `${(patBySeason.get(s) || []).length} snaps`,
     });
     renderBar(document.getElementById('sse-fgseason'), {
       categories: seasons, values: seasons.map((s) => { const g = fgBySeason.get(s); return g ? makeRate(g) : null; }),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), xlab2: (s) => `n=${(fgBySeason.get(s) || []).length}`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), tooltipExtra: (s) => `${(fgBySeason.get(s) || []).length} snaps`,
     });
 
     const snappers = DATA.filters.money_unit.long_snapper.filter((s) => rows.some((r) => r.long_snapper === s));
@@ -134,7 +134,7 @@ function execTab(root) {
     const timeBySeason = groupBy(rows.filter((r) => r.snap_to_catch !== null), 'season');
     renderBar(document.getElementById('sse-timeseason'), {
       categories: seasons, values: seasons.map((s) => { const g = timeBySeason.get(s); return g && g.length ? mean(g.map((r) => r.snap_to_catch)) : null; }),
-      labelFmt: (v) => `${fmt(v, 2)}s`, colorFn: () => cssVar('--cat-5'), xlab2: (s) => `n=${(timeBySeason.get(s) || []).length}`,
+      labelFmt: (v) => `${fmt(v, 2)}s`, colorFn: () => cssVar('--cat-5'), tooltipExtra: (s) => `${(timeBySeason.get(s) || []).length} snaps`,
     });
   }
   render();
@@ -343,7 +343,7 @@ function deepTab(root) {
     const quarters = DATA.filters.money_unit.quarter.filter((q) => byQ.has(q));
     renderBar(document.getElementById('ssd-quarter'), {
       categories: quarters, values: quarters.map((q) => makeRate(byQ.get(q))),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-2'), xlab2: (q) => `n=${byQ.get(q).length}`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-2'), tooltipExtra: (q) => `${byQ.get(q).length} snaps`,
     });
 
     const seasons = DATA.filters.money_unit.season.filter((s) => rows.some((r) => r.season === s));
@@ -380,7 +380,7 @@ function deepTab(root) {
     if (snapLocsPresent.length) {
       renderBar(document.getElementById('ssd-snaploc'), {
         categories: snapLocsPresent, values: snapLocsPresent.map((s) => makeRate(bySnapLoc.get(s))),
-        labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-5'), xlab2: (s) => `n=${bySnapLoc.get(s).length}`,
+        labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-5'), tooltipExtra: (s) => `${bySnapLoc.get(s).length} snaps`,
       });
     } else {
       document.getElementById('ssd-snaploc').innerHTML = '<div class="data-note">No charted Snap Location data in the current filter (2023 onward only).</div>';
@@ -390,7 +390,7 @@ function deepTab(root) {
     renderBar(document.getElementById('ssd-scoretrend'), {
       categories: seasons, values: seasons.map((s) => mean((scoreBySeason.get(s) || []).map((r) => r.score))),
       labelFmt: (v) => fmt(v, 0), colorFn: (s, v) => (v >= 50 ? cssVar('--good') : cssVar('--critical')),
-      xlab2: (s) => `n=${(scoreBySeason.get(s) || []).length}`,
+      tooltipExtra: (s) => `${(scoreBySeason.get(s) || []).length} snaps`,
     });
 
     const tbody = snappers.map((s) => {

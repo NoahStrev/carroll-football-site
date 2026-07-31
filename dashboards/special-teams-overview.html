@@ -158,7 +158,7 @@ function teamOverviewTab(root) {
       values: UNIT_KEYS.map((u) => mean(rowsByUnit[u].map((r) => r.score))),
       labelFmt: (v) => fmt(v, 0),
       colorFn: (name, v) => (v === null ? cssVar('--muted') : v >= 50 ? cssVar('--good') : cssVar('--critical')),
-      xlab2: (name, i) => `n=${rowsByUnit[UNIT_KEYS[i]].length}`,
+      tooltipExtra: (name, i) => `${rowsByUnit[UNIT_KEYS[i]].length} plays`,
     });
 
     const allRows = UNIT_KEYS.flatMap((u) => rowsByUnit[u]);
@@ -169,7 +169,7 @@ function teamOverviewTab(root) {
       values: seasonsInView.map((s) => mean(byseason.get(s).map((r) => r.score))),
       labelFmt: (v) => fmt(v, 0),
       colorFn: () => cssVar('--cat-1'),
-      xlab2: (s) => `n=${byseason.get(s).length}`,
+      tooltipExtra: (s) => `${byseason.get(s).length} plays`,
     });
 
     renderBar(document.getElementById('to-volume'), {
@@ -297,7 +297,7 @@ function moneyUnitTab(root) {
       }),
       labelFmt: (v) => pct(v, 0),
       colorFn: () => cssVar('--cat-1'),
-      xlab2: (b) => `n=${(fgByBucket.get(b) || []).length}`,
+      tooltipExtra: (b) => `${(fgByBucket.get(b) || []).length} kicks`,
     });
 
     const hashes = HASH_ORDER;
@@ -307,7 +307,7 @@ function moneyUnitTab(root) {
       values: hashes.filter((h) => byHash.has(h)).map((h) => byHash.get(h).filter((r) => r.make).length / byHash.get(h).length),
       labelFmt: (v) => pct(v, 0),
       colorFn: () => cssVar('--cat-3'),
-      xlab2: (h) => `n=${byHash.get(h).length}`,
+      tooltipExtra: (h) => `${byHash.get(h).length} kicks`,
     });
 
     const missRows = rows.filter((r) => !r.make && r.miss_location);
@@ -425,7 +425,7 @@ function puntTab(root) {
         return g.filter((r) => r.drive_success).length / g.length;
       }),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'),
-      xlab2: (b) => `n=${byBucket.get(b).length}`,
+      tooltipExtra: (b) => `${byBucket.get(b).length} punts`,
     });
 
     const outcomeCats = ['No Score', 'Field Goal', 'Touchdown', 'Safety'];
@@ -530,7 +530,7 @@ function puntReturnTab(root) {
       categories: buckets,
       values: buckets.map((b) => byBucket.get(b).filter((r) => r.drive_success).length / byBucket.get(b).length),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'),
-      xlab2: (b) => `n=${byBucket.get(b).length}`,
+      tooltipExtra: (b) => `${byBucket.get(b).length} punts`,
     });
 
     const rlBucket = (rl) => (rl <= 5 ? '0-5' : rl <= 10 ? '6-10' : rl <= 15 ? '11-15' : rl <= 20 ? '16-20' : '21+');
@@ -541,7 +541,7 @@ function puntReturnTab(root) {
       categories: rlCats,
       values: rlCats.map((c) => byRL.get(c).filter((r) => r.drive_success).length / byRL.get(c).length),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'),
-      xlab2: (c) => `n=${byRL.get(c).length}`,
+      tooltipExtra: (c) => `${byRL.get(c).length} punts`,
     });
 
     renderTrendCard(document.getElementById('prt-rettrend'), rows, 'return_length', ' yds', 'Avg Return Length');
@@ -635,7 +635,7 @@ function kickoffTab(root) {
     const byType = groupBy(rows, 'kick_type');
     renderBar(document.getElementById('ko-typefp'), {
       categories: kickTypes, values: kickTypes.map((t) => mean(byType.get(t).map((r) => r.converted_los))),
-      colorFn: (name) => typeColors[name], xlab2: (t) => `n=${byType.get(t).length}`,
+      colorFn: (name) => typeColors[name], tooltipExtra: (t) => `${byType.get(t).length} kicks`,
     });
 
     const buckets = sortBuckets([...new Set(rows.map((r) => r.field_bucket).filter(Boolean))]);
@@ -644,14 +644,14 @@ function kickoffTab(root) {
       categories: buckets,
       values: buckets.map((b) => byBucket.get(b).filter((r) => r.drive_success).length / byBucket.get(b).length),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'),
-      xlab2: (b) => `n=${byBucket.get(b).length}`,
+      tooltipExtra: (b) => `${byBucket.get(b).length} kicks`,
     });
 
     renderBar(document.getElementById('ko-typesuccess'), {
       categories: kickTypes,
       values: kickTypes.map((t) => byType.get(t).filter((r) => r.drive_success).length / byType.get(t).length),
       labelFmt: (v) => pct(v, 0), colorFn: (name) => typeColors[name],
-      xlab2: (t) => `n=${byType.get(t).length}`,
+      tooltipExtra: (t) => `${byType.get(t).length} kicks`,
     });
 
     renderTrendCard(document.getElementById('ko-fptrend'), rows, 'converted_los', '', 'Avg Field Position');
@@ -744,7 +744,7 @@ function kickoffReturnTab(root) {
       categories: locCats,
       values: locCats.map((l) => byLoc.get(l).filter((r) => r.drive_success).length / byLoc.get(l).length),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'),
-      xlab2: (l) => `n=${byLoc.get(l).length}`,
+      tooltipExtra: (l) => `${byLoc.get(l).length} returns`,
     });
 
     const buckets = sortBuckets([...new Set(rows.map((r) => r.field_bucket).filter(Boolean))]);
@@ -753,7 +753,7 @@ function kickoffReturnTab(root) {
       categories: buckets,
       values: buckets.map((b) => byBucket.get(b).filter((r) => r.drive_success).length / byBucket.get(b).length),
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'),
-      xlab2: (b) => `n=${byBucket.get(b).length}`,
+      tooltipExtra: (b) => `${byBucket.get(b).length} returns`,
     });
 
     const outcomeCats = ['No Score', 'Field Goal', 'Touchdown'].filter((o) => rows.some((r) => r.next_drive_outcome === o));

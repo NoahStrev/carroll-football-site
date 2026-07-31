@@ -109,19 +109,19 @@ function execTab(root) {
     const byseason = groupBy(deepRows, 'season');
     renderBar(document.getElementById('kke-tbseason'), {
       categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g ? rate(g, (r) => r.touchback) : null; }),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'), tooltipExtra: (s) => `${(byseason.get(s) || []).length} kicks`,
     });
     renderBar(document.getElementById('kke-i25season'), {
       categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g ? rate(g, (r) => r.inside_25) : null; }),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), tooltipExtra: (s) => `${(byseason.get(s) || []).length} kicks`,
     });
     renderBar(document.getElementById('kke-distseason'), {
       categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g && g.length ? mean(g.map((r) => r.total_distance)) : null; }),
-      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--cat-4'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--cat-4'), tooltipExtra: (s) => `${(byseason.get(s) || []).length} kicks`,
     });
     renderBar(document.getElementById('kke-retseason'), {
       categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g && g.length ? mean(g.map((r) => r.return_length)) : null; }),
-      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--critical'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--critical'), tooltipExtra: (s) => `${(byseason.get(s) || []).length} kicks`,
     });
   }
   render();
@@ -332,14 +332,14 @@ function deepTab(root) {
     const quarters = DATA.filters.kickoff.quarter.filter((q) => byQ.has(q));
     renderBar(document.getElementById('kkd-quarter'), {
       categories: quarters, values: quarters.map((q) => rate(byQ.get(q), (r) => r.touchback)),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-2'), xlab2: (q) => `n=${byQ.get(q).length}`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-2'), tooltipExtra: (q) => `${byQ.get(q).length} kicks`,
     });
 
     const seasons = DATA.filters.kickoff.season.filter((s) => rows.some((r) => r.season === s));
     const byseason = groupBy(deepRows, 'season');
     renderBar(document.getElementById('kkd-retseason'), {
       categories: seasons, values: seasons.map((s) => { const g = byseason.get(s); return g && g.length ? mean(g.map((r) => r.return_length)) : null; }),
-      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--critical'), xlab2: (s) => `n=${(byseason.get(s) || []).length}`,
+      labelFmt: (v) => `${fmt(v, 0)} yds`, colorFn: () => cssVar('--critical'), tooltipExtra: (s) => `${(byseason.get(s) || []).length} kicks`,
     });
 
     const allSeasons = DATA.filters.kickoff.season;
@@ -369,7 +369,7 @@ function deepTab(root) {
     if (hashesPresent.length) {
       renderBar(document.getElementById('kkd-hash'), {
         categories: hashesPresent, values: hashesPresent.map((h) => rate(byHash.get(h), (r) => r.touchback)),
-        labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), xlab2: (h) => `n=${byHash.get(h).length}`,
+        labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), tooltipExtra: (h) => `${byHash.get(h).length} kicks`,
       });
     } else {
       document.getElementById('kkd-hash').innerHTML = '<div class="data-note">No charted hash data in the current filter (2023 onward only).</div>';
@@ -379,7 +379,7 @@ function deepTab(root) {
     renderBar(document.getElementById('kkd-scoretrend'), {
       categories: seasons, values: seasons.map((s) => mean((scoreBySeason.get(s) || []).map((r) => r.score))),
       labelFmt: (v) => fmt(v, 0), colorFn: (s, v) => (v >= 50 ? cssVar('--good') : cssVar('--critical')),
-      xlab2: (s) => `n=${(scoreBySeason.get(s) || []).length}`,
+      tooltipExtra: (s) => `${(scoreBySeason.get(s) || []).length} kicks`,
     });
 
     const tbody = kickers.map((k) => {
