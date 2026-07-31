@@ -32,6 +32,7 @@
       <a href="offense.html">Offense</a>
       <a href="defense.html">Defense</a>
       <a href="rankings.html">Rankings</a>
+      <a href="glossary.html">Glossary</a>
     </div>
   </nav>
 
@@ -99,7 +100,7 @@ function teamOverviewTab(root) {
         <div class="shelf" id="to-shelf"></div>
         <div class="body">
           <div class="kpirow-5" id="to-kpis">
-            ${UNIT_KEYS.map((u) => kpiHTML(`to-${u}`, `${UNIT_LABELS[u]} Avg Score`)).join('')}
+            ${UNIT_KEYS.map((u) => kpiHTML(`to-${u}`, `${UNIT_LABELS[u]} Avg Score`, undefined, 'Value / Score')).join('')}
           </div>
           <div class="chartgrid">
             <div class="card"><div class="card-head"><h3>Avg Score by Unit</h3></div><div class="card-body" id="to-byunit"></div></div>

@@ -30,6 +30,7 @@
       <a href="offense.html" class="active">Offense</a>
       <a href="defense.html">Defense</a>
       <a href="rankings.html">Rankings</a>
+      <a href="glossary.html">Glossary</a>
     </div>
   </nav>
 
@@ -81,11 +82,11 @@ function execTab(root) {
         <div class="body">
           <div class="kpirow-6" id="oe-kpis">
             ${kpiHTML('oe-ypp', 'Yards / Play', '--good')}
-            ${kpiHTML('oe-succ', 'Success Rate', '--good')}
-            ${kpiHTML('oe-exp', 'Explosive Rate')}
-            ${kpiHTML('oe-to', 'Turnover Rate', '--critical')}
-            ${kpiHTML('oe-rz', 'Red Zone TD %')}
-            ${kpiHTML('oe-ppd', 'Points / Drive (approx.)')}
+            ${kpiHTML('oe-succ', 'Success Rate', '--good', 'Success Rate')}
+            ${kpiHTML('oe-exp', 'Explosive Rate', undefined, 'Explosive Play')}
+            ${kpiHTML('oe-to', 'Turnover Rate', '--critical', 'Turnover Rate')}
+            ${kpiHTML('oe-rz', 'Red Zone TD %', undefined, 'Red Zone')}
+            ${kpiHTML('oe-ppd', 'Points / Drive (approx.)', undefined, 'Points / Drive (approx.)')}
           </div>
           <div class="chartgrid">
             <div class="card"><div class="card-head"><h3>Yards / Play by Down</h3></div><div class="card-body" id="oe-down"></div></div>
@@ -367,7 +368,7 @@ function outcomesTab(root) {
           <div class="kpirow" id="oo-kpis">
             ${kpiHTML('oo-n', 'Plays in View')}
             ${kpiHTML('oo-top', 'Most Common Outcome')}
-            ${kpiHTML('oo-to', 'Turnover Rate', '--critical')}
+            ${kpiHTML('oo-to', 'Turnover Rate', '--critical', 'Turnover Rate')}
             ${kpiHTML('oo-ypp', 'Avg Yards', '--good')}
           </div>
           <div class="card" style="margin-bottom:14px;">
@@ -465,7 +466,7 @@ function qbTab(root) {
         <div class="body">
           <div class="kpirow" id="oqb-kpis">
             ${kpiHTML('oqb-n', 'Pass Snaps')}
-            ${kpiHTML('oqb-eff', 'Pass Efficiency', '--good')}
+            ${kpiHTML('oqb-eff', 'Pass Efficiency', '--good', 'Success Rate')}
             ${kpiHTML('oqb-sack', 'Sack Rate', '--critical')}
             ${kpiHTML('oqb-prot', 'Most Common Protection')}
           </div>
@@ -560,8 +561,8 @@ function rbTab(root) {
         <div class="body">
           <div class="kpirow" id="orb-kpis">
             ${kpiHTML('orb-n', 'Run Snaps')}
-            ${kpiHTML('orb-eff', 'Run Efficiency', '--good')}
-            ${kpiHTML('orb-exp', 'Explosive Run Rate', '--good')}
+            ${kpiHTML('orb-eff', 'Run Efficiency', '--good', 'Success Rate')}
+            ${kpiHTML('orb-exp', 'Explosive Run Rate', '--good', 'Explosive Play')}
             ${kpiHTML('orb-backfield', 'Most-Used Backfield')}
           </div>
           <div class="card" style="margin-bottom:14px;">
@@ -656,8 +657,8 @@ function wrTab(root) {
         <div class="body">
           <div class="kpirow" id="owr-kpis">
             ${kpiHTML('owr-n', 'Pass Snaps')}
-            ${kpiHTML('owr-eff', 'Pass Efficiency', '--good')}
-            ${kpiHTML('owr-exp', 'Explosive Pass Rate', '--good')}
+            ${kpiHTML('owr-eff', 'Pass Efficiency', '--good', 'Success Rate')}
+            ${kpiHTML('owr-exp', 'Explosive Pass Rate', '--good', 'Explosive Play')}
             ${kpiHTML('owr-shell', 'Most Common Shell Faced')}
           </div>
           <div class="card" style="margin-bottom:14px;">
@@ -752,7 +753,7 @@ function olTab(root) {
         <div class="body">
           <div class="kpirow" id="ool-kpis">
             ${kpiHTML('ool-n', 'Snaps in View')}
-            ${kpiHTML('ool-run', 'Run Efficiency', '--good')}
+            ${kpiHTML('ool-run', 'Run Efficiency', '--good', 'Success Rate')}
             ${kpiHTML('ool-sack', 'Sack Rate Allowed', '--critical')}
             ${kpiHTML('ool-prot', 'Most Common Protection')}
           </div>

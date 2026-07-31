@@ -158,10 +158,83 @@ function hideTooltip() {
 // verbatim there) since every Phase 2 position page needs the same KPI-tile
 // markup -- reuse instead of re-copying per page.
 
-function kpiHTML(id, label, dotVar) {
+/* ------------------------------------------------------- glossary hints --- */
+// Shared term -> plain-language definition lookup (2026-07-31, per the user:
+// "a brand new coach might not know the definition for some of our terms").
+// This is the single source of truth for both dashboards/glossary.html's
+// full reference page and the inline "?" hover hints below -- add a term
+// here once and it's usable from either place.
+const GLOSSARY = {
+  'Explosive Play': 'A run gaining 10+ yards or a pass gaining 15+ yards — the "big play" threshold used across every efficiency chart on this site.',
+  'Success Rate': 'Share of plays that gained enough yardage relative to down and distance: at least 50% of yards-to-go on 1st down, 70% on 2nd down, or a full conversion on 3rd/4th down.',
+  'Stuffed': 'A play efficiency result meaning 0 or negative yards gained.',
+  'Play Efficiency': 'A play is classified Explosive, Successful, Unsuccessful, or Stuffed based on yards gained relative to down and distance — see the Explosive Play / Success Rate / Stuffed entries for the exact thresholds.',
+  'Money Down': '3rd or 4th down — the down where the offense must convert or give up the ball.',
+  'Passing Down': '2nd down with 7 or more yards to go — a situation where a pass is statistically much more likely than a run.',
+  'Standard Down': "Any down/distance that isn't a Money Down or Passing Down — the \"expected\" play-calling situation.",
+  'Field Zone': 'Backed Up / Own Territory / Midfield / Opponent Territory / Red Zone — five buckets of distance-to-the-end-zone used to group plays by field position.',
+  'Red Zone': "Inside the opponent's own 20-yard line — the highest-value scoring area of the field.",
+  'Points / Drive (approx.)': "A simplified estimate: 6 points for a touchdown, 3 for a made field goal, 0 otherwise — doesn't add PAT/two-point value on top, so it's always a slight underestimate of real points per drive.",
+  'Turnover Rate': "Share of Carroll's own offensive plays that ended in a turnover (interception or lost fumble) — a giveaway.",
+  'Takeaway Rate': "Share of the opponent's offensive plays, while Carroll is on defense, that ended in a turnover — a Carroll takeaway.",
+  'Drive Result Mix': "How Carroll's offensive drives actually ended (Touchdown, Punt, Turnover, etc.), counted once per real drive — not once per play.",
+  'Play Outcome': 'The specific charted result of a play (Touchdown, Interception, Sack, Complete, Incomplete, Fumble, etc.), shown exactly as charted — including compound results like "Rush, TD" when more than one thing happened on the same play.',
+  'Value / Score': "A \"points added over expectation\" metric computed for every Special Teams unit — how many points better or worse than an average Carroll attempt that play was, rescaled to a 0–100 Score for easy comparison across units.",
+  'Snap Location': "A hand-charted snap-quality rating (scale still being finalized by the coaching staff, currently 1-3 or 1-5) — which end of the scale means \"better\" isn't confirmed yet.",
+  'Net Punt': "Gross punt distance minus the returner's return yardage — the real field-position value of a punt.",
+  'Inside-20 (I20)': "A punt that pins the opponent inside their own 20-yard line — a strong special teams outcome.",
+  'Inside-25 (I25)': "A kickoff that pins the opponent inside their own 25-yard line.",
+  'Touchback': 'A kick that goes into (or is downed in) the end zone, giving the receiving team the ball at a fixed spot with no return.',
+  'Operation Time': "The full snap-to-kick sequence, split into Snap → Catch (snapper to holder/punter) and Catch → Kick (holder/punter to the kick itself) — hand-charted from 2023 onward.",
+  'Hash': "Which hash mark the ball was snapped from or kicked to: Left, Middle, or Right (Special Teams' kick-landing tracking also uses Left-Middle/Right-Middle).",
+  'Personnel': 'The grouping of running backs/tight ends/wide receivers on the field for a play (e.g. "11 personnel" = 1 RB, 1 TE, 3 WR).',
+  'Coverage': "The pass defense scheme (e.g. Cover 1, Cover 3) the opponent's defense showed against Carroll's offense.",
+  'Coverage Shell': 'The deep-safety alignment behind a coverage call (e.g. "2 High" = two deep safeties) — shown for what opponents display against Carroll\'s offense.',
+  'Direction': 'Which side of the field a run or pass play attacked: Left, Middle, or Right.',
+  'Pass Depth': 'Short or Deep — how far downfield a pass was thrown.',
+  'CCIW': "College Conference of Illinois & Wisconsin, Carroll's conference — CCIW rankings compare Carroll against the other ~9-10 teams in the conference.",
+  'National (NCAA D3) Rankings': "Carroll's rank among all ~200+ NCAA Division III football programs nationally, via NCAA.com.",
+  'Strength Score / Athleticism Score': "Team-scope percentile scores computed by the Lifting Data project — a composite z-score across an athlete's lift or testing numbers, rescaled to 0-100.",
+  'Pro Agility': 'A timed change-of-direction sprint (the 5-10-5 shuttle) — the one metric on the Lifting & Strength page where a *lower* time is better.',
+};
+
+/** Small "?" marker that shows a term's GLOSSARY definition on hover, via the
+ * same showTooltip()/hideTooltip() used by every chart tooltip on the site --
+ * one shared delegated listener (below) handles every marker on the page, so
+ * a chart/table that re-renders doesn't need to re-wire anything. */
+function glossaryMarker(term) {
+  return `<span class="glossary-hint" data-glossary-term="${term}" tabindex="0">?</span>`;
+}
+document.addEventListener('mouseover', (e) => {
+  const hint = e.target.closest('.glossary-hint');
+  if (!hint) return;
+  const term = hint.dataset.glossaryTerm;
+  const def = GLOSSARY[term];
+  if (!def) return;
+  const r = hint.getBoundingClientRect();
+  showTooltip(r.left, r.bottom + 4, `<div class="tt-title">${term}</div><div class="tt-muted" style="color:var(--text-primary); font-size:12px; margin-top:2px;">${def}</div>`);
+});
+document.addEventListener('mouseout', (e) => {
+  if (e.target.closest('.glossary-hint')) hideTooltip();
+});
+document.addEventListener('focusin', (e) => {
+  const hint = e.target.closest('.glossary-hint');
+  if (!hint) return;
+  const term = hint.dataset.glossaryTerm;
+  const def = GLOSSARY[term];
+  if (!def) return;
+  const r = hint.getBoundingClientRect();
+  showTooltip(r.left, r.bottom + 4, `<div class="tt-title">${term}</div><div class="tt-muted" style="color:var(--text-primary); font-size:12px; margin-top:2px;">${def}</div>`);
+});
+document.addEventListener('focusout', (e) => {
+  if (e.target.closest('.glossary-hint')) hideTooltip();
+});
+
+function kpiHTML(id, label, dotVar, glossaryTerm) {
   const dot = dotVar ? `<span class="statusdot" style="background:var(${dotVar})"></span>` : '';
   const accent = dotVar ? ` style="--kpi-accent:var(${dotVar})"` : '';
-  return `<div class="kpi"${accent}><div class="label">${dot}${label}</div><div class="value" id="${id}-value">—</div><div class="foot" id="${id}-foot"></div></div>`;
+  const hint = glossaryTerm ? glossaryMarker(glossaryTerm) : '';
+  return `<div class="kpi"${accent}><div class="label">${dot}${label}${hint}</div><div class="value" id="${id}-value">—</div><div class="foot" id="${id}-foot"></div></div>`;
 }
 
 function setKPI(id, value, foot) {

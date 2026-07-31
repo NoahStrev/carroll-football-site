@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary — Carroll Football Analytics</title>
+<link rel="stylesheet" href="../css/theme.css">
+<style>
+  .glossary-search {
+    width: 100%; max-width: 420px; font-family: inherit; font-size: 14px; font-weight: 600;
+    padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--surface-1); color: var(--text-primary); margin-bottom: 20px;
+  }
+  .glossary-search:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .glossary-section { margin-bottom: 20px; }
+  .glossary-section-title {
+    font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted);
+    font-weight: 700; margin: 0 0 8px 4px;
+  }
+  .glossary-term-row { padding: 13px 16px; border-bottom: 1px solid var(--grid); }
+  .glossary-term-row:last-child { border-bottom: none; }
+  .glossary-term { font-size: 13.5px; font-weight: 700; margin-bottom: 3px; }
+  .glossary-def { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; }
+  .glossary-empty { padding: 20px; text-align: center; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="../index.html">Overview</a>
+      <a href="special-teams-overview.html">Special Teams</a>
+      <a href="placekicker.html">Positions</a>
+      <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html">Offense</a>
+      <a href="defense.html">Defense</a>
+      <a href="rankings.html">Rankings</a>
+      <a href="glossary.html" class="active">Glossary</a>
+    </div>
+  </nav>
+
+  <div class="intro">
+    <h1>Glossary</h1>
+  </div>
+
+  <div style="max-width: 1280px; margin: 0 auto; padding: 0 4px;">
+    <input type="text" class="glossary-search" id="glossary-search" placeholder="Search terms…" autocomplete="off" spellcheck="false">
+    <div id="glossary-sections"></div>
+  </div>
+</div>
+
+<script src="../js/charts.js"></script>
+<script>
+// Presentation-only grouping/ordering for this page -- the actual definition
+// text always comes from the shared GLOSSARY object in js/charts.js (also
+// what powers the inline "?" hover hints on KPI tiles across the site), so
+// there's exactly one place a definition ever needs updating.
+const CATEGORIES = [
+  {
+    title: 'Efficiency & Situational Terms',
+    terms: ['Explosive Play', 'Success Rate', 'Stuffed', 'Play Efficiency', 'Money Down', 'Passing Down',
+      'Standard Down', 'Field Zone', 'Red Zone', 'Points / Drive (approx.)', 'Turnover Rate', 'Takeaway Rate',
+      'Drive Result Mix', 'Play Outcome'],
+  },
+  {
+    title: 'Offense & Defense Schematics',
+    terms: ['Personnel', 'Coverage', 'Coverage Shell', 'Direction', 'Pass Depth', 'Hash'],
+  },
+  {
+    title: 'Special Teams',
+    terms: ['Value / Score', 'Snap Location', 'Net Punt', 'Inside-20 (I20)', 'Inside-25 (I25)', 'Touchback', 'Operation Time'],
+  },
+  {
+    title: 'Rankings',
+    terms: ['CCIW', 'National (NCAA D3) Rankings'],
+  },
+  {
+    title: 'Lifting & Strength',
+    terms: ['Strength Score / Athleticism Score', 'Pro Agility'],
+  },
+];
+
+function render(query) {
+  const q = (query || '').trim().toLowerCase();
+  const sectionsEl = document.getElementById('glossary-sections');
+  const html = CATEGORIES.map((cat) => {
+    const rows = cat.terms
+      .filter((t) => !q || t.toLowerCase().includes(q) || (GLOSSARY[t] || '').toLowerCase().includes(q))
+      .map((t) => `
+        <div class="glossary-term-row">
+          <div class="glossary-term">${t}</div>
+          <div class="glossary-def">${GLOSSARY[t] || '—'}</div>
+        </div>`).join('');
+    if (!rows) return '';
+    return `
+      <div class="glossary-section">
+        <div class="glossary-section-title">${cat.title}</div>
+        <div class="card">${rows}</div>
+      </div>`;
+  }).join('');
+  sectionsEl.innerHTML = html || '<div class="glossary-empty">No terms match your search.</div>';
+}
+
+document.getElementById('glossary-search').addEventListener('input', (e) => render(e.target.value));
+render('');
+</script>
+</body>
+</html>

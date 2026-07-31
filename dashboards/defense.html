@@ -30,6 +30,7 @@
       <a href="offense.html">Offense</a>
       <a href="defense.html" class="active">Defense</a>
       <a href="rankings.html">Rankings</a>
+      <a href="glossary.html">Glossary</a>
     </div>
   </nav>
 
@@ -81,11 +82,11 @@ function execTab(root) {
         <div class="body">
           <div class="kpirow-6" id="de-kpis">
             ${kpiHTML('de-ypp', 'Yards Allowed / Play', '--critical')}
-            ${kpiHTML('de-succ', 'Success Rate Allowed', '--critical')}
-            ${kpiHTML('de-exp', 'Explosive Rate Allowed')}
-            ${kpiHTML('de-to', 'Takeaway Rate', '--good')}
-            ${kpiHTML('de-rz', 'Red Zone TD % Allowed')}
-            ${kpiHTML('de-ppd', 'Points Allowed / Drive (approx.)')}
+            ${kpiHTML('de-succ', 'Success Rate Allowed', '--critical', 'Success Rate')}
+            ${kpiHTML('de-exp', 'Explosive Rate Allowed', undefined, 'Explosive Play')}
+            ${kpiHTML('de-to', 'Takeaway Rate', '--good', 'Takeaway Rate')}
+            ${kpiHTML('de-rz', 'Red Zone TD % Allowed', undefined, 'Red Zone')}
+            ${kpiHTML('de-ppd', 'Points Allowed / Drive (approx.)', undefined, 'Points / Drive (approx.)')}
           </div>
           <div class="chartgrid">
             <div class="card"><div class="card-head"><h3>Yards Allowed / Play by Down</h3></div><div class="card-body" id="de-down"></div></div>
@@ -350,7 +351,7 @@ function outcomesTab(root) {
           <div class="kpirow" id="do-kpis">
             ${kpiHTML('do-n', 'Plays in View')}
             ${kpiHTML('do-top', 'Most Common Outcome')}
-            ${kpiHTML('do-to', 'Takeaway Rate', '--good')}
+            ${kpiHTML('do-to', 'Takeaway Rate', '--good', 'Takeaway Rate')}
             ${kpiHTML('do-ypp', 'Avg Yards Allowed', '--critical')}
           </div>
           <div class="card" style="margin-bottom:14px;">
@@ -456,7 +457,7 @@ function dlineTab(root) {
         <div class="body">
           <div class="kpirow" id="ddl-kpis">
             ${kpiHTML('ddl-n', 'Snaps in View')}
-            ${kpiHTML('ddl-run', 'Run Efficiency Allowed', '--critical')}
+            ${kpiHTML('ddl-run', 'Run Efficiency Allowed', '--critical', 'Success Rate')}
             ${kpiHTML('ddl-sack', 'Sack Rate', '--good')}
             ${kpiHTML('ddl-front', 'Most-Used Front')}
           </div>
@@ -555,8 +556,8 @@ function linebackersTab(root) {
         <div class="body">
           <div class="kpirow" id="dlb-kpis">
             ${kpiHTML('dlb-n', 'Run Snaps Faced')}
-            ${kpiHTML('dlb-run', 'Run Efficiency Allowed', '--critical')}
-            ${kpiHTML('dlb-exp', 'Explosive Run Rate Allowed', '--critical')}
+            ${kpiHTML('dlb-run', 'Run Efficiency Allowed', '--critical', 'Success Rate')}
+            ${kpiHTML('dlb-exp', 'Explosive Run Rate Allowed', '--critical', 'Explosive Play')}
             ${kpiHTML('dlb-blitz', 'Most Common Blitz Call')}
           </div>
           <div class="card" style="margin-bottom:14px;">
@@ -658,8 +659,8 @@ function cornersTab(root) {
         <div class="body">
           <div class="kpirow" id="dcb-kpis">
             ${kpiHTML('dcb-n', 'Pass Snaps Faced')}
-            ${kpiHTML('dcb-eff', 'Pass Efficiency Allowed', '--critical')}
-            ${kpiHTML('dcb-exp', 'Explosive Pass Rate Allowed', '--critical')}
+            ${kpiHTML('dcb-eff', 'Pass Efficiency Allowed', '--critical', 'Success Rate')}
+            ${kpiHTML('dcb-exp', 'Explosive Pass Rate Allowed', '--critical', 'Explosive Play')}
             ${kpiHTML('dcb-ypp', 'Avg Yards / Pass Allowed', '--critical')}
           </div>
           <div class="card" style="margin-bottom:14px;">
@@ -747,9 +748,9 @@ function safetiesTab(root) {
         <div class="body">
           <div class="kpirow" id="dsaf-kpis">
             ${kpiHTML('dsaf-n', 'Snaps in View')}
-            ${kpiHTML('dsaf-exp', 'Explosive Rate Allowed', '--critical')}
-            ${kpiHTML('dsaf-pass', 'Pass Efficiency Allowed', '--critical')}
-            ${kpiHTML('dsaf-run', 'Run Efficiency Allowed', '--critical')}
+            ${kpiHTML('dsaf-exp', 'Explosive Rate Allowed', '--critical', 'Explosive Play')}
+            ${kpiHTML('dsaf-pass', 'Pass Efficiency Allowed', '--critical', 'Success Rate')}
+            ${kpiHTML('dsaf-run', 'Run Efficiency Allowed', '--critical', 'Success Rate')}
           </div>
           <div class="card" style="margin-bottom:14px;">
             <div class="card-head"><h3>Explosive Rate Allowed by Field Zone</h3></div>
