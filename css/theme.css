@@ -369,7 +369,15 @@ html, body {
 .legend .sw { display: inline-flex; align-items: center; gap: 5px; }
 .legend .dot { width: 9px; height: 9px; border-radius: 2px; }
 
-.heat { display: grid; grid-template-columns: 130px repeat(5, 1fr); gap: 3px; }
+/* justify-content:center added 2026-07-31 -- same real bug as .stacked
+   above: renderHeatmap's data columns used to be 1fr (js/charts.js), which
+   stretches each cell to fill whatever's left of the card's width -- on a
+   full-width card with only 4-5 columns that meant huge cells with mostly
+   blank padding around a 3-4 character value. Columns are now a fixed
+   minmax() size (js/charts.js) sized to their actual content, and
+   justify-content centers the now-compact grid instead of leaving it
+   left-stuck with a wall of empty space to its right. */
+.heat { display: grid; grid-template-columns: 130px repeat(5, 1fr); justify-content: center; gap: 3px; }
 .heat .hcell { font-size: 11px; padding: 8px 4px; border-radius: 4px; text-align: center; }
 .heat .rowlabel { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; font-weight: 600; }
 .heat .collabel { font-size: 10.5px; color: var(--muted); text-align: center; padding-bottom: 2px; }

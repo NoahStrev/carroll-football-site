@@ -436,7 +436,14 @@ const SEQ_STEPS = ['--seq-100', '--seq-200', '--seq-300', '--seq-400', '--seq-50
 function renderHeatmap(container, { rowLabels, colLabels, cellFor, title = (r, c) => `${r} × ${c}` }) {
   container.innerHTML = '';
   const grid = el('div', 'heat');
-  grid.style.gridTemplateColumns = `130px repeat(${colLabels.length}, 1fr)`;
+  // Real bug found 2026-07-31: 1fr stretched every data column to fill
+  // whatever's left of the card's width -- fine for a 5-season heatmap on a
+  // half-width card, but on a full-width card with only 4 columns (Offense/
+  // Defense's Down x Distance grid) each cell ballooned to ~280px wide for a
+  // 3-4 character value. minmax() sizes columns to their actual content
+  // instead; .heat's justify-content:center (theme.css) keeps the now-
+  // compact grid from sitting left-stuck with empty space to its right.
+  grid.style.gridTemplateColumns = `130px repeat(${colLabels.length}, minmax(60px, 100px))`;
   grid.appendChild(el('div', 'rowlabel', ''));
   colLabels.forEach((c) => grid.appendChild(el('div', 'collabel', c)));
   rowLabels.forEach((r) => {
