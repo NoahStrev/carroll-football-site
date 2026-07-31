@@ -196,7 +196,7 @@ function prepareRows(rows, season, week) {
 // "All seasons" -- that option is still there for browsing everything at once, but
 // shouldn't be the first thing landed on since it can't show a rank (see cciwTable).
 function seasonSelectHTML(id, seasons) {
-  return `<select class="fp-select-inline" id="${id}">${seasons.map((s, i) => `<option value="${s}"${i === 0 ? ' selected' : ''}>${s}</option>`).join('')}<option value="">All seasons (no rank shown)</option></select>`;
+  return `<select class="fp-select-inline" id="${id}">${seasons.map((s, i) => `<option value="${s}"${i === 0 ? ' selected' : ''}>${s}</option>`).join('')}<option value="">All seasons</option></select>`;
 }
 
 // Appears only for a season with in-season weekly data -- a tab row rather than

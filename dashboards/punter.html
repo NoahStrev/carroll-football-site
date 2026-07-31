@@ -58,7 +58,7 @@ let DATA = null;
 /* ------------------------------------------------------------------ tab: Executive Scorecard --- */
 
 const EXEC_FILTERS = [
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'punter', label: 'Punter' },
 ];
 
@@ -125,7 +125,7 @@ function execTab(root) {
 
 /* ------------------------------------------------------------------ tab: Punter Head-to-Head --- */
 
-const H2H_FILTERS = [{ field: 'season', label: 'Season' }];
+const H2H_FILTERS = [{ field: 'season', label: 'Season', defaultLatestOnly: true }];
 
 function h2hTab(root) {
   const punters = DATA.filters.punt.punter;
@@ -262,7 +262,7 @@ function h2hTab(root) {
 /* ------------------------------------------------------------------ tab: Situational Deep Dive --- */
 
 const DEEP_FILTERS = [
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'punter', label: 'Punter' },
   { field: 'quarter', label: 'Quarter' },
   { field: 'opponent', label: 'Opponent' },

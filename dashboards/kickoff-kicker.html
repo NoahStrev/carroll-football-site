@@ -61,7 +61,7 @@ function onside(rows) { return rows.filter((r) => r.kick_type === 'Onside'); }
 /* ------------------------------------------------------------------ tab: Executive Scorecard --- */
 
 const EXEC_FILTERS = [
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'kicker', label: 'Kicker' },
 ];
 
@@ -125,7 +125,7 @@ function execTab(root) {
 
 /* ------------------------------------------------------------------ tab: Kicker Head-to-Head --- */
 
-const H2H_FILTERS = [{ field: 'season', label: 'Season' }];
+const H2H_FILTERS = [{ field: 'season', label: 'Season', defaultLatestOnly: true }];
 const OUTCOMES = ['Touchback', 'Out of Bounds', 'Returned', 'Onside'];
 
 function outcomeOf(r) {
@@ -259,7 +259,7 @@ function h2hTab(root) {
 /* ------------------------------------------------------------------ tab: Situational Deep Dive --- */
 
 const DEEP_FILTERS = [
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'kicker', label: 'Kicker' },
   { field: 'quarter', label: 'Quarter' },
   { field: 'opponent', label: 'Opponent' },

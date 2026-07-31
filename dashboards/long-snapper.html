@@ -59,7 +59,7 @@ function withSnapper(rows) { return rows.filter((r) => r.snapper); }
 /* ------------------------------------------------------------------ tab: Executive Scorecard --- */
 
 const EXEC_FILTERS = [
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'snapper', label: 'Snapper' },
 ];
 
@@ -127,7 +127,7 @@ function execTab(root) {
 
 /* ------------------------------------------------------------------ tab: Snapper Head-to-Head --- */
 
-const H2H_FILTERS = [{ field: 'season', label: 'Season' }];
+const H2H_FILTERS = [{ field: 'season', label: 'Season', defaultLatestOnly: true }];
 
 function h2hTab(root) {
   const snappers = DATA.filters.punt.snapper;
@@ -260,7 +260,7 @@ function h2hTab(root) {
 /* ------------------------------------------------------------------ tab: Situational Deep Dive --- */
 
 const DEEP_FILTERS = [
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'snapper', label: 'Snapper' },
   { field: 'quarter', label: 'Quarter' },
   { field: 'opponent', label: 'Opponent' },

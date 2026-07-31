@@ -57,7 +57,7 @@ let DATA = null;
    ============================================================================ */
 
 const EXEC_FILTERS = [
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'opponent', label: 'Opponent' },
   { field: 'quarter', label: 'Quarter' },
   { field: 'situation', label: 'Situation' },
@@ -209,7 +209,7 @@ function execTab(root) {
    ============================================================================ */
 
 const TEND_FILTERS = [
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'opponent', label: 'Opponent' },
   { field: 'situation', label: 'Situation' },
   { field: 'field_zone', label: 'Field Zone' },

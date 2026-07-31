@@ -695,10 +695,17 @@ function topKeysByCount(map, n = 10) {
 */
 
 function buildFilterPanel(tabId, filterDefs, filterValues) {
-  const groups = filterDefs.map(({ field, label }) => {
+  const groups = filterDefs.map(({ field, label, defaultLatestOnly }) => {
     const values = filterValues[field] || [];
     const searchable = values.length > 8;
-    const rows = values.map((v) => `<label class="fp-chk"><input type="checkbox" data-field="${field}" value="${v}" checked>${v}</label>`).join('');
+    // defaultLatestOnly (2026-07-31, per the user: "all dashboards should be
+    // preset with the most recent year selected") -- every other field still
+    // defaults to fully checked; only a field opting into this (every page's
+    // `season` filter def) starts pre-narrowed to its single highest value.
+    // Sorted fresh rather than trusting incoming order, since it only needs
+    // to hold for 4-digit year strings, which sort correctly as plain strings.
+    const latestValue = defaultLatestOnly && values.length ? [...values].sort().at(-1) : null;
+    const rows = values.map((v) => `<label class="fp-chk"><input type="checkbox" data-field="${field}" value="${v}"${defaultLatestOnly ? (v === latestValue ? ' checked' : '') : ' checked'}>${v}</label>`).join('');
     return `
       <div class="fp-group" data-group="${field}">
         <div class="fp-label-row">

@@ -61,7 +61,7 @@ function outcomeOf(r) { return r.make ? 'Make' : (r.miss_location === 'Blocked' 
 /* ------------------------------------------------------------------ tab: Executive Scorecard --- */
 
 const EXEC_FILTERS = [
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'long_snapper', label: 'Snapper' },
 ];
 
@@ -136,7 +136,7 @@ function execTab(root) {
 
 /* ------------------------------------------------------------------ tab: Snapper Head-to-Head --- */
 
-const H2H_FILTERS = [{ field: 'season', label: 'Season' }];
+const H2H_FILTERS = [{ field: 'season', label: 'Season', defaultLatestOnly: true }];
 
 function h2hTab(root) {
   const snappers = DATA.filters.money_unit.long_snapper;
@@ -269,7 +269,7 @@ function h2hTab(root) {
 /* ------------------------------------------------------------------ tab: Situational Deep Dive --- */
 
 const DEEP_FILTERS = [
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'long_snapper', label: 'Snapper' },
   { field: 'quarter', label: 'Quarter' },
   { field: 'is_home', label: 'Home/Away' },

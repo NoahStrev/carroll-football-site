@@ -85,7 +85,7 @@ const UNIT_LABELS = {
   money_unit: 'Money Unit', punt: 'Punt', punt_return: 'Punt Return',
   kickoff: 'Kickoff', kickoff_return: 'Kickoff Return',
 };
-const OVERVIEW_FILTERS = [{ field: 'season', label: 'Season' }];
+const OVERVIEW_FILTERS = [{ field: 'season', label: 'Season', defaultLatestOnly: true }];
 
 function teamOverviewTab(root) {
   const allSeasons = [...new Set(UNIT_KEYS.flatMap((u) => DATA.filters[u].season))].sort();
@@ -190,7 +190,7 @@ const MONEY_FILTERS = [
   { field: 'fg_exp', label: 'FG / EXP' },
   { field: 'is_home', label: 'Home/Away' },
   { field: 'quarter', label: 'Quarter' },
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'kicker', label: 'Kicker' },
   { field: 'long_snapper', label: 'Long Snapper' },
 ];
@@ -328,7 +328,7 @@ const PUNT_FILTERS = [
   { field: 'next_drive_outcome', label: 'Next Drive Outcome' },
   { field: 'is_home', label: 'Home/Away' },
   { field: 'quarter', label: 'Quarter' },
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'opponent', label: 'Opponent' },
   { field: 'punter', label: 'Punter' },
 ];
@@ -440,7 +440,7 @@ const PUNT_RETURN_FILTERS = [
   { field: 'next_drive_outcome', label: 'Next Drive Outcome' },
   { field: 'is_home', label: 'Home/Away' },
   { field: 'quarter', label: 'Quarter' },
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'opponent', label: 'Opponent' },
   { field: 'returner', label: 'Returner' },
 ];
@@ -555,7 +555,7 @@ const KICKOFF_FILTERS = [
   { field: 'next_drive_outcome', label: 'Next Drive Outcome' },
   { field: 'is_home', label: 'Home/Away' },
   { field: 'quarter', label: 'Quarter' },
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'opponent', label: 'Opponent' },
   { field: 'kicker', label: 'Kicker' },
 ];
@@ -660,7 +660,7 @@ const KICKOFF_RETURN_FILTERS = [
   { field: 'next_drive_outcome', label: 'Next Drive Outcome' },
   { field: 'is_home', label: 'Home/Away' },
   { field: 'quarter', label: 'Quarter' },
-  { field: 'season', label: 'Season' },
+  { field: 'season', label: 'Season', defaultLatestOnly: true },
   { field: 'opponent', label: 'Opponent' },
   { field: 'returner', label: 'Returner' },
 ];
