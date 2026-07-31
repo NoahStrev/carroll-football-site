@@ -162,6 +162,7 @@ function teamOverviewTab(root) {
       values: UNIT_KEYS.map((u) => rowsByUnit[u].length),
       labelFmt: (v) => String(v),
       colorFn: (name, v, i) => catColor(i),
+      tooltipExtra: (name, i) => `${pct(totalRows ? rowsByUnit[UNIT_KEYS[i]].length / totalRows : null, 0)} of all plays in view`,
     });
 
     // Deliberately reads DATA.units directly, NOT the season-filtered
@@ -302,6 +303,7 @@ function moneyUnitTab(root) {
       renderBar(document.getElementById('mu-miss'), {
         categories: cats, values: cats.map((c) => missCounts.get(c).length),
         labelFmt: (v) => String(v), colorFn: () => cssVar('--critical'),
+        tooltipExtra: (c) => `${pct(missRows.length ? missCounts.get(c).length / missRows.length : null, 0)} of misses · ${pct(fgRows.length ? missCounts.get(c).length / fgRows.length : null, 0)} of all FG attempts`,
       });
     } else {
       // Real bug found 2026-07-30 re-validating this page: this branch didn't
@@ -399,6 +401,7 @@ function puntTab(root) {
       values: outcomes.map((o) => rows.filter((r) => r.kick_outcome === o).length),
       labelFmt: (v) => String(v),
       colorFn: (name) => categoricalColorMap(outcomes)[name],
+      tooltipExtra: (o) => `${pct(rows.length ? rows.filter((r) => r.kick_outcome === o).length / rows.length : null, 0)} of punts in view`,
     });
 
     const buckets = sortBuckets([...new Set(rows.map((r) => r.field_bucket).filter(Boolean))]);
@@ -507,6 +510,7 @@ function puntReturnTab(root) {
     renderBar(document.getElementById('prt-outcome'), {
       categories: outcomes, values: outcomes.map((o) => rows.filter((r) => r.kick_outcome === o).length),
       labelFmt: (v) => String(v), colorFn: (name) => categoricalColorMap(outcomes)[name],
+      tooltipExtra: (o) => `${pct(rows.length ? rows.filter((r) => r.kick_outcome === o).length / rows.length : null, 0)} of punts in view`,
     });
 
     const buckets = sortBuckets([...new Set(rows.map((r) => r.field_bucket).filter(Boolean))]);

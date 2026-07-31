@@ -217,6 +217,7 @@ function h2hTab(root) {
       categories: OUTCOMES.filter((o) => byOutcome.has(o)),
       values: OUTCOMES.filter((o) => byOutcome.has(o)).map((o) => byOutcome.get(o).length),
       labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-1'),
+      tooltipExtra: (o) => `${pct(kRows.length ? byOutcome.get(o).length / kRows.length : null, 0)} of this kicker's kicks`,
     });
   }
 
@@ -232,17 +233,14 @@ function h2hTab(root) {
       <span class="sw"><span class="dot" style="background:var(--cat-3)"></span>${selB.value}</span>`;
 
     const seasons = DATA.filters.kickoff.season;
-    function seasonVals(kicker, field) {
-      const kDeep = deep(rows.filter((r) => r.kicker === kicker));
-      const byS = groupBy(kDeep, 'season');
-      return seasons.map((s) => {
-        const g = byS.get(s);
-        if (!g || !g.length) return null;
-        return field === 'touchback' ? rate(g, (r) => r.touchback) : mean(g.map((r) => r.return_length));
-      });
-    }
-    renderTwoLine(document.getElementById('kkh-tb-svg'), seasons, seasonVals(selA.value, 'touchback'), seasonVals(selB.value, 'touchback'), cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0));
-    renderTwoLine(document.getElementById('kkh-ret-svg'), seasons, seasonVals(selA.value, 'return'), seasonVals(selB.value, 'return'), cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => `${fmt(v, 1)} yds`);
+    const deepA = deep(rows.filter((r) => r.kicker === selA.value));
+    const deepB = deep(rows.filter((r) => r.kicker === selB.value));
+    const tbA = seasonSeries(deepA, seasons, (g) => rate(g, (r) => r.touchback));
+    const tbB = seasonSeries(deepB, seasons, (g) => rate(g, (r) => r.touchback));
+    renderTwoLine(document.getElementById('kkh-tb-svg'), seasons, tbA.values, tbB.values, cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0), tbA.counts, tbB.counts);
+    const retA = seasonSeries(deepA, seasons, (g) => mean(g.map((r) => r.return_length)));
+    const retB = seasonSeries(deepB, seasons, (g) => mean(g.map((r) => r.return_length)));
+    renderTwoLine(document.getElementById('kkh-ret-svg'), seasons, retA.values, retB.values, cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => `${fmt(v, 1)} yds`, retA.counts, retB.counts);
   }
   render();
 }
@@ -328,15 +326,9 @@ function deepTab(root) {
     });
 
     const allSeasons = DATA.filters.kickoff.season;
-    // Real bug found 2026-07-30 re-validating this page: the insight text below
-    // promises the Season filter never narrows this grid (by design -- it's a
-    // cross-season view, only Quarter narrows it and Kicker hides rows), but
-    // both `kickers` and cellFor were reading from season-filtered rows --
-    // selecting a single season silently zeroed every other season's column
-    // and could drop kicker rows who didn't kick that season. Uses a separate
-    // rows variable with the season filter forced open so only Kicker/Quarter
-    // actually affect this chart, matching the stated behavior.
-    const heatmapDeepRows = deep(applyFilters(DATA.units.kickoff, { ...state, season: new Set(allSeasons) }));
+    // See reopenSeasons() in charts.js -- keeps this heatmap's columns matching
+    // the insight text below (Season never narrows it, only Kicker/Quarter do).
+    const heatmapDeepRows = deep(reopenSeasons(DATA.units.kickoff, state, allSeasons));
     const kickers = DATA.filters.kickoff.kicker.filter((k) => heatmapDeepRows.some((r) => r.kicker === k));
     renderHeatmap(document.getElementById('kkd-heatmap'), {
       rowLabels: kickers, colLabels: allSeasons,

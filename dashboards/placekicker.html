@@ -235,11 +235,9 @@ function h2hTab(root) {
       <span class="sw"><span class="dot" style="background:var(--cat-3)"></span>${selB.value}</span>`;
 
     const seasons = DATA.filters.money_unit.season;
-    function seasonRates(kRows) {
-      const byS = groupBy(fgs(kRows), 'season');
-      return seasons.map((s) => { const g = byS.get(s); return g && g.length ? makeRate(g) : null; });
-    }
-    renderTwoLine(document.getElementById('pkh-trend-svg'), seasons, seasonRates(rowsA), seasonRates(rowsB), cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0));
+    const sA = seasonSeries(fgs(rowsA), seasons, makeRate);
+    const sB = seasonSeries(fgs(rowsB), seasons, makeRate);
+    renderTwoLine(document.getElementById('pkh-trend-svg'), seasons, sA.values, sB.values, cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0), sA.counts, sB.counts);
 
     const opRows = rows.filter((r) => r.kicker === selA.value || r.kicker === selB.value);
     renderStacked(document.getElementById('pkh-optime-chart'), {
@@ -350,14 +348,9 @@ function deepTab(root) {
     });
 
     const allSeasons = DATA.filters.money_unit.season;
-    // Real bug found 2026-07-30 re-validating this page: the insight text below
-    // promises the Season filter never narrows this grid (by design -- it's a
-    // cross-season view), but cellFor was reading from `fgRows`, which IS
-    // already season-filtered -- selecting a single season silently zeroed
-    // every other season's column instead of leaving them alone. Uses a
-    // separate rows variable with the season filter forced open so only
-    // Kicker/Quarter actually affect this chart, matching the stated behavior.
-    const heatmapFgRows = fgs(applyFilters(DATA.units.money_unit, { ...state, season: new Set(allSeasons) }));
+    // See reopenSeasons() in charts.js -- keeps this heatmap's columns matching
+    // the insight text below (Season never narrows it, only Kicker/Quarter do).
+    const heatmapFgRows = fgs(reopenSeasons(DATA.units.money_unit, state, allSeasons));
     renderHeatmap(document.getElementById('pkd-heatmap'), {
       rowLabels: FG_DIST_BUCKETS, colLabels: allSeasons,
       cellFor: (bucket, season) => {

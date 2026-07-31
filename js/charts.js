@@ -476,8 +476,13 @@ function renderSparkline(container, { values, labels, unit = '' }) {
  * -- simpler than the Lifting Class Comparison chart since there's no career-
  * year realignment needed here, just a straight per-category plot. Hoisted
  * 2026-08-01 from placekicker.html into here since the Kickoff Kicker page
- * needs the identical thing. */
-function renderTwoLine(svg, categories, valuesA, valuesB, colorA, colorB, nameA, nameB, labelFmt) {
+ * needs the identical thing. `countsA`/`countsB` are optional per-point sample
+ * sizes (same length as categories) -- when given, the tooltip adds an "n=X"
+ * line so the H2H trend charts show the same context as every other chart's
+ * tooltip, not just the bare rate/value (enriched 2026-07-31 per the user's
+ * sitewide tooltip pass; every renderTwoLine call site previously showed no
+ * sample size at all, unlike the KPI/bar-chart tooltips right next to it). */
+function renderTwoLine(svg, categories, valuesA, valuesB, colorA, colorB, nameA, nameB, labelFmt, countsA, countsB) {
   const svgns = 'http://www.w3.org/2000/svg';
   while (svg.firstChild) svg.removeChild(svg.firstChild);
   const W = 1180, H = 150, PAD = 10;
@@ -487,7 +492,7 @@ function renderTwoLine(svg, categories, valuesA, valuesB, colorA, colorB, nameA,
   const sx = (i) => PAD + (i / Math.max(1, categories.length - 1)) * (W - PAD * 2);
   const sy = (v) => H - PAD - ((v - vMin) / (vMax - vMin || 1)) * (H - PAD * 2 - 16) - 10;
 
-  function line(values, color, name) {
+  function line(values, color, name, counts) {
     for (let i = 1; i < values.length; i++) {
       if (values[i - 1] === null || values[i] === null) continue;
       const l = document.createElementNS(svgns, 'line');
@@ -502,15 +507,16 @@ function renderTwoLine(svg, categories, valuesA, valuesB, colorA, colorB, nameA,
       c.setAttribute('cx', sx(i)); c.setAttribute('cy', sy(v)); c.setAttribute('r', 3.5);
       c.setAttribute('fill', color);
       c.style.cursor = 'pointer';
-      const html = `<div class="tt-title">${name} — ${categories[i]}</div><div class="tt-row"><span>${labelFmt(v)}</span></div>`;
+      const nRow = counts && counts[i] !== undefined && counts[i] !== null ? `<div class="tt-muted">n=${counts[i]}</div>` : '';
+      const html = `<div class="tt-title">${name} — ${categories[i]}</div><div class="tt-row"><span>${labelFmt(v)}</span></div>${nRow}`;
       c.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html));
       c.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html));
       c.addEventListener('mouseleave', hideTooltip);
       svg.appendChild(c);
     });
   }
-  line(valuesA, colorA, nameA);
-  line(valuesB, colorB, nameB);
+  line(valuesA, colorA, nameA, countsA);
+  line(valuesB, colorB, nameB, countsB);
   categories.forEach((cat, i) => {
     const t = document.createElementNS(svgns, 'text');
     t.setAttribute('x', sx(i)); t.setAttribute('y', H - 2); t.setAttribute('text-anchor', 'middle');
@@ -546,6 +552,25 @@ function groupBy(rows, field) {
 /** Sorts field-position bucket labels ("0-10","11-20",...) in numeric order. */
 function sortBuckets(labels) {
   return [...labels].sort((a, b) => parseInt(a) - parseInt(b));
+}
+
+/** Collapses rows to one representative per key (first occurrence wins).
+ * Real bug found 2026-07-31: Offense/Defense's official play-by-play repeats
+ * per-drive fields (drive_result) on every play row of that drive, so a plain
+ * row count over-weights long drives -- a 15-play touchdown drive counted 15x
+ * while a 3-and-out punt counted 3x, making "Drive Result Mix" show Touchdown
+ * as the top category (1046 rows, 34%) when Punt is actually the most common
+ * real drive outcome (244/607 distinct drives, 40% vs Touchdown's 173/607,
+ * 28%). Use this to count distinct drives instead of play-rows whenever a
+ * per-drive field is being tallied. */
+function uniqueByKey(rows, keyFn) {
+  const seen = new Set();
+  const out = [];
+  rows.forEach((r) => {
+    const k = keyFn(r);
+    if (!seen.has(k)) { seen.add(k); out.push(r); }
+  });
+  return out;
 }
 
 /** Parses either "M/D/YYYY" (Special Teams data) or ISO "YYYY-MM-DD" (Game
@@ -743,6 +768,37 @@ function readFilterState(tabId, filterDefs) {
     state[field] = new Set([...panel.querySelectorAll(`input[data-field="${field}"]:checked`)].map((cb) => cb.value));
   });
   return state;
+}
+
+/** Re-applies every filter in `state` except forces the Season group open to
+ * the full `allSeasons` list -- the fix pattern behind every "X × season"
+ * heatmap on the position pages, whose own insight text promises the Season
+ * filter never narrows that one chart (only the other filters do). Hoisted
+ * 2026-07-31 -- this exact block (including its own explanatory comment) was
+ * independently copy-pasted, byte-for-byte, into short-snapper.html,
+ * long-snapper.html, placekicker.html, punter.html, and kickoff-kicker.html
+ * after the underlying bug (heatmap silently zeroing every other season's
+ * column) was found and fixed on 2026-07-30 -- one shared place instead of
+ * five re-derivations of the same fix. */
+function reopenSeasons(dataset, state, allSeasons) {
+  return applyFilters(dataset, { ...state, season: new Set(allSeasons) });
+}
+
+/** Builds parallel {values, counts} arrays for a fixed season axis from
+ * already-filtered rows -- groups by season and applies metricFn to each
+ * season's rows (null for a season with zero matching rows), plus the raw
+ * per-season row count so a caller (e.g. renderTwoLine) can show a real n=
+ * instead of just the rate/value. Hoisted 2026-07-31 -- every position page's
+ * H2H tab had its own near-identical `season<Metric>(name)` closure doing
+ * exactly this (short-snapper's seasonFgRate, long-snapper's seasonNet,
+ * placekicker's seasonRates, punter's seasonNet, kickoff-kicker's seasonVals),
+ * each re-deriving the group-by-season-then-map step and none of them
+ * exposing counts for the tooltip. */
+function seasonSeries(rows, seasons, metricFn) {
+  const byS = groupBy(rows, 'season');
+  const values = seasons.map((s) => { const g = byS.get(s); return g && g.length ? metricFn(g) : null; });
+  const counts = seasons.map((s) => { const g = byS.get(s); return g ? g.length : 0; });
+  return { values, counts };
 }
 
 function applyFilters(rows, state) {

@@ -213,6 +213,7 @@ function h2hTab(root) {
       categories: PUNT_OUTCOMES.filter((o) => byOutcome.has(o)),
       values: PUNT_OUTCOMES.filter((o) => byOutcome.has(o)).map((o) => byOutcome.get(o).length),
       labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-1'),
+      tooltipExtra: (o) => `${pct(pRows.length ? byOutcome.get(o).length / pRows.length : null, 0)} of this punter's kicks`,
     });
   }
 
@@ -228,12 +229,9 @@ function h2hTab(root) {
       <span class="sw"><span class="dot" style="background:var(--cat-3)"></span>${selB.value}</span>`;
 
     const seasons = DATA.filters.punt.season;
-    function seasonNet(punter) {
-      const pRows = rows.filter((r) => r.punter === punter);
-      const byS = groupBy(pRows, 'season');
-      return seasons.map((s) => { const g = byS.get(s); return g && g.length ? avgNet(g) : null; });
-    }
-    renderTwoLine(document.getElementById('pth-trend-svg'), seasons, seasonNet(selA.value), seasonNet(selB.value), cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => `${fmt(v, 1)} yds`);
+    const sA = seasonSeries(rows.filter((r) => r.punter === selA.value), seasons, avgNet);
+    const sB = seasonSeries(rows.filter((r) => r.punter === selB.value), seasons, avgNet);
+    renderTwoLine(document.getElementById('pth-trend-svg'), seasons, sA.values, sB.values, cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => `${fmt(v, 1)} yds`, sA.counts, sB.counts);
 
     const opRows = rows.filter((r) => r.punter === selA.value || r.punter === selB.value);
     renderStacked(document.getElementById('pth-optime-chart'), {
@@ -333,15 +331,9 @@ function deepTab(root) {
     });
 
     const allSeasons = DATA.filters.punt.season;
-    // Real bug found 2026-07-30 re-validating this page: the insight text below
-    // promises the Season filter never narrows this grid (by design -- it's a
-    // cross-season view, only Quarter narrows it and Punter hides rows), but
-    // both `punters` and cellFor were reading from season-filtered rows --
-    // selecting a single season silently zeroed every other season's column
-    // and could drop punter rows who didn't punt that season. Uses a separate
-    // rows variable with the season filter forced open so only Punter/Quarter
-    // actually affect this chart, matching the stated behavior.
-    const heatmapRows = applyFilters(DATA.units.punt, { ...state, season: new Set(allSeasons) });
+    // See reopenSeasons() in charts.js -- keeps this heatmap's columns matching
+    // the insight text below (Season never narrows it, only Punter/Quarter do).
+    const heatmapRows = reopenSeasons(DATA.units.punt, state, allSeasons);
     const punters = DATA.filters.punt.punter.filter((p) => heatmapRows.some((r) => r.punter === p));
     renderHeatmap(document.getElementById('ptd-heatmap'), {
       rowLabels: punters, colLabels: allSeasons,

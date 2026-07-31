@@ -154,11 +154,16 @@ function execTab(root) {
       labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-8'), tooltipExtra: (z) => `${byZone.get(z).length} plays`,
     });
 
-    const byResult = groupBy(rows.filter((r) => r.drive_result), 'drive_result');
+    // drive_result is repeated on every play row of a drive, not just its last
+    // play -- uniqueByKey collapses to one row per real drive so a 15-play
+    // touchdown drive doesn't outweigh a 3-and-out punt 5-to-1 in this chart.
+    const driveResultRows = uniqueByKey(rows.filter((r) => r.drive_result), (r) => `${r.game_label}|${r.drive_num}`);
+    const byResult = groupBy(driveResultRows, 'drive_result');
     const resultCats = topKeysByCount(byResult, 8);
     renderBar(document.getElementById('de-driveresult'), {
       categories: resultCats, values: resultCats.map((c) => byResult.get(c).length),
       labelFmt: (v) => String(v), colorFn: (name) => categoricalColorMap(resultCats)[name],
+      tooltipExtra: (c) => `${pct(driveResultRows.length ? byResult.get(c).length / driveResultRows.length : null, 0)} of drives`,
     });
 
     const byDownDist = groupBy(withEff.map((r) => ({ ...r, _db: distanceBucket(r.distance) })).filter((r) => r._db), '_db');

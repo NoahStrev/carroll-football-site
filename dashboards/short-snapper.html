@@ -107,9 +107,11 @@ function execTab(root) {
 
     const snappers = DATA.filters.money_unit.long_snapper.filter((s) => rows.some((r) => r.long_snapper === s));
     const bySnapper = groupBy(withSnapper(rows), 'long_snapper');
+    const creditedTotal = withSnapper(rows).length;
     renderBar(document.getElementById('sse-bysnap'), {
       categories: snappers, values: snappers.map((s) => (bySnapper.get(s) || []).length),
       labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-4'),
+      tooltipExtra: (s) => `${pct(creditedTotal ? (bySnapper.get(s) || []).length / creditedTotal : null, 0)} of credited snaps`,
     });
 
     const timeBySeason = groupBy(rows.filter((r) => r.snap_to_catch !== null), 'season');
@@ -214,6 +216,7 @@ function h2hTab(root) {
       categories: OUTCOMES.filter((o) => byOutcome.has(o)),
       values: OUTCOMES.filter((o) => byOutcome.has(o)).map((o) => byOutcome.get(o).length),
       labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-1'),
+      tooltipExtra: (o) => `${pct(sRows.length ? byOutcome.get(o).length / sRows.length : null, 0)} of this snapper's attempts`,
     });
   }
 
@@ -229,12 +232,9 @@ function h2hTab(root) {
       <span class="sw"><span class="dot" style="background:var(--cat-3)"></span>${selB.value}</span>`;
 
     const seasons = DATA.filters.money_unit.season;
-    function seasonFgRate(snapper) {
-      const sFg = fgs(rows.filter((r) => r.long_snapper === snapper));
-      const byS = groupBy(sFg, 'season');
-      return seasons.map((s) => { const g = byS.get(s); return g && g.length ? makeRate(g) : null; });
-    }
-    renderTwoLine(document.getElementById('ssh-trend-svg'), seasons, seasonFgRate(selA.value), seasonFgRate(selB.value), cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0));
+    const sA = seasonSeries(fgs(rows.filter((r) => r.long_snapper === selA.value)), seasons, makeRate);
+    const sB = seasonSeries(fgs(rows.filter((r) => r.long_snapper === selB.value)), seasons, makeRate);
+    renderTwoLine(document.getElementById('ssh-trend-svg'), seasons, sA.values, sB.values, cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0), sA.counts, sB.counts);
 
     const snapLocRows = rows.filter((r) => (r.long_snapper === selA.value || r.long_snapper === selB.value) && r.snap_location);
     const snapLocs = snapLocationScale(DATA.units.money_unit);
@@ -335,15 +335,9 @@ function deepTab(root) {
     });
 
     const allSeasons = DATA.filters.money_unit.season;
-    // Real bug found 2026-07-30 re-validating this page: the insight text below
-    // promises the Season filter never narrows this grid (by design -- it's a
-    // cross-season view, only Quarter narrows it and Snapper hides rows), but
-    // both `snappers` and cellFor were reading from season-filtered rows --
-    // selecting a single season silently zeroed every other season's column
-    // and could drop snapper rows with no attempts that season. Uses a
-    // separate rows variable with the season filter forced open so only
-    // Snapper/Quarter actually affect this chart, matching the stated behavior.
-    const heatmapFgRows = fgs(withSnapper(applyFilters(DATA.units.money_unit, { ...state, season: new Set(allSeasons) })));
+    // See reopenSeasons() in charts.js -- keeps this heatmap's columns matching
+    // the insight text below (Season never narrows it, only Snapper/Quarter do).
+    const heatmapFgRows = fgs(withSnapper(reopenSeasons(DATA.units.money_unit, state, allSeasons)));
     const snappers = DATA.filters.money_unit.long_snapper.filter((s) => heatmapFgRows.some((r) => r.long_snapper === s));
     renderHeatmap(document.getElementById('ssd-heatmap'), {
       rowLabels: snappers, colLabels: allSeasons,

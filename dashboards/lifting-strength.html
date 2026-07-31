@@ -365,7 +365,11 @@ function compareTab(root) {
         c.setAttribute('fill', color);
         c.style.cursor = 'pointer';
         const classPart = p.classLabel ? `, ${p.classLabel}` : '';
-        const html = `<b>${series.name}</b> — Year ${p.yearIdx} (${p.session_label}${classPart}): ${metricLabel(metric, p.value)}`;
+        const html = [
+          `<div class="tt-title">${series.name} — Year ${p.yearIdx}</div>`,
+          `<div class="tt-row"><span>${metric}</span><span>${metricLabel(metric, p.value)}</span></div>`,
+          `<div class="tt-muted">${p.session_label}${classPart}</div>`,
+        ].join('');
         c.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html));
         c.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html));
         c.addEventListener('mouseleave', hideTooltip);
