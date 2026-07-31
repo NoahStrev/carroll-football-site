@@ -143,6 +143,17 @@ html, body {
 .intro h1 { font-size: 24px; margin: 0 0 7px; font-weight: 800; letter-spacing: -.01em; }
 .intro p { font-size: 13.5px; color: var(--text-secondary); margin: 0 0 14px; line-height: 1.6; max-width: 900px; }
 
+/* Precedes a .tabbar that navigates BETWEEN pages (the Special Teams position
+   sub-nav) rather than switching views within one page -- without it, two
+   .tabbar rows stacked directly on top of each other (page-nav, then in-page
+   unit/phase tabs) read as one confusing cluster of pills with no indication
+   they mean different things, especially where both rows' first pill is
+   named the same thing ("Team Overview"). */
+.subnav-label {
+  max-width: 1280px; margin: 0 auto 8px; padding: 0 4px;
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--muted); font-weight: 700;
+}
 .tabbar { display: flex; gap: 8px; max-width: 1280px; margin: 0 auto 20px; padding: 0 4px; flex-wrap: wrap; }
 .tabbtn {
   font-family: inherit; font-size: 13px; font-weight: 600; padding: 9px 16px;
