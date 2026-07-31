@@ -293,6 +293,19 @@ html, body {
   vertical-align: 1px; user-select: none;
 }
 .glossary-hint:hover, .glossary-hint:focus-visible { background: var(--accent); color: #fff; outline: none; }
+/* Real bug found 2026-07-31: inline (in the label's own text flow), the hint
+   competed with the label text for the KPI tile's ~160px width -- a longer
+   label (e.g. "Points / Drive (approx.)", or Defense's "...Allowed" labels)
+   plus the icon wrapped to 2 lines, and since every KPI in a kpirow shares
+   one CSS grid row (auto-sized to the tallest tile), that single wrapped
+   label either stretched the whole row (leaving short-label tiles like
+   "Yards / Play" with a large, misaligned gap above their value) or, once
+   several tiles wrapped, left each tile's value sitting at a different Y
+   depending on whether ITS OWN label happened to wrap. Pinning the hint to
+   the tile's corner instead removes it from the text-wrapping calculation
+   entirely, independent of label wording length. */
+.kpi .label { position: relative; padding-right: 14px; }
+.kpi .label .glossary-hint { position: absolute; top: 1px; right: 0; margin-left: 0; }
 
 .card {
   background: var(--page); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
