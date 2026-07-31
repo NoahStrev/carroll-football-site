@@ -5,6 +5,12 @@ Buddah Report (NCAA.com D3, national ranks) -- and writes ../data/rankings.json
 for the new Rankings dashboard (Overall / Offensive / Defensive tabs, CCIW and
 National shown side by side within each).
 
+2026-07-31: the "Overall" tab is displayed as "Additional Metrics" in
+rankings.html (per the user -- Turnover Margin/Winning %/Penalties read more
+like a catch-all than a team's single most important summary). The internal
+phase key below is still "overall" throughout this script and the JSON
+payload -- only the on-page label changed, not the data shape.
+
 Per the user (2026-07-30): "i have a report that will be repopulated weekly
 with the cciw rankings if they're playing a conference opponent and a
 national one for whoever they play, i would like an overall section, an

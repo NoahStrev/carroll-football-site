@@ -74,7 +74,7 @@
 
   <div class="tabbar" id="rank-tabs">
     <button class="tabbtn active" data-tab="this_week">This Week</button>
-    <button class="tabbtn" data-tab="overall">Overall</button>
+    <button class="tabbtn" data-tab="overall">Additional Metrics</button>
     <button class="tabbtn" data-tab="offense">Offensive</button>
     <button class="tabbtn" data-tab="defense">Defensive</button>
     <button class="tabbtn" data-tab="special_teams">Special Teams</button>
@@ -87,7 +87,7 @@
 <script>
 let DATA = null;
 
-const PHASE_TITLES = { overall: 'Overall', offense: 'Offensive', defense: 'Defensive', special_teams: 'Special Teams' };
+const PHASE_TITLES = { overall: 'Additional Metrics', offense: 'Offensive', defense: 'Defensive', special_teams: 'Special Teams' };
 
 function rankTag(rank, outOf) {
   if (rank <= 3) return `<span class="tag good">#${rank} of ${outOf}</span>`;
@@ -240,7 +240,7 @@ function rankingsTab(phase, root) {
           <div class="sub">CCIW &amp; National Rankings · Carroll Football</div>
         </div>
         <div class="body">
-          ${phase === 'overall' ? '<div class="insight" style="margin-bottom:14px;">CCIW-scope has no Overall category — see the intro above for why. Only National Rankings apply to this tab.</div>' : ''}
+          ${phase === 'overall' ? '<div class="insight" style="margin-bottom:14px;">CCIW-scope has no Additional Metrics category (Turnover Margin, Winning %, Penalties) — cciw.org doesn\'t publish these as their own ranked category the way NCAA.com does. Only National Rankings apply to this tab.</div>' : ''}
           <div class="rankgrid">
             <div class="card" id="${phase}-cciw-card">
               <div class="card-head"><h3>CCIW Rankings <span class="print-only" id="${phase}-cciw-printlabel"></span></h3></div>
@@ -398,7 +398,7 @@ function thisWeekTab(root) {
       <div class="rankgrid">
         <div class="card">
           <div class="card-head"><h3>CCIW Rankings${tw.carroll.cciw.season ? ` (${tw.carroll.cciw.season})` : ''}</h3></div>
-          <div class="card-body"><div class="rank-scroll">${phase === 'overall' ? '<div class="lb-empty">CCIW-scope has no Overall category.</div>' : thisWeekTable(cciwJoined, false)}</div></div>
+          <div class="card-body"><div class="rank-scroll">${phase === 'overall' ? '<div class="lb-empty">CCIW-scope has no Additional Metrics category.</div>' : thisWeekTable(cciwJoined, false)}</div></div>
         </div>
         <div class="card">
           <div class="card-head"><h3>National Rankings${tw.carroll.national.season ? ` (${tw.carroll.national.season})` : ''}</h3></div>
