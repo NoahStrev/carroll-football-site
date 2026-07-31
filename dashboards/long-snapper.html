@@ -29,6 +29,15 @@
     <h1>Long Snapper</h1>
   </div>
 
+  <div class="tabbar" id="position-subnav">
+    <a class="tabbtn" href="special-teams-overview.html">Team Overview</a>
+    <a class="tabbtn" href="placekicker.html">Placekicker</a>
+    <a class="tabbtn" href="kickoff-kicker.html">Kickoff Kicker</a>
+    <a class="tabbtn" href="punter.html">Punter</a>
+    <a class="tabbtn" href="short-snapper.html">Short Snapper</a>
+    <a class="tabbtn active" href="long-snapper.html">Long Snapper</a>
+  </div>
+
   <div class="tabbar" id="ls-tabs">
     <button class="tabbtn active" data-tab="exec">Executive Scorecard</button>
     <button class="tabbtn" data-tab="h2h">Snapper Head-to-Head</button>
@@ -252,6 +261,8 @@ const DEEP_FILTERS = [
   { field: 'season', label: 'Season' },
   { field: 'snapper', label: 'Snapper' },
   { field: 'quarter', label: 'Quarter' },
+  { field: 'opponent', label: 'Opponent' },
+  { field: 'is_home', label: 'Home/Away' },
 ];
 
 function deepTab(root) {

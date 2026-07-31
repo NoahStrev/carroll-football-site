@@ -38,6 +38,15 @@
     <h1>Special Teams Overview</h1>
   </div>
 
+  <div class="tabbar" id="position-subnav">
+    <a class="tabbtn active" href="special-teams-overview.html">Team Overview</a>
+    <a class="tabbtn" href="placekicker.html">Placekicker</a>
+    <a class="tabbtn" href="kickoff-kicker.html">Kickoff Kicker</a>
+    <a class="tabbtn" href="punter.html">Punter</a>
+    <a class="tabbtn" href="short-snapper.html">Short Snapper</a>
+    <a class="tabbtn" href="long-snapper.html">Long Snapper</a>
+  </div>
+
   <div class="tabbar" id="unit-tabs">
     <button class="tabbtn active" data-unit="overview">Team Overview</button>
     <button class="tabbtn" data-unit="money_unit">Money Unit</button>
@@ -435,6 +444,7 @@ function puntTab(root) {
    ============================================================================ */
 
 const PUNT_RETURN_FILTERS = [
+  { field: 'kick_outcome', label: 'Kick Outcome' },
   { field: 'next_drive_outcome', label: 'Next Drive Outcome' },
   { field: 'is_home', label: 'Home/Away' },
   { field: 'quarter', label: 'Quarter' },

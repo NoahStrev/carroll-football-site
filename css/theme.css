@@ -149,6 +149,11 @@ html, body {
   border-radius: 999px; border: 1px solid var(--border); background: var(--surface-1);
   color: var(--text-secondary); cursor: pointer;
   transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+  /* .tabbtn started as a <button>-only class (in-page view switching); the
+     Special Teams position-page sub-nav (2026-07-31) reuses it on <a> tags for
+     cross-page navigation instead, so it needs its own display/text-decoration
+     rather than inheriting the browser's default inline-link underline. */
+  display: inline-block; text-decoration: none;
 }
 .tabbtn:hover { border-color: var(--accent); color: var(--text-primary); }
 .tabbtn.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 10px color-mix(in srgb, var(--accent) 40%, transparent); }

@@ -829,6 +829,16 @@ function makeSearchCombobox(container, { options, value, onChange, placeholder =
   const input = el('input', 'combobox-input');
   input.type = 'text';
   input.placeholder = placeholder;
+  // Real bug found 2026-07-31: with no spellcheck/autocomplete attributes, a
+  // name the browser's dictionary doesn't recognize (most athlete names) gets
+  // underlined and can pop the browser's native spellcheck/autocorrect UI on a
+  // quick click, competing with (and sometimes eating) the click meant to pick
+  // a dropdown item. None of this input's own values are ever submitted or
+  // autofilled, so all of these are safe to disable outright.
+  input.spellcheck = false;
+  input.setAttribute('autocomplete', 'off');
+  input.setAttribute('autocorrect', 'off');
+  input.setAttribute('autocapitalize', 'off');
   const list = el('div', 'combobox-list');
   wrap.appendChild(input);
   wrap.appendChild(list);
@@ -841,7 +851,13 @@ function makeSearchCombobox(container, { options, value, onChange, placeholder =
 
   function renderList(query) {
     const q = (query || '').toLowerCase();
-    const matches = options.filter((o) => o.label.toLowerCase().includes(q)).slice(0, 40);
+    // No cap here -- was a hard-coded slice(0, 40) (real bug found 2026-07-31:
+    // this exact function's own docstring cites "230+ athlete names" as the
+    // reason it exists, yet silently hid anything past the first 40 unfiltered
+    // matches; .combobox-list's max-height/overflow-y:auto in theme.css can
+    // scroll through any number of rendered rows, the cap was the only thing
+    // actually preventing you from reaching the rest by scrolling or typing).
+    const matches = options.filter((o) => o.label.toLowerCase().includes(q));
     list.innerHTML = matches.map((o) => `<div class="combobox-item" data-value="${o.value}">${o.label}</div>`).join('');
     list.querySelectorAll('.combobox-item').forEach((item) => {
       item.addEventListener('mousedown', (e) => {
