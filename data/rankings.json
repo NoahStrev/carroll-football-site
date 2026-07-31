@@ -20095,15 +20095,5 @@
 "rows": []
 }
 }
-},
-"downloads": [
-{
-"label": "Download full CCIW workbook (.xlsx)",
-"file": "CCIW_Rankings_AllTime.xlsx"
-},
-{
-"label": "Download full National workbook (.xlsx)",
-"file": "National_Rankings_AllYears.xlsx"
 }
-]
 }

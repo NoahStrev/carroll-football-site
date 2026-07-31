@@ -44,10 +44,6 @@ Sources (read directly, not copied into this project):
          "Fewest Penalties Per Game") extended by the same judgment-call
          pattern, documented inline below.
 
-Also copies both source workbooks into data/downloads/ so the site can offer
-them as direct downloads (per the user: "i would like these reports to be
-downloadable if possible").
-
 2026-07-30 additions:
 - Down-to-the-week granularity: cciw_rows/national_rows now keep every in-season
   week's row (not just the latest), tagged with a "week" number, so the dashboard
@@ -64,13 +60,23 @@ downloadable if possible").
   opponents (not tracked by either Buddah Report project) get
   opponent_data_available: false rather than a guessed/empty table.
 
+2026-07-31: dropped the raw-.xlsx "download" feature this script used to build
+(copying source workbooks into data/downloads/ and listing them in the payload)
+-- per the user, downloads are now a PDF of whatever's currently on screen,
+generated client-side via the browser's print dialog (see rankings.html's
+printCard()/printPage()), not a pre-built file this script produces. Also, per
+the user: a rank number only means something within its own season's real
+competitive pool -- rankings.html's "All seasons" view lists each season's real
+value but deliberately drops Rank/sorts-by-rank for that view rather than
+implying a cross-season comparison neither cciw.org nor NCAA.com actually
+publishes; a single selected season still shows its own real rank as published.
+
 Re-run whenever either source project's output, or Schedule/schedule.json, changes:
     python build_rankings_data.py
 """
 
 import json
 import re
-import shutil
 from pathlib import Path
 
 import openpyxl
@@ -97,7 +103,6 @@ OUT = Path(__file__).resolve().parent.parent / "data" / "rankings.json"
 # Rankings page needs to go "down to the individual week" once weekly scraping starts,
 # so the dashboard can offer a week selector, not just the most recent snapshot.
 WEEKLY_YEAR_RE = re.compile(r"_(\d{4})_Weekly\.xlsx$")
-DOWNLOADS_DIR = Path(__file__).resolve().parent.parent / "data" / "downloads"
 
 CCIW_SHEET_TO_PHASE = {
     "Offense-Team": "offense",
@@ -450,21 +455,6 @@ def main():
         },
         "this_week": build_this_week(cciw_rows, national_rows),
     }
-
-    DOWNLOADS_DIR.mkdir(exist_ok=True, parents=True)
-    shutil.copy2(CCIW_SRC, DOWNLOADS_DIR / "CCIW_Rankings_AllTime.xlsx")
-    shutil.copy2(NATIONAL_SRC, DOWNLOADS_DIR / "National_Rankings_AllYears.xlsx")
-    downloads = [
-        {"label": "Download full CCIW workbook (.xlsx)", "file": "CCIW_Rankings_AllTime.xlsx"},
-        {"label": "Download full National workbook (.xlsx)", "file": "National_Rankings_AllYears.xlsx"},
-    ]
-    for name in cciw_weekly_files:
-        shutil.copy2(CCIW_SRC.parent / name, DOWNLOADS_DIR / name)
-        downloads.append({"label": f"Download {name} (in-season, updated weekly)", "file": name})
-    for name in national_weekly_files:
-        shutil.copy2(NATIONAL_SRC.parent / name, DOWNLOADS_DIR / name)
-        downloads.append({"label": f"Download {name} (in-season, updated weekly)", "file": name})
-    payload["downloads"] = downloads
 
     OUT.parent.mkdir(exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:

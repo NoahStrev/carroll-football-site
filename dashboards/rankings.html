@@ -19,10 +19,37 @@
     border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
     text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
   }
+  .download-btn { cursor: pointer; }
   .download-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .week-tabs { display: flex; gap: 4px; flex-wrap: wrap; padding: 0 15px 10px; }
+  .week-tab-btn {
+    font-family: inherit; font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary); cursor: pointer;
+  }
+  .week-tab-btn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+  .week-tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .print-only { display: none; }
 
   @media (max-width: 900px) {
     .rankgrid { grid-template-columns: 1fr; }
+  }
+
+  /* Each panel's own "PDF" button marks it as .print-target (js) right before
+     window.print() -- only that one card (title, current season/week, table)
+     survives onto the printed page/PDF, everything else on the site is hidden. */
+  @media print {
+    .sitenav, .intro, .tabbar, .no-print, select, .week-tabs { display: none !important; }
+    /* Only a rankgrid that actually HAS a marked card (the Rankings phase tabs'
+       "print just this one panel" case) hides its other card -- This Week's PDF
+       button prints the whole tab as-is (8 cards, none individually marked), so
+       none of ITS rankgrids match this and nothing in them gets hidden. */
+    .rankgrid:has(.print-target) .card:not(.print-target) { display: none !important; }
+    .rankgrid { display: block !important; }
+    .rank-scroll { max-height: none !important; overflow: visible !important; }
+    .print-only { display: inline !important; }
+    table.rank-table thead th { position: static; box-shadow: none; }
   }
 </style>
 </head>
@@ -68,36 +95,72 @@ function rankTag(rank, outOf) {
   return `#${rank} of ${outOf}`;
 }
 
-function cciwTable(rows) {
+// ranked=true (one season selected): real per-category rank, sorted best-first --
+// exactly what the source publishes. ranked=false (All seasons): a rank number
+// pulled out of its own year's competitive pool and sorted next to a different
+// year's would imply a cross-season comparison neither source actually publishes,
+// so this mode drops Rank entirely and just lists each season's real value, most
+// recent season first, grouped for browsing rather than ranked.
+function cciwTable(rows, ranked) {
   if (!rows.length) return '<div class="lb-empty">No CCIW-scope rows for this selection.</div>';
-  const sorted = rows.slice().sort((a, b) => a.rank - b.rank);
-  const body = sorted.map((r) => `
+  if (ranked) {
+    const sorted = rows.slice().sort((a, b) => a.rank - b.rank);
+    const body = sorted.map((r) => `
     <tr>
       <td class="name">${r.category}</td>
       <td>${r.metric}</td>
       <td style="text-align:right;">${r.value}</td>
       <td style="text-align:right;">${rankTag(r.rank, r.out_of)}</td>
     </tr>`).join('');
-  return `
+    return `
     <table class="mini rank-table">
       <thead><tr><th>Category</th><th>Metric</th><th style="text-align:right;">Value</th><th style="text-align:right;">CCIW Rank</th></tr></thead>
       <tbody>${body}</tbody>
     </table>`;
+  }
+  const sorted = rows.slice().sort((a, b) => b.season.localeCompare(a.season) || a.category.localeCompare(b.category));
+  const body = sorted.map((r) => `
+    <tr>
+      <td>${r.season}</td>
+      <td class="name">${r.category}</td>
+      <td>${r.metric}</td>
+      <td style="text-align:right;">${r.value}</td>
+    </tr>`).join('');
+  return `
+    <table class="mini rank-table">
+      <thead><tr><th>Season</th><th>Category</th><th>Metric</th><th style="text-align:right;">Value</th></tr></thead>
+      <tbody>${body}</tbody>
+    </table>`;
 }
 
-function nationalTable(rows) {
+function nationalTable(rows, ranked) {
   if (!rows.length) return '<div class="lb-empty">No National-scope rows for this selection.</div>';
-  const sorted = rows.slice().sort((a, b) => a.rank - b.rank);
-  const body = sorted.map((r) => `
+  if (ranked) {
+    const sorted = rows.slice().sort((a, b) => a.rank - b.rank);
+    const body = sorted.map((r) => `
     <tr>
       <td class="name">${r.category}</td>
       <td>${r.stat}</td>
       <td style="text-align:right;">${r.value}</td>
       <td style="text-align:right;">#${r.rank}</td>
     </tr>`).join('');
-  return `
+    return `
     <table class="mini rank-table">
       <thead><tr><th>Category</th><th>Stat</th><th style="text-align:right;">Value</th><th style="text-align:right;">National Rank</th></tr></thead>
+      <tbody>${body}</tbody>
+    </table>`;
+  }
+  const sorted = rows.slice().sort((a, b) => b.season.localeCompare(a.season) || a.category.localeCompare(b.category));
+  const body = sorted.map((r) => `
+    <tr>
+      <td>${r.season}</td>
+      <td class="name">${r.category}</td>
+      <td>${r.stat}</td>
+      <td style="text-align:right;">${r.value}</td>
+    </tr>`).join('');
+  return `
+    <table class="mini rank-table">
+      <thead><tr><th>Season</th><th>Category</th><th>Stat</th><th style="text-align:right;">Value</th></tr></thead>
       <tbody>${body}</tbody>
     </table>`;
 }
@@ -124,18 +187,36 @@ function prepareRows(rows, season, week) {
   return seasonRows.filter((r) => r.week === w);
 }
 
+// Defaults to the most recent season (real ranks, true to the source) rather than
+// "All seasons" -- that option is still there for browsing everything at once, but
+// shouldn't be the first thing landed on since it can't show a rank (see cciwTable).
 function seasonSelectHTML(id, seasons) {
-  return `<select class="fp-select-inline" id="${id}"><option value="">All seasons</option>${seasons.map((s) => `<option value="${s}">${s}</option>`).join('')}</select>`;
+  return `<select class="fp-select-inline" id="${id}">${seasons.map((s, i) => `<option value="${s}"${i === 0 ? ' selected' : ''}>${s}</option>`).join('')}<option value="">All seasons (no rank shown)</option></select>`;
 }
 
-function weekSelectHTML(id, weeks) {
+// Appears only for a season with in-season weekly data -- a tab row rather than
+// a second dropdown, since picking a week is a first-class view switch (like the
+// phase tabs above), not a minor filter tweak.
+function weekTabsHTML(id, weeks, activeWeek) {
   if (!weeks || !weeks.length) return '';
-  const latest = weeks[weeks.length - 1].week;
-  return `<select class="fp-select-inline" id="${id}">${weeks.map((w) => `<option value="${w.week}"${w.week === latest ? ' selected' : ''}>Wk${w.week} (${w.date})</option>`).join('')}</select>`;
+  const active = activeWeek != null ? Number(activeWeek) : weeks[weeks.length - 1].week;
+  return `<div class="week-tabs" id="${id}">${weeks.map((w) => `<button type="button" class="week-tab-btn${w.week === active ? ' active' : ''}" data-week="${w.week}">Wk${w.week} (${w.date})</button>`).join('')}</div>`;
 }
 
-function downloadRowHTML() {
-  return DATA.downloads.map((d) => `<a class="download-btn" href="../data/downloads/${d.file}" download>&#8595; ${d.label}</a>`).join('');
+// Isolates one card (see the .rankgrid:has(.print-target) print CSS rule) so its
+// sibling card doesn't also print.
+function printCard(cardEl, filenameTitle) {
+  document.querySelectorAll('.print-target').forEach((el) => el.classList.remove('print-target'));
+  cardEl.classList.add('print-target');
+  printPage(filenameTitle);
+}
+
+// Prints whatever's currently visible in the tab as-is -- no card isolation.
+function printPage(filenameTitle) {
+  const prevTitle = document.title;
+  document.title = filenameTitle;
+  window.print();
+  document.title = prevTitle;
 }
 
 function footerSourceText() {
@@ -161,68 +242,83 @@ function rankingsTab(phase, root) {
         <div class="body">
           ${phase === 'overall' ? '<div class="insight" style="margin-bottom:14px;">CCIW-scope has no Overall category — see the intro above for why. Only National Rankings apply to this tab.</div>' : ''}
           <div class="rankgrid">
-            <div class="card">
-              <div class="card-head"><h3>CCIW Rankings</h3></div>
+            <div class="card" id="${phase}-cciw-card">
+              <div class="card-head"><h3>CCIW Rankings <span class="print-only" id="${phase}-cciw-printlabel"></span></h3></div>
               <div class="card-body">
                 <div class="rank-shelf">
                   <span class="filters-summary" id="${phase}-cciw-summary"></span>
                   ${cciwSeasons.length ? seasonSelectHTML(`${phase}-cciw-season`, cciwSeasons) : ''}
-                  <span id="${phase}-cciw-week-wrap"></span>
+                  <button type="button" class="download-btn no-print" id="${phase}-cciw-pdf">&#8595; PDF</button>
                 </div>
+                <div id="${phase}-cciw-week-wrap"></div>
                 <div class="rank-scroll" id="${phase}-cciw-table"></div>
               </div>
             </div>
-            <div class="card">
-              <div class="card-head"><h3>National Rankings</h3></div>
+            <div class="card" id="${phase}-national-card">
+              <div class="card-head"><h3>National Rankings <span class="print-only" id="${phase}-national-printlabel"></span></h3></div>
               <div class="card-body">
                 <div class="rank-shelf">
                   <span class="filters-summary" id="${phase}-national-summary"></span>
                   ${nationalSeasons.length ? seasonSelectHTML(`${phase}-national-season`, nationalSeasons) : ''}
-                  <span id="${phase}-national-week-wrap"></span>
+                  <button type="button" class="download-btn no-print" id="${phase}-national-pdf">&#8595; PDF</button>
                 </div>
+                <div id="${phase}-national-week-wrap"></div>
                 <div class="rank-scroll" id="${phase}-national-table"></div>
               </div>
             </div>
           </div>
-          <div class="download-row">${downloadRowHTML()}</div>
         </div>
-        <div class="footer-note">Source: ${footerSourceText()}</div>
+        <div class="footer-note no-print">Source: ${footerSourceText()}</div>
       </div>
     </div>`;
 
   function renderCciw() {
     const season = document.getElementById(`${phase}-cciw-season`)?.value || '';
-    const weekSel = document.getElementById(`${phase}-cciw-week`);
-    const filtered = prepareRows(cciwRows, season, weekSel ? weekSel.value : null);
-    document.getElementById(`${phase}-cciw-table`).innerHTML = cciwTable(filtered);
+    const weekBtn = document.querySelector(`#${phase}-cciw-week-wrap .week-tab-btn.active`);
+    const filtered = prepareRows(cciwRows, season, weekBtn ? weekBtn.dataset.week : null);
+    document.getElementById(`${phase}-cciw-table`).innerHTML = cciwTable(filtered, !!season);
     document.getElementById(`${phase}-cciw-summary`).textContent = `${filtered.length} rows`;
+    document.getElementById(`${phase}-cciw-printlabel`).textContent =
+      season ? `— ${season}${weekBtn ? ` · Wk${weekBtn.dataset.week}` : ''}` : '— all seasons (real values only, no cross-year rank)';
   }
   function onCciwSeasonChange() {
     const season = document.getElementById(`${phase}-cciw-season`)?.value || '';
     const weeks = season ? DATA.cciw.weeks[season] : null;
     const wrap = document.getElementById(`${phase}-cciw-week-wrap`);
-    wrap.innerHTML = weekSelectHTML(`${phase}-cciw-week`, weeks);
-    document.getElementById(`${phase}-cciw-week`)?.addEventListener('change', renderCciw);
+    wrap.innerHTML = weekTabsHTML(`${phase}-cciw-weektabs`, weeks);
+    wrap.querySelectorAll('.week-tab-btn').forEach((btn) => btn.addEventListener('click', () => {
+      wrap.querySelectorAll('.week-tab-btn').forEach((b) => b.classList.toggle('active', b === btn));
+      renderCciw();
+    }));
     renderCciw();
   }
   function renderNational() {
     const season = document.getElementById(`${phase}-national-season`)?.value || '';
-    const weekSel = document.getElementById(`${phase}-national-week`);
-    const filtered = prepareRows(nationalRows, season, weekSel ? weekSel.value : null);
-    document.getElementById(`${phase}-national-table`).innerHTML = nationalTable(filtered);
+    const weekBtn = document.querySelector(`#${phase}-national-week-wrap .week-tab-btn.active`);
+    const filtered = prepareRows(nationalRows, season, weekBtn ? weekBtn.dataset.week : null);
+    document.getElementById(`${phase}-national-table`).innerHTML = nationalTable(filtered, !!season);
     document.getElementById(`${phase}-national-summary`).textContent = `${filtered.length} rows`;
+    document.getElementById(`${phase}-national-printlabel`).textContent =
+      season ? `— ${season}${weekBtn ? ` · Wk${weekBtn.dataset.week}` : ''}` : '— all seasons (real values only, no cross-year rank)';
   }
   function onNationalSeasonChange() {
     const season = document.getElementById(`${phase}-national-season`)?.value || '';
     const weeks = season ? DATA.national.weeks[season] : null;
     const wrap = document.getElementById(`${phase}-national-week-wrap`);
-    wrap.innerHTML = weekSelectHTML(`${phase}-national-week`, weeks);
-    document.getElementById(`${phase}-national-week`)?.addEventListener('change', renderNational);
+    wrap.innerHTML = weekTabsHTML(`${phase}-national-weektabs`, weeks);
+    wrap.querySelectorAll('.week-tab-btn').forEach((btn) => btn.addEventListener('click', () => {
+      wrap.querySelectorAll('.week-tab-btn').forEach((b) => b.classList.toggle('active', b === btn));
+      renderNational();
+    }));
     renderNational();
   }
 
   document.getElementById(`${phase}-cciw-season`)?.addEventListener('change', onCciwSeasonChange);
   document.getElementById(`${phase}-national-season`)?.addEventListener('change', onNationalSeasonChange);
+  document.getElementById(`${phase}-cciw-pdf`).addEventListener('click', () =>
+    printCard(document.getElementById(`${phase}-cciw-card`), `CCIW Rankings - ${title} - Carroll Football`));
+  document.getElementById(`${phase}-national-pdf`).addEventListener('click', () =>
+    printCard(document.getElementById(`${phase}-national-card`), `National Rankings - ${title} - Carroll Football`));
   onCciwSeasonChange();
   onNationalSeasonChange();
 }
@@ -319,12 +415,18 @@ function thisWeekTab(root) {
           <div class="sub">${haLabel} ${tw.opponent} · ${whenWhere} · ${confLabel}</div>
         </div>
         <div class="body">
+          <div class="download-row no-print" style="margin-bottom:14px;">
+            <button type="button" class="download-btn" id="tw-pdf">&#8595; PDF</button>
+          </div>
           ${!tw.opponent_data_available ? `<div class="insight">No ranking data available for ${tw.opponent} — not tracked by either CCIW Buddah Report or National Buddah Report (non-conference opponent). Carroll's own current standing is shown below regardless.</div>` : ''}
           ${panelsHTML}
         </div>
-        <div class="footer-note">Schedule: Schedule/schedule.json (gopios.com). Ranks: most current season/week available for each team from the same sources as the tabs after this one.</div>
+        <div class="footer-note no-print">Schedule: Schedule/schedule.json (gopios.com). Ranks: most current season/week available for each team from the same sources as the tabs after this one.</div>
       </div>
     </div>`;
+
+  document.getElementById('tw-pdf').addEventListener('click', () =>
+    printPage(`This Week - ${haLabel === 'at' ? 'at' : 'vs'} ${tw.opponent} - Carroll Football`));
 }
 
 const TAB_RENDERERS = {
