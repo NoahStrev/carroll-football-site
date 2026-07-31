@@ -1,11 +1,9 @@
 # Carroll Football Analytics Site
 
-Replaces `dashboards-site-poc` (kept around for reference for now; delete it once this
-site fully covers what it did — see the special-teams position pages below).
-
-Static HTML/CSS/JS, no build step, same approach as `dashboards-site-poc` and the
-`Special Teams Data/mockups/*.html` prototypes this project's visual language is
-based on.
+Static HTML/CSS/JS, no build step. Replaced `dashboards-site-poc` (an earlier
+proof-of-concept covering only the 5 special-teams position pages, never deployed
+live) once this site's coverage caught up and surpassed it — removed 2026-07-30.
+Visual language originates from the `Special Teams Data/mockups/*.html` prototypes.
 
 ## Structure
 

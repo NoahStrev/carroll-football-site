@@ -43,27 +43,6 @@
 
   <div class="intro">
     <h1>Rankings</h1>
-    <p id="rank-intro-text">
-      Carroll's own conference and national statistical rankings, read directly from the
-      <code>CCIW Buddah Report</code> and <code>National Buddah Report</code> projects' own
-      already-scraped, already-classified output — this page doesn't re-scrape either source
-      itself. <b>CCIW Rankings</b> (cciw.org, out of the conference's 9–10 teams,
-      <span id="cciw-season-range">…</span>) apply whenever an opponent is a CCIW conference team;
-      <b>National Rankings</b> (NCAA.com D3, out of ~200+ programs nationally,
-      <span id="national-season-range">…</span>) apply to any opponent, conference or not.
-      <b>Overall has no CCIW-scope data</b> — a real, permanent gap, not a bug:
-      cciw.org's own site never publishes Turnover Margin, Winning %, or Penalties as their own
-      ranked category the way NCAA.com does, so that tab only ever has a National-scope table.
-      Special Teams rounds out the four phases the source data actually splits into (matching what
-      each report's own PDF already shows) — it complements rather than duplicates the
-      <a href="special-teams-overview.html">Special Teams Overview</a> dashboard, which goes far
-      deeper per-unit but has no CCIW/national ranking context of its own. Team-level only for this
-      first pass (no individual-leader rankings yet). All source workbooks used to build this page
-      are downloadable in full below each table, including in-season weekly progression files when
-      the current season is still underway (those don't have Overall/Offense/Defense/Special
-      Teams finalized into the all-time workbooks until the season ends). Refreshed automatically
-      every Monday in-season, after both pipelines' own weekly scrapes run.
-    </p>
   </div>
 
   <div class="tabbar" id="rank-tabs">
@@ -153,20 +132,6 @@ function weekSelectHTML(id, weeks) {
   if (!weeks || !weeks.length) return '';
   const latest = weeks[weeks.length - 1].week;
   return `<select class="fp-select-inline" id="${id}">${weeks.map((w) => `<option value="${w.week}"${w.week === latest ? ' selected' : ''}>Wk${w.week} (${w.date})</option>`).join('')}</select>`;
-}
-
-function seasonRangeText(seasons) {
-  const nums = seasons.map(Number).filter((n) => !isNaN(n)).sort((a, b) => a - b);
-  if (!nums.length) return 'no seasons yet';
-  const parts = [];
-  let start = nums[0], prev = nums[0];
-  for (let i = 1; i <= nums.length; i++) {
-    const n = nums[i];
-    if (n === prev + 1) { prev = n; continue; }
-    parts.push(start === prev ? `${start}` : `${start}–${prev}`);
-    start = prev = n;
-  }
-  return parts.join(', ');
 }
 
 function downloadRowHTML() {
@@ -379,8 +344,6 @@ fetch('../data/rankings.json')
   .then((r) => r.json())
   .then((data) => {
     DATA = data;
-    document.getElementById('cciw-season-range').textContent = seasonRangeText(DATA.cciw.seasons);
-    document.getElementById('national-season-range').textContent = seasonRangeText(DATA.national.seasons);
     showTab('this_week');
   })
   .catch((err) => {

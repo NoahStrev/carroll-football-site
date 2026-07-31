@@ -36,21 +36,6 @@
 
   <div class="intro">
     <h1>Special Teams Overview</h1>
-    <p>
-      All five special-teams units, rebuilt from the real <code>Carroll_Special_Teams_2021_Current.xlsx</code>
-      workbook (2021–2025). Every KPI/chart here recomputes live from the filtered rows.
-      Two things shown on the original Tableau version aren't in the current data pipeline yet and are
-      omitted rather than faked: <b>Snap Rating</b> (no such column exists in the source) and the exact
-      L/Short miss-location breakdown (only "Blocked" is currently tracked as a miss reason). Hangtime and
-      snap-timing fields are hand-charted by the coaching staff and are real wherever populated — filters
-      and charts here only ever use the rows that actually have a value, never an average padded with blanks.
-      <b>Team Overview</b> (added 2026-07-30) rolls all five units up into one cross-unit view using each
-      unit's own real "points added over expectation" <b>Value</b>/<b>Score</b> metric — Money Unit, Punt,
-      and Kickoff already had it; Punt Return and Kickoff Return actually have it too (real columns on
-      those sheets the pipeline never extracted before this pass, a same-shaped gap to the "Snap Location"
-      one caught earlier in this project). Score is the 0–100 rescale of Value, used here since it puts all
-      five differently-scaled units on one comparable axis.
-    </p>
   </div>
 
   <div class="tabbar" id="unit-tabs">
