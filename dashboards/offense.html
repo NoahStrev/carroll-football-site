@@ -40,6 +40,7 @@
   <div class="tabbar" id="off-tabs">
     <button class="tabbtn active" data-tab="exec">Executive Scorecard</button>
     <button class="tabbtn" data-tab="tendencies">Play-Calling &amp; Tendencies</button>
+    <button class="tabbtn" data-tab="outcomes">Play Outcomes</button>
   </div>
 
   <div class="stage" id="off-stage"></div>
@@ -336,9 +337,106 @@ function tendenciesTab(root) {
   render();
 }
 
+/* ============================================================================
+   PLAY OUTCOMES (added 2026-07-31, per the user: "the filters would be play
+   type and stuff like that and the chart shows the breakdown of the outcome
+   of the play") -- reads the same hand-charted Plays sheet and filter set as
+   Play-Calling & Tendencies (Play Type is already one of them), but the main
+   chart is play_outcome itself (Touchdown, Interception, Sack, Complete,
+   Incomplete, Fumble, ...) rather than a play-calling dimension. play_outcome
+   is real but messy -- some rows are compound strings like "Rush, TD" or
+   "Complete, Fumble" (multiple things happened on one play) -- shown exactly
+   as charted via topKeysByCount rather than split/normalized, matching how
+   Play Call/Formation/Personnel already handle their own messy real values.
+   ============================================================================ */
+
+function outcomesTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Offense</h2></div>
+          <div class="sub">Play Outcomes · Hand-Charted Plays</div>
+        </div>
+        <div class="shelf" id="oo-shelf"></div>
+        <div class="body">
+          <div class="kpirow" id="oo-kpis">
+            ${kpiHTML('oo-n', 'Plays in View')}
+            ${kpiHTML('oo-top', 'Most Common Outcome')}
+            ${kpiHTML('oo-to', 'Turnover Rate', '--critical')}
+            ${kpiHTML('oo-ypp', 'Avg Yards', '--good')}
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Outcome Breakdown (top 10 by volume)</h3></div>
+            <div class="card-body" id="oo-breakdown"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Outcome Mix by Play Type</h3></div>
+            <div class="card-body" id="oo-bytype"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Outcome detail</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Outcome</th><th>N</th><th>% of Plays</th><th>Avg Yards</th></tr></thead>
+                <tbody id="oo-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's Plays sheet, combined_play_data.xlsx. Outcome shown exactly as charted, including compound values (e.g. "Rush, TD") — not normalized or split into separate rows.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('oo-shelf').innerHTML = buildFilterPanel('oo', TEND_FILTERS, DATA.filters.offense);
+  wireFilterPanel('oo', TEND_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('oo', TEND_FILTERS);
+    const rows = applyFilters(DATA.offense.plays, state);
+    document.getElementById('oo-summary').textContent = `${rows.length} snaps in view`;
+
+    const byOutcome = groupBy(rows.filter((r) => r.play_outcome), 'play_outcome');
+    const outcomeCats = topKeysByCount(byOutcome, 10);
+    const topOutcome = outcomeCats[0];
+
+    setKPI('oo-n', String(rows.length));
+    setKPI('oo-top', topOutcome || '—', topOutcome ? `${byOutcome.get(topOutcome).length} plays` : '');
+    setKPI('oo-to', pct(rate(rows, (r) => !!r.turnover_type)), `${rows.filter((r) => r.turnover_type).length} turnovers`);
+    setKPI('oo-ypp', fmt(mean(rows.map((r) => r.yards)), 1));
+
+    renderBar(document.getElementById('oo-breakdown'), {
+      categories: outcomeCats, values: outcomeCats.map((c) => byOutcome.get(c).length),
+      labelFmt: (v) => String(v), colorFn: (name, v, i) => catColor(i),
+      tooltipExtra: (c) => `${pct(rows.length ? byOutcome.get(c).length / rows.length : null, 0)} of plays`,
+    });
+
+    const runPassColors = { Run: cssVar('--cat-1'), Pass: cssVar('--cat-4') };
+    renderStacked(document.getElementById('oo-bytype'), {
+      categories: outcomeCats,
+      series: {
+        Run: outcomeCats.map((c) => byOutcome.get(c).filter((r) => r.play_type === 'Run').length),
+        Pass: outcomeCats.map((c) => byOutcome.get(c).filter((r) => r.play_type === 'Pass').length),
+      },
+      order: ['Run', 'Pass'], colors: runPassColors,
+    });
+
+    const tbody = outcomeCats.map((c) => {
+      const g = byOutcome.get(c);
+      return `<tr>
+        <td class="name">${c}</td><td>${g.length}</td>
+        <td>${pct(rows.length ? g.length / rows.length : null, 0)}</td>
+        <td>${fmt(mean(g.map((r) => r.yards)), 1)}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('oo-table-body').innerHTML = tbody || '<tr><td colspan="4" style="text-align:center; color:var(--muted);">No outcomes in current filter.</td></tr>';
+  }
+  render();
+}
+
 /* ------------------------------------------------------------------------ tabs ---- */
 
-const TAB_RENDERERS = { exec: execTab, tendencies: tendenciesTab };
+const TAB_RENDERERS = { exec: execTab, tendencies: tendenciesTab, outcomes: outcomesTab };
 
 function showTab(tab) {
   document.querySelectorAll('#off-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
