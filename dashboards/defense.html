@@ -41,6 +41,10 @@
     <button class="tabbtn active" data-tab="exec">Executive Scorecard</button>
     <button class="tabbtn" data-tab="tendencies">Play-Calling &amp; Tendencies</button>
     <button class="tabbtn" data-tab="outcomes">Play Outcomes</button>
+    <button class="tabbtn" data-tab="dline">Defensive Line</button>
+    <button class="tabbtn" data-tab="linebackers">Linebackers</button>
+    <button class="tabbtn" data-tab="corners">Cornerbacks</button>
+    <button class="tabbtn" data-tab="safeties">Safeties</button>
   </div>
 
   <div class="stage" id="def-stage"></div>
@@ -417,9 +421,418 @@ function outcomesTab(root) {
   render();
 }
 
+/* ============================================================================
+   POSITION-GROUP COACH VIEWS (added 2026-07-31, per the user: "getting
+   specific views for each position group... from the view of a linebacker
+   coach, or a corner coach"). No player-level attribution exists anywhere in
+   this data (Plays/OfficialPlayByPlay are charted at the play level, not
+   per-player -- confirmed by checking the Game Analysis project's own
+   SKILL.md and real column list) -- these are schematic/situational views
+   built from the same charted fields as Tendencies/Play Outcomes, just each
+   one filtered and organized around what that position group's coach
+   actually cares about, not raw player stat lines.
+
+   Defensive Line/Linebackers read DATA.defense.plays (TEND_FILTERS) since
+   their relevant fields -- front_d/blitz_d/movement, Carroll's own call
+   vocabulary -- only exist on the hand-charted Plays sheet. Cornerbacks/
+   Safeties read DATA.defense.official (EXEC_FILTERS) instead, since their
+   relevant fields -- direction/pass_depth of the ball actually thrown, and
+   field_zone for Safeties -- only exist on the official play-by-play; there
+   is no separate "coverage type" field for Carroll's own defensive calls
+   (only for what opponents show Carroll's offense, on offense.plays), so a
+   corner view centers on outcomes actually allowed rather than a literal
+   "we ran Cover 2" breakdown.
+   ============================================================================ */
+
+function dlineTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Defense</h2></div>
+          <div class="sub">Defensive Line · Hand-Charted Plays</div>
+        </div>
+        <div class="shelf" id="ddl-shelf"></div>
+        <div class="body">
+          <div class="kpirow" id="ddl-kpis">
+            ${kpiHTML('ddl-n', 'Snaps in View')}
+            ${kpiHTML('ddl-run', 'Run Efficiency Allowed', '--critical')}
+            ${kpiHTML('ddl-sack', 'Sack Rate', '--good')}
+            ${kpiHTML('ddl-front', 'Most-Used Front')}
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Front Called (top 10 by volume)</h3></div>
+            <div class="card-body" id="ddl-front"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Run Efficiency Allowed by Front</h3></div>
+            <div class="card-body" id="ddl-runbyfront"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Movement/Stunt Called (top 10 by volume)</h3></div>
+            <div class="card-body" id="ddl-movement"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Front detail</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Front</th><th>N</th><th>Run Eff % Allowed</th><th>Avg Yards Allowed</th><th>Sacks</th></tr></thead>
+                <tbody id="ddl-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's Plays sheet, combined_play_data.xlsx. Front/movement names are Carroll's own playbook call vocabulary, shown exactly as charted.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('ddl-shelf').innerHTML = buildFilterPanel('ddl', TEND_FILTERS, DATA.filters.defense);
+  wireFilterPanel('ddl', TEND_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('ddl', TEND_FILTERS);
+    const rows = applyFilters(DATA.defense.plays, state);
+    document.getElementById('ddl-summary').textContent = `${rows.length} snaps in view`;
+
+    const byFront = groupBy(rows.filter((r) => r.front_d), 'front_d');
+    const frontCats = topKeysByCount(byFront, 10);
+    const topFront = frontCats[0];
+    const runRows = rows.filter((r) => r.play_type === 'Run');
+    const sackRows = rows.filter((r) => r.play_outcome && r.play_outcome.includes('Sack'));
+
+    setKPI('ddl-n', String(rows.length));
+    setKPI('ddl-run', pct(rate(runRows, (r) => isSuccess(r.play_efficiency))), `${runRows.length} run snaps`);
+    setKPI('ddl-sack', pct(rows.length ? sackRows.length / rows.length : null), `${sackRows.length} sacks`);
+    setKPI('ddl-front', topFront || '—', topFront ? `${byFront.get(topFront).length} snaps` : '');
+
+    renderBar(document.getElementById('ddl-front'), {
+      categories: frontCats, values: frontCats.map((f) => byFront.get(f).length),
+      labelFmt: (v) => String(v), colorFn: (name, v, i) => catColor(i),
+      tooltipExtra: (f) => `${pct(rows.length ? byFront.get(f).length / rows.length : null, 0)} of snaps`,
+    });
+
+    const runByFront = groupBy(runRows.filter((r) => r.front_d), 'front_d');
+    const runFrontCats = topKeysByCount(runByFront, 10);
+    renderBar(document.getElementById('ddl-runbyfront'), {
+      categories: runFrontCats, values: runFrontCats.map((f) => rate(runByFront.get(f), (r) => isSuccess(r.play_efficiency))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--critical'),
+      tooltipExtra: (f) => `${runByFront.get(f).length} run snaps`,
+    });
+
+    const byMovement = groupBy(rows.filter((r) => r.movement), 'movement');
+    const movementCats = topKeysByCount(byMovement, 10);
+    renderBar(document.getElementById('ddl-movement'), {
+      categories: movementCats, values: movementCats.map((m) => byMovement.get(m).length),
+      labelFmt: (v) => String(v), colorFn: (name, v, i) => catColor(i),
+      tooltipExtra: (m) => `${pct(rows.length ? byMovement.get(m).length / rows.length : null, 0)} of snaps`,
+    });
+
+    const tbody = frontCats.map((f) => {
+      const g = byFront.get(f);
+      const gRun = g.filter((r) => r.play_type === 'Run');
+      const gSack = g.filter((r) => r.play_outcome && r.play_outcome.includes('Sack'));
+      return `<tr>
+        <td class="name">${f}</td><td>${g.length}</td>
+        <td>${pct(gRun.length ? rate(gRun, (r) => isSuccess(r.play_efficiency)) : null, 0)}</td>
+        <td>${fmt(mean(g.map((r) => r.yards)), 1)}</td>
+        <td>${gSack.length}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('ddl-table-body').innerHTML = tbody || '<tr><td colspan="5" style="text-align:center; color:var(--muted);">No fronts in current filter.</td></tr>';
+  }
+  render();
+}
+
+function linebackersTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Defense</h2></div>
+          <div class="sub">Linebackers · Hand-Charted Plays</div>
+        </div>
+        <div class="shelf" id="dlb-shelf"></div>
+        <div class="body">
+          <div class="kpirow" id="dlb-kpis">
+            ${kpiHTML('dlb-n', 'Run Snaps Faced')}
+            ${kpiHTML('dlb-run', 'Run Efficiency Allowed', '--critical')}
+            ${kpiHTML('dlb-exp', 'Explosive Run Rate Allowed', '--critical')}
+            ${kpiHTML('dlb-blitz', 'Most Common Blitz Call')}
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Run Efficiency Allowed by Front</h3></div>
+            <div class="card-body" id="dlb-runbyfront"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Run Efficiency Allowed by Hash</h3></div>
+            <div class="card-body" id="dlb-runbyhash"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Blitz Called (top 10 by volume)</h3></div>
+            <div class="card-body" id="dlb-blitzchart"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Front detail — run snaps only</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Front</th><th>N (run)</th><th>Run Eff %</th><th>Explosive %</th><th>Avg Yards</th></tr></thead>
+                <tbody id="dlb-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's Plays sheet, combined_play_data.xlsx. Front/blitz names are Carroll's own playbook call vocabulary, shown exactly as charted.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('dlb-shelf').innerHTML = buildFilterPanel('dlb', TEND_FILTERS, DATA.filters.defense);
+  wireFilterPanel('dlb', TEND_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('dlb', TEND_FILTERS);
+    const rows = applyFilters(DATA.defense.plays, state);
+    const runRows = rows.filter((r) => r.play_type === 'Run');
+    document.getElementById('dlb-summary').textContent = `${runRows.length} run snaps in view`;
+
+    const byBlitz = groupBy(rows.filter((r) => r.blitz_d), 'blitz_d');
+    const blitzCats = topKeysByCount(byBlitz, 10);
+    const topBlitz = blitzCats[0];
+
+    setKPI('dlb-n', String(runRows.length));
+    setKPI('dlb-run', pct(rate(runRows, (r) => isSuccess(r.play_efficiency))));
+    setKPI('dlb-exp', pct(rate(runRows, (r) => r.play_efficiency === 'Explosive')));
+    setKPI('dlb-blitz', topBlitz || '—', topBlitz ? `${byBlitz.get(topBlitz).length} snaps` : '');
+
+    const runByFront = groupBy(runRows.filter((r) => r.front_d), 'front_d');
+    const runFrontCats = topKeysByCount(runByFront, 10);
+    renderBar(document.getElementById('dlb-runbyfront'), {
+      categories: runFrontCats, values: runFrontCats.map((f) => rate(runByFront.get(f), (r) => isSuccess(r.play_efficiency))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--critical'),
+      tooltipExtra: (f) => `${runByFront.get(f).length} run snaps`,
+    });
+
+    const hashes = HASH_ORDER_FALLBACK;
+    const runByHash = groupBy(runRows.filter((r) => r.hash), 'hash');
+    const hashesPresent = hashes.filter((h) => runByHash.has(h));
+    renderBar(document.getElementById('dlb-runbyhash'), {
+      categories: hashesPresent, values: hashesPresent.map((h) => rate(runByHash.get(h), (r) => isSuccess(r.play_efficiency))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'),
+      tooltipExtra: (h) => `${runByHash.get(h).length} run snaps`,
+    });
+
+    renderBar(document.getElementById('dlb-blitzchart'), {
+      categories: blitzCats, values: blitzCats.map((b) => byBlitz.get(b).length),
+      labelFmt: (v) => String(v), colorFn: (name, v, i) => catColor(i),
+      tooltipExtra: (b) => `${pct(rows.length ? byBlitz.get(b).length / rows.length : null, 0)} of snaps`,
+    });
+
+    const tbody = runFrontCats.map((f) => {
+      const g = runByFront.get(f);
+      return `<tr>
+        <td class="name">${f}</td><td>${g.length}</td>
+        <td>${pct(rate(g, (r) => isSuccess(r.play_efficiency)), 0)}</td>
+        <td>${pct(rate(g, (r) => r.play_efficiency === 'Explosive'), 0)}</td>
+        <td>${fmt(mean(g.map((r) => r.yards)), 1)}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('dlb-table-body').innerHTML = tbody || '<tr><td colspan="5" style="text-align:center; color:var(--muted);">No run snaps in current filter.</td></tr>';
+  }
+  render();
+}
+
+// L/M/R hash order -- HASH_ORDER in js/charts.js is 5-value (L/LM/M/RM/R,
+// special teams' kick-location convention); this project's charted play hash
+// is only ever L/M/R (confirmed via DATA.filters.defense.hash), so a
+// separate 3-value constant instead of reusing/overloading HASH_ORDER.
+const HASH_ORDER_FALLBACK = ['L', 'M', 'R'];
+
+function cornersTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Defense</h2></div>
+          <div class="sub">Cornerbacks · Official Play-by-Play</div>
+        </div>
+        <div class="shelf" id="dcb-shelf"></div>
+        <div class="body">
+          <div class="kpirow" id="dcb-kpis">
+            ${kpiHTML('dcb-n', 'Pass Snaps Faced')}
+            ${kpiHTML('dcb-eff', 'Pass Efficiency Allowed', '--critical')}
+            ${kpiHTML('dcb-exp', 'Explosive Pass Rate Allowed', '--critical')}
+            ${kpiHTML('dcb-ypp', 'Avg Yards / Pass Allowed', '--critical')}
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Pass Efficiency Allowed by Direction</h3></div>
+            <div class="card-body" id="dcb-bydirection"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Pass Efficiency Allowed by Depth</h3></div>
+            <div class="card-body" id="dcb-bydepth"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Pass Yards Allowed by Game</h3></div>
+            <div class="card-body" id="dcb-trend"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Direction detail</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Direction</th><th>N</th><th>Efficiency % Allowed</th><th>Explosive %</th><th>Avg Yards</th></tr></thead>
+                <tbody id="dcb-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's OfficialPlayByPlay sheet, combined_play_data.xlsx. Direction/depth coverage is much sparser for 2021 games (source play text didn't include those qualifiers that year) — not a parsing gap, a source-data limitation.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('dcb-shelf').innerHTML = buildFilterPanel('dcb', EXEC_FILTERS, DATA.filters.defense);
+  wireFilterPanel('dcb', EXEC_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('dcb', EXEC_FILTERS);
+    const rows = applyFilters(DATA.defense.official, state);
+    const passRows = rows.filter((r) => r.play_type === 'Pass');
+    document.getElementById('dcb-summary').textContent = `${passRows.length} pass snaps in view`;
+    const withEff = passRows.filter((r) => r.play_efficiency !== null);
+
+    setKPI('dcb-n', String(passRows.length));
+    setKPI('dcb-eff', pct(rate(withEff, (r) => isSuccess(r.play_efficiency))), `${withEff.length} classified`);
+    setKPI('dcb-exp', pct(rate(withEff, (r) => r.play_efficiency === 'Explosive')));
+    setKPI('dcb-ypp', fmt(mean(passRows.map((r) => r.yards)), 1));
+
+    const directions = ['Left', 'Middle', 'Right'].filter((d) => passRows.some((r) => r.direction === d));
+    const byDirection = groupBy(passRows.filter((r) => r.direction), 'direction');
+    renderBar(document.getElementById('dcb-bydirection'), {
+      categories: directions, values: directions.map((d) => rate(byDirection.get(d), (r) => isSuccess(r.play_efficiency))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--critical'),
+      tooltipExtra: (d) => `${byDirection.get(d).length} passes`,
+    });
+
+    const depths = ['Short', 'Deep'].filter((d) => passRows.some((r) => r.pass_depth === d));
+    const byDepth = groupBy(passRows.filter((r) => r.pass_depth), 'pass_depth');
+    renderBar(document.getElementById('dcb-bydepth'), {
+      categories: depths, values: depths.map((d) => rate(byDepth.get(d), (r) => isSuccess(r.play_efficiency))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--serious'),
+      tooltipExtra: (d) => `${byDepth.get(d).length} passes`,
+    });
+
+    renderTrendCard(document.getElementById('dcb-trend'), passRows, 'yards', ' yds', 'Pass Yards Allowed by Game');
+
+    const tbody = directions.map((d) => {
+      const g = byDirection.get(d);
+      return `<tr>
+        <td class="name">${d}</td><td>${g.length}</td>
+        <td>${pct(rate(g, (r) => isSuccess(r.play_efficiency)), 0)}</td>
+        <td>${pct(rate(g, (r) => r.play_efficiency === 'Explosive'), 0)}</td>
+        <td>${fmt(mean(g.map((r) => r.yards)), 1)}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('dcb-table-body').innerHTML = tbody || '<tr><td colspan="5" style="text-align:center; color:var(--muted);">No direction data in current filter.</td></tr>';
+  }
+  render();
+}
+
+function safetiesTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Defense</h2></div>
+          <div class="sub">Safeties · Official Play-by-Play</div>
+        </div>
+        <div class="shelf" id="dsaf-shelf"></div>
+        <div class="body">
+          <div class="kpirow" id="dsaf-kpis">
+            ${kpiHTML('dsaf-n', 'Snaps in View')}
+            ${kpiHTML('dsaf-exp', 'Explosive Rate Allowed', '--critical')}
+            ${kpiHTML('dsaf-pass', 'Pass Efficiency Allowed', '--critical')}
+            ${kpiHTML('dsaf-run', 'Run Efficiency Allowed', '--critical')}
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Explosive Rate Allowed by Field Zone</h3></div>
+            <div class="card-body" id="dsaf-byzone"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Explosive Rate Allowed by Play Type</h3></div>
+            <div class="card-body" id="dsaf-bytype"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Yards Allowed / Play by Game</h3></div>
+            <div class="card-body" id="dsaf-trend"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Field zone detail</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Field Zone</th><th>N</th><th>Explosive %</th><th>Pass Eff % Allowed</th><th>Run Eff % Allowed</th></tr></thead>
+                <tbody id="dsaf-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's OfficialPlayByPlay sheet, combined_play_data.xlsx. Field Zone is Carroll's own defense's distance-to-goal, so "Red Zone" here means the opponent is deep in Carroll territory.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('dsaf-shelf').innerHTML = buildFilterPanel('dsaf', EXEC_FILTERS, DATA.filters.defense);
+  wireFilterPanel('dsaf', EXEC_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('dsaf', EXEC_FILTERS);
+    const rows = applyFilters(DATA.defense.official, state);
+    const withEff = rows.filter((r) => r.play_efficiency !== null);
+    document.getElementById('dsaf-summary').textContent = `${rows.length} plays in view`;
+    const passEff = withEff.filter((r) => r.play_type === 'Pass');
+    const runEff = withEff.filter((r) => r.play_type === 'Run');
+
+    setKPI('dsaf-n', String(rows.length));
+    setKPI('dsaf-exp', pct(rate(withEff, (r) => r.play_efficiency === 'Explosive')), `${withEff.length} classified`);
+    setKPI('dsaf-pass', pct(rate(passEff, (r) => isSuccess(r.play_efficiency))), `${passEff.length} pass plays`);
+    setKPI('dsaf-run', pct(rate(runEff, (r) => isSuccess(r.play_efficiency))), `${runEff.length} run plays`);
+
+    const zones = FIELD_ZONES.filter((z) => withEff.some((r) => r.field_zone === z));
+    const byZone = groupBy(withEff, 'field_zone');
+    renderBar(document.getElementById('dsaf-byzone'), {
+      categories: zones, values: zones.map((z) => rate(byZone.get(z), (r) => r.play_efficiency === 'Explosive')),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-8'),
+      tooltipExtra: (z) => `${byZone.get(z).length} plays`,
+    });
+
+    const types = ['Run', 'Pass'].filter((t) => withEff.some((r) => r.play_type === t));
+    const byType = groupBy(withEff, 'play_type');
+    renderBar(document.getElementById('dsaf-bytype'), {
+      categories: types, values: types.map((t) => rate(byType.get(t), (r) => r.play_efficiency === 'Explosive')),
+      labelFmt: (v) => pct(v, 0), colorFn: (name) => (name === 'Run' ? cssVar('--cat-1') : cssVar('--cat-4')),
+      tooltipExtra: (t) => `${byType.get(t).length} plays`,
+    });
+
+    renderTrendCard(document.getElementById('dsaf-trend'), rows, 'yards', ' yds', 'Yards Allowed / Play by Game');
+
+    const tbody = zones.map((z) => {
+      const g = byZone.get(z);
+      const gPass = g.filter((r) => r.play_type === 'Pass');
+      const gRun = g.filter((r) => r.play_type === 'Run');
+      return `<tr>
+        <td class="name">${z}</td><td>${g.length}</td>
+        <td>${pct(rate(g, (r) => r.play_efficiency === 'Explosive'), 0)}</td>
+        <td>${pct(gPass.length ? rate(gPass, (r) => isSuccess(r.play_efficiency)) : null, 0)}</td>
+        <td>${pct(gRun.length ? rate(gRun, (r) => isSuccess(r.play_efficiency)) : null, 0)}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('dsaf-table-body').innerHTML = tbody || '<tr><td colspan="5" style="text-align:center; color:var(--muted);">No field zone data in current filter.</td></tr>';
+  }
+  render();
+}
+
 /* ------------------------------------------------------------------------ tabs ---- */
 
-const TAB_RENDERERS = { exec: execTab, tendencies: tendenciesTab, outcomes: outcomesTab };
+const TAB_RENDERERS = {
+  exec: execTab, tendencies: tendenciesTab, outcomes: outcomesTab,
+  dline: dlineTab, linebackers: linebackersTab, corners: cornersTab, safeties: safetiesTab,
+};
 
 function showTab(tab) {
   document.querySelectorAll('#def-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));

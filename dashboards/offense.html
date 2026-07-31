@@ -41,6 +41,10 @@
     <button class="tabbtn active" data-tab="exec">Executive Scorecard</button>
     <button class="tabbtn" data-tab="tendencies">Play-Calling &amp; Tendencies</button>
     <button class="tabbtn" data-tab="outcomes">Play Outcomes</button>
+    <button class="tabbtn" data-tab="qb">Quarterbacks</button>
+    <button class="tabbtn" data-tab="rb">Running Backs</button>
+    <button class="tabbtn" data-tab="wr">Receivers</button>
+    <button class="tabbtn" data-tab="ol">Offensive Line</button>
   </div>
 
   <div class="stage" id="off-stage"></div>
@@ -434,9 +438,414 @@ function outcomesTab(root) {
   render();
 }
 
+/* ============================================================================
+   POSITION-GROUP COACH VIEWS (added 2026-07-31, per the user: "getting
+   specific views for each position group... from the view of a linebacker
+   coach, or a corner coach" -- same treatment applied to Offense's skill
+   groups). No player-level attribution exists anywhere in this data (Plays/
+   OfficialPlayByPlay are charted at the play level, not per-player -- see
+   defense.html's matching section for the full explanation) -- these are
+   schematic/situational views built from the same charted fields as
+   Tendencies/Play Outcomes, filtered and organized around what that position
+   group's coach actually cares about. All four read DATA.offense.plays
+   (TEND_FILTERS) since formation/personnel/backfield/protection/coverage-
+   faced only exist on the hand-charted Plays sheet, not the official
+   play-by-play.
+   ============================================================================ */
+
+function qbTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Offense</h2></div>
+          <div class="sub">Quarterbacks · Hand-Charted Plays</div>
+        </div>
+        <div class="shelf" id="oqb-shelf"></div>
+        <div class="body">
+          <div class="kpirow" id="oqb-kpis">
+            ${kpiHTML('oqb-n', 'Pass Snaps')}
+            ${kpiHTML('oqb-eff', 'Pass Efficiency', '--good')}
+            ${kpiHTML('oqb-sack', 'Sack Rate', '--critical')}
+            ${kpiHTML('oqb-prot', 'Most Common Protection')}
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Coverage Faced (top 10 by volume)</h3></div>
+            <div class="card-body" id="oqb-coverage"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Pass Efficiency by Coverage Faced</h3></div>
+            <div class="card-body" id="oqb-effbycoverage"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Protection Called (top 10 by volume)</h3></div>
+            <div class="card-body" id="oqb-protection"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Coverage detail</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Coverage</th><th>N</th><th>Pass Eff %</th><th>Explosive %</th><th>Avg Yards</th></tr></thead>
+                <tbody id="oqb-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's Plays sheet, combined_play_data.xlsx. Coverage/protection names are the opponent's defense (coverage) and Carroll's own offensive call (protection), shown exactly as charted. Sack→Pass is the standard stat-keeping convention, so sacks count as pass snaps here.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('oqb-shelf').innerHTML = buildFilterPanel('oqb', TEND_FILTERS, DATA.filters.offense);
+  wireFilterPanel('oqb', TEND_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('oqb', TEND_FILTERS);
+    const rows = applyFilters(DATA.offense.plays, state);
+    const passRows = rows.filter((r) => r.play_type === 'Pass');
+    document.getElementById('oqb-summary').textContent = `${passRows.length} pass snaps in view`;
+    const sackRows = passRows.filter((r) => r.play_outcome && r.play_outcome.includes('Sack'));
+
+    const byProtection = groupBy(rows.filter((r) => r.protection), 'protection');
+    const topProtection = topKeysByCount(byProtection, 1)[0];
+
+    setKPI('oqb-n', String(passRows.length));
+    setKPI('oqb-eff', pct(rate(passRows, (r) => isSuccess(r.play_efficiency))));
+    setKPI('oqb-sack', pct(passRows.length ? sackRows.length / passRows.length : null), `${sackRows.length} sacks`);
+    setKPI('oqb-prot', topProtection || '—', topProtection ? `${byProtection.get(topProtection).length} snaps` : '');
+
+    const byCoverage = groupBy(passRows.filter((r) => r.coverage), 'coverage');
+    const coverageCats = topKeysByCount(byCoverage, 10);
+    renderBar(document.getElementById('oqb-coverage'), {
+      categories: coverageCats, values: coverageCats.map((c) => byCoverage.get(c).length),
+      labelFmt: (v) => String(v), colorFn: (name, v, i) => catColor(i),
+      tooltipExtra: (c) => `${pct(passRows.length ? byCoverage.get(c).length / passRows.length : null, 0)} of pass snaps`,
+    });
+
+    renderBar(document.getElementById('oqb-effbycoverage'), {
+      categories: coverageCats, values: coverageCats.map((c) => rate(byCoverage.get(c), (r) => isSuccess(r.play_efficiency))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'),
+      tooltipExtra: (c) => `${byCoverage.get(c).length} pass snaps`,
+    });
+
+    const protectionCats = topKeysByCount(byProtection, 10);
+    renderBar(document.getElementById('oqb-protection'), {
+      categories: protectionCats, values: protectionCats.map((p) => byProtection.get(p).length),
+      labelFmt: (v) => String(v), colorFn: (name, v, i) => catColor(i),
+      tooltipExtra: (p) => `${pct(rows.length ? byProtection.get(p).length / rows.length : null, 0)} of snaps`,
+    });
+
+    const tbody = coverageCats.map((c) => {
+      const g = byCoverage.get(c);
+      return `<tr>
+        <td class="name">${c}</td><td>${g.length}</td>
+        <td>${pct(rate(g, (r) => isSuccess(r.play_efficiency)), 0)}</td>
+        <td>${pct(rate(g, (r) => r.play_efficiency === 'Explosive'), 0)}</td>
+        <td>${fmt(mean(g.map((r) => r.yards)), 1)}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('oqb-table-body').innerHTML = tbody || '<tr><td colspan="5" style="text-align:center; color:var(--muted);">No coverage data in current filter.</td></tr>';
+  }
+  render();
+}
+
+function rbTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Offense</h2></div>
+          <div class="sub">Running Backs · Hand-Charted Plays</div>
+        </div>
+        <div class="shelf" id="orb-shelf"></div>
+        <div class="body">
+          <div class="kpirow" id="orb-kpis">
+            ${kpiHTML('orb-n', 'Run Snaps')}
+            ${kpiHTML('orb-eff', 'Run Efficiency', '--good')}
+            ${kpiHTML('orb-exp', 'Explosive Run Rate', '--good')}
+            ${kpiHTML('orb-backfield', 'Most-Used Backfield')}
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Run Efficiency by Front Faced</h3></div>
+            <div class="card-body" id="orb-runbyfront"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Backfield Alignment (top 10 by volume)</h3></div>
+            <div class="card-body" id="orb-backfield"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Run Efficiency by Formation</h3></div>
+            <div class="card-body" id="orb-runbyformation"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Front-faced detail — run snaps only</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Front Faced</th><th>N</th><th>Run Eff %</th><th>Explosive %</th><th>Avg Yards</th></tr></thead>
+                <tbody id="orb-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's Plays sheet, combined_play_data.xlsx. Front Faced is the opponent's defensive front shown against Carroll's offense; Backfield/Formation are Carroll's own call, shown exactly as charted.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('orb-shelf').innerHTML = buildFilterPanel('orb', TEND_FILTERS, DATA.filters.offense);
+  wireFilterPanel('orb', TEND_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('orb', TEND_FILTERS);
+    const rows = applyFilters(DATA.offense.plays, state);
+    const runRows = rows.filter((r) => r.play_type === 'Run');
+    document.getElementById('orb-summary').textContent = `${runRows.length} run snaps in view`;
+
+    const byBackfield = groupBy(rows.filter((r) => r.backfield), 'backfield');
+    const topBackfield = topKeysByCount(byBackfield, 1)[0];
+
+    setKPI('orb-n', String(runRows.length));
+    setKPI('orb-eff', pct(rate(runRows, (r) => isSuccess(r.play_efficiency))));
+    setKPI('orb-exp', pct(rate(runRows, (r) => r.play_efficiency === 'Explosive')));
+    setKPI('orb-backfield', topBackfield || '—', topBackfield ? `${byBackfield.get(topBackfield).length} snaps` : '');
+
+    const runByFront = groupBy(runRows.filter((r) => r.def_front), 'def_front');
+    const frontCats = topKeysByCount(runByFront, 10);
+    renderBar(document.getElementById('orb-runbyfront'), {
+      categories: frontCats, values: frontCats.map((f) => rate(runByFront.get(f), (r) => isSuccess(r.play_efficiency))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--good'),
+      tooltipExtra: (f) => `${runByFront.get(f).length} run snaps`,
+    });
+
+    const backfieldCats = topKeysByCount(byBackfield, 10);
+    renderBar(document.getElementById('orb-backfield'), {
+      categories: backfieldCats, values: backfieldCats.map((b) => byBackfield.get(b).length),
+      labelFmt: (v) => String(v), colorFn: (name, v, i) => catColor(i),
+      tooltipExtra: (b) => `${pct(rows.length ? byBackfield.get(b).length / rows.length : null, 0)} of snaps`,
+    });
+
+    const runByFormation = groupBy(runRows.filter((r) => r.formation), 'formation');
+    const formCats = topKeysByCount(runByFormation, 10);
+    renderBar(document.getElementById('orb-runbyformation'), {
+      categories: formCats, values: formCats.map((f) => rate(runByFormation.get(f), (r) => isSuccess(r.play_efficiency))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'),
+      tooltipExtra: (f) => `${runByFormation.get(f).length} run snaps`,
+    });
+
+    const tbody = frontCats.map((f) => {
+      const g = runByFront.get(f);
+      return `<tr>
+        <td class="name">${f}</td><td>${g.length}</td>
+        <td>${pct(rate(g, (r) => isSuccess(r.play_efficiency)), 0)}</td>
+        <td>${pct(rate(g, (r) => r.play_efficiency === 'Explosive'), 0)}</td>
+        <td>${fmt(mean(g.map((r) => r.yards)), 1)}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('orb-table-body').innerHTML = tbody || '<tr><td colspan="5" style="text-align:center; color:var(--muted);">No run snaps in current filter.</td></tr>';
+  }
+  render();
+}
+
+function wrTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Offense</h2></div>
+          <div class="sub">Receivers · Hand-Charted Plays</div>
+        </div>
+        <div class="shelf" id="owr-shelf"></div>
+        <div class="body">
+          <div class="kpirow" id="owr-kpis">
+            ${kpiHTML('owr-n', 'Pass Snaps')}
+            ${kpiHTML('owr-eff', 'Pass Efficiency', '--good')}
+            ${kpiHTML('owr-exp', 'Explosive Pass Rate', '--good')}
+            ${kpiHTML('owr-shell', 'Most Common Shell Faced')}
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Coverage Shell Faced (top 10 by volume)</h3></div>
+            <div class="card-body" id="owr-shell"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Pass Efficiency by Personnel</h3></div>
+            <div class="card-body" id="owr-effbypersonnel"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Formation Usage on Pass Plays (top 10 by volume)</h3></div>
+            <div class="card-body" id="owr-formation"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Coverage shell detail</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Shell</th><th>N</th><th>Pass Eff %</th><th>Explosive %</th><th>Avg Yards</th></tr></thead>
+                <tbody id="owr-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's Plays sheet, combined_play_data.xlsx. Coverage Shell is the opponent's deep-safety alignment (e.g. "2 High") shown against Carroll's offense; Personnel/Formation are Carroll's own call, shown exactly as charted.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('owr-shelf').innerHTML = buildFilterPanel('owr', TEND_FILTERS, DATA.filters.offense);
+  wireFilterPanel('owr', TEND_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('owr', TEND_FILTERS);
+    const rows = applyFilters(DATA.offense.plays, state);
+    const passRows = rows.filter((r) => r.play_type === 'Pass');
+    document.getElementById('owr-summary').textContent = `${passRows.length} pass snaps in view`;
+
+    const byShell = groupBy(passRows.filter((r) => r.cov_shell), 'cov_shell');
+    const topShell = topKeysByCount(byShell, 1)[0];
+
+    setKPI('owr-n', String(passRows.length));
+    setKPI('owr-eff', pct(rate(passRows, (r) => isSuccess(r.play_efficiency))));
+    setKPI('owr-exp', pct(rate(passRows, (r) => r.play_efficiency === 'Explosive')));
+    setKPI('owr-shell', topShell || '—', topShell ? `${byShell.get(topShell).length} snaps` : '');
+
+    const shellCats = topKeysByCount(byShell, 10);
+    renderBar(document.getElementById('owr-shell'), {
+      categories: shellCats, values: shellCats.map((s) => byShell.get(s).length),
+      labelFmt: (v) => String(v), colorFn: (name, v, i) => catColor(i),
+      tooltipExtra: (s) => `${pct(passRows.length ? byShell.get(s).length / passRows.length : null, 0)} of pass snaps`,
+    });
+
+    const byPersonnel = groupBy(passRows.filter((r) => r.personnel !== null && r.personnel !== undefined), 'personnel');
+    const persCats = topKeysByCount(byPersonnel, 10);
+    renderBar(document.getElementById('owr-effbypersonnel'), {
+      categories: persCats, values: persCats.map((p) => rate(byPersonnel.get(p), (r) => isSuccess(r.play_efficiency))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-5'),
+      tooltipExtra: (p) => `${byPersonnel.get(p).length} pass snaps`,
+    });
+
+    const byFormation = groupBy(passRows.filter((r) => r.formation), 'formation');
+    const formCats = topKeysByCount(byFormation, 10);
+    renderBar(document.getElementById('owr-formation'), {
+      categories: formCats, values: formCats.map((f) => byFormation.get(f).length),
+      labelFmt: (v) => String(v), colorFn: (name, v, i) => catColor(i),
+      tooltipExtra: (f) => `${pct(passRows.length ? byFormation.get(f).length / passRows.length : null, 0)} of pass snaps`,
+    });
+
+    const tbody = shellCats.map((s) => {
+      const g = byShell.get(s);
+      return `<tr>
+        <td class="name">${s}</td><td>${g.length}</td>
+        <td>${pct(rate(g, (r) => isSuccess(r.play_efficiency)), 0)}</td>
+        <td>${pct(rate(g, (r) => r.play_efficiency === 'Explosive'), 0)}</td>
+        <td>${fmt(mean(g.map((r) => r.yards)), 1)}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('owr-table-body').innerHTML = tbody || '<tr><td colspan="5" style="text-align:center; color:var(--muted);">No coverage shell data in current filter.</td></tr>';
+  }
+  render();
+}
+
+function olTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Offense</h2></div>
+          <div class="sub">Offensive Line · Hand-Charted Plays</div>
+        </div>
+        <div class="shelf" id="ool-shelf"></div>
+        <div class="body">
+          <div class="kpirow" id="ool-kpis">
+            ${kpiHTML('ool-n', 'Snaps in View')}
+            ${kpiHTML('ool-run', 'Run Efficiency', '--good')}
+            ${kpiHTML('ool-sack', 'Sack Rate Allowed', '--critical')}
+            ${kpiHTML('ool-prot', 'Most Common Protection')}
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Fronts Faced (top 10 by volume)</h3></div>
+            <div class="card-body" id="ool-front"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Run Efficiency by Front Faced</h3></div>
+            <div class="card-body" id="ool-runbyfront"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Stunts Faced (top 10 by volume)</h3></div>
+            <div class="card-body" id="ool-stunt"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Front-faced detail</h3></div>
+            <div class="card-body">
+              <table class="mini">
+                <thead><tr><th>Front Faced</th><th>N</th><th>Run Eff %</th><th>Avg Yards</th><th>Sacks</th></tr></thead>
+                <tbody id="ool-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's Plays sheet, combined_play_data.xlsx. Front/Stunt Faced is the opponent's defense shown against Carroll's offense; Protection is Carroll's own call, shown exactly as charted.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('ool-shelf').innerHTML = buildFilterPanel('ool', TEND_FILTERS, DATA.filters.offense);
+  wireFilterPanel('ool', TEND_FILTERS, render);
+
+  function render() {
+    const state = readFilterState('ool', TEND_FILTERS);
+    const rows = applyFilters(DATA.offense.plays, state);
+    document.getElementById('ool-summary').textContent = `${rows.length} snaps in view`;
+    const runRows = rows.filter((r) => r.play_type === 'Run');
+    const sackRows = rows.filter((r) => r.play_outcome && r.play_outcome.includes('Sack'));
+
+    const byFront = groupBy(rows.filter((r) => r.def_front), 'def_front');
+    const frontCats = topKeysByCount(byFront, 10);
+    const byProtection = groupBy(rows.filter((r) => r.protection), 'protection');
+    const topProtection = topKeysByCount(byProtection, 1)[0];
+
+    setKPI('ool-n', String(rows.length));
+    setKPI('ool-run', pct(rate(runRows, (r) => isSuccess(r.play_efficiency))), `${runRows.length} run snaps`);
+    setKPI('ool-sack', pct(rows.length ? sackRows.length / rows.length : null), `${sackRows.length} sacks`);
+    setKPI('ool-prot', topProtection || '—', topProtection ? `${byProtection.get(topProtection).length} snaps` : '');
+
+    renderBar(document.getElementById('ool-front'), {
+      categories: frontCats, values: frontCats.map((f) => byFront.get(f).length),
+      labelFmt: (v) => String(v), colorFn: (name, v, i) => catColor(i),
+      tooltipExtra: (f) => `${pct(rows.length ? byFront.get(f).length / rows.length : null, 0)} of snaps`,
+    });
+
+    const runByFront = groupBy(runRows.filter((r) => r.def_front), 'def_front');
+    const runFrontCats = topKeysByCount(runByFront, 10);
+    renderBar(document.getElementById('ool-runbyfront'), {
+      categories: runFrontCats, values: runFrontCats.map((f) => rate(runByFront.get(f), (r) => isSuccess(r.play_efficiency))),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--good'),
+      tooltipExtra: (f) => `${runByFront.get(f).length} run snaps`,
+    });
+
+    const byStunt = groupBy(rows.filter((r) => r.stunt), 'stunt');
+    const stuntCats = topKeysByCount(byStunt, 10);
+    renderBar(document.getElementById('ool-stunt'), {
+      categories: stuntCats, values: stuntCats.map((s) => byStunt.get(s).length),
+      labelFmt: (v) => String(v), colorFn: (name, v, i) => catColor(i),
+      tooltipExtra: (s) => `${pct(rows.length ? byStunt.get(s).length / rows.length : null, 0)} of snaps`,
+    });
+
+    const tbody = frontCats.map((f) => {
+      const g = byFront.get(f);
+      const gRun = g.filter((r) => r.play_type === 'Run');
+      const gSack = g.filter((r) => r.play_outcome && r.play_outcome.includes('Sack'));
+      return `<tr>
+        <td class="name">${f}</td><td>${g.length}</td>
+        <td>${pct(gRun.length ? rate(gRun, (r) => isSuccess(r.play_efficiency)) : null, 0)}</td>
+        <td>${fmt(mean(g.map((r) => r.yards)), 1)}</td>
+        <td>${gSack.length}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('ool-table-body').innerHTML = tbody || '<tr><td colspan="5" style="text-align:center; color:var(--muted);">No fronts in current filter.</td></tr>';
+  }
+  render();
+}
+
 /* ------------------------------------------------------------------------ tabs ---- */
 
-const TAB_RENDERERS = { exec: execTab, tendencies: tendenciesTab, outcomes: outcomesTab };
+const TAB_RENDERERS = {
+  exec: execTab, tendencies: tendenciesTab, outcomes: outcomesTab,
+  qb: qbTab, rb: rbTab, wr: wrTab, ol: olTab,
+};
 
 function showTab(tab) {
   document.querySelectorAll('#off-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
