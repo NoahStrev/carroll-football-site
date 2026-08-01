@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="../css/theme.css">
 <style>
   /* .unit-header, .kpirow/.kpirow-5/.kpirow-6, .colcard-2/.kicker-col/etc.,
-     .heat, .grid2, .linewrap svg all already live in css/theme.css. */
+     .heat, .grid2, .barchart all already live in css/theme.css. */
 </style>
 </head>
 <body>
@@ -151,10 +151,7 @@ function h2hTab(root) {
                 <div class="mini-kpi"><div class="l">Snap time <span style="font-size:9px; color:var(--muted); font-weight:400;">(2023+)</span></div><div class="v" id="lsh-A-time">—</div></div>
               </div>
               <div class="card-head" style="padding:0 0 6px; border:none;"><h3>Outcome mix</h3></div>
-              <div class="barchart" style="height:110px; padding-top:14px;">
-                <div class="gridlines"><div></div><div></div><div></div></div>
-                <div id="lsh-A-outchart" style="display:contents;"></div>
-              </div>
+              <div id="lsh-A-outchart"></div>
             </div>
           </div>
           <div class="kicker-col">
@@ -170,10 +167,7 @@ function h2hTab(root) {
                 <div class="mini-kpi"><div class="l">Snap time <span style="font-size:9px; color:var(--muted); font-weight:400;">(2023+)</span></div><div class="v" id="lsh-B-time">—</div></div>
               </div>
               <div class="card-head" style="padding:0 0 6px; border:none;"><h3>Outcome mix</h3></div>
-              <div class="barchart" style="height:110px; padding-top:14px;">
-                <div class="gridlines"><div></div><div></div><div></div></div>
-                <div id="lsh-B-outchart" style="display:contents;"></div>
-              </div>
+              <div id="lsh-B-outchart"></div>
             </div>
           </div>
         </div>
@@ -182,7 +176,7 @@ function h2hTab(root) {
             <div class="card-head"><h3>Net punt by season — selected snappers</h3></div>
             <div class="card-body">
               <div class="legend" id="lsh-trend-legend"></div>
-              <div class="linewrap"><svg id="lsh-trend-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
+              <div id="lsh-trend-chart"></div>
             </div>
           </div>
           <div class="card">
@@ -220,6 +214,7 @@ function h2hTab(root) {
       values: PUNT_OUTCOMES.filter((o) => byOutcome.has(o)).map((o) => byOutcome.get(o).length),
       labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-1'),
       tooltipExtra: (o) => `${pct(sRows.length ? byOutcome.get(o).length / sRows.length : null, 0)} of this snapper's punts`,
+      compact: true,
     });
   }
 
@@ -237,7 +232,10 @@ function h2hTab(root) {
     const seasons = DATA.filters.punt.season;
     const sA = seasonSeries(rows.filter((r) => r.snapper === selA.value), seasons, avgNet);
     const sB = seasonSeries(rows.filter((r) => r.snapper === selB.value), seasons, avgNet);
-    renderTwoLine(document.getElementById('lsh-trend-svg'), seasons, sA.values, sB.values, cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => `${fmt(v, 1)} yds`, sA.counts, sB.counts);
+    renderGroupedBar(document.getElementById('lsh-trend-chart'), {
+      categories: seasons, valuesA: sA.values, valuesB: sB.values, colorA: cssVar('--cat-6'), colorB: cssVar('--cat-3'),
+      nameA: selA.value, nameB: selB.value, labelFmt: (v) => `${fmt(v, 1)} yds`, countsA: sA.counts, countsB: sB.counts,
+    });
 
     const snapLocRows = rows.filter((r) => (r.snapper === selA.value || r.snapper === selB.value) && r.snap_location);
     const snapLocs = snapLocationScale(DATA.units.punt);

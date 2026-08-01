@@ -157,10 +157,7 @@ function h2hTab(root) {
                 <div class="mini-kpi"><div class="l">Hangtime <span style="font-size:9px; color:var(--muted); font-weight:400;">(2023+)</span></div><div class="v" id="kkh-A-hang">—</div></div>
               </div>
               <div class="card-head" style="padding:0 0 6px; border:none;"><h3>Outcome mix</h3></div>
-              <div class="barchart" style="height:110px; padding-top:14px;">
-                <div class="gridlines"><div></div><div></div><div></div></div>
-                <div id="kkh-A-outchart" style="display:contents;"></div>
-              </div>
+              <div id="kkh-A-outchart"></div>
             </div>
           </div>
           <div class="kicker-col">
@@ -176,10 +173,7 @@ function h2hTab(root) {
                 <div class="mini-kpi"><div class="l">Hangtime <span style="font-size:9px; color:var(--muted); font-weight:400;">(2023+)</span></div><div class="v" id="kkh-B-hang">—</div></div>
               </div>
               <div class="card-head" style="padding:0 0 6px; border:none;"><h3>Outcome mix</h3></div>
-              <div class="barchart" style="height:110px; padding-top:14px;">
-                <div class="gridlines"><div></div><div></div><div></div></div>
-                <div id="kkh-B-outchart" style="display:contents;"></div>
-              </div>
+              <div id="kkh-B-outchart"></div>
             </div>
           </div>
         </div>
@@ -188,14 +182,14 @@ function h2hTab(root) {
             <div class="card-head"><h3>Touchback % by season — selected kickers</h3></div>
             <div class="card-body">
               <div class="legend" id="kkh-tb-legend"></div>
-              <div class="linewrap"><svg id="kkh-tb-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
+              <div id="kkh-tb-chart"></div>
             </div>
           </div>
           <div class="card">
             <div class="card-head"><h3>Avg return allowed by season — selected kickers</h3></div>
             <div class="card-body">
               <div class="legend" id="kkh-ret-legend"></div>
-              <div class="linewrap"><svg id="kkh-ret-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
+              <div id="kkh-ret-chart"></div>
             </div>
           </div>
         </div>
@@ -230,6 +224,7 @@ function h2hTab(root) {
       values: OUTCOMES.filter((o) => byOutcome.has(o)).map((o) => byOutcome.get(o).length),
       labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-1'),
       tooltipExtra: (o) => `${pct(kRows.length ? byOutcome.get(o).length / kRows.length : null, 0)} of this kicker's kicks`,
+      compact: true,
     });
   }
 
@@ -249,10 +244,16 @@ function h2hTab(root) {
     const deepB = deep(rows.filter((r) => r.kicker === selB.value));
     const tbA = seasonSeries(deepA, seasons, (g) => rate(g, (r) => r.touchback));
     const tbB = seasonSeries(deepB, seasons, (g) => rate(g, (r) => r.touchback));
-    renderTwoLine(document.getElementById('kkh-tb-svg'), seasons, tbA.values, tbB.values, cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0), tbA.counts, tbB.counts);
+    renderGroupedBar(document.getElementById('kkh-tb-chart'), {
+      categories: seasons, valuesA: tbA.values, valuesB: tbB.values, colorA: cssVar('--cat-6'), colorB: cssVar('--cat-3'),
+      nameA: selA.value, nameB: selB.value, labelFmt: (v) => pct(v, 0), countsA: tbA.counts, countsB: tbB.counts,
+    });
     const retA = seasonSeries(deepA, seasons, (g) => mean(g.map((r) => r.return_length)));
     const retB = seasonSeries(deepB, seasons, (g) => mean(g.map((r) => r.return_length)));
-    renderTwoLine(document.getElementById('kkh-ret-svg'), seasons, retA.values, retB.values, cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => `${fmt(v, 1)} yds`, retA.counts, retB.counts);
+    renderGroupedBar(document.getElementById('kkh-ret-chart'), {
+      categories: seasons, valuesA: retA.values, valuesB: retB.values, colorA: cssVar('--cat-6'), colorB: cssVar('--cat-3'),
+      nameA: selA.value, nameB: selB.value, labelFmt: (v) => `${fmt(v, 1)} yds`, countsA: retA.counts, countsB: retB.counts,
+    });
   }
   render();
 }

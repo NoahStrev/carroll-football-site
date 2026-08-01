@@ -249,9 +249,19 @@ function setKPI(id, value, foot) {
  * tooltip HTML, overrides the default entirely if given. xlab2(cat, i): a sample-size
  * caption under the x-axis label -- also folded into the default tooltip automatically
  * (e.g. "n=85 punts") so hovering shows the same context as the caption. */
-function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1), colorFn, tooltipFmt, xlab2, tooltipExtra, seriesName }) {
+/** compact: true shrinks the plot to the 110px/14px-pad size used for the small
+ * per-person charts on H2H tabs (FG makes by distance, Outcome mix) -- pass it
+ * instead of wrapping the target container in its own static .barchart/.gridlines
+ * markup. Real bug found 2026-07-31: those H2H mini-charts used to nest a static
+ * .barchart shell around the container renderBar renders into, and renderBar
+ * builds its own .barchart/.gridlines inside that -- same double-nested-class
+ * bug as the heatmap fix earlier this session, and it left .barcol sized to its
+ * own content (~50px) instead of stretching to the card, stuck at the left edge
+ * with blank space to the right. */
+function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1), colorFn, tooltipFmt, xlab2, tooltipExtra, seriesName, compact = false }) {
   container.innerHTML = '';
   const wrap = el('div', 'barchart');
+  if (compact) { wrap.style.height = '110px'; wrap.style.paddingTop = '14px'; }
   const max = Math.max(1e-9, ...values.filter((v) => v !== null && !Number.isNaN(v)));
   const gridlines = el('div', 'gridlines');
   for (let i = 0; i < 4; i++) gridlines.appendChild(document.createElement('div'));
@@ -551,60 +561,55 @@ function renderSparkline(container, { values, labels, unit = '', seasons, oppone
   container.appendChild(axis);
 }
 
-/* ---------------------------------------------------------------- two-line -- */
+/* ------------------------------------------------------------ grouped bar -- */
 
-/** Small shared two-series line chart over a fixed category axis (e.g. seasons)
- * -- simpler than the Lifting Class Comparison chart since there's no career-
- * year realignment needed here, just a straight per-category plot. Hoisted
- * 2026-08-01 from placekicker.html into here since the Kickoff Kicker page
- * needs the identical thing. `countsA`/`countsB` are optional per-point sample
- * sizes (same length as categories) -- when given, the tooltip adds an "n=X"
- * line so the H2H trend charts show the same context as every other chart's
- * tooltip, not just the bare rate/value (enriched 2026-07-31 per the user's
- * sitewide tooltip pass; every renderTwoLine call site previously showed no
- * sample size at all, unlike the KPI/bar-chart tooltips right next to it). */
-function renderTwoLine(svg, categories, valuesA, valuesB, colorA, colorB, nameA, nameB, labelFmt, countsA, countsB) {
-  const svgns = 'http://www.w3.org/2000/svg';
-  while (svg.firstChild) svg.removeChild(svg.firstChild);
-  const W = 1180, H = 150, PAD = 10;
-  const all = [...valuesA, ...valuesB].filter((v) => v !== null && v !== undefined);
-  const vMin = all.length ? Math.min(...all, 0) : 0;
-  const vMax = all.length ? Math.max(...all, 1) : 1;
-  const sx = (i) => PAD + (i / Math.max(1, categories.length - 1)) * (W - PAD * 2);
-  const sy = (v) => H - PAD - ((v - vMin) / (vMax - vMin || 1)) * (H - PAD * 2 - 16) - 10;
+/** Grouped (paired) bar chart -- two bars per category, for direct two-person
+ * comparison. Replaces the old two-line season trend chart (renderTwoLine,
+ * removed 2026-07-31 per the user): with only a handful of high-school-career
+ * seasons per person, a connected line implies a continuous trend that isn't
+ * really there, and two overlaid lines whose active seasons don't overlap
+ * read as more directly comparable than they are. Side-by-side bars per
+ * season compare the same thing without that implication -- a season one
+ * person didn't play just shows an empty slot instead of a misleading gap
+ * in a line. */
+function renderGroupedBar(container, { categories, valuesA, valuesB, colorA, colorB, nameA, nameB, labelFmt = (v) => fmt(v, 1), countsA, countsB }) {
+  container.innerHTML = '';
+  const wrap = el('div', 'barchart');
+  const all = [...valuesA, ...valuesB].filter((v) => v !== null && v !== undefined && !Number.isNaN(v));
+  const max = Math.max(1e-9, ...all);
+  const gridlines = el('div', 'gridlines');
+  for (let i = 0; i < 4; i++) gridlines.appendChild(document.createElement('div'));
+  wrap.appendChild(gridlines);
 
-  function line(values, color, name, counts) {
-    for (let i = 1; i < values.length; i++) {
-      if (values[i - 1] === null || values[i] === null) continue;
-      const l = document.createElementNS(svgns, 'line');
-      l.setAttribute('x1', sx(i - 1)); l.setAttribute('y1', sy(values[i - 1]));
-      l.setAttribute('x2', sx(i)); l.setAttribute('y2', sy(values[i]));
-      l.setAttribute('stroke', color); l.setAttribute('stroke-width', '2'); l.setAttribute('stroke-linecap', 'round');
-      svg.appendChild(l);
-    }
-    values.forEach((v, i) => {
-      if (v === null) return;
-      const c = document.createElementNS(svgns, 'circle');
-      c.setAttribute('cx', sx(i)); c.setAttribute('cy', sy(v)); c.setAttribute('r', 3.5);
-      c.setAttribute('fill', color);
-      c.style.cursor = 'pointer';
-      const nRow = counts && counts[i] !== undefined && counts[i] !== null ? `<div class="tt-muted">n=${counts[i]}</div>` : '';
-      const html = `<div class="tt-title">${name} — ${categories[i]}</div><div class="tt-row"><span>${labelFmt(v)}</span></div>${nRow}`;
-      c.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html));
-      c.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html));
-      c.addEventListener('mouseleave', hideTooltip);
-      svg.appendChild(c);
-    });
+  function tooltip(name, v, n) {
+    if (v === null || v === undefined || Number.isNaN(v)) return `<div class="tt-title">${name}</div><div class="tt-row tt-muted">No data</div>`;
+    const nRow = n !== undefined && n !== null ? `<div class="tt-muted">n=${n}</div>` : '';
+    return `<div class="tt-title">${name}</div><div class="tt-row"><span>${labelFmt(v)}</span></div>${nRow}`;
   }
-  line(valuesA, colorA, nameA, countsA);
-  line(valuesB, colorB, nameB, countsB);
+
   categories.forEach((cat, i) => {
-    const t = document.createElementNS(svgns, 'text');
-    t.setAttribute('x', sx(i)); t.setAttribute('y', H - 2); t.setAttribute('text-anchor', 'middle');
-    t.setAttribute('font-size', '10'); t.setAttribute('fill', cssVar('--muted'));
-    t.textContent = cat;
-    svg.appendChild(t);
+    const col = el('div', 'barcol');
+    const plot = el('div', 'barplot');
+    plot.style.gap = '6px';
+    [[valuesA[i], colorA, nameA, countsA], [valuesB[i], colorB, nameB, countsB]].forEach(([v, color, name, counts]) => {
+      const bar = el('div', 'bar');
+      const h = v === null || v === undefined || Number.isNaN(v) ? 0 : Math.max(2, (v / max) * 100);
+      bar.style.height = `${h}%`;
+      bar.style.background = color;
+      if (v !== null && v !== undefined && !Number.isNaN(v)) bar.appendChild(el('span', 'cap', labelFmt(v)));
+      const html = tooltip(name, v, counts ? counts[i] : undefined);
+      bar.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html));
+      bar.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html));
+      bar.addEventListener('mouseleave', hideTooltip);
+      plot.appendChild(bar);
+    });
+    col.appendChild(plot);
+    const xlabEl = el('div', 'xlab', cat);
+    xlabEl.title = cat;
+    col.appendChild(xlabEl);
+    wrap.appendChild(col);
   });
+  container.appendChild(wrap);
 }
 
 /** Snap Location's real scale, computed from the data instead of hardcoded --
@@ -885,7 +890,7 @@ function reopenSeasons(dataset, state, allSeasons) {
 /** Builds parallel {values, counts} arrays for a fixed season axis from
  * already-filtered rows -- groups by season and applies metricFn to each
  * season's rows (null for a season with zero matching rows), plus the raw
- * per-season row count so a caller (e.g. renderTwoLine) can show a real n=
+ * per-season row count so a caller (e.g. renderGroupedBar) can show a real n=
  * instead of just the rate/value. Hoisted 2026-07-31 -- every position page's
  * H2H tab had its own near-identical `season<Metric>(name)` closure doing
  * exactly this (short-snapper's seasonFgRate, long-snapper's seasonNet,

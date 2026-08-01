@@ -7,11 +7,9 @@
 <link rel="stylesheet" href="../css/theme.css">
 <style>
   /* .unit-header, .kpirow/.kpirow-5/.kpirow-6, .colcard-2/.kicker-col/
-     .kicker-head/.kicker-select/.kicker-body/.mini-kpi-row, .heat all already
-     live in css/theme.css (carried from the mockups, or hoisted 2026-08-01) --
-     only page-specific layout goes here. .linewrap svg (also in theme.css)
-  already gives any svg inside a .linewrap div display:block/100%/150px/
-  visible-overflow -- no extra class needed for a trend-chart svg. */
+     .kicker-head/.kicker-select/.kicker-body/.mini-kpi-row, .heat, .barchart
+     all already live in css/theme.css (carried from the mockups, or hoisted
+     2026-08-01) -- only page-specific layout goes here. */
 </style>
 </head>
 <body>
@@ -153,10 +151,7 @@ function h2hTab(root) {
                 <div class="mini-kpi"><div class="l">Avg Score</div><div class="v" id="pkh-A-score">—</div></div>
               </div>
               <div class="card-head" style="padding:0 0 6px; border:none;"><h3>FG makes by distance</h3></div>
-              <div class="barchart" style="height:110px; padding-top:14px;">
-                <div class="gridlines"><div></div><div></div><div></div></div>
-                <div id="pkh-A-distchart" style="display:contents;"></div>
-              </div>
+              <div id="pkh-A-distchart"></div>
             </div>
           </div>
           <div class="kicker-col">
@@ -172,10 +167,7 @@ function h2hTab(root) {
                 <div class="mini-kpi"><div class="l">Avg Score</div><div class="v" id="pkh-B-score">—</div></div>
               </div>
               <div class="card-head" style="padding:0 0 6px; border:none;"><h3>FG makes by distance</h3></div>
-              <div class="barchart" style="height:110px; padding-top:14px;">
-                <div class="gridlines"><div></div><div></div><div></div></div>
-                <div id="pkh-B-distchart" style="display:contents;"></div>
-              </div>
+              <div id="pkh-B-distchart"></div>
             </div>
           </div>
         </div>
@@ -183,7 +175,7 @@ function h2hTab(root) {
           <div class="card-head"><h3>FG make % by season — selected kickers</h3></div>
           <div class="card-body">
             <div class="legend" id="pkh-trend-legend"></div>
-            <div class="linewrap"><svg id="pkh-trend-svg" viewBox="0 0 1180 150" preserveAspectRatio="none"></svg></div>
+            <div id="pkh-trend-chart"></div>
           </div>
         </div>
         <div class="card">
@@ -231,6 +223,7 @@ function h2hTab(root) {
       labelFmt: (v) => String(v),
       colorFn: () => cssVar('--cat-1'),
       tooltipExtra: (b) => `${(byBucket.get(b) || []).length} kicks`,
+      compact: true,
     });
     return kRows;
   }
@@ -249,7 +242,10 @@ function h2hTab(root) {
     const seasons = DATA.filters.money_unit.season;
     const sA = seasonSeries(fgs(rowsA), seasons, makeRate);
     const sB = seasonSeries(fgs(rowsB), seasons, makeRate);
-    renderTwoLine(document.getElementById('pkh-trend-svg'), seasons, sA.values, sB.values, cssVar('--cat-6'), cssVar('--cat-3'), selA.value, selB.value, (v) => pct(v, 0), sA.counts, sB.counts);
+    renderGroupedBar(document.getElementById('pkh-trend-chart'), {
+      categories: seasons, valuesA: sA.values, valuesB: sB.values, colorA: cssVar('--cat-6'), colorB: cssVar('--cat-3'),
+      nameA: selA.value, nameB: selB.value, labelFmt: (v) => pct(v, 0), countsA: sA.counts, countsB: sB.counts,
+    });
 
     const opRows = rows.filter((r) => r.kicker === selA.value || r.kicker === selB.value);
     renderStacked(document.getElementById('pkh-optime-chart'), {
@@ -266,7 +262,7 @@ function h2hTab(root) {
   render();
 }
 
-/* renderTwoLine now lives in js/charts.js (hoisted 2026-08-01 -- needed again by
+/* renderGroupedBar now lives in js/charts.js (hoisted 2026-08-01 -- needed again by
    the Kickoff Kicker page, don't re-add a local copy). */
 
 /* ------------------------------------------------------------------ tab: Situational Deep Dive --- */
