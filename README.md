@@ -315,6 +315,44 @@ Visual language originates from the `Special Teams Data/mockups/*.html` prototyp
      `#rank-stage` print class) since This Week — unlike the phase tabs —
      has 4 separate rankgrids rather than one to isolate a single card
      within.
+   - **This Week replaced by Opponent Scouting, then split into its own
+     page** (2026-07-31, per the user: This Week's own rank tables just
+     repeated each phase tab's Carroll row with the opponent's row bolted on
+     next to it — not real new information). First landed as a new tab
+     *inside* rankings.html; the same session, per the user ("opponent scout
+     is supposed to be its own thing now, it doesn't make sense to have it
+     under rankings"), pulled out into its own top-level page,
+     `dashboards/opponent-scouting.html`, with its own nav entry (between
+     Defense and Rankings on every page) and its own top-level tabbar — not
+     nested under Rankings at all anymore. It reads `data/game-data.json`
+     directly on page load, the same play-by-play file Offense/Defense
+     already use, fetched the same eager way every other dashboard fetches
+     its own data file (no more lazy-load-on-tab-open — that only existed to
+     avoid paying for a ~7MB fetch on every rankings.html visit, which is
+     moot now that this is its own page). Two tabs:
+     - **By Opponent** — Yards/Play, Success Rate, Explosive Rate, and
+       Turnover/Takeaway Rate, each as its own bar chart with opponent as the
+       category axis (Offense and Defense grain, 4 charts each), Season-
+       filtered like every other dashboard (defaults to the latest year).
+     - **Scouting Report** — one team at a time by design (a coach picks a
+       specific in-game scenario and wants that team's percentage tendency
+       for it, not two teams overlaid). A single opponent dropdown drives two
+       stacked-bar report panels, Offense (Carroll's own play-calling in
+       games against that opponent) and Defense (that opponent's own
+       play-calling against Carroll — real scouting signal for a rematch):
+       Run/Pass % by Down, by Quarter, and after an Explosive Play. Aggregates
+       every season Carroll has played that opponent (no Season filter here —
+       a single game's snap count is too thin to be a real tendency signal).
+       Run/Pass excludes Kneel and Two-Point Conversion snaps (not real
+       play-calling signal); Sack counts as a pass call, the same convention
+       Offense &gt; Quarterbacks already documents. "After an Explosive Play"
+       is computed from the source array's already-chronological per-drive
+       play order (no explicit sequence field exists) — same assumption
+       `uniqueByKey` and every drive-result chart already rely on.
+     rankings.html itself reverted to just its original 4 phase tabs
+     (Offensive/Defensive/Special Teams/Additional Metrics), defaulting to
+     Offensive now that there's no This Week/Opponent Scouting tab to land on
+     first.
    - Game Analysis and the two Game Prep Report PDFs (per-opponent scouting
      reports) aren't ingested yet. Design/scope TBD for those.
 

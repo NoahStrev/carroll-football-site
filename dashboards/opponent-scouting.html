@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Opponent Scouting — Carroll Football Analytics</title>
+<link rel="stylesheet" href="../css/theme.css">
+<style>
+  /* .unit-header, .kpirow, .tabbar/.tabbtn all already live in css/theme.css. */
+  .scout-select {
+    font-family: inherit; font-size: 12.5px; padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--page); color: var(--text-primary); font-weight: 600;
+  }
+  .scout-report-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .scout-section-title { font-size: 15px; font-weight: 800; margin: 22px 0 10px; }
+  .scout-section-title:first-child { margin-top: 0; }
+  /* Same shape as offense.html/defense.html's own local .chartgrid -- not a
+     shared theme.css class (each page re-declares it alongside its own
+     breakpoint, see theme.css's responsive-section comment). */
+  .chartgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .chartgrid .card-body { min-height: 190px; }
+  @media (max-width: 900px) {
+    .chartgrid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="../index.html">Overview</a>
+      <a href="special-teams-overview.html">Special Teams</a>
+      <a href="placekicker.html">Positions</a>
+      <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html">Offense</a>
+      <a href="defense.html">Defense</a>
+      <a href="opponent-scouting.html" class="active">Opponent Scouting</a>
+      <a href="rankings.html">Rankings</a>
+      <a href="glossary.html">Glossary</a>
+    </div>
+  </nav>
+
+  <div class="intro">
+    <h1>Opponent Scouting</h1>
+  </div>
+
+  <div class="tabbar" id="os-tabs">
+    <button class="tabbtn active" data-tab="by_opponent">By Opponent</button>
+    <button class="tabbtn" data-tab="report">Scouting Report</button>
+  </div>
+
+  <div class="stage" id="os-stage"></div>
+</div>
+
+<script src="../js/charts.js"></script>
+<script>
+let DATA = null;
+const QUARTERS = ['1st', '2nd', '3rd', '4th', 'OT'];
+
+// Rush/Pass/Sack/Kneel/Two-Point Conversion is official play-by-play's full
+// play_type vocabulary (see offense.html/defense.html) -- Kneel and Two-Point
+// Conversion snaps aren't real play-calling signal (clock-killing, a distinct
+// situational play), so they're dropped from every run/pass split below. Sack
+// counts as a pass call, the same convention Offense > Quarterbacks already
+// documents ("Sack -> Pass is the standard stat-keeping convention").
+function runPassRows(rows) { return rows.filter((r) => r.play_type === 'Rush' || r.play_type === 'Pass' || r.play_type === 'Sack'); }
+function isRunPlay(r) { return r.play_type === 'Rush'; }
+function isPassPlay(r) { return r.play_type === 'Pass' || r.play_type === 'Sack'; }
+
+// Flags each row with whether the play immediately before it in the same
+// drive was Explosive. Relies on the source array already being in
+// chronological play order (true throughout this dataset -- see
+// uniqueByKey's comment on the same assumption) since there's no explicit
+// play-sequence field to sort by.
+function withAfterExplosive(rows) {
+  const flagged = [];
+  groupBy(rows, 'game_label').forEach((gameRows) => {
+    groupBy(gameRows, 'drive_num').forEach((driveRows) => {
+      driveRows.forEach((r, i) => {
+        flagged.push({ ...r, _afterExplosive: i > 0 && driveRows[i - 1].play_efficiency === 'Explosive' });
+      });
+    });
+  });
+  return flagged;
+}
+
+function byOpponentMetrics(rows) {
+  const withEff = rows.filter((r) => r.play_efficiency !== null);
+  return {
+    ypp: mean(rows.map((r) => r.yards)),
+    success: rate(withEff, (r) => isSuccess(r.play_efficiency)),
+    explosive: rate(withEff, (r) => r.play_efficiency === 'Explosive'),
+    turnover: rate(rows, (r) => r.is_turnover),
+  };
+}
+
+/* ============================================================================
+   BY OPPONENT
+   ============================================================================ */
+
+const BO_FILTERS = [{ field: 'season', label: 'Season', defaultLatestOnly: true }];
+
+function byOpponentTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Opponent Scouting</h2></div>
+          <div class="sub">By Opponent · Official Play-by-Play</div>
+        </div>
+        <div class="shelf" id="bo-shelf"></div>
+        <div class="body">
+          <h3 class="scout-section-title">Offense</h3>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Yards / Play by Opponent</h3></div><div class="card-body" id="bo-off-ypp"></div></div>
+            <div class="card"><div class="card-head"><h3>Success Rate by Opponent</h3></div><div class="card-body" id="bo-off-succ"></div></div>
+            <div class="card"><div class="card-head"><h3>Explosive Rate by Opponent</h3></div><div class="card-body" id="bo-off-exp"></div></div>
+            <div class="card"><div class="card-head"><h3>Turnover Rate by Opponent</h3></div><div class="card-body" id="bo-off-to"></div></div>
+          </div>
+          <h3 class="scout-section-title">Defense</h3>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Yards Allowed / Play by Opponent</h3></div><div class="card-body" id="bo-def-ypp"></div></div>
+            <div class="card"><div class="card-head"><h3>Success Rate Allowed by Opponent</h3></div><div class="card-body" id="bo-def-succ"></div></div>
+            <div class="card"><div class="card-head"><h3>Explosive Rate Allowed by Opponent</h3></div><div class="card-body" id="bo-def-exp"></div></div>
+            <div class="card"><div class="card-head"><h3>Takeaway Rate by Opponent</h3></div><div class="card-body" id="bo-def-to"></div></div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's OfficialPlayByPlay sheet, combined_play_data.xlsx (50 real Carroll games, 2021–2025).</div>
+      </div>
+    </div>`;
+
+  document.getElementById('bo-shelf').innerHTML = buildFilterPanel('bo', BO_FILTERS, DATA.filters.offense);
+  wireFilterPanel('bo', BO_FILTERS, render);
+
+  function renderOpponentGrainCharts(side, rows, toColorVar) {
+    const byOpp = groupBy(rows, 'opponent');
+    const opponents = [...byOpp.keys()].sort();
+    const metrics = new Map(opponents.map((o) => [o, byOpponentMetrics(byOpp.get(o))]));
+    renderBar(document.getElementById(`bo-${side}-ypp`), {
+      categories: opponents, values: opponents.map((o) => metrics.get(o).ypp),
+      labelFmt: (v) => fmt(v, 1), colorFn: () => cssVar('--cat-1'), tooltipExtra: (o) => `${byOpp.get(o).length} plays`,
+    });
+    renderBar(document.getElementById(`bo-${side}-succ`), {
+      categories: opponents, values: opponents.map((o) => metrics.get(o).success),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--serious'), tooltipExtra: (o) => `${byOpp.get(o).length} plays`,
+    });
+    renderBar(document.getElementById(`bo-${side}-exp`), {
+      categories: opponents, values: opponents.map((o) => metrics.get(o).explosive),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-8'), tooltipExtra: (o) => `${byOpp.get(o).length} plays`,
+    });
+    renderBar(document.getElementById(`bo-${side}-to`), {
+      categories: opponents, values: opponents.map((o) => metrics.get(o).turnover),
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar(toColorVar), tooltipExtra: (o) => `${byOpp.get(o).length} plays`,
+    });
+  }
+
+  function render() {
+    const state = readFilterState('bo', BO_FILTERS);
+    const offRows = applyFilters(DATA.offense.official, state);
+    const defRows = applyFilters(DATA.defense.official, state);
+    document.getElementById('bo-summary').textContent = `${offRows.length} offensive / ${defRows.length} defensive plays in view`;
+    renderOpponentGrainCharts('off', offRows, '--critical');
+    renderOpponentGrainCharts('def', defRows, '--good');
+  }
+  render();
+}
+
+/* ============================================================================
+   SCOUTING REPORT -- one opponent at a time by design, per the user: a coach
+   says "we're in scenario X" (3rd down, 4th quarter, after an explosive play)
+   and wants that team's percentage tendency for it, which only makes sense
+   for one team, not two overlaid.
+   ============================================================================ */
+
+function reportSideHTML(side, title, note) {
+  return `
+    <h3 class="scout-section-title">${title}</h3>
+    <div class="insight" style="margin-bottom:10px;">${note}</div>
+    <div class="kpirow" id="sr-${side}-kpis">
+      ${kpiHTML(`sr-${side}-n`, 'Snaps (Run/Pass/Sack)')}
+      ${kpiHTML(`sr-${side}-run`, 'Run %')}
+      ${kpiHTML(`sr-${side}-pass`, 'Pass %')}
+      ${kpiHTML(`sr-${side}-games`, 'Games')}
+    </div>
+    <div class="chartgrid">
+      <div class="card"><div class="card-head"><h3>Run/Pass % by Down</h3></div><div class="card-body" id="sr-${side}-down"></div></div>
+      <div class="card"><div class="card-head"><h3>Run/Pass % by Quarter</h3></div><div class="card-body" id="sr-${side}-quarter"></div></div>
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-head"><h3>Run/Pass % After an Explosive Play</h3></div>
+      <div class="card-body" id="sr-${side}-explosive"></div>
+    </div>`;
+}
+
+function renderReportSide(side, allRows) {
+  const rpAll = runPassRows(withAfterExplosive(allRows));
+  const games = new Set(allRows.map((r) => r.game_label));
+  setKPI(`sr-${side}-n`, String(rpAll.length));
+  setKPI(`sr-${side}-run`, pct(rate(rpAll, isRunPlay)));
+  setKPI(`sr-${side}-pass`, pct(rate(rpAll, isPassPlay)));
+  setKPI(`sr-${side}-games`, String(games.size));
+
+  const runPassColors = { Run: cssVar('--cat-1'), Pass: cssVar('--cat-4') };
+
+  const downs = DOWNS.filter((d) => rpAll.some((r) => r.down === d));
+  const byDown = groupBy(rpAll, 'down');
+  renderStacked(document.getElementById(`sr-${side}-down`), {
+    categories: downs,
+    series: { Run: downs.map((d) => byDown.get(d).filter(isRunPlay).length), Pass: downs.map((d) => byDown.get(d).filter(isPassPlay).length) },
+    order: ['Run', 'Pass'], colors: runPassColors,
+  });
+
+  const quarters = QUARTERS.filter((q) => rpAll.some((r) => r.quarter === q));
+  const byQuarter = groupBy(rpAll, 'quarter');
+  renderStacked(document.getElementById(`sr-${side}-quarter`), {
+    categories: quarters,
+    series: { Run: quarters.map((q) => byQuarter.get(q).filter(isRunPlay).length), Pass: quarters.map((q) => byQuarter.get(q).filter(isPassPlay).length) },
+    order: ['Run', 'Pass'], colors: runPassColors,
+  });
+
+  const afterCats = ['After Explosive Play', 'Other Snaps'];
+  const afterGroup = { 'After Explosive Play': rpAll.filter((r) => r._afterExplosive), 'Other Snaps': rpAll.filter((r) => !r._afterExplosive) };
+  renderStacked(document.getElementById(`sr-${side}-explosive`), {
+    categories: afterCats,
+    series: { Run: afterCats.map((c) => afterGroup[c].filter(isRunPlay).length), Pass: afterCats.map((c) => afterGroup[c].filter(isPassPlay).length) },
+    order: ['Run', 'Pass'], colors: runPassColors,
+  });
+}
+
+function reportTab(root) {
+  const opponents = [...new Set([...DATA.offense.official, ...DATA.defense.official].map((r) => r.opponent))].sort();
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Opponent Scouting</h2></div>
+          <div class="sub">Scouting Report · Official Play-by-Play</div>
+        </div>
+        <div class="body">
+          <div class="scout-report-head">
+            <label for="sr-opponent" style="font-size:12.5px; font-weight:600; color:var(--text-secondary);">Opponent</label>
+            <select class="scout-select" id="sr-opponent">${opponents.map((o) => `<option value="${o}">${o}</option>`).join('')}</select>
+          </div>
+          <div id="sr-body"></div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's OfficialPlayByPlay sheet, combined_play_data.xlsx (50 real Carroll games, 2021–2025). Run/Pass excludes Kneel and Two-Point Conversion snaps; Sack counts as a pass call.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('sr-opponent').addEventListener('change', render);
+
+  function render() {
+    const opponent = document.getElementById('sr-opponent').value;
+    const offRows = DATA.offense.official.filter((r) => r.opponent === opponent);
+    const defRows = DATA.defense.official.filter((r) => r.opponent === opponent);
+    document.getElementById('sr-body').innerHTML =
+      reportSideHTML('off', 'Offense', "Carroll's own play-calling tendencies in games against this opponent.") +
+      reportSideHTML('def', 'Defense', "This opponent's play-calling tendencies against Carroll's defense — real scouting signal if they're on a future schedule again.");
+    renderReportSide('off', offRows);
+    renderReportSide('def', defRows);
+  }
+  render();
+}
+
+const TAB_RENDERERS = {
+  by_opponent: (root) => byOpponentTab(root),
+  report: (root) => reportTab(root),
+};
+
+function showTab(tab) {
+  document.querySelectorAll('#os-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  TAB_RENDERERS[tab](document.getElementById('os-stage'));
+}
+
+document.querySelectorAll('#os-tabs .tabbtn').forEach((btn) => {
+  btn.addEventListener('click', () => showTab(btn.dataset.tab));
+});
+
+fetch('../data/game-data.json')
+  .then((r) => r.json())
+  .then((data) => {
+    DATA = data;
+    showTab('by_opponent');
+  })
+  .catch((err) => {
+    document.getElementById('os-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/game-data.json — ${err}. Run scripts/build_game_data.py first, and serve over http:// not file://.</div></div>`;
+  });
+</script>
+</body>
+</html>

@@ -44,17 +44,12 @@
     /* Only a rankgrid that actually HAS a marked card (the Rankings phase tabs'
        "print just this one panel" case) hides its other card. */
     .rankgrid:has(.print-target) .card:not(.print-target) { display: none !important; }
-    /* This Week's CCIW/National PDF buttons isolate by scope across all 4
-       stacked phase sections at once (#rank-stage.tw-print-cciw/-national, set
-       by printThisWeekScope()) -- unlike the phase tabs' single rankgrid, This
-       Week has 4, so this can't reuse the per-card print-target mechanism above. */
-    #rank-stage.tw-print-cciw .tw-national,
-    #rank-stage.tw-print-national .tw-cciw { display: none !important; }
     .rankgrid { display: block !important; }
     .rank-scroll { max-height: none !important; overflow: visible !important; }
     .print-only { display: inline !important; }
     table.rank-table thead th { position: static; box-shadow: none; }
   }
+
 </style>
 </head>
 <body>
@@ -69,6 +64,7 @@
       <a href="lifting-strength.html">Lifting &amp; Strength</a>
       <a href="offense.html">Offense</a>
       <a href="defense.html">Defense</a>
+      <a href="opponent-scouting.html">Opponent Scouting</a>
       <a href="rankings.html" class="active">Rankings</a>
       <a href="glossary.html">Glossary</a>
     </div>
@@ -79,8 +75,7 @@
   </div>
 
   <div class="tabbar" id="rank-tabs">
-    <button class="tabbtn active" data-tab="this_week">This Week</button>
-    <button class="tabbtn" data-tab="offense">Offensive</button>
+    <button class="tabbtn active" data-tab="offense">Offensive</button>
     <button class="tabbtn" data-tab="defense">Defensive</button>
     <button class="tabbtn" data-tab="special_teams">Special Teams</button>
     <button class="tabbtn" data-tab="overall">Additional Metrics</button>
@@ -225,18 +220,6 @@ function printPage(filenameTitle) {
   document.title = prevTitle;
 }
 
-// This Week stacks all 4 phase sections in one page (unlike the phase tabs'
-// single rankgrid), so isolating "just CCIW" or "just National" needs a
-// page-wide scope instead of the phase tabs' per-card printCard() isolation --
-// a class on #rank-stage that the print CSS below uses to hide every card of
-// the other scope across all 4 sections at once.
-function printThisWeekScope(scope, filenameTitle) {
-  const stage = document.getElementById('rank-stage');
-  stage.classList.add(`tw-print-${scope}`);
-  printPage(filenameTitle);
-  stage.classList.remove(`tw-print-${scope}`);
-}
-
 function footerSourceText() {
   const cciw = DATA.generated_from.cciw.join(', ');
   const national = DATA.generated_from.national.join(', ');
@@ -341,118 +324,7 @@ function rankingsTab(phase, root) {
   onNationalSeasonChange();
 }
 
-function joinTeamRows(carrollRows, opponentRows, keyFn) {
-  const oppMap = new Map(opponentRows.map((r) => [keyFn(r), r]));
-  const seen = new Set();
-  const joined = [];
-  carrollRows.forEach((cr) => {
-    const key = keyFn(cr);
-    seen.add(key);
-    joined.push({ ...cr, opponentRow: oppMap.get(key) || null });
-  });
-  opponentRows.forEach((or) => {
-    const key = keyFn(or);
-    if (seen.has(key)) return;
-    joined.push({ category: or.category, metric: or.metric, stat: or.stat, rank: null, out_of: null, opponentRow: or });
-  });
-  return joined;
-}
-
-function thisWeekTable(joined, isNational) {
-  if (!joined.length) return '<div class="lb-empty">No rows for this selection.</div>';
-  const sorted = joined.slice().sort((a, b) => {
-    const ak = a.category + (a.metric ?? a.stat ?? ''), bk = b.category + (b.metric ?? b.stat ?? '');
-    return ak.localeCompare(bk);
-  });
-  const body = sorted.map((r) => {
-    const metricLabel = r.metric ?? r.stat ?? '';
-    const carrollCell = r.rank != null ? (isNational ? `#${r.rank}` : rankTag(r.rank, r.out_of)) : '—';
-    const oppCell = r.opponentRow ? (isNational ? `#${r.opponentRow.rank}` : rankTag(r.opponentRow.rank, r.opponentRow.out_of)) : '—';
-    return `
-    <tr>
-      <td class="name">${r.category}</td>
-      <td>${metricLabel}</td>
-      <td style="text-align:right;">${carrollCell}</td>
-      <td style="text-align:right;">${oppCell}</td>
-    </tr>`;
-  }).join('');
-  return `
-    <table class="mini rank-table">
-      <thead><tr><th>Category</th><th>Metric</th><th style="text-align:right;">Carroll</th><th style="text-align:right;">Opponent</th></tr></thead>
-      <tbody>${body}</tbody>
-    </table>`;
-}
-
-function thisWeekTab(root) {
-  const tw = DATA.this_week;
-  if (!tw) {
-    root.innerHTML = `
-      <div class="frame-wrap active">
-        <div class="slide">
-          <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>This Week</h2></div></div>
-          <div class="body"><div class="insight">No schedule data yet — run <code>Schedule/scrape_schedule.py</code>, or the 2026 season is fully played out.</div></div>
-        </div>
-      </div>`;
-    return;
-  }
-
-  const haLabel = tw.home_away === 'home' ? 'vs.' : tw.home_away === 'away' ? 'at' : '';
-  const confLabel = tw.is_conference ? 'CCIW conference game' : 'non-conference game';
-  const whenWhere = [
-    tw.date_text, tw.time_text,
-    [tw.venue, tw.city].filter(Boolean).join(', '),
-  ].filter(Boolean).join(' · ');
-
-  const phases = ['overall', 'offense', 'defense', 'special_teams'];
-  const panelsHTML = phases.map((phase) => {
-    const carrollCciw = tw.carroll.cciw.rows.filter((r) => r.phase === phase);
-    const carrollNat = tw.carroll.national.rows.filter((r) => r.phase === phase);
-    const oppCciw = tw.opponent_rows.cciw.rows.filter((r) => r.phase === phase);
-    const oppNat = tw.opponent_rows.national.rows.filter((r) => r.phase === phase);
-    const cciwJoined = joinTeamRows(carrollCciw, oppCciw, (r) => `${r.category}|${r.metric}`);
-    const natJoined = joinTeamRows(carrollNat, oppNat, (r) => `${r.category}|${r.stat}`);
-    return `
-      <h3 style="margin:18px 0 8px;">${PHASE_TITLES[phase]}</h3>
-      <div class="rankgrid">
-        <div class="card tw-cciw">
-          <div class="card-head"><h3>CCIW Rankings${tw.carroll.cciw.season ? ` (${tw.carroll.cciw.season})` : ''}</h3></div>
-          <div class="card-body"><div class="rank-scroll">${phase === 'overall' ? '<div class="lb-empty">CCIW-scope has no Additional Metrics category.</div>' : thisWeekTable(cciwJoined, false)}</div></div>
-        </div>
-        <div class="card tw-national">
-          <div class="card-head"><h3>National Rankings${tw.carroll.national.season ? ` (${tw.carroll.national.season})` : ''}</h3></div>
-          <div class="card-body"><div class="rank-scroll">${thisWeekTable(natJoined, true)}</div></div>
-        </div>
-      </div>`;
-  }).join('');
-
-  root.innerHTML = `
-    <div class="frame-wrap active">
-      <div class="slide">
-        <div class="unit-header">
-          <div class="brandmark"><span class="crest">CU</span><h2>This Week</h2></div>
-          <div class="sub">${haLabel} ${tw.opponent} · ${whenWhere} · ${confLabel}</div>
-        </div>
-        <div class="body">
-          <div class="download-row no-print" style="margin-bottom:14px;">
-            <button type="button" class="download-btn" id="tw-cciw-pdf">&#8595; CCIW PDF</button>
-            <button type="button" class="download-btn" id="tw-national-pdf">&#8595; National PDF</button>
-          </div>
-          ${!tw.opponent_data_available ? `<div class="insight">No ranking data available for ${tw.opponent} — not tracked by either CCIW Buddah Report or National Buddah Report (non-conference opponent). Carroll's own current standing is shown below regardless.</div>` : ''}
-          ${panelsHTML}
-        </div>
-        <div class="footer-note no-print">Schedule: Schedule/schedule.json (gopios.com). Ranks: most current season/week available for each team from the same sources as the tabs after this one.</div>
-      </div>
-    </div>`;
-
-  const oppLabel = `${haLabel === 'at' ? 'at' : 'vs'} ${tw.opponent}`;
-  document.getElementById('tw-cciw-pdf').addEventListener('click', () =>
-    printThisWeekScope('cciw', `This Week CCIW - ${oppLabel} - Carroll Football`));
-  document.getElementById('tw-national-pdf').addEventListener('click', () =>
-    printThisWeekScope('national', `This Week National - ${oppLabel} - Carroll Football`));
-}
-
 const TAB_RENDERERS = {
-  this_week: (root) => thisWeekTab(root),
   overall: (root) => rankingsTab('overall', root),
   offense: (root) => rankingsTab('offense', root),
   defense: (root) => rankingsTab('defense', root),
@@ -472,7 +344,7 @@ fetch('../data/rankings.json')
   .then((r) => r.json())
   .then((data) => {
     DATA = data;
-    showTab('this_week');
+    showTab('offense');
   })
   .catch((err) => {
     document.getElementById('rank-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/rankings.json — ${err}. Run scripts/build_rankings_data.py first, and serve over http:// not file://.</div></div>`;
