@@ -22,6 +22,18 @@
   @media (max-width: 900px) {
     .chartgrid { grid-template-columns: 1fr; }
   }
+  /* Scouting Report's scenario table -- 9 columns (Scenario, N, 2 Play Type,
+     3 Direction, 2 Pass Depth) is wider than most .mini tables on this site,
+     so it gets its own horizontal-scroll wrapper instead of squeezing on
+     mobile. .tbl-section rows are a group header (a bare colspan row, no
+     data) between each scenario dimension (By Down, By Quarter, ...). */
+  .tbl-scroll { overflow-x: auto; }
+  table.mini .tbl-section td {
+    background: var(--page); font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--muted); font-weight: 700; padding-top: 12px;
+  }
+  table.mini thead tr:first-child th { border-bottom: none; padding-bottom: 2px; color: var(--text-secondary); }
+  table.mini thead tr:last-child th { padding-top: 2px; }
 </style>
 </head>
 <body>
@@ -68,23 +80,6 @@ const QUARTERS = ['1st', '2nd', '3rd', '4th', 'OT'];
 function runPassRows(rows) { return rows.filter((r) => r.play_type === 'Rush' || r.play_type === 'Pass' || r.play_type === 'Sack'); }
 function isRunPlay(r) { return r.play_type === 'Rush'; }
 function isPassPlay(r) { return r.play_type === 'Pass' || r.play_type === 'Sack'; }
-
-// Flags each row with whether the play immediately before it in the same
-// drive was Explosive. Relies on the source array already being in
-// chronological play order (true throughout this dataset -- see
-// uniqueByKey's comment on the same assumption) since there's no explicit
-// play-sequence field to sort by.
-function withAfterExplosive(rows) {
-  const flagged = [];
-  groupBy(rows, 'game_label').forEach((gameRows) => {
-    groupBy(gameRows, 'drive_num').forEach((driveRows) => {
-      driveRows.forEach((r, i) => {
-        flagged.push({ ...r, _afterExplosive: i > 0 && driveRows[i - 1].play_efficiency === 'Explosive' });
-      });
-    });
-  });
-  return flagged;
-}
 
 function byOpponentMetrics(rows) {
   const withEff = rows.filter((r) => r.play_efficiency !== null);
@@ -169,10 +164,151 @@ function byOpponentTab(root) {
 
 /* ============================================================================
    SCOUTING REPORT -- one opponent at a time by design, per the user: a coach
-   says "we're in scenario X" (3rd down, 4th quarter, after an explosive play)
-   and wants that team's percentage tendency for it, which only makes sense
-   for one team, not two overlaid.
+   on the sideline hits a specific scenario, looks it up, and reads the real
+   percentage odds for it -- which only makes sense for one team at a time,
+   not two overlaid. Originally a handful of Run/Pass bar charts (by down, by
+   quarter, after an explosive play); per the user, rebuilt as a single dense
+   reference table instead ("a table view with percentages of a bunch of
+   different scenarios... play type or call or whatnot") covering every
+   scenario dimension the official play-by-play actually has, not just the
+   3 examples first mentioned.
    ============================================================================ */
+
+// Leading/trailing by more than a score (8 points -- the real "still has to
+// go for it" line: two scores down is a fundamentally different situation
+// than one) vs by a score or less vs tied.
+const SCORE_BUCKETS = ['Leading by 9+', 'Leading by 1-8', 'Tied', 'Trailing by 1-8', 'Trailing by 9+'];
+function scoreBucket(sd) {
+  if (sd === null || sd === undefined) return null;
+  if (sd > 8) return 'Leading by 9+';
+  if (sd > 0) return 'Leading by 1-8';
+  if (sd === 0) return 'Tied';
+  if (sd >= -8) return 'Trailing by 1-8';
+  return 'Trailing by 9+';
+}
+function ordinalDown(d) { return d === 1 ? '1st' : d === 2 ? '2nd' : d === 3 ? '3rd' : '4th'; }
+
+// Relies on the source array already being in chronological play order
+// (true throughout this dataset -- see uniqueByKey's comment on the same
+// assumption) since there's no explicit play-sequence field to sort by.
+// Flags whether the play immediately before it in the same drive was
+// Explosive, and whether it's the first play of its drive (its own real
+// scenario: "what do they do to start a drive" is a different question than
+// "what do they do on 2nd and 8", not covered by any of down/quarter/
+// situation/field zone/distance alone).
+function withScenarioFlags(rows) {
+  const flagged = [];
+  groupBy(rows, 'game_label').forEach((gameRows) => {
+    groupBy(gameRows, 'drive_num').forEach((driveRows) => {
+      driveRows.forEach((r, i) => {
+        flagged.push({
+          ...r,
+          _afterExplosive: i > 0 && driveRows[i - 1].play_efficiency === 'Explosive',
+          _firstPlayOfDrive: i === 0,
+        });
+      });
+    });
+  });
+  return flagged;
+}
+
+// Every scenario dimension the official play-by-play actually carries, each
+// its own section in the report table. `rows` on each item is NOT yet
+// filtered to Run/Pass/Sack -- scenarioRowHTML() does that itself so empty
+// buckets (e.g. a down/distance combo with zero real snaps) can be dropped
+// before rendering.
+function buildScenarios(flagged) {
+  const withDist = flagged.map((r) => ({ ...r, _db: distanceBucket(r.distance) }));
+  return [
+    { title: 'By Down', items: DOWNS.map((d) => ({ label: `${ordinalDown(d)} Down`, rows: flagged.filter((r) => r.down === d) })) },
+    { title: 'By Distance', items: DIST_BUCKETS.map((b) => ({ label: `${b} yds to go`, rows: withDist.filter((r) => r._db === b) })) },
+    {
+      title: 'By Down & Distance',
+      items: DOWNS.flatMap((d) => DIST_BUCKETS.map((b) => ({ label: `${ordinalDown(d)} & ${b}`, rows: withDist.filter((r) => r.down === d && r._db === b) }))),
+    },
+    { title: 'By Quarter', items: QUARTERS.map((q) => ({ label: q, rows: flagged.filter((r) => r.quarter === q) })) },
+    { title: 'By Situation', items: SITUATIONS.map((s) => ({ label: s, rows: flagged.filter((r) => r.situation === s) })) },
+    { title: 'By Field Zone', items: FIELD_ZONES.map((z) => ({ label: z, rows: flagged.filter((r) => r.field_zone === z) })) },
+    {
+      title: 'Goal-to-Go',
+      items: [
+        { label: 'Goal-to-Go', rows: flagged.filter((r) => r.is_goal_to_go) },
+        { label: 'Not Goal-to-Go', rows: flagged.filter((r) => !r.is_goal_to_go) },
+      ],
+    },
+    { title: 'By Score Situation', items: SCORE_BUCKETS.map((b) => ({ label: b, rows: flagged.filter((r) => scoreBucket(r.score_differential) === b) })) },
+    {
+      title: 'Drive Context',
+      items: [
+        { label: 'First Play of Drive', rows: flagged.filter((r) => r._firstPlayOfDrive) },
+        { label: 'Not First Play of Drive', rows: flagged.filter((r) => !r._firstPlayOfDrive) },
+      ],
+    },
+    {
+      title: 'Explosive-Play Context',
+      items: [
+        { label: 'After an Explosive Play', rows: flagged.filter((r) => r._afterExplosive) },
+        { label: 'Other Snaps', rows: flagged.filter((r) => !r._afterExplosive) },
+      ],
+    },
+  ];
+}
+
+// One row = one scenario, every "type of call" percentage the data can
+// answer for it: Run/Pass mix (of every Run/Pass/Sack snap in the scenario),
+// Direction (of just the subset with a charted direction), Pass Depth (of
+// just the pass attempts with a charted depth) -- three different
+// denominators in one row on purpose, so a coach reads one line for "3rd &
+// Long" and gets the full picture instead of hunting across 3 separate tables.
+function scenarioRowHTML(label, rows) {
+  const rp = runPassRows(rows);
+  const n = rp.length;
+  const runN = rp.filter(isRunPlay).length;
+  const passRows = rp.filter(isPassPlay);
+  const dirRows = rp.filter((r) => r.direction);
+  const left = dirRows.filter((r) => r.direction === 'Left').length;
+  const mid = dirRows.filter((r) => r.direction === 'Middle').length;
+  const right = dirRows.filter((r) => r.direction === 'Right').length;
+  const depthRows = passRows.filter((r) => r.pass_depth);
+  const deep = depthRows.filter((r) => r.pass_depth === 'Deep').length;
+  const short = depthRows.filter((r) => r.pass_depth === 'Short').length;
+  return `<tr>
+    <td class="name">${label}</td>
+    <td>${n}</td>
+    <td>${pct(n ? runN / n : null, 0)}</td>
+    <td>${pct(n ? (n - runN) / n : null, 0)}</td>
+    <td>${dirRows.length ? pct(left / dirRows.length, 0) : '—'}</td>
+    <td>${dirRows.length ? pct(mid / dirRows.length, 0) : '—'}</td>
+    <td>${dirRows.length ? pct(right / dirRows.length, 0) : '—'}</td>
+    <td>${depthRows.length ? pct(deep / depthRows.length, 0) : '—'}</td>
+    <td>${depthRows.length ? pct(short / depthRows.length, 0) : '—'}</td>
+  </tr>`;
+}
+
+function sectionRowHTML(title) {
+  return `<tr class="tbl-section"><td colspan="9">${title}</td></tr>`;
+}
+
+function renderScenarioTable(containerId, flagged) {
+  const sections = buildScenarios(flagged);
+  let rowsHTML = '';
+  sections.forEach((sec) => {
+    const items = sec.items.filter((it) => runPassRows(it.rows).length > 0);
+    if (!items.length) return;
+    rowsHTML += sectionRowHTML(sec.title);
+    items.forEach((it) => { rowsHTML += scenarioRowHTML(it.label, it.rows); });
+  });
+  document.getElementById(containerId).innerHTML = `
+    <div class="tbl-scroll">
+      <table class="mini">
+        <thead>
+          <tr><th></th><th></th><th colspan="2">Play Type</th><th colspan="3">Direction (charted subset)</th><th colspan="2">Pass Depth (charted subset)</th></tr>
+          <tr><th>Scenario</th><th>N</th><th>Run %</th><th>Pass %</th><th>Left %</th><th>Middle %</th><th>Right %</th><th>Deep %</th><th>Short %</th></tr>
+        </thead>
+        <tbody>${rowsHTML}</tbody>
+      </table>
+    </div>`;
+}
 
 function reportSideHTML(side, title, note) {
   return `
@@ -184,49 +320,25 @@ function reportSideHTML(side, title, note) {
       ${kpiHTML(`sr-${side}-pass`, 'Pass %')}
       ${kpiHTML(`sr-${side}-games`, 'Games')}
     </div>
-    <div class="chartgrid">
-      <div class="card"><div class="card-head"><h3>Run/Pass % by Down</h3></div><div class="card-body" id="sr-${side}-down"></div></div>
-      <div class="card"><div class="card-head"><h3>Run/Pass % by Quarter</h3></div><div class="card-body" id="sr-${side}-quarter"></div></div>
-    </div>
-    <div class="card" style="margin-bottom:14px;">
-      <div class="card-head"><h3>Run/Pass % After an Explosive Play</h3></div>
-      <div class="card-body" id="sr-${side}-explosive"></div>
+    <div class="card">
+      <div class="card-head"><h3>Percentage Breakdown by Scenario</h3></div>
+      <div class="card-body">
+        <div id="sr-${side}-table"></div>
+        <div class="data-note">Play Type % is of every Run/Pass/Sack snap in that scenario (the N column). Direction and Pass Depth % are each their own charted subset (direction ~74% of run/pass snaps, depth ~34% of pass attempts, site-wide) -- "—" means nothing was charted for that scenario, not 0%.</div>
+      </div>
     </div>`;
 }
 
 function renderReportSide(side, allRows) {
-  const rpAll = runPassRows(withAfterExplosive(allRows));
+  const flagged = withScenarioFlags(allRows);
+  const rpAll = runPassRows(flagged);
   const games = new Set(allRows.map((r) => r.game_label));
   setKPI(`sr-${side}-n`, String(rpAll.length));
   setKPI(`sr-${side}-run`, pct(rate(rpAll, isRunPlay)));
   setKPI(`sr-${side}-pass`, pct(rate(rpAll, isPassPlay)));
   setKPI(`sr-${side}-games`, String(games.size));
 
-  const runPassColors = { Run: cssVar('--cat-1'), Pass: cssVar('--cat-4') };
-
-  const downs = DOWNS.filter((d) => rpAll.some((r) => r.down === d));
-  const byDown = groupBy(rpAll, 'down');
-  renderStacked(document.getElementById(`sr-${side}-down`), {
-    categories: downs,
-    series: { Run: downs.map((d) => byDown.get(d).filter(isRunPlay).length), Pass: downs.map((d) => byDown.get(d).filter(isPassPlay).length) },
-    order: ['Run', 'Pass'], colors: runPassColors,
-  });
-
-  const quarters = QUARTERS.filter((q) => rpAll.some((r) => r.quarter === q));
-  const byQuarter = groupBy(rpAll, 'quarter');
-  renderStacked(document.getElementById(`sr-${side}-quarter`), {
-    categories: quarters,
-    series: { Run: quarters.map((q) => byQuarter.get(q).filter(isRunPlay).length), Pass: quarters.map((q) => byQuarter.get(q).filter(isPassPlay).length) },
-    order: ['Run', 'Pass'], colors: runPassColors,
-  });
-
-  const afterCats = ['After Explosive Play', 'Other Snaps'];
-  const afterGroup = { 'After Explosive Play': rpAll.filter((r) => r._afterExplosive), 'Other Snaps': rpAll.filter((r) => !r._afterExplosive) };
-  renderStacked(document.getElementById(`sr-${side}-explosive`), {
-    categories: afterCats,
-    series: { Run: afterCats.map((c) => afterGroup[c].filter(isRunPlay).length), Pass: afterCats.map((c) => afterGroup[c].filter(isPassPlay).length) },
-    order: ['Run', 'Pass'], colors: runPassColors,
-  });
+  renderScenarioTable(`sr-${side}-table`, flagged);
 }
 
 function reportTab(root) {

@@ -334,25 +334,54 @@ Visual language originates from the `Special Teams Data/mockups/*.html` prototyp
        Turnover/Takeaway Rate, each as its own bar chart with opponent as the
        category axis (Offense and Defense grain, 4 charts each), Season-
        filtered like every other dashboard (defaults to the latest year).
-     - **Scouting Report** — one team at a time by design (a coach picks a
-       specific in-game scenario and wants that team's percentage tendency
+     - **Scouting Report** — one team at a time by design (a coach on the
+       sideline hits a scenario and wants that team's real percentage odds
        for it, not two teams overlaid). A single opponent dropdown drives two
-       stacked-bar report panels, Offense (Carroll's own play-calling in
-       games against that opponent) and Defense (that opponent's own
-       play-calling against Carroll — real scouting signal for a rematch):
-       Run/Pass % by Down, by Quarter, and after an Explosive Play. Aggregates
-       every season Carroll has played that opponent (no Season filter here —
-       a single game's snap count is too thin to be a real tendency signal).
-       Run/Pass excludes Kneel and Two-Point Conversion snaps (not real
-       play-calling signal); Sack counts as a pass call, the same convention
-       Offense &gt; Quarterbacks already documents. "After an Explosive Play"
-       is computed from the source array's already-chronological per-drive
-       play order (no explicit sequence field exists) — same assumption
-       `uniqueByKey` and every drive-result chart already rely on.
+       report panels, Offense (Carroll's own play-calling in games against
+       that opponent) and Defense (that opponent's own play-calling against
+       Carroll — real scouting signal for a rematch). Aggregates every season
+       Carroll has played that opponent (no Season filter here — a single
+       game's snap count is too thin to be a real tendency signal).
      rankings.html itself reverted to just its original 4 phase tabs
      (Offensive/Defensive/Special Teams/Additional Metrics), defaulting to
      Offensive now that there's no This Week/Opponent Scouting tab to land on
      first.
+   - **Scouting Report rebuilt as a dense scenario table** (2026-08-01, same
+     session — per the user, the bar-chart version wasn't what they had in
+     mind: "this is a table view with percentages of a bunch of different
+     scenarios that show different percentages of play type or call or
+     whatnot", then "expand the amount of scenarios... there are a ton of
+     different ways to break this down... the ultimate goal is for a coach
+     to be on the sideline, look for a given scenario and be able to
+     understand the odds"). Replaced the 3 Run/Pass bar charts (by down, by
+     quarter, after an explosive play) with one `<table class="mini">` per
+     side, one row per scenario, grouped into 10 section-header-delimited
+     dimensions covering every scenario field the official play-by-play
+     actually carries: By Down, By Distance (reuses the existing
+     `distanceBucket()`/`DIST_BUCKETS`), By Down &amp; Distance (the full
+     cross of the two — "3rd &amp; Long" is literally how a coach thinks
+     about it), By Quarter, By Situation, By Field Zone, Goal-to-Go, By
+     Score Situation (a new `scoreBucket()` — Leading/Trailing split at the
+     real one-score-game line, ±8 points), Drive Context (first play of a
+     drive vs. not — a new flag alongside the existing after-an-explosive-
+     play one, same per-drive chronological-order pass), and Explosive-Play
+     Context. Each row shows 3 independent percentage breakdowns with 3
+     different denominators on purpose (one glance = the full picture for
+     that scenario, not 3 separate tables to cross-reference): Play Type
+     (Run/Pass, of every snap in the scenario), Direction (Left/Middle/
+     Right, of just the charted-direction subset, ~74% site-wide), and Pass
+     Depth (Deep/Short, of just the charted-depth subset among pass
+     attempts, ~34% site-wide) — a `—` means nothing was charted for that
+     cell, never a fabricated 0%. Scenario groups/rows with zero real
+     Run/Pass/Sack snaps are dropped entirely (e.g. Augustana's Scouting
+     Report has no "Goal-to-Go" row — 32 Goal-to-Go plays exist site-wide,
+     none against that specific opponent). Verified against a 5-game
+     opponent (full table, all 10 sections populated) and a 1-game 2021-22
+     opponent (Direction/Pass Depth correctly show `—` throughout — those
+     fields weren't charted that early, a known, already-documented data
+     limitation), no console errors, table's own horizontal-scroll wrapper
+     keeps the page from overflowing on mobile instead of squeezing 9
+     columns unreadable.
    - Game Analysis and the two Game Prep Report PDFs (per-opponent scouting
      reports) aren't ingested yet. Design/scope TBD for those.
 
