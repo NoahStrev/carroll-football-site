@@ -24,16 +24,59 @@
   }
   /* Scouting Report's scenario table -- 9 columns (Scenario, N, 2 Play Type,
      3 Direction, 2 Pass Depth) is wider than most .mini tables on this site,
-     so it gets its own horizontal-scroll wrapper instead of squeezing on
-     mobile. .tbl-section rows are a group header (a bare colspan row, no
-     data) between each scenario dimension (By Down, By Quarter, ...). */
-  .tbl-scroll { overflow-x: auto; }
+     and can run 50+ rows long (per the user: "the header isn't visible
+     making it hard to remember"). Real bug found getting a sticky header
+     working here: `overflow-x: auto` on ANY ancestor -- .tbl-scroll itself,
+     or even theme.css's shared .stage two levels up, which every dashboard's
+     tab content sits inside -- forces that ancestor's overflow-y to compute
+     to `auto` too per the CSS overflow spec (an author can't override this
+     back to `visible` while overflow-x stays non-visible; the browser
+     ignores it). That silently makes the ancestor a scroll container even
+     though it never actually overflows (its own height always matches its
+     content), which is enough to become position:sticky's positioning
+     context instead of the real page -- and since that container's own
+     scrollTop never moves, the "sticky" header just sits frozen in place
+     instead of tracking the viewport as the page scrolls past it.
+     Fix: give .tbl-scroll a real bounded height instead of fighting that
+     cascade rule -- once it's a genuine, always-scrolling box (scrollHeight
+     > clientHeight whenever the table is tall), it's unambiguously its own
+     header's sticky context regardless of what .stage or anything else does,
+     and it now also scrolls vertically within itself (a conventional
+     frozen-header data-table pattern) rather than the whole page scrolling
+     past a sticky bar. .tbl-section rows are a group header (a bare colspan
+     row, no data) between each scenario dimension (By Down, By Quarter,
+     ...). */
+  .tbl-scroll { overflow: auto; max-height: 65vh; }
   table.mini .tbl-section td {
     background: var(--page); font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em;
     color: var(--muted); font-weight: 700; padding-top: 12px;
   }
-  table.mini thead tr:first-child th { border-bottom: none; padding-bottom: 2px; color: var(--text-secondary); }
-  table.mini thead tr:last-child th { padding-top: 2px; }
+  table.mini.scenario-table thead th {
+    position: sticky; top: 0; z-index: 2; background: var(--page); box-shadow: 0 1px 0 var(--grid);
+  }
+  .download-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .download-btn {
+    font-family: inherit; font-size: 12px; font-weight: 600; padding: 7px 13px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
+    cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .download-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .custom-situation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+  .custom-situation-grid label {
+    display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--muted); font-weight: 700; margin-bottom: 4px;
+  }
+  .custom-situation-grid .scout-select { width: 100%; }
+
+  @media print {
+    .sitenav, .intro, .tabbar, .no-print, .scout-report-head select { display: none !important; }
+    table.mini.scenario-table thead th { position: static; box-shadow: none; }
+    /* .tbl-scroll's max-height/overflow is a screen-only convenience (frozen
+       header while scanning on-screen) -- printed, the table should lay out
+       in full across as many pages as it needs, not clip to one scrolled
+       screenful. */
+    .tbl-scroll { max-height: none; overflow: visible; }
+  }
 </style>
 </head>
 <body>
@@ -60,7 +103,8 @@
 
   <div class="tabbar" id="os-tabs">
     <button class="tabbtn active" data-tab="by_opponent">By Opponent</button>
-    <button class="tabbtn" data-tab="report">Scouting Report</button>
+    <button class="tabbtn" data-tab="offense_report">Offense Report</button>
+    <button class="tabbtn" data-tab="defense_report">Defense Report</button>
   </div>
 
   <div class="stage" id="os-stage"></div>
@@ -80,6 +124,17 @@ const QUARTERS = ['1st', '2nd', '3rd', '4th', 'OT'];
 function runPassRows(rows) { return rows.filter((r) => r.play_type === 'Rush' || r.play_type === 'Pass' || r.play_type === 'Sack'); }
 function isRunPlay(r) { return r.play_type === 'Rush'; }
 function isPassPlay(r) { return r.play_type === 'Pass' || r.play_type === 'Sack'; }
+
+// Same pattern as rankings.html's printPage() -- prints whatever's currently
+// visible in the tab as-is (print CSS above hides the nav/tabbar/controls),
+// no per-card isolation needed since each tab here is already just one
+// self-contained report.
+function printPage(filenameTitle) {
+  const prevTitle = document.title;
+  document.title = filenameTitle;
+  window.print();
+  document.title = prevTitle;
+}
 
 function byOpponentMetrics(rows) {
   const withEff = rows.filter((r) => r.play_efficiency !== null);
@@ -107,6 +162,9 @@ function byOpponentTab(root) {
         </div>
         <div class="shelf" id="bo-shelf"></div>
         <div class="body">
+          <div class="download-row no-print">
+            <button type="button" class="download-btn" id="bo-pdf">&#8595; PDF</button>
+          </div>
           <h3 class="scout-section-title">Offense</h3>
           <div class="chartgrid">
             <div class="card"><div class="card-head"><h3>Yards / Play by Opponent</h3></div><div class="card-body" id="bo-off-ypp"></div></div>
@@ -129,27 +187,33 @@ function byOpponentTab(root) {
   document.getElementById('bo-shelf').innerHTML = buildFilterPanel('bo', BO_FILTERS, DATA.filters.offense);
   wireFilterPanel('bo', BO_FILTERS, render);
 
+  // scroll: true -- per the user ("we need to be able to scroll left and
+  // right because there are too many teams"), these charts stopped
+  // flex-shrinking every opponent to fit the card (unreadable past ~8-10
+  // categories) and scroll horizontally within their own card instead.
   function renderOpponentGrainCharts(side, rows, toColorVar) {
     const byOpp = groupBy(rows, 'opponent');
     const opponents = [...byOpp.keys()].sort();
     const metrics = new Map(opponents.map((o) => [o, byOpponentMetrics(byOpp.get(o))]));
     renderBar(document.getElementById(`bo-${side}-ypp`), {
       categories: opponents, values: opponents.map((o) => metrics.get(o).ypp),
-      labelFmt: (v) => fmt(v, 1), colorFn: () => cssVar('--cat-1'), tooltipExtra: (o) => `${byOpp.get(o).length} plays`,
+      labelFmt: (v) => fmt(v, 1), colorFn: () => cssVar('--cat-1'), tooltipExtra: (o) => `${byOpp.get(o).length} plays`, scroll: true,
     });
     renderBar(document.getElementById(`bo-${side}-succ`), {
       categories: opponents, values: opponents.map((o) => metrics.get(o).success),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--serious'), tooltipExtra: (o) => `${byOpp.get(o).length} plays`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--serious'), tooltipExtra: (o) => `${byOpp.get(o).length} plays`, scroll: true,
     });
     renderBar(document.getElementById(`bo-${side}-exp`), {
       categories: opponents, values: opponents.map((o) => metrics.get(o).explosive),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-8'), tooltipExtra: (o) => `${byOpp.get(o).length} plays`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-8'), tooltipExtra: (o) => `${byOpp.get(o).length} plays`, scroll: true,
     });
     renderBar(document.getElementById(`bo-${side}-to`), {
       categories: opponents, values: opponents.map((o) => metrics.get(o).turnover),
-      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar(toColorVar), tooltipExtra: (o) => `${byOpp.get(o).length} plays`,
+      labelFmt: (v) => pct(v, 0), colorFn: () => cssVar(toColorVar), tooltipExtra: (o) => `${byOpp.get(o).length} plays`, scroll: true,
     });
   }
+
+  document.getElementById('bo-pdf').addEventListener('click', () => printPage('Opponent Scouting - By Opponent - Carroll Football'));
 
   function render() {
     const state = readFilterState('bo', BO_FILTERS);
@@ -300,36 +364,128 @@ function renderScenarioTable(containerId, flagged) {
   });
   document.getElementById(containerId).innerHTML = `
     <div class="tbl-scroll">
-      <table class="mini">
+      <table class="mini scenario-table">
         <thead>
-          <tr><th></th><th></th><th colspan="2">Play Type</th><th colspan="3">Direction (charted subset)</th><th colspan="2">Pass Depth (charted subset)</th></tr>
-          <tr><th>Scenario</th><th>N</th><th>Run %</th><th>Pass %</th><th>Left %</th><th>Middle %</th><th>Right %</th><th>Deep %</th><th>Short %</th></tr>
+          <tr><th>Scenario</th><th>N</th><th>Run %</th><th>Pass %</th><th>Dir: Left %</th><th>Dir: Mid %</th><th>Dir: Right %</th><th>Depth: Deep %</th><th>Depth: Short %</th></tr>
         </thead>
         <tbody>${rowsHTML}</tbody>
       </table>
     </div>`;
 }
 
-function reportSideHTML(side, title, note) {
+/* ---------------------------------------------------------------- custom
+   situation builder -- per the user: "a custom situation enterer, where
+   they can input all the current criteria and get all of the percentages."
+   Every dropdown defaults to "Any" (ignored); selected values combine with
+   AND. Reuses scenarioRowHTML() so the single result row is the exact same
+   Play Type/Direction/Pass Depth shape as every row in the scenario table
+   above it, just for whatever exact combination the coach picked instead of
+   a pre-built scenario. */
+const CUSTOM_FIELDS = [
+  { id: 'down', label: 'Down', options: DOWNS.map(String) },
+  { id: 'distance', label: 'Distance', options: DIST_BUCKETS },
+  { id: 'quarter', label: 'Quarter', options: QUARTERS },
+  { id: 'situation', label: 'Situation', options: SITUATIONS },
+  { id: 'fieldZone', label: 'Field Zone', options: FIELD_ZONES },
+  { id: 'goalToGo', label: 'Goal-to-Go', options: ['Goal-to-Go', 'Not Goal-to-Go'] },
+  { id: 'score', label: 'Score Situation', options: SCORE_BUCKETS },
+  { id: 'drive', label: 'Drive Context', options: ['First Play of Drive', 'Not First Play of Drive'] },
+  { id: 'explosive', label: 'Explosive-Play Context', options: ['After an Explosive Play', 'Other Snaps'] },
+];
+
+function customControlsHTML(side) {
+  return CUSTOM_FIELDS.map((f) => `
+    <div>
+      <label for="cs-${side}-${f.id}">${f.label}</label>
+      <select class="scout-select" id="cs-${side}-${f.id}">
+        <option value="Any">Any</option>
+        ${f.options.map((o) => `<option value="${o}">${o}</option>`).join('')}
+      </select>
+    </div>`).join('');
+}
+
+function customFilterRows(flagged, side) {
+  const val = (id) => document.getElementById(`cs-${side}-${id}`).value;
+  const down = val('down'), distance = val('distance'), quarter = val('quarter'), situation = val('situation'),
+    fieldZone = val('fieldZone'), goalToGo = val('goalToGo'), score = val('score'), drive = val('drive'), explosive = val('explosive');
+  return flagged.filter((r) => {
+    if (down !== 'Any' && String(r.down) !== down) return false;
+    if (distance !== 'Any' && distanceBucket(r.distance) !== distance) return false;
+    if (quarter !== 'Any' && r.quarter !== quarter) return false;
+    if (situation !== 'Any' && r.situation !== situation) return false;
+    if (fieldZone !== 'Any' && r.field_zone !== fieldZone) return false;
+    if (goalToGo !== 'Any' && (goalToGo === 'Goal-to-Go') !== !!r.is_goal_to_go) return false;
+    if (score !== 'Any' && scoreBucket(r.score_differential) !== score) return false;
+    if (drive !== 'Any' && (drive === 'First Play of Drive') !== !!r._firstPlayOfDrive) return false;
+    if (explosive !== 'Any' && (explosive === 'After an Explosive Play') !== !!r._afterExplosive) return false;
+    return true;
+  });
+}
+
+function customResultLabel(side) {
+  const val = (id) => document.getElementById(`cs-${side}-${id}`).value;
+  // Down's own values (1/2/3/4) read as bare digits with no context outside
+  // its own dropdown -- every other field's options are already
+  // self-descriptive strings ("4th", "Red Zone", "Tied", ...).
+  const parts = CUSTOM_FIELDS
+    .map((f) => { const v = val(f.id); return v === 'Any' ? null : f.id === 'down' ? `${ordinalDown(Number(v))} Down` : v; })
+    .filter((v) => v !== null);
+  return parts.length ? parts.join(', ') : 'All snaps (no filters selected)';
+}
+
+function wireCustomSituation(side, flagged) {
+  const controlsEl = document.getElementById(`cs-${side}-controls`);
+  controlsEl.innerHTML = customControlsHTML(side);
+  controlsEl.querySelectorAll('select').forEach((sel) => sel.addEventListener('change', renderResult));
+
+  function renderResult() {
+    const matched = customFilterRows(flagged, side);
+    const rp = runPassRows(matched);
+    document.getElementById(`cs-${side}-result`).innerHTML = rp.length
+      ? `<div class="tbl-scroll">
+          <table class="mini scenario-table">
+            <thead><tr><th>Scenario</th><th>N</th><th>Run %</th><th>Pass %</th><th>Dir: Left %</th><th>Dir: Mid %</th><th>Dir: Right %</th><th>Depth: Deep %</th><th>Depth: Short %</th></tr></thead>
+            <tbody>${scenarioRowHTML(customResultLabel(side), matched)}</tbody>
+          </table>
+        </div>`
+      : `<div class="insight">No real Run/Pass/Sack snaps match this combination for this opponent.</div>`;
+  }
+  renderResult();
+}
+
+/* ---------------------------------------------------------------- report
+   page shell -- shared by the Offense Report and Defense Report tabs (per
+   the user: "break the tables out into offense and defense" -- each now
+   gets its own full tab/page instead of both stacked on one, which was the
+   real cause of "the header isn't visible making it hard to remember": two
+   57-row tables stacked doubled the scroll distance to the second one). */
+function reportPageHTML(side, note) {
   return `
-    <h3 class="scout-section-title">${title}</h3>
-    <div class="insight" style="margin-bottom:10px;">${note}</div>
     <div class="kpirow" id="sr-${side}-kpis">
       ${kpiHTML(`sr-${side}-n`, 'Snaps (Run/Pass/Sack)')}
       ${kpiHTML(`sr-${side}-run`, 'Run %')}
       ${kpiHTML(`sr-${side}-pass`, 'Pass %')}
       ${kpiHTML(`sr-${side}-games`, 'Games')}
     </div>
-    <div class="card">
+    <div class="insight" style="margin-bottom:10px;">${note}</div>
+    <div class="card" style="margin-bottom:14px;">
       <div class="card-head"><h3>Percentage Breakdown by Scenario</h3></div>
       <div class="card-body">
         <div id="sr-${side}-table"></div>
         <div class="data-note">Play Type % is of every Run/Pass/Sack snap in that scenario (the N column). Direction and Pass Depth % are each their own charted subset (direction ~74% of run/pass snaps, depth ~34% of pass attempts, site-wide) -- "—" means nothing was charted for that scenario, not 0%.</div>
       </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Custom Situation</h3></div>
+      <div class="card-body">
+        <div class="custom-situation-grid no-print" id="cs-${side}-controls"></div>
+        <div id="cs-${side}-result"></div>
+        <div class="data-note">Combines every selection above with AND -- leave a dropdown on "Any" to ignore that dimension. Same charted-subset caveat applies to Direction/Pass Depth here as the table above.</div>
+      </div>
     </div>`;
 }
 
-function renderReportSide(side, allRows) {
+function renderReportPage(side, allRows) {
   const flagged = withScenarioFlags(allRows);
   const rpAll = runPassRows(flagged);
   const games = new Set(allRows.map((r) => r.game_label));
@@ -339,46 +495,61 @@ function renderReportSide(side, allRows) {
   setKPI(`sr-${side}-games`, String(games.size));
 
   renderScenarioTable(`sr-${side}-table`, flagged);
+  wireCustomSituation(side, flagged);
 }
 
-function reportTab(root) {
+function opponentReportTab(root, side, subtitle, note, dataFn) {
   const opponents = [...new Set([...DATA.offense.official, ...DATA.defense.official].map((r) => r.opponent))].sort();
   root.innerHTML = `
     <div class="frame-wrap active">
       <div class="slide">
         <div class="unit-header">
           <div class="brandmark"><span class="crest">CU</span><h2>Opponent Scouting</h2></div>
-          <div class="sub">Scouting Report · Official Play-by-Play</div>
+          <div class="sub">${subtitle} · Official Play-by-Play</div>
         </div>
         <div class="body">
           <div class="scout-report-head">
-            <label for="sr-opponent" style="font-size:12.5px; font-weight:600; color:var(--text-secondary);">Opponent</label>
-            <select class="scout-select" id="sr-opponent">${opponents.map((o) => `<option value="${o}">${o}</option>`).join('')}</select>
+            <label for="sr-${side}-opponent" style="font-size:12.5px; font-weight:600; color:var(--text-secondary);">Opponent</label>
+            <select class="scout-select" id="sr-${side}-opponent">${opponents.map((o) => `<option value="${o}">${o}</option>`).join('')}</select>
+            <button type="button" class="download-btn no-print" id="sr-${side}-pdf">&#8595; PDF</button>
           </div>
-          <div id="sr-body"></div>
+          ${reportPageHTML(side, note)}
         </div>
         <div class="footer-note">Source: Game Analysis's OfficialPlayByPlay sheet, combined_play_data.xlsx (50 real Carroll games, 2021–2025). Run/Pass excludes Kneel and Two-Point Conversion snaps; Sack counts as a pass call.</div>
       </div>
     </div>`;
 
-  document.getElementById('sr-opponent').addEventListener('change', render);
+  document.getElementById(`sr-${side}-opponent`).addEventListener('change', render);
+  document.getElementById(`sr-${side}-pdf`).addEventListener('click', () => {
+    const opponent = document.getElementById(`sr-${side}-opponent`).value;
+    printPage(`Opponent Scouting - ${subtitle} - ${opponent} - Carroll Football`);
+  });
 
   function render() {
-    const opponent = document.getElementById('sr-opponent').value;
-    const offRows = DATA.offense.official.filter((r) => r.opponent === opponent);
-    const defRows = DATA.defense.official.filter((r) => r.opponent === opponent);
-    document.getElementById('sr-body').innerHTML =
-      reportSideHTML('off', 'Offense', "Carroll's own play-calling tendencies in games against this opponent.") +
-      reportSideHTML('def', 'Defense', "This opponent's play-calling tendencies against Carroll's defense — real scouting signal if they're on a future schedule again.");
-    renderReportSide('off', offRows);
-    renderReportSide('def', defRows);
+    const opponent = document.getElementById(`sr-${side}-opponent`).value;
+    renderReportPage(side, dataFn(opponent));
   }
   render();
 }
 
+function offenseReportTab(root) {
+  opponentReportTab(
+    root, 'off', 'Offense Report', "Carroll's own play-calling tendencies in games against this opponent.",
+    (opponent) => DATA.offense.official.filter((r) => r.opponent === opponent),
+  );
+}
+
+function defenseReportTab(root) {
+  opponentReportTab(
+    root, 'def', 'Defense Report', "This opponent's play-calling tendencies against Carroll's defense — real scouting signal if they're on a future schedule again.",
+    (opponent) => DATA.defense.official.filter((r) => r.opponent === opponent),
+  );
+}
+
 const TAB_RENDERERS = {
   by_opponent: (root) => byOpponentTab(root),
-  report: (root) => reportTab(root),
+  offense_report: (root) => offenseReportTab(root),
+  defense_report: (root) => defenseReportTab(root),
 };
 
 function showTab(tab) {

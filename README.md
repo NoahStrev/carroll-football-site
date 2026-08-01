@@ -382,6 +382,52 @@ Visual language originates from the `Special Teams Data/mockups/*.html` prototyp
      limitation), no console errors, table's own horizontal-scroll wrapper
      keeps the page from overflowing on mobile instead of squeezing 9
      columns unreadable.
+   - **Opponent Scouting round 2** (2026-08-01, same session, per the user):
+     - **Offense/Defense split into separate tabs.** The Scouting Report tab
+       stacked both sides' full scenario tables on one page — per the user
+       ("break the tables out into offense and defense... because these
+       tables are so long the header isn't visible making it hard to
+       remember"), each side is now its own top-level tab (Offense Report /
+       Defense Report), each with its own opponent dropdown (independent of
+       each other now that they're separate pages).
+     - **Sticky table headers** — real bug found getting this working: any
+       ancestor with `overflow-x: auto` (the table's own `.tbl-scroll`
+       wrapper, or even theme.css's shared `.stage` two levels up, which
+       every dashboard's tab content sits inside) forces that ancestor's
+       `overflow-y` to compute to `auto` too per the CSS overflow spec — an
+       author can't override it back to `visible` while `overflow-x` stays
+       non-`visible`. That silently makes the ancestor a scroll container
+       even though it never actually overflows, which is enough to hijack
+       `position: sticky`'s positioning context away from the real page, so
+       the header just sits frozen in place instead of tracking the
+       viewport. Fixed by giving `.tbl-scroll` a real bounded height
+       (`max-height: 65vh`) instead of fighting the cascade rule — a
+       conventional frozen-header scrollable data table, unambiguously its
+       own sticky context regardless of what `.stage` does. Print CSS resets
+       it back to `max-height: none` so a PDF still lays the full table out
+       across pages instead of clipping to one scrolled screenful.
+     - **By Opponent charts scroll horizontally** instead of squeezing —
+       per the user ("too many teams"), `renderBar()` in `js/charts.js`
+       gained a `scroll` option (fixed `colWidth` per category instead of
+       flex-shrinking, `overflow-x: auto` on the chart itself) used by all 8
+       of this tab's charts; every other `renderBar()` call site site-wide
+       is untouched (`scroll` defaults to `false`).
+     - **PDF download restored** on all 3 tabs (By Opponent, Offense Report,
+       Defense Report) — reuses rankings.html's `printPage()` pattern
+       (`window.print()` + a temporary document-title swap for the saved
+       filename); this page never needed rankings.html's per-card
+       `print-target` isolation since each tab here is already one
+       self-contained report.
+     - **Custom Situation builder**, added to the bottom of both Offense
+       Report and Defense Report — per the user: "a custom situation
+       enterer, where they can input all the current criteria and get all
+       of the percentages." 9 dropdowns (Down, Distance, Quarter, Situation,
+       Field Zone, Goal-to-Go, Score Situation, Drive Context, Explosive-
+       Play Context), each defaulting to "Any" (ignored); selections combine
+       with AND. Reuses the same `scenarioRowHTML()` the scenario table
+       already uses, so the one result row is the identical Play Type/
+       Direction/Pass Depth shape, just for whatever exact combination the
+       coach picked instead of a pre-built scenario.
    - Game Analysis and the two Game Prep Report PDFs (per-opponent scouting
      reports) aren't ingested yet. Design/scope TBD for those.
 

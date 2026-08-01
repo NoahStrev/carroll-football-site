@@ -258,10 +258,16 @@ function setKPI(id, value, foot) {
  * bug as the heatmap fix earlier this session, and it left .barcol sized to its
  * own content (~50px) instead of stretching to the card, stuck at the left edge
  * with blank space to the right. */
-function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1), colorFn, tooltipFmt, xlab2, tooltipExtra, seriesName, compact = false }) {
+/** scroll: true stops categories flex-shrinking to fit the card (which
+ * squeezes every bar unreadably once there are more than ~8-10, e.g.
+ * Opponent Scouting's "by opponent" charts across 10-15 real opponents) --
+ * each .barcol gets a fixed colWidth instead, and the chart scrolls
+ * horizontally within its own card once the columns overflow it. */
+function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1), colorFn, tooltipFmt, xlab2, tooltipExtra, seriesName, compact = false, scroll = false, colWidth = 78 }) {
   container.innerHTML = '';
   const wrap = el('div', 'barchart');
   if (compact) { wrap.style.height = '110px'; wrap.style.paddingTop = '14px'; }
+  if (scroll) wrap.style.overflowX = 'auto';
   const max = Math.max(1e-9, ...values.filter((v) => v !== null && !Number.isNaN(v)));
   const gridlines = el('div', 'gridlines');
   for (let i = 0; i < 4; i++) gridlines.appendChild(document.createElement('div'));
@@ -282,6 +288,7 @@ function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1),
   categories.forEach((cat, i) => {
     const v = values[i];
     const col = el('div', 'barcol');
+    if (scroll) col.style.flex = `0 0 ${colWidth}px`;
     const plot = el('div', 'barplot');
     const barH = v === null || Number.isNaN(v) ? 0 : Math.max(2, (v / max) * 100);
     const bar = el('div', 'bar');
