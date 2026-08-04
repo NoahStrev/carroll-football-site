@@ -493,6 +493,52 @@ opponent strings collapsed to 13 real opponents; confirmed live in-browser
 filter) that "WashU" now shows all 5 seasons/games instead of 4+1 split
 across two entries.
 
+**v1.0.2 — Self Scout / Opponent Scout renamed and expanded** (2026-08-04,
+per the user: "right now offense is technically a self scout, not an
+opponent scout" — correct: **"Offense Report" was always Carroll's own
+offensive tendencies scoped to one opponent's games, not a scout of that
+opponent at all.** Renamed both existing report tabs to say what they
+actually are (content/data source unchanged for either):
+- **Offense Self Scout** (was "Offense Report") — `DATA.offense.official`,
+  Carroll's own play-calling.
+- **Offense Scout** (was "Defense Report") — `DATA.defense.official`,
+  which was *already*, in substance, a scout of the other team's offense
+  the whole time (it's literally their own snaps, run/pass/direction/depth
+  of what they called) — just mislabeled "Defense" because of which side
+  of the ball Carroll was on, not what the report is actually about.
+
+Then a genuinely new fourth tab, **Defense Self Scout** — Carroll's own
+defensive scheme calls (front, blitz, movement) in games against a
+selected opponent. Structurally different from the other two tabs by
+necessity: those schematic fields only exist on the hand-charted `Plays`
+sheet (`DATA.defense.plays`), not the official play-by-play, so there's no
+Quarter/Goal-to-Go/Score Situation/Drive Context/Explosive-Play Context
+here (only 4 scenario dimensions: By Down, By Distance, By Situation, By
+Field Zone — those official-only fields simply don't exist on this sheet).
+Front/blitz/movement are also each a large open-ended vocabulary (60+ real
+distinct calls, e.g. `"OVER"`/`"BEAR"`/`"BLACKHAWKS"` for fronts) rather
+than a small fixed set like Run/Pass, so the scenario table shows the
+single most-common real call per scenario ("Top Front/Blitz/Movement",
+with its share of that scenario's charted snaps for that field) instead of
+fixed percentage columns — paired with the same Top-10-by-volume bar
+charts (`topKeysByCount` + `renderBar`) already established on
+defense.html's Defensive Line/Linebackers tabs, and a 4-field Custom
+Situation builder (Down/Distance/Situation/Field Zone) reusing the same
+modal-value row renderer. `'-'` (the source sheet's own "charted, but
+nothing called" placeholder) is excluded from "real call" everywhere,
+matching the exact convention defense.html's own Tendencies/DL tabs
+already use for these same fields. `sectionRowHTML()` (shared with the
+other two tabs' 9-column table) gained an optional `colspan` param (default
+9, this table passes 5) rather than hardcoding it. Verified in-browser: all
+4 tabs render with no console errors; the two renamed tabs' KPI values are
+byte-identical to before the rename (365/46.3% and 329/42.9%, unchanged);
+Defense Self Scout tested against both a 5-game opponent (all 4 sections
+populated) and a 1-game opponent (no crash, `"—"` shown correctly for an
+unfilled scenario/field combo); sticky header and bounded-height scroll
+(the fix from the previous round) carry over correctly since it reuses the
+same `table.mini.scenario-table`/`.tbl-scroll` classes; no horizontal
+overflow at 400px mobile width.
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the

@@ -67,6 +67,7 @@
     color: var(--muted); font-weight: 700; margin-bottom: 4px;
   }
   .custom-situation-grid .scout-select { width: 100%; }
+  .modal-pct { color: var(--muted); font-size: 11px; font-weight: 400; }
 
   @media print {
     .sitenav, .intro, .tabbar, .no-print, .scout-report-head select { display: none !important; }
@@ -104,8 +105,9 @@
 
   <div class="tabbar" id="os-tabs">
     <button class="tabbtn active" data-tab="by_opponent">By Opponent</button>
-    <button class="tabbtn" data-tab="offense_report">Offense Report</button>
-    <button class="tabbtn" data-tab="defense_report">Defense Report</button>
+    <button class="tabbtn" data-tab="offense_self_scout">Offense Self Scout</button>
+    <button class="tabbtn" data-tab="offense_scout">Offense Scout</button>
+    <button class="tabbtn" data-tab="defense_self_scout">Defense Self Scout</button>
   </div>
 
   <div class="stage" id="os-stage"></div>
@@ -350,8 +352,8 @@ function scenarioRowHTML(label, rows) {
   </tr>`;
 }
 
-function sectionRowHTML(title) {
-  return `<tr class="tbl-section"><td colspan="9">${title}</td></tr>`;
+function sectionRowHTML(title, colspan = 9) {
+  return `<tr class="tbl-section"><td colspan="${colspan}">${title}</td></tr>`;
 }
 
 function renderScenarioTable(containerId, flagged) {
@@ -455,11 +457,15 @@ function wireCustomSituation(side, flagged) {
 }
 
 /* ---------------------------------------------------------------- report
-   page shell -- shared by the Offense Report and Defense Report tabs (per
-   the user: "break the tables out into offense and defense" -- each now
-   gets its own full tab/page instead of both stacked on one, which was the
-   real cause of "the header isn't visible making it hard to remember": two
-   57-row tables stacked doubled the scroll distance to the second one). */
+   page shell -- shared by the Offense Self Scout and Offense Scout tabs
+   (per the user: "break the tables out into offense and defense" -- each
+   now gets its own full tab/page instead of both stacked on one, which was
+   the real cause of "the header isn't visible making it hard to remember":
+   two 57-row tables stacked doubled the scroll distance to the second
+   one). Both tabs' Run/Pass/Direction/Depth scenario table and Custom
+   Situation builder are identical in shape -- they differ only in which
+   side's official play-by-play they read (DATA.offense.official for
+   Carroll's own calls, DATA.defense.official for the opponent's). */
 function reportPageHTML(side, note) {
   return `
     <div class="kpirow" id="sr-${side}-kpis">
@@ -533,24 +539,269 @@ function opponentReportTab(root, side, subtitle, note, dataFn) {
   render();
 }
 
-function offenseReportTab(root) {
+// Per the user (2026-08-04): the original "Offense Report"/"Defense Report"
+// naming was misleading -- "Offense Report" is really a SELF scout (it's
+// Carroll's own offensive play-calling, just scoped to games against one
+// opponent), not a scout of the other team at all. "Defense Report" was
+// already, in substance, an opponent OFFENSE scout the whole time --
+// defense.official is literally the opponent's own snaps, run/pass/
+// direction/depth of what THEY called, seen through Carroll's defensive
+// data -- just mislabeled "Defense" because of which side of the ball
+// Carroll was on, not what the report is actually about. Renamed both to
+// say what they really are; content/data source unchanged for either.
+function offenseSelfScoutTab(root) {
   opponentReportTab(
-    root, 'off', 'Offense Report', "Carroll's own play-calling tendencies in games against this opponent.",
+    root, 'off', 'Offense Self Scout', "Carroll's own play-calling tendencies in games against this opponent.",
     (opponent) => DATA.offense.official.filter((r) => r.opponent === opponent),
   );
 }
 
-function defenseReportTab(root) {
+function offenseScoutTab(root) {
   opponentReportTab(
-    root, 'def', 'Defense Report', "This opponent's play-calling tendencies against Carroll's defense — real scouting signal if they're on a future schedule again.",
+    root, 'def', 'Offense Scout', "This opponent's own play-calling tendencies against Carroll's defense — real scouting signal if they're on a future schedule again.",
     (opponent) => DATA.defense.official.filter((r) => r.opponent === opponent),
   );
 }
 
+/* ============================================================================
+   DEFENSE SELF SCOUT -- per the user: "make a defensive self scout section
+   as well." Carroll's own defensive scheme calls (front/blitz/movement) are
+   only charted on the hand-charted Plays sheet (defense.plays), not the
+   official play-by-play -- so this can't reuse the Run/Pass/Direction/Depth
+   scenario table the other two report tabs use (that breakdown doesn't
+   exist for Carroll's own defensive calls, only for what play type the
+   OPPONENT ran). Front/blitz/movement are each a large open-ended
+   vocabulary (60+ real distinct calls, e.g. "OVER"/"BEAR"/"BLACKHAWKS"),
+   not a small fixed set like Run/Pass -- so the scenario table shows the
+   single most-common real call per scenario ("Top Front/Blitz/Movement")
+   instead of a fixed set of percentage columns, and pairs it with the same
+   Top-10-by-volume bar charts already established on defense.html's
+   Defensive Line/Linebackers tabs (topKeysByCount + renderBar) for the
+   fuller picture. Also has only 4 scenario dimensions (Down/Distance/
+   Situation/Field Zone), not the other tabs' 10 -- Quarter/Goal-to-Go/Score
+   Situation/Drive Context/Explosive-Play Context all come from official
+   play-by-play fields that don't exist on this hand-charted sheet.
+   ============================================================================ */
+
+// '-' is the source sheet's own "charted, but nothing called" placeholder --
+// excluded from "real call" everywhere below, same convention defense.html's
+// existing Tendencies/Defensive Line tabs already use for these same fields.
+function dssRealRows(rows, field) {
+  return rows.filter((r) => r[field] && r[field] !== '-');
+}
+
+function dssModalCellHTML(rows, field) {
+  const real = dssRealRows(rows, field);
+  if (!real.length) return '—';
+  const byVal = groupBy(real, field);
+  const top = topKeysByCount(byVal, 1)[0];
+  return `${top} <span class="modal-pct">(${pct(byVal.get(top).length / real.length, 0)})</span>`;
+}
+
+function dssScenarios(rows) {
+  const withDist = rows.map((r) => ({ ...r, _db: distanceBucket(r.distance) }));
+  return [
+    { title: 'By Down', items: DOWNS.map((d) => ({ label: `${ordinalDown(d)} Down`, rows: rows.filter((r) => r.down === d) })) },
+    { title: 'By Distance', items: DIST_BUCKETS.map((b) => ({ label: `${b} yds to go`, rows: withDist.filter((r) => r._db === b) })) },
+    { title: 'By Situation', items: SITUATIONS.map((s) => ({ label: s, rows: rows.filter((r) => r.situation === s) })) },
+    { title: 'By Field Zone', items: FIELD_ZONES.map((z) => ({ label: z, rows: rows.filter((r) => r.field_zone === z) })) },
+  ];
+}
+
+function dssScenarioRowHTML(label, rows) {
+  return `<tr>
+    <td class="name">${label}</td>
+    <td>${rows.length}</td>
+    <td>${dssModalCellHTML(rows, 'front_d')}</td>
+    <td>${dssModalCellHTML(rows, 'blitz_d')}</td>
+    <td>${dssModalCellHTML(rows, 'movement')}</td>
+  </tr>`;
+}
+
+const DSS_TABLE_HEAD = '<tr><th>Scenario</th><th>N</th><th>Top Front</th><th>Top Blitz</th><th>Top Movement</th></tr>';
+
+function renderDssScenarioTable(containerId, rows) {
+  const sections = dssScenarios(rows);
+  let rowsHTML = '';
+  sections.forEach((sec) => {
+    const items = sec.items.filter((it) => it.rows.length > 0);
+    if (!items.length) return;
+    rowsHTML += sectionRowHTML(sec.title, 5);
+    items.forEach((it) => { rowsHTML += dssScenarioRowHTML(it.label, it.rows); });
+  });
+  document.getElementById(containerId).innerHTML = `
+    <div class="tbl-scroll">
+      <table class="mini scenario-table">
+        <thead>${DSS_TABLE_HEAD}</thead>
+        <tbody>${rowsHTML}</tbody>
+      </table>
+    </div>`;
+}
+
+function renderDssCharts(rows) {
+  const byFront = groupBy(dssRealRows(rows, 'front_d'), 'front_d');
+  const frontCats = topKeysByCount(byFront, 10);
+  renderBar(document.getElementById('dss-front'), {
+    categories: frontCats, values: frontCats.map((f) => byFront.get(f).length),
+    labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-2'),
+    tooltipExtra: (f) => `${byFront.get(f).length} snaps`,
+  });
+
+  const byBlitz = groupBy(dssRealRows(rows, 'blitz_d'), 'blitz_d');
+  const blitzCats = topKeysByCount(byBlitz, 10);
+  renderBar(document.getElementById('dss-blitz-chart'), {
+    categories: blitzCats, values: blitzCats.map((b) => byBlitz.get(b).length),
+    labelFmt: (v) => String(v), colorFn: () => cssVar('--cat-7'),
+    tooltipExtra: (b) => `${byBlitz.get(b).length} snaps`,
+  });
+
+  const byMovement = groupBy(dssRealRows(rows, 'movement'), 'movement');
+  const moveCats = topKeysByCount(byMovement, 10);
+  renderBar(document.getElementById('dss-movement'), {
+    categories: moveCats, values: moveCats.map((m) => byMovement.get(m).length),
+    labelFmt: (v) => String(v), colorFn: (name, v, i) => catColor(i),
+    tooltipExtra: (m) => `${byMovement.get(m).length} snaps`,
+  });
+}
+
+const DSS_CUSTOM_FIELDS = [
+  { id: 'down', label: 'Down', options: DOWNS.map(String) },
+  { id: 'distance', label: 'Distance', options: DIST_BUCKETS },
+  { id: 'situation', label: 'Situation', options: SITUATIONS },
+  { id: 'fieldZone', label: 'Field Zone', options: FIELD_ZONES },
+];
+
+function dssCustomControlsHTML() {
+  return DSS_CUSTOM_FIELDS.map((f) => `
+    <div>
+      <label for="dss-cs-${f.id}">${f.label}</label>
+      <select class="scout-select" id="dss-cs-${f.id}">
+        <option value="Any">Any</option>
+        ${f.options.map((o) => `<option value="${o}">${o}</option>`).join('')}
+      </select>
+    </div>`).join('');
+}
+
+function dssCustomFilterRows(rows) {
+  const val = (id) => document.getElementById(`dss-cs-${id}`).value;
+  const down = val('down'), distance = val('distance'), situation = val('situation'), fieldZone = val('fieldZone');
+  return rows.filter((r) => {
+    if (down !== 'Any' && String(r.down) !== down) return false;
+    if (distance !== 'Any' && distanceBucket(r.distance) !== distance) return false;
+    if (situation !== 'Any' && r.situation !== situation) return false;
+    if (fieldZone !== 'Any' && r.field_zone !== fieldZone) return false;
+    return true;
+  });
+}
+
+function dssCustomLabel() {
+  const val = (id) => document.getElementById(`dss-cs-${id}`).value;
+  const parts = DSS_CUSTOM_FIELDS
+    .map((f) => { const v = val(f.id); return v === 'Any' ? null : f.id === 'down' ? `${ordinalDown(Number(v))} Down` : v; })
+    .filter((v) => v !== null);
+  return parts.length ? parts.join(', ') : 'All snaps (no filters selected)';
+}
+
+function wireDssCustomSituation(rows) {
+  const controlsEl = document.getElementById('dss-cs-controls');
+  controlsEl.innerHTML = dssCustomControlsHTML();
+  controlsEl.querySelectorAll('select').forEach((sel) => sel.addEventListener('change', renderResult));
+
+  function renderResult() {
+    const matched = dssCustomFilterRows(rows);
+    document.getElementById('dss-cs-result').innerHTML = matched.length
+      ? `<div class="tbl-scroll">
+          <table class="mini scenario-table">
+            <thead>${DSS_TABLE_HEAD}</thead>
+            <tbody>${dssScenarioRowHTML(dssCustomLabel(), matched)}</tbody>
+          </table>
+        </div>`
+      : '<div class="insight">No charted snaps match this combination for this opponent.</div>';
+  }
+  renderResult();
+}
+
+function defenseSelfScoutTab(root) {
+  const opponents = [...new Set([...DATA.offense.official, ...DATA.defense.official].map((r) => r.opponent))].sort();
+  root.innerHTML = `
+    <div class="frame-wrap active">
+      <div class="slide">
+        <div class="unit-header">
+          <div class="brandmark"><span class="crest">CU</span><h2>Opponent Scouting</h2></div>
+          <div class="sub">Defense Self Scout · Hand-Charted Plays</div>
+        </div>
+        <div class="body">
+          <div class="scout-report-head">
+            <label for="dss-opponent" style="font-size:12.5px; font-weight:600; color:var(--text-secondary);">Opponent</label>
+            <select class="scout-select" id="dss-opponent">${opponents.map((o) => `<option value="${o}">${o}</option>`).join('')}</select>
+            <button type="button" class="download-btn no-print" id="dss-pdf">&#8595; PDF</button>
+          </div>
+          <div class="kpirow" id="dss-kpis">
+            ${kpiHTML('dss-n', 'Snaps (Charted)')}
+            ${kpiHTML('dss-blitzrate', 'Blitz Rate')}
+            ${kpiHTML('dss-topfront', 'Most-Used Front')}
+            ${kpiHTML('dss-games', 'Games')}
+          </div>
+          <div class="insight" style="margin-bottom:10px;">Carroll's own defensive scheme calls (front, blitz, movement) in games against this opponent — the other two report tabs cover play type (run/pass); this one covers Carroll's own call.</div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Most-Used Call by Scenario</h3></div>
+            <div class="card-body">
+              <div id="dss-table"></div>
+              <div class="data-note">Top Front/Blitz/Movement is the single most-common real call charted for that scenario, with its share of that scenario's charted snaps for that field — "—" means nothing was charted for that field in that scenario, not that Carroll never called anything.</div>
+            </div>
+          </div>
+          <div class="chartgrid">
+            <div class="card"><div class="card-head"><h3>Fronts Used (top 10 by volume)</h3></div><div class="card-body" id="dss-front"></div></div>
+            <div class="card"><div class="card-head"><h3>Blitzes Called (top 10 by volume)</h3></div><div class="card-body" id="dss-blitz-chart"></div></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-head"><h3>Movement/Stunt Called (top 10 by volume)</h3></div>
+            <div class="card-body" id="dss-movement"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Custom Situation</h3></div>
+            <div class="card-body">
+              <div class="custom-situation-grid no-print" id="dss-cs-controls"></div>
+              <div id="dss-cs-result"></div>
+              <div class="data-note">Combines every selection above with AND — leave a dropdown on "Any" to ignore that dimension.</div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note">Source: Game Analysis's Plays sheet, combined_play_data.xlsx. Front/blitz/movement names are Carroll's own playbook call vocabulary, shown exactly as charted.</div>
+      </div>
+    </div>`;
+
+  document.getElementById('dss-opponent').addEventListener('change', render);
+  document.getElementById('dss-pdf').addEventListener('click', () => {
+    const opponent = document.getElementById('dss-opponent').value;
+    printPage(`Opponent Scouting - Defense Self Scout - ${opponent} - Carroll Football`);
+  });
+
+  function render() {
+    const opponent = document.getElementById('dss-opponent').value;
+    const rows = DATA.defense.plays.filter((r) => r.opponent === opponent);
+    const games = new Set(rows.map((r) => r.game_label));
+    const blitzCharted = rows.filter((r) => r.blitz_d !== null && r.blitz_d !== undefined);
+    const byFrontAll = groupBy(dssRealRows(rows, 'front_d'), 'front_d');
+    const topFrontAll = topKeysByCount(byFrontAll, 1)[0];
+
+    setKPI('dss-n', String(rows.length));
+    setKPI('dss-blitzrate', blitzCharted.length ? pct(rate(blitzCharted, (r) => r.blitz_d !== '-')) : '—', `${blitzCharted.length} charted`);
+    setKPI('dss-topfront', topFrontAll || '—', topFrontAll ? `${byFrontAll.get(topFrontAll).length} snaps` : '');
+    setKPI('dss-games', String(games.size));
+
+    renderDssScenarioTable('dss-table', rows);
+    renderDssCharts(rows);
+    wireDssCustomSituation(rows);
+  }
+  render();
+}
+
 const TAB_RENDERERS = {
   by_opponent: (root) => byOpponentTab(root),
-  offense_report: (root) => offenseReportTab(root),
-  defense_report: (root) => defenseReportTab(root),
+  offense_self_scout: (root) => offenseSelfScoutTab(root),
+  offense_scout: (root) => offenseScoutTab(root),
+  defense_self_scout: (root) => defenseSelfScoutTab(root),
 };
 
 function showTab(tab) {
