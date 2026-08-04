@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Updates — Carroll Football Analytics</title>
+<link rel="stylesheet" href="../css/theme.css">
+<style>
+  .version-badge {
+    display: inline-flex; align-items: center; font-size: 11.5px; font-weight: 700;
+    padding: 4px 10px; border-radius: 999px; background: var(--accent); color: #fff; margin-left: 10px;
+    vertical-align: middle;
+  }
+  .version-card { margin-bottom: 16px; }
+  .version-date { font-weight: 400; color: var(--muted); font-size: 12.5px; }
+  table.mini td.change { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="../index.html">Overview</a>
+      <a href="special-teams-overview.html">Special Teams</a>
+      <a href="placekicker.html">Positions</a>
+      <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html">Offense</a>
+      <a href="defense.html">Defense</a>
+      <a href="opponent-scouting.html">Opponent Scouting</a>
+      <a href="rankings.html">Rankings</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="updates.html" class="active">Updates</a>
+    </div>
+  </nav>
+
+  <div class="intro">
+    <h1>Updates<span class="version-badge" id="current-version-badge"></span></h1>
+    <p>What's changed on this site, most recent first — every real patch and what it actually changes for you.</p>
+  </div>
+
+  <div style="max-width: 1280px; margin: 0 auto; padding: 0 4px;" id="updates-list"></div>
+</div>
+
+<script src="../js/charts.js"></script>
+<script>
+/* Hand-maintained changelog -- per the user (2026-08-01): "Assume right now
+   we are on v1.0.0 and I want to update with any patches and effects."
+   Each entry after v1.0.0 should be a real patch, described as
+   change -> effect (what shipped, what it actually changes for a coach
+   using the site) -- not a dev-log dump of every internal fix (that's what
+   README.md's dated history is for). Newest version first. */
+const UPDATES = [
+  {
+    version: '1.0.0',
+    date: 'August 1, 2026',
+    title: 'Initial public launch',
+    changes: [
+      { change: 'Site published live on GitHub Pages', effect: 'The full site is reachable at a real public link for the first time, instead of only running locally during development.' },
+      { change: 'Team & Units: Special Teams Overview and Lifting & Strength', effect: 'Money Unit, Punt, Punt Return, Kickoff, Kickoff Return, and lifting leaderboards with athlete-vs-athlete comparison, all in one place.' },
+      { change: '5 Position pages: Placekicker, Kickoff Kicker, Punter, Short Snapper, Long Snapper', effect: 'Each has an Executive Scorecard, a head-to-head athlete comparison, and a Situational Deep Dive.' },
+      { change: 'Offense & Defense: Executive Scorecard, Play-Calling & Tendencies, Play Outcomes, and 8 position-group coach views', effect: 'A QB, RB, WR, OL, DL, LB, CB, or S coach each gets a schematic view built around what their own position group actually cares about.' },
+      { change: 'Opponent Scouting: by-opponent charts, plus a per-opponent Scouting Report and Custom Situation builder', effect: "Look up any past opponent's real tendencies (run/pass by down, distance, quarter, situation, score, and more), or build any exact combination on the fly and get the real percentages." },
+      { change: 'Rankings: CCIW and National standings across Offensive/Defensive/Special Teams/Additional Metrics', effect: "Carroll's conference and national standing is visible in one place without digging through either source report." },
+      { change: 'Glossary with searchable terms and inline hover hints', effect: 'A new coach unfamiliar with a stat (e.g. "explosive play") can look it up without ever leaving the page they\'re on.' },
+    ],
+  },
+];
+
+function versionCardHTML(u) {
+  const rows = u.changes.map((c) => `
+    <tr><td class="name change">${c.change}</td><td>${c.effect}</td></tr>`).join('');
+  return `
+    <div class="card version-card">
+      <div class="card-head"><h3>v${u.version} — ${u.title} <span class="version-date">${u.date}</span></h3></div>
+      <div class="card-body">
+        <table class="mini">
+          <thead><tr><th>Change</th><th>Effect</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+document.getElementById('current-version-badge').textContent = `v${UPDATES[0].version}`;
+document.getElementById('updates-list').innerHTML = UPDATES.map(versionCardHTML).join('');
+</script>
+</body>
+</html>

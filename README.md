@@ -431,6 +431,39 @@ Visual language originates from the `Special Teams Data/mockups/*.html` prototyp
    - Game Analysis and the two Game Prep Report PDFs (per-opponent scouting
      reports) aren't ingested yet. Design/scope TBD for those.
 
+**Checked (not fixed — nothing to fix) same day**: whether rankings.html's
+pre-existing `table.rank-table thead th { position: sticky; ... }` had the
+same overflow bug just found and fixed in Opponent Scouting. It does not —
+`.rank-scroll` (its own table wrapper) already had a real bounded
+`max-height: 480px` with `overflow-y: auto` from the start, i.e. the same
+genuine-scroll-container pattern the fix above uses, just arrived at
+independently before this bug was ever found. Confirmed empirically
+(`scrollHeight` 2486px vs. `clientHeight` 480px on the Offensive tab's CCIW
+panel; header `th` stays pinned at its own viewport offset while scrolling
+300px internally; same check repeated on the National panel) rather than
+assumed either way.
+
+## Phase 5 — Updates tab
+
+Added 2026-08-01, per the user: "now that the site is live I also want to
+add one last tab called Updates. Assume right now we are on v1.0.0 and I
+want to update with any patches and effects." A new top-level page,
+`dashboards/updates.html` (nav entry after Glossary, on every page), with a
+hand-maintained `UPDATES` array — newest version first, each entry a
+version/date/title plus a Change → Effect table (what shipped, and what it
+actually changes for a coach using the site — user-facing, not a dev-log
+dump; README's own dated history above is the exhaustive developer record).
+
+**v1.0.0 ("Initial public launch") is the current site as of the GitHub
+Pages launch** — one summary row per major area (site going live, Team &
+Units, 5 Position pages, Offense & Defense, Opponent Scouting, Rankings,
+Glossary), not a line-by-line diff of every session's work. **Going
+forward**: every real patch to the live site should get a new entry here
+(bump the patch version, e.g. 1.0.1) describing what changed and its
+effect — this is meant to be kept current, the same way README's own
+dated history is, just written for the people using the site instead of
+whoever's developing it.
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the
