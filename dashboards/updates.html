@@ -53,6 +53,15 @@
    README.md's dated history is for). Newest version first. */
 const UPDATES = [
   {
+    version: '1.0.3',
+    date: 'August 4, 2026',
+    title: 'Defense Scout was showing our own defense, not theirs',
+    changes: [
+      { change: 'Added a real "Defense Scout" tab — the opponent\'s own defensive scheme calls (front, blitz, coverage) against Carroll\'s offense, by scenario, plus the same Custom Situation builder', effect: 'What "Offense Scout" already did for the opponent\'s offense, "Defense Scout" now does for their defense: real scouting signal on what fronts, blitzes, and coverages that opponent tends to show, if they\'re on a future schedule again.' },
+      { change: 'Fixed a Blitz Rate KPI that could misleadingly read 100.0% on the new tab', effect: 'Blitz Rate now reflects the real share of snaps with a blitz shown, not an artifact of how the two data sources mark "no blitz" differently.' },
+    ],
+  },
+  {
     version: '1.0.2',
     date: 'August 4, 2026',
     title: 'Self Scout vs. Opponent Scout, and a new Defense Self Scout',

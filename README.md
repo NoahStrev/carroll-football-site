@@ -539,6 +539,44 @@ unfilled scenario/field combo); sticky header and bounded-height scroll
 same `table.mini.scenario-table`/`.tbl-scroll` classes; no horizontal
 overflow at 400px mobile width.
 
+**v1.0.3 — hotfix: Defense Scout was scouting the wrong team** (2026-08-04,
+per the user, immediately after v1.0.2 shipped: "offense scout should be
+looking at the opponents offense self offense scout is looking at our own,
+and the same principal should be applied to defense" — v1.0.2 had only
+built the *self*-scout half of the defense side; there was no tab actually
+showing what the opponent's own defense does). Refactored the two
+scheme-vocabulary tabs onto one shared generic renderer:
+`defenseSelfScoutTab`'s body (front/blitz/movement scenario table, top-10
+charts, custom situation builder — all parameter-driven over a `fields`
+array and an id `side` prefix) hoisted into a new `schemeScoutTab(root,
+config)`, matching this project's established convention of hoisting pure,
+parameter-driven helpers while keeping tab-renderer functions themselves
+separate. `defenseSelfScoutTab` now just calls it with
+`DATA.defense.plays` (Carroll's own calls); a new `defenseScoutTab` calls
+the same renderer with `DATA.offense.plays` (`def_front`/`blitz`/`coverage`
+— the *opponent's* defensive calls charted while facing Carroll's
+offense), completing the intended 2×2 (Self/Opponent × Offense/Defense).
+Tab bar and `TAB_RENDERERS` gained a 5th "Defense Scout" entry.
+
+**Real bug caught while first testing the new tab**: its Blitz Rate KPI
+read 100.0% on the very first opponent checked. `defenseSelfScoutTab`'s
+original formula (`rate(charted rows, r => r[field] !== '-')`) is only
+correct because `defense.plays.blitz_d` uses a literal `'-'` for
+"charted, nothing called" (966 real occurrences in the data) — but
+`offense.plays.blitz` (the field the new tab reads) has **zero** `'-'`
+occurrences; blank/null is what marks "no blitz" there instead. Copying
+the old formula verbatim meant "charted" (non-null) was structurally
+guaranteed to always exclude nothing, i.e. always compute 100%. Added a
+`blitzUsesDash` flag to `schemeScoutTab`'s config: `true` preserves the
+original charted-rows-minus-dash formula for Defense Self Scout (still
+43.8%, 185/356 charted — unchanged, confirming no regression), `false`
+computes the rate directly against all rows in view for Defense Scout
+(correctly 14.1%, 55/391). Verified in-browser: all 5 tabs click through
+with no console errors; new tab tested against a 1-game opponent
+(Benedictine) with no crash, `"—"` shown correctly throughout when a
+scenario/field combo has no real (non-`'-'`) calls charted; no horizontal
+overflow at 400px mobile width.
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the
