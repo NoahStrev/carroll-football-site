@@ -464,6 +464,35 @@ effect — this is meant to be kept current, the same way README's own
 dated history is, just written for the people using the site instead of
 whoever's developing it.
 
+**v1.0.1 — opponent name merge** (2026-08-04, per the user, noticed
+directly on the Opponent Scouting page's opponent dropdown: "some teams
+have two different naming conventions (Wash U vs Washington University,
+etc)"). The official box-score scrape used a different `OPPONENT` string
+for the same school in different seasons — confirmed by cross-referencing
+`GAME_LABEL` (which stayed consistent, e.g. always `"Carroll vs Wash U
+..."`) against `OPPONENT` (which didn't), and by season exclusivity (each
+pair never co-occurs in the same season): **"Washington (Mo.)"** (2021
+only) / **"WashU"** (2022-2025), and **"Wisconsin Lutheran"** (2022 only)
+/ **"Wis. Lutheran"** (2023 only). A new `OPPONENT_ALIASES` map in
+`scripts/build_game_data.py`, applied once right after the
+`OfficialPlayByPlay` sheet is read (mutating the row dicts in place so
+every downstream consumer — the `games` list, filter lists, every
+offense/defense play/official/drive row — inherits the canonical name
+automatically). **Real bug caught mid-fix**: `classify_side()` compares
+each row's own `POSSESSION_TEAM` against the now-canonicalized `OPPONENT`
+to decide offense vs. defense — canonicalizing only `OPPONENT` broke that
+comparison for the renamed games' defensive snaps (`POSSESSION_TEAM` still
+said the old name), silently dropping 122 defense.official rows and 20
+defense drives. Fixed by canonicalizing `possession_team` the same way
+before comparing. Verified by diffing every row array (`offense.official`,
+`defense.official`, both `.plays`, both `.drives`, `games`) against the
+previously-committed `data/game-data.json`: identical row counts
+everywhere, `opponent` is the only field that changed anywhere. 15 raw
+opponent strings collapsed to 13 real opponents; confirmed live in-browser
+(Opponent Scouting's dropdown, `offense.html`/`defense.html`'s own Opponent
+filter) that "WashU" now shows all 5 seasons/games instead of 4+1 split
+across two entries.
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the

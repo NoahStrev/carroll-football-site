@@ -42,6 +42,25 @@ OUT = Path(__file__).resolve().parent.parent / "data" / "game-data.json"
 
 CARROLL = "Carroll (WI)"
 
+# The official box-score scrape used a different OPPONENT string for the same
+# school in different seasons -- confirmed by cross-referencing GAME_LABEL
+# (which stays consistent, e.g. always "Carroll vs Wash U ...") against
+# OPPONENT (which doesn't), and by season exclusivity (each pair never
+# co-occurs in the same season, consistent with a one-time scrape naming
+# change rather than two real different opponents): "Washington (Mo.)"
+# (2021 only) / "WashU" (2022-2025), and "Wisconsin Lutheran" (2022 only) /
+# "Wis. Lutheran" (2023 only). Canonicalized to the more common of each
+# pair's two spellings. Found 2026-08-04 per the user noticing it directly
+# on the Opponent Scouting page's opponent dropdown.
+OPPONENT_ALIASES = {
+    "Washington (Mo.)": "WashU",
+    "Wis. Lutheran": "Wisconsin Lutheran",
+}
+
+
+def canonical_opponent(name):
+    return OPPONENT_ALIASES.get(name, name)
+
 
 def sheet_rows(ws):
     headers = [c.value for c in next(ws.iter_rows(min_row=1, max_row=1))]
@@ -76,8 +95,16 @@ def normalize_team(name):
 def classify_side(possession_team, opponent):
     """'offense' if Carroll has the ball, 'defense' if the known opponent
     does, else None (administrative rows like 'Halftime'/'Game Start'/
-    'Start of Quarter #N' -- not a real snap by either side, excluded)."""
-    norm = normalize_team(possession_team)
+    'Start of Quarter #N' -- not a real snap by either side, excluded).
+    `opponent` is always the already-canonicalized OPPONENT value (see
+    canonical_opponent()/OPPONENT_ALIASES) -- possession_team needs the same
+    canonicalization applied before comparing, or every defensive snap in a
+    game whose OPPONENT got renamed would stop matching its own
+    POSSESSION_TEAM value (a real bug hit once building this: renaming
+    "Washington (Mo.)" -> "WashU" silently dropped that entire game's
+    defense-side rows, since POSSESSION_TEAM still said the old name when
+    Carroll's opponent had the ball)."""
+    norm = canonical_opponent(normalize_team(possession_team))
     if norm == CARROLL:
         return "offense"
     if norm == opponent:
@@ -104,6 +131,8 @@ def main():
     carroll_game_labels = {r["GAME_LABEL"] for r in gml if r["HAS_OFFICIAL_PBP"]}
 
     opbp_all = list(sheet_rows(wb["OfficialPlayByPlay"]))
+    for r in opbp_all:
+        r["OPPONENT"] = canonical_opponent(r["OPPONENT"])
     opponent_by_game = {r["GAME_LABEL"]: r["OPPONENT"] for r in opbp_all}
     date_by_game = {r["GAME_LABEL"]: r["GAME_DATE"] for r in opbp_all}
 
