@@ -70,7 +70,7 @@
   .modal-pct { color: var(--muted); font-size: 11px; font-weight: 400; }
 
   @media print {
-    .sitenav, .intro, .tabbar, .no-print, .scout-report-head select { display: none !important; }
+    .sitenav, .intro, .tabbar, .no-print, .scout-report-head select, .filters-control, .filters-summary { display: none !important; }
     table.mini.scenario-table thead th { position: static; box-shadow: none; }
     /* .tbl-scroll's max-height/overflow is a screen-only convenience (frozen
        header while scanning on-screen) -- printed, the table should lay out
@@ -296,6 +296,22 @@ function withScenarioFlags(rows) {
       });
     });
   });
+  // Real bug found 2026-08-04, caught cross-checking the new "All Opponents"
+  // combined view against a raw Python count (1327 shown vs 1329 real 1st-down
+  // Run/Pass/Sack snaps): groupBy() silently skips any row whose grouping key
+  // is null/undefined -- correct for a real categorical breakdown, but wrong
+  // here, since a handful of real snaps have no charted drive_num at all (4
+  // rows in offense.official's 2021 Benedictine game, 10 in defense.official's
+  // 2021 WashU game -- a charting gap, not real "no drive" plays). Losing them
+  // in the grouping above silently excludes them from the ENTIRE scenario
+  // table and Custom Situation builder, not just the one Drive Context section
+  // that actually needs drive_num to mean anything. Add them back with a
+  // default (not fabricated) drive-sequence flag instead of dropping them.
+  rows.forEach((r) => {
+    if (r.game_label === null || r.game_label === undefined || r.drive_num === null || r.drive_num === undefined) {
+      flagged.push({ ...r, _afterExplosive: false, _firstPlayOfDrive: false });
+    }
+  });
   return flagged;
 }
 
@@ -385,6 +401,17 @@ function renderScenarioTable(containerId, flagged) {
     rowsHTML += sectionRowHTML(sec.title);
     items.forEach((it) => { rowsHTML += scenarioRowHTML(it.label, it.rows); });
   });
+  // Real gap found 2026-08-04, while double-checking the new Season filter:
+  // picking a single-season opponent (e.g. Benedictine, 2021 only) and
+  // unchecking that season is a completely normal path through the new
+  // filter, not an edge case -- it used to render a bare header-only table
+  // with no rows, which reads like a rendering glitch rather than "no data
+  // in this combination." wireCustomSituation() already had a proper empty
+  // message for the exact same situation; this matches that.
+  if (!rowsHTML) {
+    document.getElementById(containerId).innerHTML = '<div class="insight">No real Run/Pass/Sack snaps match the selected opponent(s)/season(s).</div>';
+    return;
+  }
   document.getElementById(containerId).innerHTML = `
     <div class="tbl-scroll">
       <table class="mini scenario-table">
@@ -692,6 +719,14 @@ function renderSchemeScenarioTable(containerId, rows, fields) {
     rowsHTML += sectionRowHTML(sec.title, 2 + fields.length);
     items.forEach((it) => { rowsHTML += schemeScenarioRowHTML(it.label, it.rows, fields); });
   });
+  // Same fix as renderScenarioTable() -- a single-season opponent with that
+  // season unchecked (or "None" on the Season filter) is a normal path
+  // through the new filter, not an edge case; show the same empty-state
+  // message wireSchemeCustomSituation() already had instead of a bare table.
+  if (!rowsHTML) {
+    document.getElementById(containerId).innerHTML = '<div class="insight">No charted snaps match the selected opponent(s)/season(s).</div>';
+    return;
+  }
   document.getElementById(containerId).innerHTML = `
     <div class="tbl-scroll">
       <table class="mini scenario-table">

@@ -626,6 +626,70 @@ console errors at both desktop and 400px mobile width; Defense Scout
 tested against a 1-game opponent (Benedictine) with the new All
 Opponents/Season controls in place, no crash.
 
+**v1.0.5 — thorough re-check found a real data-drop bug, plus print/empty-state
+cleanup** (2026-08-04, same day, per the user: "lets double check through
+everything we've done, see if theres anything that can be fixed or cleaned
+up or improved, be thorough"). Re-read the whole file, cross-checked KPI
+values against raw Python counts, and tested edge cases the new All
+Opponents/Season controls make newly reachable. Found 3 real issues:
+
+1. **Silent data drop in `withScenarioFlags()`** (real bug, not introduced
+   this session — present since the Scouting Report tabs were first built).
+   `groupBy()` deliberately skips any row whose grouping key is
+   null/undefined, which is correct for a real categorical breakdown (e.g.
+   grouping by `front_d` should skip uncharted rows) but wrong here:
+   `withScenarioFlags()` uses `groupBy(rows, 'game_label')` then
+   `groupBy(gameRows, 'drive_num')` purely to PARTITION every row into its
+   game/drive so it can compute `_afterExplosive`/`_firstPlayOfDrive` — it
+   needs every row to survive, not just the ones with a real key. 4 rows in
+   `offense.official` (all from the 2021 Benedictine game) and 10 rows in
+   `defense.official` (all from the 2021 WashU game) have no charted
+   `drive_num` at all (a charting gap for those specific games), and were
+   silently vanishing from `flagged` — which meant they were missing from
+   EVERY scenario section on Offense Self Scout/Offense Scout (not just a
+   Drive Context row, which is the only section that actually needs
+   `drive_num` to mean anything), and from the Custom Situation builder's
+   results too. Caught by cross-checking the new "All Opponents" combined
+   1st-Down row against a raw Python count: table showed 1327, Python said
+   1329. Fixed by adding any row missing `game_label`/`drive_num` back into
+   `flagged` with a default (not fabricated) `false` drive-sequence flag,
+   instead of letting `groupBy()` drop it. Verified: 1st Down now reads
+   1329 (offense) / 1429 (defense), matching Python exactly.
+2. **Season filter not hidden when printing.** The new Season filter's
+   button/panel (built via the shared `buildFilterPanel`, same component
+   the pre-existing By Opponent tab's own Season filter already used) had
+   no `@media print` rule hiding it, unlike the Opponent `<select>` next to
+   it — a printed/downloaded PDF would show a stray "Filters" button in the
+   header. This existed for By Opponent's own Season filter too, just
+   never triggered before since printing that tab was less commonly
+   exercised in testing. Fixed by adding `.filters-control, .filters-summary`
+   to the existing print hide-list — one CSS change covers all 5 tabs.
+3. **Bare header-only table on zero-result combinations.** Picking a
+   single-season opponent (e.g. Benedictine, 2021 only) and unchecking that
+   season via the new Season filter is a completely normal path through the
+   new UI, not a deliberately adversarial edge case — it rendered a table
+   with headers but zero rows, reading like a broken render rather than "no
+   data for this combination." `wireCustomSituation()`/
+   `wireSchemeCustomSituation()` already had a proper empty-state message
+   for the exact same situation; `renderScenarioTable()` and
+   `renderSchemeScenarioTable()` now show the same kind of message instead
+   of an empty table body.
+
+All 5 tabs re-verified in-browser after the fixes: zero console errors, no
+horizontal overflow at 400px, and the empty-state/print fixes confirmed
+working on both a report tab (Offense Self Scout) and a scheme tab
+(Defense Scout). **Noted but not fixed this round**: `wireFilterPanel()`
+(shared in `js/charts.js`) adds a new `document.addEventListener('click', ...)`
+each time it's called, and every per-opponent tab here calls it fresh on
+every tab-switch (not just once per page load) — switching tabs repeatedly
+leaks one harmless-but-permanent document-level click listener per switch.
+Pre-existing pattern (By Opponent tab had this before today), now present
+on 4 more tabs on this page. Low real-world impact (each leaked listener
+is a cheap no-op check against a detached DOM node), but a genuine cleanup
+candidate for `wireFilterPanel()` itself since it's shared by every
+dashboard on the site that uses the filter panel component across tab
+switches — flagged as a follow-up rather than bundled into this change.
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the

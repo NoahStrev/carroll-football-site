@@ -53,6 +53,16 @@
    README.md's dated history is for). Newest version first. */
 const UPDATES = [
   {
+    version: '1.0.5',
+    date: 'August 4, 2026',
+    title: 'Fixed a small data-drop bug, plus print and empty-state cleanup',
+    changes: [
+      { change: 'Fixed a bug where a handful of real snaps (4 from a 2021 game, 10 from another) were silently missing from Offense Self Scout and Offense Scout\'s scenario tables and Custom Situation results', effect: 'Every real snap now counts — the "All Opponents" view surfaced this by no longer matching a hand count for 1st-down plays; those plays are now included.' },
+      { change: 'Fixed the new Season filter button showing up in printed/PDF output on all 5 tabs', effect: 'Downloaded scouting report PDFs no longer have a stray "Filters" button printed in the middle of the header.' },
+      { change: 'Selecting an opponent with no data for the seasons currently checked now shows a clear "no snaps match" message instead of a blank table', effect: 'A narrowed report with zero results now reads as "nothing here for this combination" instead of looking like a broken page.' },
+    ],
+  },
+  {
     version: '1.0.4',
     date: 'August 4, 2026',
     title: 'All Opponents combined view, a Season filter, and 2 more scenarios on the scheme tabs',
