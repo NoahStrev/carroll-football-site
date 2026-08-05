@@ -379,6 +379,19 @@ function buildScenarios(flagged) {
         { label: 'Other Snaps', rows: flagged.filter((r) => !r._afterExplosive) },
       ],
     },
+    {
+      // Added 2026-08-05, per the user asking for more Custom Situation
+      // filters. is_two_minute_drill is computed in build_game_data.py from
+      // DRIVE_CLOCK (a field this pipeline never read before) -- 2:00 or
+      // less on the clock in a half-ending quarter (2nd/4th), the real
+      // hurry-up signal a sideline coach cares about. OT excluded (untimed
+      // downs, no running clock).
+      title: 'Clock Situation',
+      items: [
+        { label: 'Two-Minute Drill', rows: flagged.filter((r) => r.is_two_minute_drill) },
+        { label: 'Other Snaps', rows: flagged.filter((r) => !r.is_two_minute_drill) },
+      ],
+    },
   ];
 }
 
@@ -466,6 +479,7 @@ const CUSTOM_FIELDS = [
   { id: 'score', label: 'Score Situation', options: SCORE_BUCKETS },
   { id: 'drive', label: 'Drive Context', options: ['First Play of Drive', 'Not First Play of Drive'] },
   { id: 'explosive', label: 'Explosive-Play Context', options: ['After an Explosive Play', 'Other Snaps'] },
+  { id: 'clock', label: 'Clock Situation', options: ['Two-Minute Drill', 'Other Snaps'] },
 ];
 
 function customControlsHTML(side) {
@@ -482,7 +496,8 @@ function customControlsHTML(side) {
 function customFilterRows(flagged, side) {
   const val = (id) => document.getElementById(`cs-${side}-${id}`).value;
   const down = val('down'), distance = val('distance'), quarter = val('quarter'), situation = val('situation'),
-    fieldZone = val('fieldZone'), goalToGo = val('goalToGo'), score = val('score'), drive = val('drive'), explosive = val('explosive');
+    fieldZone = val('fieldZone'), goalToGo = val('goalToGo'), score = val('score'), drive = val('drive'),
+    explosive = val('explosive'), clock = val('clock');
   return flagged.filter((r) => {
     if (down !== 'Any' && String(r.down) !== down) return false;
     if (distance !== 'Any' && distanceBucket(r.distance) !== distance) return false;
@@ -493,6 +508,7 @@ function customFilterRows(flagged, side) {
     if (score !== 'Any' && scoreBucket(r.score_differential) !== score) return false;
     if (drive !== 'Any' && (drive === 'First Play of Drive') !== !!r._firstPlayOfDrive) return false;
     if (explosive !== 'Any' && (explosive === 'After an Explosive Play') !== !!r._afterExplosive) return false;
+    if (clock !== 'Any' && (clock === 'Two-Minute Drill') !== !!r.is_two_minute_drill) return false;
     return true;
   });
 }

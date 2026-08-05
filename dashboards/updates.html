@@ -64,10 +64,13 @@ const UPDATES = [
   {
     version: '1.2.0',
     date: 'August 5, 2026',
-    title: 'Fixed 388 missing snaps and a mobile scrolling gap',
+    title: 'Data cleanup, player search, and a Two-Minute Drill filter',
     changes: [
       { change: 'Fixed a data-completeness bug where 388 real offense/defense snaps (spread fairly evenly across all 5 seasons) were silently missing from every official-play-by-play view — Offense Self Scout, Offense Scout, and By Opponent — caused by a scraping quirk in the source data that this site\'s own build script couldn\'t previously work around', effect: 'Every real charted snap counts now — every KPI, percentage, and scenario breakdown built from official play-by-play data across those tabs is slightly more accurate than before.' },
       { change: 'Fixed scenario tables (Opponent Scouting\'s 4 per-opponent tabs) losing the row label (e.g. "3rd Down") off-screen when scrolling sideways on a phone', effect: 'The Scenario column now stays visible while scrolling right to see the rest of a row\'s percentages on a phone — you always know which scenario you\'re looking at.' },
+      { change: 'Full audit of every underlying dataset for duplicate or double-counted records, on top of the earlier missing-record check', effect: 'The data behind every dashboard is now confirmed clean — no duplicated or double-counted records found anywhere on this site. One real issue was found and flagged in the source Lifting Data spreadsheet (a likely typo in one athlete\'s height) for the coaching staff to correct at the source.' },
+      { change: 'Added a player-name search box to Lifting & Strength\'s All Time/Last Session and Senior-Junior/Sophomore-Freshman tabs', effect: 'Search for a specific player and instantly see their real rank on every leaderboard, instead of scrolling through the full roster to find them each time.' },
+      { change: 'Added "Clock Situation" (Two-Minute Drill vs. Other Snaps) as a new scenario breakdown and Custom Situation filter on Offense Self Scout and Offense Scout', effect: 'See real hurry-up tendencies for the last 2 minutes of either half — e.g. run/pass mix swings sharply toward pass in a two-minute drill, now visible at a glance instead of hidden in the full-game numbers.' },
     ],
   },
   {

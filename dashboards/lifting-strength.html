@@ -37,6 +37,19 @@
   table.lb-scroll { margin: 0; }
   table.lb-scroll tbody tr:first-child td { padding-top: 7px; }
 
+  /* Player-name search on the leaderboard tabs (2026-08-05, per the user:
+     "search and see someones ranking without having to scroll and find
+     them everytime"). Filters every leaderboard card's rows down to name
+     matches while keeping each match's REAL rank number (computed from
+     the full sorted list before filtering, not renumbered 1/2/3... on the
+     filtered subset -- a coach searching for one player still needs to
+     see their actual standing, not a misleadingly low rank number just
+     because they were the first match). */
+  .name-search {
+    font-family: inherit; font-size: 12.5px; padding: 7px 10px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--page); color: var(--text-primary);
+    min-width: 200px;
+  }
   .comparegrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
   .compare-legend { display: flex; gap: 18px; margin-bottom: 14px; font-size: 13px; }
   .compare-legend .sw { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
@@ -134,26 +147,39 @@ function athleteYearOrder(athlete) {
 
 /* ------------------------------------------------------------ leaderboard --- */
 
-function leaderboardTable(title, rows) {
+function leaderboardTable(title, rows, searchQuery) {
   // Show every qualifying athlete (all are non-zero -- the Lifting Data pipeline
   // never emits a zero-value row, an athlete with no recorded lift just has no
   // row), scrolled instead of truncated to a top-N slice (fixed 2026-07-30 per
   // user feedback -- the old top-12 cutoff hid most of the roster).
   const lowerBetter = LOWER_IS_BETTER.has(title);
-  const top = [...rows].sort((a, b) => lowerBetter ? a.value - b.value : b.value - a.value);
+  // Rank is assigned from the FULL sorted list before any name-search filtering,
+  // so a search match still shows their real standing (e.g. "23") rather than
+  // "1" just because they were the only/first row left after filtering.
+  const ranked = [...rows]
+    .sort((a, b) => lowerBetter ? a.value - b.value : b.value - a.value)
+    .map((r, i) => ({ ...r, rank: i + 1 }));
+  const q = (searchQuery || '').trim().toLowerCase();
+  const top = q ? ranked.filter((r) => `${r.first_name} ${r.last_name}`.toLowerCase().includes(q)) : ranked;
   if (!top.length) {
+    // While actively searching, a metric with zero name matches is skipped
+    // entirely rather than rendered as an empty card -- per the user's own
+    // framing ("see someone's ranking without having to scroll"), a wall of
+    // empty cards for every metric that athlete doesn't have a qualifying
+    // session in would be noise, not the answer they're looking for.
+    if (q) return '';
     return `<div class="card"><div class="card-head"><h3>${title}</h3></div><div class="lb-empty">No qualifying sessions.</div></div>`;
   }
-  const body = top.map((r, i) => `
+  const body = top.map((r) => `
     <tr>
-      <td><span class="lb-rank">${i + 1}</span></td>
+      <td><span class="lb-rank">${r.rank}</span></td>
       <td class="name">${r.first_name} ${r.last_name}</td>
       <td>${r.session_label}</td>
       <td style="text-align:right; font-weight:700;">${metricLabel(title, r.value)}</td>
     </tr>`).join('');
   return `
     <div class="card">
-      <div class="card-head"><h3>${title}</h3><span class="count">${top.length}</span></div>
+      <div class="card-head"><h3>${title}</h3><span class="count">${top.length}${q && top.length !== ranked.length ? ` of ${ranked.length}` : ''}</span></div>
       <div class="card-body lb-scroll-wrap">
         <table class="mini lb-scroll">
           <thead><tr><th></th><th>Name</th><th>Session</th><th style="text-align:right;">Value</th></tr></thead>
@@ -165,19 +191,19 @@ function leaderboardTable(title, rows) {
 
 // Shared by classGroupHTML/allTimeGroupHTML -- two labeled `.lbgrid` sections
 // (Strength / Athletic Testing) instead of one flat row of 9 leaderboard cards.
-function metricSectionsHTML(rowsFor) {
+function metricSectionsHTML(rowsFor, searchQuery) {
   return `
     <div class="lbgrid-label">Strength</div>
     <div class="lbgrid">
-      ${STRENGTH_METRICS.map((m) => leaderboardTable(m, rowsFor(m))).join('')}
+      ${STRENGTH_METRICS.map((m) => leaderboardTable(m, rowsFor(m), searchQuery)).join('')}
     </div>
     <div class="lbgrid-label">Athletic Testing</div>
     <div class="lbgrid">
-      ${ATHLETIC_METRICS.map((m) => leaderboardTable(m, rowsFor(m))).join('')}
+      ${ATHLETIC_METRICS.map((m) => leaderboardTable(m, rowsFor(m), searchQuery)).join('')}
     </div>`;
 }
 
-function classGroupHTML(label, positionFilter) {
+function classGroupHTML(label, positionFilter, searchQuery) {
   // Routed through the shared applyFilters (js/charts.js) rather than a hand-
   // rolled condition here -- an earlier local copy of this filter had its own
   // "empty selection passes everything" bug (fixed 2026-07-30) that survived
@@ -189,11 +215,11 @@ function classGroupHTML(label, positionFilter) {
   return `
     <div class="classgroup">
       <div class="classgroup-head"><span class="ribbon">${label}</span></div>
-      ${metricSectionsHTML(rowsFor)}
+      ${metricSectionsHTML(rowsFor, searchQuery)}
     </div>`;
 }
 
-function allTimeGroupHTML(label, isLastSession, positionFilter) {
+function allTimeGroupHTML(label, isLastSession, positionFilter, searchQuery) {
   const rowsFor = (metric) => {
     const candidates = applyFilters(
       DATA.leaderboard_rows.filter((r) => r.metric === metric && (!isLastSession || r.is_last_session)),
@@ -218,7 +244,7 @@ function allTimeGroupHTML(label, isLastSession, positionFilter) {
   return `
     <div class="classgroup">
       <div class="classgroup-head"><span class="ribbon">${label}</span></div>
-      ${metricSectionsHTML(rowsFor)}
+      ${metricSectionsHTML(rowsFor, searchQuery)}
     </div>`;
 }
 
@@ -240,21 +266,61 @@ function readPositionFilter(tabId) {
   return readFilterState(tabId, POSITION_FILTER_DEF).position;
 }
 
+// Player-name search (2026-08-05) -- a plain live-filter text input, not the
+// makeSearchCombobox pattern used on Class Comparison: that one is for
+// picking a single athlete to add to a chart, this one filters rows already
+// on screen as you type, so a simple <input>+'input' listener fits better
+// than a dropdown-of-matches selector.
+function nameSearchHTML(tabId) {
+  return `<input type="text" class="name-search" id="${tabId}-namesearch" placeholder="Search player name…" autocomplete="off" spellcheck="false">`;
+}
+function wireNameSearch(tabId, onChange) {
+  document.getElementById(`${tabId}-namesearch`).addEventListener('input', onChange);
+}
+function readNameSearch(tabId) {
+  return document.getElementById(`${tabId}-namesearch`).value;
+}
+
+// Sets the body's HTML, then -- if a search is active and it produced zero
+// matching cards anywhere on the page -- replaces it with an explicit "no
+// matches" message instead of leaving just the bare section-label headers
+// on screen (found while testing: searching a name with no results at all
+// left a page that looked broken/empty rather than "no results," since
+// leaderboardTable() already skips individually-empty cards during a
+// search and there was nothing left to say so at the whole-tab level).
+function renderLeaderboardBody(bodyElId, html, searchQuery) {
+  const bodyEl = document.getElementById(bodyElId);
+  bodyEl.innerHTML = html;
+  if (searchQuery.trim() && !bodyEl.querySelector('.card')) {
+    // Built via textContent, not a template-literal innerHTML interpolation --
+    // searchQuery is arbitrary user-typed text, no reason to run it through
+    // innerHTML when a plain text node does the job just as well.
+    bodyEl.innerHTML = '';
+    const msg = el('div', 'lb-empty');
+    msg.style.padding = '24px 4px';
+    msg.textContent = `No one matching "${searchQuery.trim()}" has a qualifying session in view.`;
+    bodyEl.appendChild(msg);
+  }
+}
+
 /* ---------------------------------------------------------------- tab: All Time / Last Session --- */
 
 function allTimeTab(root) {
   root.innerHTML = `
     <div class="frame-wrap active"><div class="slide">
       <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Offseason Lifting</h2></div><div class="sub">All Time &amp; ${DATA.last_session.label} (Last Session)</div></div>
-      <div class="shelf">${positionFilterHTML('at')}</div>
+      <div class="shelf">${positionFilterHTML('at')}${nameSearchHTML('at')}</div>
       <div class="body" id="at-body"></div>
       <div class="footer-note">Source: Lifting Data project's Strength (Combined Total/Bench/Squat/Clean/Strength Score) and Athletic Testing (Broad Jump/Vertical/Pro Agility/Athleticism Score) metrics, best value per athlete per session, 5 football years (2021-22 through 2025-26).</div>
     </div></div>`;
   wirePositionFilter('at', render);
+  wireNameSearch('at', render);
   function render() {
     const pos = readPositionFilter('at');
-    document.getElementById('at-body').innerHTML =
-      allTimeGroupHTML('All Time', false, pos) + allTimeGroupHTML(`Last Session (${DATA.last_session.label})`, true, pos);
+    const q = readNameSearch('at');
+    renderLeaderboardBody('at-body',
+      allTimeGroupHTML('All Time', false, pos, q) + allTimeGroupHTML(`Last Session (${DATA.last_session.label})`, true, pos, q),
+      q);
   }
   render();
 }
@@ -265,14 +331,16 @@ function classTab(root, classA, classB, subtitle) {
   root.innerHTML = `
     <div class="frame-wrap active"><div class="slide">
       <div class="unit-header"><div class="brandmark"><span class="crest">CU</span><h2>Offseason Lifting</h2></div><div class="sub">${subtitle}</div></div>
-      <div class="shelf">${positionFilterHTML('ct')}</div>
+      <div class="shelf">${positionFilterHTML('ct')}${nameSearchHTML('ct')}</div>
       <div class="body" id="ct-body"></div>
       <div class="footer-note">Source: Lifting Data project. Class year derived from years-with-program, populated 2023-24 onward only.</div>
     </div></div>`;
   wirePositionFilter('ct', render);
+  wireNameSearch('ct', render);
   function render() {
     const pos = readPositionFilter('ct');
-    document.getElementById('ct-body').innerHTML = classGroupHTML(classA, pos) + classGroupHTML(classB, pos);
+    const q = readNameSearch('ct');
+    renderLeaderboardBody('ct-body', classGroupHTML(classA, pos, q) + classGroupHTML(classB, pos, q), q);
   }
   render();
 }

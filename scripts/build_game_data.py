@@ -115,6 +115,29 @@ def classify_side(possession_team, opponent):
 SCRIMMAGE_PLAY_TYPES = {"Rush", "Pass", "Sack", "Kneel", "Two-Point Conversion"}
 
 
+def two_minute_drill(quarter, drive_clock):
+    """True if this play's drive started with 2:00 or less on the clock in a
+    half-ending quarter (2nd or 4th) -- the real "hurry-up" scouting signal a
+    coach on the sideline cares about (added 2026-08-05, per the user asking
+    for more Custom Situation filters). DRIVE_CLOCK is broadcast from the
+    drive (one value for every play in that drive, same convention as
+    DRIVE_RESULT/DRIVE_YARDS -- confirmed by checking every drive in a real
+    game has exactly one distinct DRIVE_CLOCK value across all its plays),
+    "MM:SS" time REMAINING in the quarter, ~91% filled (9473/10464 official
+    rows) -- previously read nowhere in this pipeline. OT is deliberately
+    excluded: NCAA overtime possessions are untimed downs from a fixed line,
+    not a running clock, so "2-minute drill" doesn't apply there the same way.
+    Returns False (not None) when the clock is missing or unparseable --
+    "hurry-up" is the exceptional case, so an unknown clock defaults to the
+    far more common "not currently a two-minute drill," not a third state."""
+    if quarter not in ("2nd", "4th") or not drive_clock:
+        return False
+    m = re.match(r"^(\d{1,2}):(\d{2})$", str(drive_clock))
+    if not m:
+        return False
+    return int(m.group(1)) * 60 + int(m.group(2)) <= 120
+
+
 def outcome_flags(outcome):
     tags = set((outcome or "").split(", ")) if outcome else set()
     return {
@@ -256,6 +279,7 @@ def main():
             "yards": r["YARDS"], "play_efficiency": r["PLAY_EFFICIENCY"],
             "play_outcome": r["PLAY_OUTCOME"], "is_turnover": r["IS_TURNOVER"],
             "score_differential": r["SCORE_DIFFERENTIAL"],
+            "is_two_minute_drill": two_minute_drill(r["QUARTER"], r["DRIVE_CLOCK"]),
             # Broadcast from the drive this play belongs to (same convention the
             # source workbook already uses for DRIVE_YARDS etc) so a Red Zone /
             # drive-result join works directly off a single play row, without

@@ -919,6 +919,75 @@ No code changes were needed from this round beyond the one documentation
 comment in `build_lifting_data.py` — the underlying datasets are
 confirmed clean apart from the one flagged Lifting Data source anomaly.
 
+**Same day, third round: Lifting Data deep-dive, player-name search, and a
+Clock Situation filter (2026-08-05)** — per the user, right after the
+duplicate audit above: "lets do another thorough review of the underlying
+lifting dataset and how it came to be from the mappings, also see if there
+are any issues with the strength and athletisim scores due to null vs 0 vs
+empty space." then, once done, "add the ability to filter by player name
+in the reporting lifting dashboards" and "see if there are any additonal
+filters that can be put on a custom situation" for Opponent Scouting.
+
+1. **Lifting Data mapping deep-dive.** Read the sibling Lifting Data
+   project's own `build_lifting_dataset.py` and its extensively-documented
+   `SKILL.md` (six prior validation rounds already on record there) to
+   understand exactly how the consolidated file is built — season-specific
+   parsers, the name-normalization pass, and the existing zero-vs-blank
+   audit (`add_metric()`/`add_lift_attempt()` already treat a literal 0 as
+   "no data" for every raw metric, confirmed against source cell-by-cell
+   in that project's own prior work).
+2. **Null vs. 0 vs. empty-space audit, focused on Strength/Athleticism
+   Score.** Traced the full path from `composite_row()` (source project,
+   computes the percentile score) through this project's `metric_value()`/
+   `best`/`leaderboard_rows` logic to `lifting-strength.html`'s own
+   `metricLabel()`/`fmt()` rendering — confirmed every step uses `=== null`/
+   `is None`-style checks, never a falsy check that would treat a real (if
+   unlikely) score near 0 as missing. Verified empirically against the
+   actual data: 988 Team-scope score rows, real range 1.6–99.8, zero
+   `null`/string/non-numeric values anywhere. **Found and corrected one
+   stale note** in the sibling project's own `SKILL.md` — it had claimed a
+   28.6–79.5 score range from an earlier build; the actual (and current)
+   full range is 1.6–99.8, which cross-checked directly against the source
+   workbook (not a bug — a percentile score naturally spans close to the
+   full 0–100 range across a whole multi-year roster, real outliers exist
+   at both ends).
+3. **Player-name search added to Lifting & Strength.** A live-filter text
+   box (`nameSearchHTML()`/`wireNameSearch()`/`readNameSearch()`, matching
+   the existing position-filter helper trio's shape) on the All Time/Last
+   Session and Senior-Junior/Sophomore-Freshman tabs. `leaderboardTable()`
+   now computes each athlete's rank from the FULL sorted list before
+   applying the search filter, so a match still shows their real standing
+   (e.g. "23") rather than a misleadingly low rank from being the only row
+   left after filtering. A metric card with zero name matches is skipped
+   entirely while searching (a wall of empty cards isn't the answer a
+   coach searching for one player wants); if literally nothing matches
+   anywhere on the tab, an explicit "No one matching..." message replaces
+   the bare section headers (built via `textContent`, not an innerHTML
+   template interpolation, since the search string is arbitrary user-typed
+   text). Verified: searching "Pritchett" correctly narrows Combined Total
+   to 1 row showing rank 3 (his real all-time rank), with a "1 of 228"
+   count badge; an unmatched search shows the explicit empty-state message
+   instead of a blank-looking page.
+4. **"Clock Situation" (Two-Minute Drill) added to Opponent Scouting.**
+   `OfficialPlayByPlay`'s `DRIVE_CLOCK` column (one value broadcast per
+   drive, "MM:SS" time remaining in the quarter, ~91% filled/9473 of 10464
+   rows) had never been read anywhere in this pipeline. Added
+   `two_minute_drill(quarter, drive_clock)` to `build_game_data.py` — true
+   when the drive started with 2:00 or less left in a half-ending quarter
+   (2nd/4th only; OT excluded, since NCAA overtime possessions are untimed
+   downs, not a running clock) — as a new `is_two_minute_drill` field on
+   `offense.official`/`defense.official` rows (row counts unchanged, this
+   only enriches existing rows). Wired into `buildScenarios()` as a new
+   "Clock Situation" table section and into `CUSTOM_FIELDS` as a 10th
+   dropdown on Offense Self Scout/Offense Scout (the two tabs that read
+   official play-by-play; the hand-charted-data scheme tabs don't have
+   `DRIVE_CLOCK` at all, so they're unaffected). Real signal, not just a
+   working toggle: All Opponents combined shows a clear split, 36% Run/64%
+   Pass in a two-minute drill vs. 49%/51% otherwise. Verified: 220 offense
+   / 210 defense qualifying snaps site-wide, scenario table row and Custom
+   Situation dropdown produce identical numbers, no console errors on any
+   of the 5 Opponent Scouting tabs at desktop or 400px mobile width.
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the
