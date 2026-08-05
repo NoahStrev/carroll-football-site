@@ -3,89 +3,35 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Homepage removed 2026-08-04, per the user ("the overview page is super
+     out of date... remove it for now, but we'll make a backlog note to
+     make a new intro page"). Root now just redirects to the Updates page
+     (meta refresh + JS fallback, since GitHub Pages serves this file at
+     the bare site URL and every dashboard's own nav no longer has a
+     separate "Overview" link -- that would've just duplicated the
+     existing "Updates" nav item). Backlog: build a real intro/landing
+     page and replace this redirect -- see README's Plan section. -->
+<meta http-equiv="refresh" content="0; url=dashboards/updates.html">
+<script>location.replace('dashboards/updates.html');</script>
 <title>Carroll Football Analytics</title>
 <link rel="stylesheet" href="css/theme.css">
 <style>
-  .hero { max-width: 1280px; margin: 0 auto 28px; padding: 0 4px; }
-  .hero h1 { font-size: 26px; margin: 0 0 8px; }
-  .hero p { font-size: 14px; color: var(--text-secondary); max-width: 720px; line-height: 1.55; margin: 0; }
-
-  .section-title { max-width: 1280px; margin: 0 auto 12px; padding: 0 4px; }
-  .section-title h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-secondary); margin: 0; }
-
-  .cardgrid { max-width: 1280px; margin: 0 auto 32px; padding: 0 4px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
-  .tile {
-    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
-    padding: 17px 19px; text-decoration: none; color: inherit; display: block;
-    transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+  .redirect-note { max-width: 480px; margin: 140px auto; padding: 0 20px; text-align: center; }
+  .redirect-note .crest {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--cat-2); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .25); margin: 0 auto 12px;
   }
-  .tile:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,.10); }
-  .tile h3 { font-size: 15.5px; margin: 0 0 7px; font-weight: 700; }
-  .tile p { font-size: 12.5px; color: var(--text-secondary); margin: 0; line-height: 1.5; }
+  .redirect-note h2 { font-size: 19px; margin: 0; font-weight: 800; letter-spacing: -.01em; }
+  .redirect-note p { font-size: 13.5px; color: var(--text-secondary); margin: 10px 0 0; }
+  .redirect-note a { color: var(--accent); font-weight: 600; }
 </style>
 </head>
 <body>
-
-<div class="page">
-
-  <nav class="sitenav">
-    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
-    <div class="links">
-      <a href="index.html" class="active">Overview</a>
-      <a href="dashboards/special-teams-overview.html">Special Teams</a>
-      <a href="dashboards/placekicker.html">Positions</a>
-      <a href="dashboards/lifting-strength.html">Lifting &amp; Strength</a>
-      <a href="dashboards/offense.html">Offense</a>
-      <a href="dashboards/defense.html">Defense</a>
-      <a href="dashboards/opponent-scouting.html">Opponent Scouting</a>
-      <a href="dashboards/rankings.html">Rankings</a>
-      <a href="dashboards/glossary.html">Glossary</a>
-      <a href="dashboards/updates.html">Updates</a>
-    </div>
-  </nav>
-
-  <div class="hero">
-    <h1>Carroll Football Analytics</h1>
+  <div class="redirect-note">
+    <div class="crest">CU</div>
+    <h2>Carroll Football Analytics</h2>
+    <p>Redirecting to <a href="dashboards/updates.html">Updates</a>&hellip;</p>
   </div>
-
-  <div class="section-title"><h2>Team &amp; Units</h2></div>
-  <div class="cardgrid">
-    <a class="tile" href="dashboards/special-teams-overview.html">
-      <h3>Special Teams Overview</h3>
-      <p>Money Unit, Punt, Punt Return, Kickoff, and Kickoff Return.</p>
-    </a>
-    <a class="tile" href="dashboards/lifting-strength.html">
-      <h3>Lifting &amp; Strength</h3>
-      <p>Leaderboards by class year and athlete-vs-athlete comparison.</p>
-    </a>
-  </div>
-
-  <div class="section-title"><h2>Positions</h2></div>
-  <div class="cardgrid">
-    <a class="tile" href="dashboards/placekicker.html"><h3>Placekicker</h3><p>PAT/FG individual breakdown and kicker head-to-head.</p></a>
-    <a class="tile" href="dashboards/kickoff-kicker.html"><h3>Kickoff Kicker</h3><p>Touchback/Inside-25 rate, distance, return allowed.</p></a>
-    <a class="tile" href="dashboards/punter.html"><h3>Punter</h3><p>Gross/net distance, Inside-20 rate, touchback rate.</p></a>
-    <a class="tile" href="dashboards/short-snapper.html"><h3>Short Snapper</h3><p>PAT/FG snap volume, outcome mix, snap time.</p></a>
-    <a class="tile" href="dashboards/long-snapper.html"><h3>Long Snapper</h3><p>Blocked/Punter Tackle rate, net punt, outcome mix.</p></a>
-  </div>
-
-  <div class="section-title"><h2>Offense &amp; Defense</h2></div>
-  <div class="cardgrid">
-    <a class="tile" href="dashboards/offense.html"><h3>Offense</h3><p>Executive Scorecard and Play-Calling &amp; Tendencies.</p></a>
-    <a class="tile" href="dashboards/defense.html"><h3>Defense</h3><p>Same two-tab shape as Offense, opponent's side of the ball.</p></a>
-  </div>
-
-  <div class="section-title"><h2>Opponent Scouting</h2></div>
-  <div class="cardgrid">
-    <a class="tile" href="dashboards/opponent-scouting.html"><h3>Opponent Scouting</h3><p>Yards/Play, Success, Explosive, and Turnover Rate by opponent, plus Offense Self Scout, Offense Scout, Defense Self Scout, and Defense Scout reports — a scenario table (down, distance, quarter, situation, score, and more) with Run/Pass or defensive-call percentages, viewable for one opponent, a chosen set of seasons, or every opponent combined.</p></a>
-  </div>
-
-  <div class="section-title"><h2>Rankings</h2></div>
-  <div class="cardgrid">
-    <a class="tile" href="dashboards/rankings.html"><h3>Rankings</h3><p>CCIW/National standing by season and week, across Offensive/Defensive/Special Teams/Additional Metrics.</p></a>
-  </div>
-
-</div>
-
 </body>
 </html>

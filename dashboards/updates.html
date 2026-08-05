@@ -22,7 +22,6 @@
   <nav class="sitenav">
     <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
     <div class="links">
-      <a href="../index.html">Overview</a>
       <a href="special-teams-overview.html">Special Teams</a>
       <a href="placekicker.html">Positions</a>
       <a href="lifting-strength.html">Lifting &amp; Strength</a>
@@ -47,55 +46,32 @@
 <script>
 /* Hand-maintained changelog -- per the user (2026-08-01): "Assume right now
    we are on v1.0.0 and I want to update with any patches and effects."
-   Each entry after v1.0.0 should be a real patch, described as
-   change -> effect (what shipped, what it actually changes for a coach
-   using the site) -- not a dev-log dump of every internal fix (that's what
-   README.md's dated history is for). Newest version first. */
+   Each entry should be a real patch, described as change -> effect (what
+   shipped, what it actually changes for a coach using the site) -- not a
+   dev-log dump of every internal fix (that's what README.md's dated
+   history is for). Newest version first.
+
+   Changed 2026-08-04, per the user ("lets also make each version on the
+   updates page a summary of the day of work, instead of every single
+   commit"): a version bump used to happen per real patch/commit within a
+   session (v1.0.1 through v1.0.5 were all separate entries from the same
+   day). Going forward, one version = one day of shipped work -- write a
+   single entry summarizing everything real that landed that day, once,
+   at the end of the day's work, instead of bumping per fix as you go.
+   Small same-day follow-up fixes get folded into that day's one entry
+   rather than becoming their own version. */
 const UPDATES = [
   {
-    version: '1.0.5',
+    version: '1.1.0',
     date: 'August 4, 2026',
-    title: 'Fixed a small data-drop bug, plus print and empty-state cleanup',
+    title: 'Opponent Scouting overhaul: real opponent names, self vs. opponent scouting, and combined views',
     changes: [
-      { change: 'Fixed a bug where a handful of real snaps (4 from a 2021 game, 10 from another) were silently missing from Offense Self Scout and Offense Scout\'s scenario tables and Custom Situation results', effect: 'Every real snap now counts — the "All Opponents" view surfaced this by no longer matching a hand count for 1st-down plays; those plays are now included.' },
-      { change: 'Fixed the new Season filter button showing up in printed/PDF output on all 5 tabs', effect: 'Downloaded scouting report PDFs no longer have a stray "Filters" button printed in the middle of the header.' },
-      { change: 'Selecting an opponent with no data for the seasons currently checked now shows a clear "no snaps match" message instead of a blank table', effect: 'A narrowed report with zero results now reads as "nothing here for this combination" instead of looking like a broken page.' },
-    ],
-  },
-  {
-    version: '1.0.4',
-    date: 'August 4, 2026',
-    title: 'All Opponents combined view, a Season filter, and 2 more scenarios on the scheme tabs',
-    changes: [
-      { change: 'Added an "All Opponents (Combined)" option to the Opponent dropdown on all 4 scouting report tabs (Offense Self Scout, Offense Scout, Defense Self Scout, Defense Scout)', effect: 'See tendencies across every opponent at once instead of one team at a time — the new default view on each of those 4 tabs.' },
-      { change: 'Added a Season checkbox filter to the same 4 tabs, defaulting to every season checked', effect: 'Narrow any of those reports to specific years (e.g. just this year, or just the last 2) without leaving the page.' },
-      { change: 'Added "Play Type" (Run/Pass) and "Hash" (Left/Middle/Right) as two more scenario breakdowns and Custom Situation filters on Defense Self Scout and Defense Scout', effect: 'Those two tabs now cover 6 real scenario dimensions instead of 4, closing most of the gap with the other two tabs\' options — e.g. "what blitz do they run on 3rd down passes from the left hash" is now answerable.' },
-    ],
-  },
-  {
-    version: '1.0.3',
-    date: 'August 4, 2026',
-    title: 'Defense Scout was showing our own defense, not theirs',
-    changes: [
-      { change: 'Added a real "Defense Scout" tab — the opponent\'s own defensive scheme calls (front, blitz, coverage) against Carroll\'s offense, by scenario, plus the same Custom Situation builder', effect: 'What "Offense Scout" already did for the opponent\'s offense, "Defense Scout" now does for their defense: real scouting signal on what fronts, blitzes, and coverages that opponent tends to show, if they\'re on a future schedule again.' },
-      { change: 'Fixed a Blitz Rate KPI that could misleadingly read 100.0% on the new tab', effect: 'Blitz Rate now reflects the real share of snaps with a blitz shown, not an artifact of how the two data sources mark "no blitz" differently.' },
-    ],
-  },
-  {
-    version: '1.0.2',
-    date: 'August 4, 2026',
-    title: 'Self Scout vs. Opponent Scout, and a new Defense Self Scout',
-    changes: [
-      { change: 'Renamed "Offense Report" to "Offense Self Scout" and "Defense Report" to "Offense Scout" (no data changed, just what they\'re called)', effect: 'The names now say what each report actually is: "Offense Self Scout" is Carroll\'s own offensive tendencies, and "Offense Scout" is the other team\'s real offensive tendencies — the old names had that backwards.' },
-      { change: 'Added a new "Defense Self Scout" tab — Carroll\'s own defensive calls (front, blitz, movement) by scenario, plus the same Custom Situation builder', effect: 'See what Carroll\'s defense actually tends to call in a given situation against a specific opponent, not just what the opponent does against us.' },
-    ],
-  },
-  {
-    version: '1.0.1',
-    date: 'August 4, 2026',
-    title: 'Opponent name fix',
-    changes: [
-      { change: 'Merged duplicate opponent names caused by a naming change in the source data ("WashU"/"Washington (Mo.)" and "Wisconsin Lutheran"/"Wis. Lutheran" were the same schools, split into two entries)', effect: 'Opponent Scouting, and every Opponent filter site-wide, now shows one real opponent instead of two — picking "WashU" shows all 5 seasons of games against them instead of only 4, with the 2021 game missing.' },
+      { change: 'Merged duplicate opponent names caused by a naming change in the source data ("WashU"/"Washington (Mo.)" and "Wisconsin Lutheran"/"Wis. Lutheran" were the same schools, split into two entries)', effect: 'Opponent Scouting, and every Opponent filter site-wide, now shows one real opponent instead of two — picking "WashU" shows all 5 seasons of games against them instead of only 4.' },
+      { change: 'Renamed "Offense Report"/"Defense Report" to "Offense Self Scout"/"Offense Scout" (accurate names, same data), then added the 2 missing tabs — "Defense Self Scout" and "Defense Scout"', effect: 'Full coverage on both sides of the ball: what Carroll tends to call, and what each opponent tends to call, for both offense and defense — not just offense.' },
+      { change: 'Added an "All Opponents (Combined)" view (now the default) plus a Season checkbox filter to all 4 scouting tabs', effect: 'See tendencies across every opponent and year at once, or narrow to specific seasons, instead of only ever looking at one team at a time.' },
+      { change: 'Added "Play Type" (Run/Pass) and "Hash" (Left/Middle/Right) as 2 more scenario breakdowns and Custom Situation filters on the defensive scheme tabs', effect: 'Defense Self Scout and Defense Scout now cover 6 real scenario dimensions instead of 4, closing most of the gap with the offense-side tabs.' },
+      { change: 'Fixed a bug (found via thorough re-checking, not reported) where a handful of real snaps were silently missing from some scenario tables and Custom Situation results, plus print output and empty-result-set cleanup', effect: 'Every real snap now counts everywhere it should; downloaded PDFs and narrowed-to-nothing searches both look correct instead of broken.' },
+      { change: 'Removed the outdated homepage for now — the site root and every page\'s nav go straight to this Updates page instead', effect: 'No more landing on a stale, out-of-date homepage. A real new homepage is planned but not built yet.' },
     ],
   },
   {

@@ -443,6 +443,15 @@ panel; header `th` stays pinned at its own viewport offset while scrolling
 300px internally; same check repeated on the National panel) rather than
 assumed either way.
 
+**Backlog (2026-08-04, not started): rebuild the homepage.** Per the user,
+the original `index.html` (the "Overview" landing page with the card grid
+of every dashboard) was "super out of date" and removed for now rather
+than left live and stale — see the dated entry further down for exactly
+what replaced it (a bare redirect to Updates). A real intro/landing page
+still needs to be designed and built; until then `index.html` is a
+placeholder, not a finished page. Flag this the next time homepage work
+comes up rather than assuming the card-grid version is still what's live.
+
 ## Phase 5 — Updates tab
 
 Added 2026-08-01, per the user: "now that the site is live I also want to
@@ -689,6 +698,58 @@ is a cheap no-op check against a detached DOM node), but a genuine cleanup
 candidate for `wireFilterPanel()` itself since it's shared by every
 dashboard on the site that uses the filter panel component across tab
 switches — flagged as a follow-up rather than bundled into this change.
+
+**v1.1.0 — homepage removed, Updates consolidated into one-entry-per-day,
+final sitewide QA pass** (2026-08-04, same day, per the user: "do one last
+really thorough double check... make sure everything works and looks
+proper across the different screen sizes... make each version on the
+updates page a summary of the day of work, instead of every single
+commit... the overview page is super out of date... remove it for now").
+Three real changes:
+
+1. **Homepage removed.** `index.html` (the card-grid "Overview" landing
+   page) is now a bare redirect (`<meta http-equiv="refresh">` + a JS
+   `location.replace()` fallback + a visible manual link, in case a
+   browser is slow to honor the meta refresh) to `dashboards/updates.html`.
+   Confirmed via [[project-carroll-site-workflow]]-style user check
+   (`AskUserQuestion`, since this changes navigation on every single page
+   and the site's root URL — not a call to make by guessing): repoint
+   root + every page's "Overview" nav link to Updates. In practice this
+   meant DELETING the "Overview" nav item from all 13 `dashboards/*.html`
+   files rather than repointing its href to `updates.html` — with an
+   existing "Updates" nav item already present on every page, repointing
+   "Overview" there too would've just been two identical links side by
+   side. Backlog: a real intro/landing page still needs to be designed;
+   see the note earlier in this Plan section.
+2. **Updates page changed from one version per commit to one version per
+   day.** Per the user, explicitly correcting the pattern the last 5
+   rounds had fallen into (v1.0.1 through v1.0.5, all from the same day,
+   each its own version bump). The 5 separate entries were consolidated
+   into a single `v1.1.0` covering the whole day's real changes (see
+   `dashboards/updates.html` for the actual consolidated Change → Effect
+   rows). Updated the file's own header comment to state the new standing
+   rule going forward: write one entry per day of shipped work, once, at
+   the end of the day — small same-day follow-up fixes fold into that
+   day's entry instead of becoming their own version. **This is a process
+   change, not just a one-time cleanup** — the next real patch to this
+   site should NOT get its own version bump if it lands the same day as
+   other work already documented; extend that day's existing entry
+   instead. Only start a new version entry for a new calendar day.
+3. **Full sitewide QA pass** across all 13 `dashboards/*.html` pages (every
+   position page, Offense, Defense, Opponent Scouting, Rankings, Lifting &
+   Strength, Special Teams Overview, Glossary, Updates) at mobile (390px),
+   tablet (768px), and desktop widths, clicking through every tab/sub-tab
+   on each page and checking the console after each. Found zero new
+   issues — every page was already clean going into this pass (the
+   position pages' own secondary "position switcher" tabbar reuses the
+   `.tabbtn` class and includes an `<a>` labeled "Overview" that links to
+   `special-teams-overview.html` — a different, legitimate use of the word
+   scoped to that switcher, unrelated to the sitewide homepage just
+   removed; worth remembering if "Overview" ever comes up again on this
+   project so it isn't confused with the removed page). Also fixed one
+   more stale spot caught in the same pass: `index.html`'s own homepage
+   tile description (already fixed once for the "All Opponents" wording)
+   is now moot since the whole page was replaced.
 
 ## Testing notes (Special Teams Overview)
 
@@ -1238,9 +1299,12 @@ hardcoded A/B variables.
 
 ## Running locally
 
-No build step — open `index.html` directly, or serve the folder. A launch config
-already exists at the `Football/` root (`.claude/launch.json`, name "carroll-site",
-port 8731); otherwise:
+No build step — serve the folder and open any page under `dashboards/` directly
+(e.g. `dashboards/updates.html`). `index.html` is currently just a redirect stub
+to `dashboards/updates.html` (see the dated entry below on the homepage removal),
+not a real page to open on its own. A launch config already exists at the
+`Football/` root (`.claude/launch.json`, name "carroll-site", port 8731);
+otherwise:
 
 ```bash
 python -m http.server 8731
