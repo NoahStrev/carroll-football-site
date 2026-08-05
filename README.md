@@ -988,6 +988,93 @@ filters that can be put on a custom situation" for Opponent Scouting.
    Situation dropdown produce identical numbers, no console errors on any
    of the 5 Opponent Scouting tabs at desktop or 400px mobile width.
 
+**Same day, fourth round (2026-08-05): more scenario percentages, a real
+scroll bug, all-years default, and an Athleticism Score change.** Per the
+user: "for the opponent scouting lets add some more percentages into the
+table views... things like got first down, explosive play, and any other
+percentages you think would be useful... also i noticed an issue that
+when i scroll to the right on some of the vizes in the by opponent
+section the lines disappear. also for the opponent scouting tab have the
+default be all years selected. also... i want to make a change to
+athletism score, calculate as long as they have at least 5 of the 6."
+
+1. **1st Down %, Success %, Explosive % added to all 4 per-opponent
+   tabs.** Offense Self Scout/Offense Scout (official play-by-play) get
+   all three, computed over the same Run/Pass/Sack denominator as
+   Run%/Pass% (`is_first_down`/`play_efficiency` are always populated for
+   a real scrimmage snap, unlike direction/pass_depth's own charted
+   subsets). Defense Self Scout/Defense Scout (hand-charted Plays sheet)
+   only get Success %/Explosive %, deliberately NOT First Down % —
+   checked first, and found the hand-charted sheet's own `PLAY_OUTCOME`
+   uses a `"1st DN"` tag that's **never** combined with `"Rush"`/
+   `"Complete"`/etc (confirmed: all 64 real occurrences are a bare
+   standalone tag) — a first down achieved on a play charted as
+   `"Rush"`/`"Complete"` has no marker there at all, so deriving a First
+   Down % from that field would silently undercount real first downs,
+   unlike the official sheet's clean, purpose-built `IS_FIRST_DOWN`
+   boolean. `sectionRowHTML()`'s default colspan bumped 9→12 (official
+   tables); the scheme tables' own colspan calc bumped from `2 +
+   fields.length` to `4 + fields.length`. Verified: 1st Down scenario row
+   cross-checked against Python exactly (18.5%/39.9%/12.7% → displayed
+   18%/40%/13%); Defense Self Scout's 1st Down row also matched exactly
+   (28.0%/7.4% → 28%/7%).
+2. **Real bug fixed: gridlines vanish when scrolling By Opponent's
+   horizontal bar charts.** `.gridlines` (`js/charts.js`) is `position:
+   absolute; inset: 20px 0 34px 0` (theme.css) — `right: 0` resolves
+   against `.barchart`'s own CSS width (its visible viewport, unchanged
+   by scrolling), not the full scrollable content width once `scroll:
+   true` makes the content wider than the box. So the gridlines only ever
+   spanned the columns visible at scroll position 0 — scroll right past
+   that and every bar past that point had no reference lines behind it at
+   all, not just a visually-faded version. Fixed by giving `.gridlines`
+   an explicit width read from `wrap.scrollWidth` (measured only after
+   `wrap` is attached to `container`, since a detached element's
+   `scrollWidth` isn't reliable — recomputing from `colWidth * count`
+   instead would also have undercounted by ignoring `.barchart`'s own
+   flex `gap`) and clearing `right` so the explicit width wins over the
+   inset shorthand. Verified across 4 different By Opponent charts at
+   multiple scroll positions: every real `.bar` element's own bounding
+   box stays fully covered by the gridlines' bounding box, checked
+   programmatically, not just eyeballed.
+3. **By Opponent's Season filter now defaults to all years.** Its own
+   `BO_FILTERS` used `defaultLatestOnly: true` (the site-wide "preset to
+   most recent year" convention), inconsistent with the other 4 Opponent
+   Scouting tabs, which already default to every season checked per an
+   earlier, more specific instruction for this page. Removed the flag —
+   scoped to this one page, not a site-wide convention change. Verified:
+   all 5 season checkboxes checked by default, summary line shows
+   3255/3475 (the full offense/defense.official row counts), matching
+   the other 4 tabs' own all-years default.
+4. **Athleticism Score relaxed from "all 6 required" to "at least 5 of
+   6."** Changed in the sibling Lifting Data project's own
+   `build_lifting_dataset.py`: `composite_row()` gained an optional
+   `min_metrics` parameter (defaults to requiring every metric in the
+   list — Strength Score's own call passes no override, so it's
+   completely unaffected); `add_scores()` now passes
+   `len(ATHLETICISM_METRICS) - 1` (5) for Athleticism specifically.
+   Rebuilt both that project's `Lifting_Consolidated_AllYears.xlsx` and
+   this project's `data/lifting.json` from it. Verified: Strength Score
+   (Team) unchanged at exactly 749 rows; Athleticism Score (Team) went
+   from 239 to 760 — the 521 new rows are exactly the previously-
+   completely-uncovered years (2021-22: 102 rows all missing only
+   Vertical; 2022-23: 206 rows all missing only Vertical; 2024-25: 173
+   rows all missing only Pro Agility — matching the known, documented
+   per-year metric-availability gaps exactly), plus a small number (40)
+   of new 5-of-6 rows within the two years that already had full
+   coverage, for individual sessions missing just one test. Every score
+   row's own `calc_source` (`zscore_avg_of_5_metrics` vs `_6_metrics`)
+   and `notes` (the exact per-metric z-score breakdown) already
+   self-documents which case applies — a 5-of-6 score is never silently
+   indistinguishable from a 6-of-6 one. Value range stayed sane (1.9-96.4,
+   0 None values) after the change. Updated the sibling project's own
+   `SKILL.md` to document the new gate.
+
+All 4 changes verified together in-browser: Opponent Scouting's 5 tabs
+and Lifting & Strength's 4 tabs all click through with zero console
+errors, no horizontal overflow at 400px, sticky-first-column behavior
+from the previous round still works correctly with the now-wider (12
+vs. 9 column) official-data scenario tables.
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the

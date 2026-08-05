@@ -198,7 +198,15 @@ function byOpponentMetrics(rows) {
    BY OPPONENT
    ============================================================================ */
 
-const BO_FILTERS = [{ field: 'season', label: 'Season', defaultLatestOnly: true }];
+// defaultLatestOnly removed 2026-08-05, per the user ("for the opponent
+// scouting tab have the default be all years selected") -- this tab's own
+// Season filter used to follow the site-wide "preset to most recent year"
+// convention (see js/charts.js's own defaultLatestOnly comment), but that's
+// now inconsistent with the other 4 Opponent Scouting tabs, which already
+// default to every season checked per an earlier, more specific instruction
+// for this page. Every other page's Season filter is untouched -- this is
+// scoped to Opponent Scouting only, not a site-wide convention change.
+const BO_FILTERS = [{ field: 'season', label: 'Season' }];
 
 function byOpponentTab(root) {
   root.innerHTML = `
@@ -401,6 +409,21 @@ function buildScenarios(flagged) {
 // just the pass attempts with a charted depth) -- three different
 // denominators in one row on purpose, so a coach reads one line for "3rd &
 // Long" and gets the full picture instead of hunting across 3 separate tables.
+// First Down/Success/Explosive % added 2026-08-05, per the user ("add some
+// more percentages... things like got first down, explosive play"). All
+// three are of the SAME rp (Run/Pass/Sack) denominator as Run%/Pass% --
+// is_first_down/play_efficiency are both official-play-by-play-only fields,
+// always populated for a real scrimmage snap (unlike direction/pass_depth,
+// which are their own charted subsets with a "—" for uncharted). Only safe
+// to compute this way on the OFFICIAL data these report tabs use -- the
+// hand-charted Plays sheet's own PLAY_OUTCOME uses a "1st DN" tag that's
+// NEVER combined with Rush/Complete/etc (confirmed: 64/64 occurrences are a
+// bare standalone tag), so a first-down achieved on a play charted as
+// "Rush"/"Complete" has no marker at all there -- deriving a First Down %
+// from that field would silently undercount real first downs, unlike this
+// field's clean, purpose-built IS_FIRST_DOWN boolean. That's why the scheme
+// tabs (schemeScenarioRowHTML, below) only add Success/Explosive %, not
+// First Down % -- see schemeScenarioRowHTML's own comment.
 function scenarioRowHTML(label, rows) {
   const rp = runPassRows(rows);
   const n = rp.length;
@@ -413,6 +436,9 @@ function scenarioRowHTML(label, rows) {
   const depthRows = passRows.filter((r) => r.pass_depth);
   const deep = depthRows.filter((r) => r.pass_depth === 'Deep').length;
   const short = depthRows.filter((r) => r.pass_depth === 'Short').length;
+  const firstDownN = rp.filter((r) => r.is_first_down).length;
+  const successN = rp.filter((r) => isSuccess(r.play_efficiency)).length;
+  const explosiveN = rp.filter((r) => r.play_efficiency === 'Explosive').length;
   return `<tr>
     <td class="name">${label}</td>
     <td>${n}</td>
@@ -423,10 +449,13 @@ function scenarioRowHTML(label, rows) {
     <td>${dirRows.length ? pct(right / dirRows.length, 0) : '—'}</td>
     <td>${depthRows.length ? pct(deep / depthRows.length, 0) : '—'}</td>
     <td>${depthRows.length ? pct(short / depthRows.length, 0) : '—'}</td>
+    <td>${pct(n ? firstDownN / n : null, 0)}</td>
+    <td>${pct(n ? successN / n : null, 0)}</td>
+    <td>${pct(n ? explosiveN / n : null, 0)}</td>
   </tr>`;
 }
 
-function sectionRowHTML(title, colspan = 9) {
+function sectionRowHTML(title, colspan = 12) {
   return `<tr class="tbl-section"><td colspan="${colspan}">${title}</td></tr>`;
 }
 
@@ -454,7 +483,7 @@ function renderScenarioTable(containerId, flagged) {
     <div class="tbl-scroll">
       <table class="mini scenario-table">
         <thead>
-          <tr><th>Scenario</th><th>N</th><th>Run %</th><th>Pass %</th><th>Dir: Left %</th><th>Dir: Mid %</th><th>Dir: Right %</th><th>Depth: Deep %</th><th>Depth: Short %</th></tr>
+          <tr><th>Scenario</th><th>N</th><th>Run %</th><th>Pass %</th><th>Dir: Left %</th><th>Dir: Mid %</th><th>Dir: Right %</th><th>Depth: Deep %</th><th>Depth: Short %</th><th>1st Down %</th><th>Success %</th><th>Explosive %</th></tr>
         </thead>
         <tbody>${rowsHTML}</tbody>
       </table>
@@ -535,7 +564,7 @@ function wireCustomSituation(side, flagged) {
     document.getElementById(`cs-${side}-result`).innerHTML = rp.length
       ? `<div class="tbl-scroll">
           <table class="mini scenario-table">
-            <thead><tr><th>Scenario</th><th>N</th><th>Run %</th><th>Pass %</th><th>Dir: Left %</th><th>Dir: Mid %</th><th>Dir: Right %</th><th>Depth: Deep %</th><th>Depth: Short %</th></tr></thead>
+            <thead><tr><th>Scenario</th><th>N</th><th>Run %</th><th>Pass %</th><th>Dir: Left %</th><th>Dir: Mid %</th><th>Dir: Right %</th><th>Depth: Deep %</th><th>Depth: Short %</th><th>1st Down %</th><th>Success %</th><th>Explosive %</th></tr></thead>
             <tbody>${scenarioRowHTML(customResultLabel(side), matched)}</tbody>
           </table>
         </div>`
@@ -567,7 +596,7 @@ function reportPageHTML(side, note) {
       <div class="card-head"><h3>Percentage Breakdown by Scenario</h3></div>
       <div class="card-body">
         <div id="sr-${side}-table"></div>
-        <div class="data-note">Play Type % is of every Run/Pass/Sack snap in that scenario (the N column). Direction and Pass Depth % are each their own charted subset (direction ~74% of run/pass snaps, depth ~34% of pass attempts, site-wide) -- "—" means nothing was charted for that scenario, not 0%.</div>
+        <div class="data-note">Play Type, 1st Down, Success, and Explosive % are each of every Run/Pass/Sack snap in that scenario (the N column). Direction and Pass Depth % are each their own charted subset (direction ~74% of run/pass snaps, depth ~34% of pass attempts, site-wide) -- "—" means nothing was charted for that scenario, not 0%.</div>
       </div>
     </div>
     <div class="card">
@@ -740,14 +769,24 @@ function schemeScenarios(rows) {
 }
 
 function schemeTableHeadHTML(fields) {
-  return `<tr><th>Scenario</th><th>N</th>${fields.map((f) => `<th>Top ${f.label}</th>`).join('')}</tr>`;
+  return `<tr><th>Scenario</th><th>N</th>${fields.map((f) => `<th>Top ${f.label}</th>`).join('')}<th>Success %</th><th>Explosive %</th></tr>`;
 }
 
+// Success/Explosive % added 2026-08-05, per the user ("add some more
+// percentages... any other percentages you think would be useful"). Uses
+// play_efficiency, a systematically-computed field present on the
+// hand-charted Plays sheet too (not the inconsistent "1st DN" free-text
+// tag scenarioRowHTML's own comment explains -- that one's why First Down %
+// is NOT added here, only on the official-play-by-play report tabs).
 function schemeScenarioRowHTML(label, rows, fields) {
+  const successN = rows.filter((r) => isSuccess(r.play_efficiency)).length;
+  const explosiveN = rows.filter((r) => r.play_efficiency === 'Explosive').length;
   return `<tr>
     <td class="name">${label}</td>
     <td>${rows.length}</td>
     ${fields.map((f) => `<td>${schemeModalCellHTML(rows, f.key)}</td>`).join('')}
+    <td>${pct(rows.length ? successN / rows.length : null, 0)}</td>
+    <td>${pct(rows.length ? explosiveN / rows.length : null, 0)}</td>
   </tr>`;
 }
 
@@ -757,7 +796,7 @@ function renderSchemeScenarioTable(containerId, rows, fields) {
   sections.forEach((sec) => {
     const items = sec.items.filter((it) => it.rows.length > 0);
     if (!items.length) return;
-    rowsHTML += sectionRowHTML(sec.title, 2 + fields.length);
+    rowsHTML += sectionRowHTML(sec.title, 4 + fields.length);
     items.forEach((it) => { rowsHTML += schemeScenarioRowHTML(it.label, it.rows, fields); });
   });
   // Same fix as renderScenarioTable() -- a single-season opponent with that
@@ -892,7 +931,7 @@ function schemeScoutTab(root, config) {
             <div class="card-head"><h3>Most-Used Call by Scenario</h3></div>
             <div class="card-body">
               <div id="${side}-table"></div>
-              <div class="data-note">Top ${fields.map((f) => f.label).join('/')} is the single most-common real call charted for that scenario, with its share of that scenario's charted snaps for that field — "—" means nothing was charted for that field in that scenario, not that nothing was ever called.</div>
+              <div class="data-note">Top ${fields.map((f) => f.label).join('/')} is the single most-common real call charted for that scenario, with its share of that scenario's charted snaps for that field — "—" means nothing was charted for that field in that scenario, not that nothing was ever called. Success/Explosive % are of every charted snap in that scenario (the N column).</div>
             </div>
           </div>
           <div class="chartgrid">

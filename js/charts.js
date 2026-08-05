@@ -313,6 +313,26 @@ function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1),
     wrap.appendChild(col);
   });
   container.appendChild(wrap);
+  // Real bug found 2026-08-05, per the user ("when i scroll to the right on
+  // some of the vizes in the by opponent section the lines disappear"):
+  // .gridlines is `position: absolute; inset: 20px 0 34px 0` (theme.css) --
+  // `right: 0` resolves against .barchart's own CSS width (its visible
+  // viewport, unchanged by scrolling), not the full scrollable content width
+  // once `scroll: true` makes .barchart's content wider than the box itself.
+  // So the gridlines only ever spanned the columns visible at scroll
+  // position 0 -- scroll right past that and you're looking at bars with no
+  // reference lines behind them at all. Fixed by giving gridlines an
+  // explicit width matching wrap's actual rendered content width (read via
+  // scrollWidth -- measured only now that `wrap` is attached to `container`,
+  // since a detached element's scrollWidth isn't reliable; recomputing from
+  // colWidth * count instead would also undercount by ignoring .barchart's
+  // own flex `gap`) and clearing `right` so the explicit width wins over the
+  // inset shorthand's `right: 0`. Measured before gridlines itself has a
+  // width, so it can't inflate its own measurement.
+  if (scroll) {
+    gridlines.style.right = 'auto';
+    gridlines.style.width = `${wrap.scrollWidth}px`;
+  }
 }
 
 /* ------------------------------------------------------------ stacked bar --- */
