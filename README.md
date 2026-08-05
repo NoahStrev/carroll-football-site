@@ -577,6 +577,55 @@ with no console errors; new tab tested against a 1-game opponent
 scenario/field combo has no real (non-`'-'`) calls charted; no horizontal
 overflow at 400px mobile width.
 
+**v1.0.4 — All Opponents combined view, Season filter, 2 more scheme
+scenarios** (2026-08-04, same day, per the user: "make it able to use the
+combined data of all teams, along with another filter which will be a
+checkbox of what years to select, have the default be all years, add this
+to all the defense scout, offense scout, defense self scout, and offense
+self scout"). Both `opponentReportTab()` and `schemeScoutTab()` (the 2
+shared shells behind all 4 per-opponent tabs) changed from taking a
+`dataFn(opponent)` closure to taking the raw `sourceRows` array directly,
+with a new shared `filterByOpponentSeason(rows, opponent, seasonSet)`
+doing the actual filtering — needed because the opponent filter is no
+longer the only thing narrowing the data. Each tab's Opponent `<select>`
+gained a new first option, **"All Opponents (Combined)"** (sentinel value
+`'__ALL__'`, which can't collide with any real team name), now the
+default selection on all 4 tabs — every KPI/table/chart on the page reads
+across every opponent's games at once until a specific team is picked.
+Each tab also gained a **Season** checkbox filter, reusing the exact same
+`buildFilterPanel`/`wireFilterPanel`/`readFilterState` component the By
+Opponent tab's own Season filter already uses — unlike that one, this
+filter does NOT set `defaultLatestOnly`, so every season starts checked
+per the user's explicit "default be all years." Verified: Offense Self
+Scout defaults to 3075 snaps / 50 games (all opponents, all seasons);
+unchecking 2021 drops it to 2432 snaps / 40 games; re-checking 2021 and
+switching to a specific opponent (WashU) correctly narrows to 326 snaps /
+5 games, matching the exact number the v1.0.1 opponent-name-merge fix
+confirmed for that team.
+
+**Also this round, per the user's immediate follow-up** ("the custom
+situation for defense has way less options than offense, lets see what
+can be improved there"): Defense Self Scout and Defense Scout only had 4
+scenario dimensions (Down/Distance/Situation/Field Zone) against the
+official-play-by-play tabs' 10, because Quarter/Goal-to-Go/Score
+Situation/Drive Context/Explosive-Play Context are all fields that
+genuinely don't exist on the hand-charted Plays sheet — a real structural
+gap, not an oversight (already documented in the code before this
+round). But checking the actual columns on `offense.plays`/`defense.plays`
+found 2 more fields that DO exist on both and were simply never
+surfaced: `hash` (L/M/R, ~78-80% filled) and `play_type` (Run/Pass/
+Timeout/Unknown — Timeout/Unknown excluded as real scenario values, the
+same exclusion pattern the official tabs already use for Kneel/Two-Point
+Conversion). Added both as a 5th/6th scenario-table section ("By Play
+Type", "By Hash") and as 2 more Custom Situation dropdowns on both
+scheme tabs, bringing them to 6 scenario dimensions total. Verified in
+browser: both new dropdowns render and filter correctly (e.g. selecting
+Run + L Hash together on Defense Self Scout narrows to 258 real snaps
+with a sensible top-front breakdown); all 5 tabs click through with zero
+console errors at both desktop and 400px mobile width; Defense Scout
+tested against a 1-game opponent (Benedictine) with the new All
+Opponents/Season controls in place, no crash.
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the

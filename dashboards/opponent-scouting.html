@@ -140,6 +140,25 @@ function printPage(filenameTitle) {
   document.title = prevTitle;
 }
 
+// Per the user (2026-08-04): "make it able to use the combined data of all
+// teams, along with another filter which will be a checkbox of what years to
+// select, have the default be all years" -- added to all 4 per-opponent tabs
+// (Offense Self Scout, Offense Scout, Defense Self Scout, Defense Scout).
+// ALL_OPPONENTS is a sentinel value for each tab's Opponent <select> meaning
+// "don't filter by opponent at all" -- every real opponent is a plain team
+// name, never this literal, so it can't collide. The Season filter reuses the
+// exact same checkbox filter-panel component (buildFilterPanel/wireFilterPanel/
+// readFilterState) the By Opponent tab already uses; defaultLatestOnly is left
+// unset here (unlike By Opponent's own Season filter) so every season starts
+// checked, per the user's explicit "default be all years."
+const ALL_OPPONENTS = '__ALL__';
+const ALL_OPPONENTS_LABEL = 'All Opponents (Combined)';
+const YEAR_FILTERS = [{ field: 'season', label: 'Season' }];
+
+function filterByOpponentSeason(rows, opponent, seasonSet) {
+  return rows.filter((r) => (opponent === ALL_OPPONENTS || r.opponent === opponent) && seasonSet.has(String(r.season)));
+}
+
 function byOpponentMetrics(rows) {
   const withEff = rows.filter((r) => r.play_efficiency !== null);
   return {
@@ -506,8 +525,9 @@ function renderReportPage(side, allRows) {
   wireCustomSituation(side, flagged);
 }
 
-function opponentReportTab(root, side, subtitle, note, dataFn) {
+function opponentReportTab(root, side, subtitle, note, sourceRows) {
   const opponents = [...new Set([...DATA.offense.official, ...DATA.defense.official].map((r) => r.opponent))].sort();
+  const tabId = `sr-${side}`;
   root.innerHTML = `
     <div class="frame-wrap active">
       <div class="slide">
@@ -518,7 +538,11 @@ function opponentReportTab(root, side, subtitle, note, dataFn) {
         <div class="body">
           <div class="scout-report-head">
             <label for="sr-${side}-opponent" style="font-size:12.5px; font-weight:600; color:var(--text-secondary);">Opponent</label>
-            <select class="scout-select" id="sr-${side}-opponent">${opponents.map((o) => `<option value="${o}">${o}</option>`).join('')}</select>
+            <select class="scout-select" id="sr-${side}-opponent">
+              <option value="${ALL_OPPONENTS}">${ALL_OPPONENTS_LABEL}</option>
+              ${opponents.map((o) => `<option value="${o}">${o}</option>`).join('')}
+            </select>
+            <div id="${tabId}-shelf" style="display:flex; align-items:center; gap:8px;"></div>
             <button type="button" class="download-btn no-print" id="sr-${side}-pdf">&#8595; PDF</button>
           </div>
           ${reportPageHTML(side, note)}
@@ -527,15 +551,20 @@ function opponentReportTab(root, side, subtitle, note, dataFn) {
       </div>
     </div>`;
 
+  document.getElementById(`${tabId}-shelf`).innerHTML = buildFilterPanel(tabId, YEAR_FILTERS, { season: DATA.filters.offense.season });
+  wireFilterPanel(tabId, YEAR_FILTERS, render);
+
   document.getElementById(`sr-${side}-opponent`).addEventListener('change', render);
   document.getElementById(`sr-${side}-pdf`).addEventListener('click', () => {
     const opponent = document.getElementById(`sr-${side}-opponent`).value;
-    printPage(`Opponent Scouting - ${subtitle} - ${opponent} - Carroll Football`);
+    const label = opponent === ALL_OPPONENTS ? ALL_OPPONENTS_LABEL : opponent;
+    printPage(`Opponent Scouting - ${subtitle} - ${label} - Carroll Football`);
   });
 
   function render() {
     const opponent = document.getElementById(`sr-${side}-opponent`).value;
-    renderReportPage(side, dataFn(opponent));
+    const seasonSet = readFilterState(tabId, YEAR_FILTERS).season;
+    renderReportPage(side, filterByOpponentSeason(sourceRows, opponent, seasonSet));
   }
   render();
 }
@@ -552,15 +581,15 @@ function opponentReportTab(root, side, subtitle, note, dataFn) {
 // say what they really are; content/data source unchanged for either.
 function offenseSelfScoutTab(root) {
   opponentReportTab(
-    root, 'off', 'Offense Self Scout', "Carroll's own play-calling tendencies in games against this opponent.",
-    (opponent) => DATA.offense.official.filter((r) => r.opponent === opponent),
+    root, 'off', 'Offense Self Scout', "Carroll's own play-calling tendencies against the selected opponent(s).",
+    DATA.offense.official,
   );
 }
 
 function offenseScoutTab(root) {
   opponentReportTab(
-    root, 'def', 'Offense Scout', "This opponent's own play-calling tendencies against Carroll's defense — real scouting signal if they're on a future schedule again.",
-    (opponent) => DATA.defense.official.filter((r) => r.opponent === opponent),
+    root, 'def', 'Offense Scout', "The selected opponent(s)' own play-calling tendencies against Carroll's defense — real scouting signal if they're on a future schedule again.",
+    DATA.defense.official,
   );
 }
 
@@ -587,10 +616,19 @@ function offenseScoutTab(root) {
    charts already established on defense.html's Defensive Line/Linebackers
    tabs (topKeysByCount + renderBar) and offense.html's own Tendencies tab
    (which already surfaces the opponent's def_front/coverage the same way).
-   Only 4 scenario dimensions (Down/Distance/Situation/Field Zone) exist on
-   either tab, not the official-play-by-play tabs' 10 -- Quarter/
-   Goal-to-Go/Score Situation/Drive Context/Explosive-Play Context are all
-   official-only fields that don't exist on the hand-charted Plays sheet.
+   6 scenario dimensions (Down/Distance/Situation/Field Zone/Play Type/Hash)
+   exist on either tab, not the official-play-by-play tabs' 10 --
+   Quarter/Goal-to-Go/Score Situation/Drive Context/Explosive-Play Context
+   are all official-only fields that don't exist on the hand-charted Plays
+   sheet (no quarter, no goal-to-go flag, no score_differential, no
+   drive_num on either offense.plays or defense.plays -- a real structural
+   gap, not an oversight). Play Type and Hash, added 2026-08-04 per the
+   user ("the custom situation for defense has way less options than
+   offense"), DO exist on both sheets (play_type: Run/Pass/Timeout/Unknown,
+   hash: L/M/R, ~78-80% filled) and were simply unused until now --
+   Timeout/Unknown are excluded from Play Type's real values the same way
+   Kneel/Two-Point Conversion are excluded from the official tabs' Run/Pass
+   split.
 
    One shared, parameter-driven schemeScoutTab() renders both -- per this
    project's established convention (see js/charts.js's own hoisting
@@ -614,6 +652,13 @@ function schemeModalCellHTML(rows, field) {
   return `${top} <span class="modal-pct">(${pct(byVal.get(top).length / real.length, 0)})</span>`;
 }
 
+// 'Timeout'/'Unknown' are the hand-charted sheet's own non-snap play_type
+// values (a timeout, or a play the charter couldn't classify) -- not real
+// scenario buckets, same exclusion logic as the official tabs' Run/Pass
+// split dropping Kneel/Two-Point Conversion.
+const SCHEME_PLAY_TYPES = ['Run', 'Pass'];
+const PLAY_HASH = ['L', 'M', 'R'];
+
 function schemeScenarios(rows) {
   const withDist = rows.map((r) => ({ ...r, _db: distanceBucket(r.distance) }));
   return [
@@ -621,6 +666,8 @@ function schemeScenarios(rows) {
     { title: 'By Distance', items: DIST_BUCKETS.map((b) => ({ label: `${b} yds to go`, rows: withDist.filter((r) => r._db === b) })) },
     { title: 'By Situation', items: SITUATIONS.map((s) => ({ label: s, rows: rows.filter((r) => r.situation === s) })) },
     { title: 'By Field Zone', items: FIELD_ZONES.map((z) => ({ label: z, rows: rows.filter((r) => r.field_zone === z) })) },
+    { title: 'By Play Type', items: SCHEME_PLAY_TYPES.map((t) => ({ label: t, rows: rows.filter((r) => r.play_type === t) })) },
+    { title: 'By Hash', items: PLAY_HASH.map((h) => ({ label: h, rows: rows.filter((r) => r.hash === h) })) },
   ];
 }
 
@@ -673,6 +720,8 @@ const SCHEME_CUSTOM_FIELDS = [
   { id: 'distance', label: 'Distance', options: DIST_BUCKETS },
   { id: 'situation', label: 'Situation', options: SITUATIONS },
   { id: 'fieldZone', label: 'Field Zone', options: FIELD_ZONES },
+  { id: 'playType', label: 'Play Type', options: SCHEME_PLAY_TYPES },
+  { id: 'hash', label: 'Hash', options: PLAY_HASH },
 ];
 
 function schemeCustomControlsHTML(side) {
@@ -688,12 +737,15 @@ function schemeCustomControlsHTML(side) {
 
 function schemeCustomFilterRows(side, rows) {
   const val = (id) => document.getElementById(`${side}-cs-${id}`).value;
-  const down = val('down'), distance = val('distance'), situation = val('situation'), fieldZone = val('fieldZone');
+  const down = val('down'), distance = val('distance'), situation = val('situation'), fieldZone = val('fieldZone'),
+    playType = val('playType'), hash = val('hash');
   return rows.filter((r) => {
     if (down !== 'Any' && String(r.down) !== down) return false;
     if (distance !== 'Any' && distanceBucket(r.distance) !== distance) return false;
     if (situation !== 'Any' && r.situation !== situation) return false;
     if (fieldZone !== 'Any' && r.field_zone !== fieldZone) return false;
+    if (playType !== 'Any' && r.play_type !== playType) return false;
+    if (hash !== 'Any' && r.hash !== hash) return false;
     return true;
   });
 }
@@ -701,7 +753,13 @@ function schemeCustomFilterRows(side, rows) {
 function schemeCustomLabel(side) {
   const val = (id) => document.getElementById(`${side}-cs-${id}`).value;
   const parts = SCHEME_CUSTOM_FIELDS
-    .map((f) => { const v = val(f.id); return v === 'Any' ? null : f.id === 'down' ? `${ordinalDown(Number(v))} Down` : v; })
+    .map((f) => {
+      const v = val(f.id);
+      if (v === 'Any') return null;
+      if (f.id === 'down') return `${ordinalDown(Number(v))} Down`;
+      if (f.id === 'hash') return `${v} Hash`;
+      return v;
+    })
     .filter((v) => v !== null);
   return parts.length ? parts.join(', ') : 'All snaps (no filters selected)';
 }
@@ -725,10 +783,10 @@ function wireSchemeCustomSituation(side, rows, fields) {
   renderResult();
 }
 
-// config: { side, title, note, dataFn, fields: [{key,label,chartTitle}, x3],
+// config: { side, title, note, sourceRows, fields: [{key,label,chartTitle}, x3],
 // kpiExtraLabel, footerNote }
 function schemeScoutTab(root, config) {
-  const { side, title, note, dataFn, fields, kpiExtraLabel, footerNote } = config;
+  const { side, title, note, sourceRows, fields, kpiExtraLabel, footerNote } = config;
   const opponents = [...new Set([...DATA.offense.official, ...DATA.defense.official].map((r) => r.opponent))].sort();
   root.innerHTML = `
     <div class="frame-wrap active">
@@ -740,7 +798,11 @@ function schemeScoutTab(root, config) {
         <div class="body">
           <div class="scout-report-head">
             <label for="${side}-opponent" style="font-size:12.5px; font-weight:600; color:var(--text-secondary);">Opponent</label>
-            <select class="scout-select" id="${side}-opponent">${opponents.map((o) => `<option value="${o}">${o}</option>`).join('')}</select>
+            <select class="scout-select" id="${side}-opponent">
+              <option value="${ALL_OPPONENTS}">${ALL_OPPONENTS_LABEL}</option>
+              ${opponents.map((o) => `<option value="${o}">${o}</option>`).join('')}
+            </select>
+            <div id="${side}-shelf" style="display:flex; align-items:center; gap:8px;"></div>
             <button type="button" class="download-btn no-print" id="${side}-pdf">&#8595; PDF</button>
           </div>
           <div class="kpirow" id="${side}-kpis">
@@ -778,15 +840,20 @@ function schemeScoutTab(root, config) {
       </div>
     </div>`;
 
+  document.getElementById(`${side}-shelf`).innerHTML = buildFilterPanel(side, YEAR_FILTERS, { season: DATA.filters.offense.season });
+  wireFilterPanel(side, YEAR_FILTERS, render);
+
   document.getElementById(`${side}-opponent`).addEventListener('change', render);
   document.getElementById(`${side}-pdf`).addEventListener('click', () => {
     const opponent = document.getElementById(`${side}-opponent`).value;
-    printPage(`Opponent Scouting - ${title} - ${opponent} - Carroll Football`);
+    const label = opponent === ALL_OPPONENTS ? ALL_OPPONENTS_LABEL : opponent;
+    printPage(`Opponent Scouting - ${title} - ${label} - Carroll Football`);
   });
 
   function render() {
     const opponent = document.getElementById(`${side}-opponent`).value;
-    const rows = dataFn(opponent);
+    const seasonSet = readFilterState(side, YEAR_FILTERS).season;
+    const rows = filterByOpponentSeason(sourceRows, opponent, seasonSet);
     const games = new Set(rows.map((r) => r.game_label));
     const blitzField = fields[1].key;
     const byFieldAll = groupBy(schemeRealRows(rows, fields[0].key), fields[0].key);
@@ -821,8 +888,8 @@ function defenseSelfScoutTab(root) {
   schemeScoutTab(root, {
     side: 'dss',
     title: 'Defense Self Scout',
-    note: "Carroll's own defensive scheme calls (front, blitz, movement) in games against this opponent — the other tabs cover play type (run/pass); this one covers Carroll's own call.",
-    dataFn: (opponent) => DATA.defense.plays.filter((r) => r.opponent === opponent),
+    note: "Carroll's own defensive scheme calls (front, blitz, movement) against the selected opponent(s) — the other tabs cover play type (run/pass); this one covers Carroll's own call.",
+    sourceRows: DATA.defense.plays,
     fields: [
       { key: 'front_d', label: 'Front', chartTitle: 'Fronts Used (top 10 by volume)' },
       { key: 'blitz_d', label: 'Blitz', chartTitle: 'Blitzes Called (top 10 by volume)' },
@@ -838,8 +905,8 @@ function defenseScoutTab(root) {
   schemeScoutTab(root, {
     side: 'dsc',
     title: 'Defense Scout',
-    note: "This opponent's own defensive scheme calls (front, blitz, coverage) shown against Carroll's offense — real scouting signal if they're on a future schedule again.",
-    dataFn: (opponent) => DATA.offense.plays.filter((r) => r.opponent === opponent),
+    note: "The selected opponent(s)' own defensive scheme calls (front, blitz, coverage) shown against Carroll's offense — real scouting signal if they're on a future schedule again.",
+    sourceRows: DATA.offense.plays,
     fields: [
       { key: 'def_front', label: 'Front', chartTitle: 'Fronts Shown (top 10 by volume)' },
       { key: 'blitz', label: 'Blitz', chartTitle: 'Blitzes Shown (top 10 by volume)' },
