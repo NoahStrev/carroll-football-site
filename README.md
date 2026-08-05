@@ -751,6 +751,101 @@ Three real changes:
    tile description (already fixed once for the "All Opponents" wording)
    is now moot since the whole page was replaced.
 
+**v1.2.0 — 388-row data-completeness bug fixed, mobile scroll gap fixed**
+(2026-08-05, new day, per the user: "do another extremely thorough
+checkthrough of the underlying data, make sure that there are no data
+quality issues or some other issues where we're adding or dropping rows.
+also check the formatting across the multiple screen sizes especially
+when scrolling is involved. then see what in the code can be cleaned up
+or improved"). Re-read every build script (`build_game_data.py`,
+`build_special_teams_data.py`, `build_lifting_data.py`,
+`build_rankings_data.py`) and cross-checked each one's output row counts
+directly against the raw source workbooks (not just re-running the script
+and trusting its own print output) — found one real, significant bug:
+
+1. **388 real snaps silently dropped from `offense.official`/
+   `defense.official`.** `classify_side()` matches each row's
+   `POSSESSION_TEAM` against Carroll or the known opponent to decide
+   offense/defense — but the source scrape's own `POSSESSION_TEAM`
+   sometimes reads a period-boundary label ("Start of Quarter #2" /
+   "Start of Quarter #4") instead of a real team name, specifically on
+   the first play of a quarter that CONTINUES an existing drive rather
+   than starting fresh via a kickoff (which is why only #2/#4 show this,
+   never #1/#3). `classify_side()` can't match that label to either
+   team, so 388 real Rush/Pass/Sack/Two-Point-Conversion snaps (166
+   offense, 222 defense, spread fairly evenly across all 5 seasons — not
+   concentrated in one year) were silently excluded from both
+   `offense.official` and `defense.official`, and therefore from every
+   KPI/scenario/chart built from that data (Offense/Defense's Executive
+   Scorecard, Opponent Scouting's By Opponent/Offense Self Scout/Offense
+   Scout tabs). Recovered via `DRIVE_NUM`: a drive is one continuous
+   possession, so any OTHER row in the same drive with a real,
+   classifiable `POSSESSION_TEAM` tells us the whole drive's side.
+   Verified this is safe for all 388 affected rows specifically, but
+   **not** safe as a blanket rule — 7 of 1233 real drives sitewide have
+   rows that classify to BOTH sides (likely unrelated turnover/scraping
+   quirks) — so the fix only recovers a row when its drive's other
+   classifiable rows agree on exactly one side, and leaves it dropped
+   (prior behavior) in the 7 ambiguous drives. Verified with a structural
+   diff against the previously-committed JSON: 0 existing rows changed or
+   removed, exactly 166/222 new rows added, each one a sane, real play
+   (spot-checked several: real interceptions, touchdowns, first downs
+   with sensible down/distance/score context).
+2. **Also checked, found clean**: `build_special_teams_data.py`'s 5
+   units (row counts match the source workbook exactly, no blank/phantom
+   rows), `build_rankings_data.py` (zero unmapped-category warnings, zero
+   rank-null drops), and every other `groupBy()` call site across every
+   dashboard page for the same "used as a must-keep-every-row partition"
+   misuse that caused yesterday's `withScenarioFlags()` bug — no other
+   instance found; every other `groupBy()` call is a genuine categorical
+   breakdown against a known/fixed category list, where skipping a
+   null-keyed row is correct, not a bug.
+3. **One small (1-row) gap found but NOT fixed**: one athlete's Pro
+   Agility attempt from January 2022-23 has no `'Best'`-tagged duplicate
+   row in the *source* Lifting Data workbook (every other session for
+   every other athlete does), so `metric_value()`'s "only trust the
+   `'Best'`-tagged row" convention silently excludes that one real
+   4th-year time (5.03s) from both the leaderboard and that athlete's own
+   chart. This originates in a sibling project's own data prep, not a
+   bug in this project's build script logic, and restructuring the
+   aggregation to add a single-attempt fallback for one data point across
+   the whole dataset wasn't judged worth the added complexity/risk —
+   documented here and in memory instead.
+4. **Mobile scrolling gap, screen-size audit.** Actually scrolled (not
+   just checked `scrollWidth`) every sticky-header/horizontal-scroll
+   surface on the site at mobile/tablet/desktop: Opponent Scouting's
+   `.tbl-scroll` tables, its By Opponent horizontal bar charts,
+   `rankings.html`'s `.rank-scroll`, and `lifting-strength.html`'s
+   leaderboard lists. All sticky headers stayed correctly pinned through
+   both vertical and (where applicable) horizontal scroll. Found one real
+   gap: Opponent Scouting's scenario tables (9 columns on the report
+   tabs, up to 7 on the scheme tabs) don't fit inside ~294px of usable
+   width on a 390px phone, so the table needs to scroll horizontally too
+   — but with no sticky first column, scrolling right to see Direction/
+   Pass Depth (or Top Front/Blitz/...) lost the "Scenario" row label off
+   the left edge, making it unclear which row's percentages you were
+   reading. Fixed by making the first column sticky horizontally too, the
+   same way the header row already sticks vertically (excluding the
+   `.tbl-section` colspan group-header rows, which already span the full
+   table width and don't need it) — verified the corner cell stays
+   pinned through combined vertical+horizontal scroll, and added a
+   matching print-mode reset since the new rule is more specific than the
+   existing `thead th { position: static; }` print rule and would
+   otherwise have won the cascade and left a stray shadow on printed
+   output.
+5. **Code cleanup pass**: checked every function in `opponent-scouting.html`
+   and `js/charts.js` for dead code (none found — everything has a real
+   call site, several charts.js functions that looked unused only because
+   they're called internally by other charts.js functions, e.g.
+   `renderSparkline` from `renderTrendCard`) and checked for unused CSS
+   classes (none found). The near-duplicate Custom Situation function
+   families (`custom*` for the official-data tabs vs `schemeCustom*` for
+   the scheme tabs) were deliberately left un-hoisted — each has real
+   bespoke per-field comparison logic and a different field count (9 vs
+   6), matching this project's own established convention of not forcing
+   a shared factory onto tab-shaped code that's only mostly-similar (see
+   [[project-carroll-site-workflow]]).
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the

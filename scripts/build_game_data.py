@@ -188,6 +188,39 @@ def main():
                 "blitz_d": r["BLITZ (D)"], "num_d": r["#(D)"],
             })
 
+    # Real bug found 2026-08-05 (thorough data-quality audit): the source
+    # scrape's own POSSESSION_TEAM sometimes reads a period-boundary label
+    # ("Start of Quarter #2" / "Start of Quarter #4") instead of a real team
+    # name, on the first play of a quarter that continues an existing drive
+    # rather than starting via a kickoff (which is why only #2/#4 show this,
+    # never #1/#3 -- those always start possession fresh off a real kickoff
+    # row). classify_side() can't match that label to either team, so those
+    # rows were silently dropped from both offense_official/defense_official
+    # -- 388 real Rush/Pass/Sack/Two-Point-Conversion snaps site-wide.
+    # Recoverable via DRIVE_NUM: a drive is one continuous possession, so any
+    # OTHER row in the same drive with a real, classifiable POSSESSION_TEAM
+    # tells us the whole drive's side. Confirmed empirically this is safe for
+    # every one of the 388 affected rows -- but NOT universally safe across
+    # the dataset (7 of 1233 real drives have rows that classify to BOTH
+    # sides, likely turnover/muffed-play scraping quirks unrelated to this
+    # bug), so this only recovers a row when its drive's OTHER classifiable
+    # rows agree on exactly one side, and leaves it dropped (prior behavior)
+    # in any drive where that's not true.
+    drive_sides, ambiguous_drives = {}, set()
+    for r in opbp_all:
+        if r["GAME_LABEL"] not in carroll_game_labels or r["DRIVE_NUM"] is None:
+            continue
+        s = classify_side(r["POSSESSION_TEAM"], r["OPPONENT"])
+        if s is None:
+            continue
+        key = (r["GAME_LABEL"], r["DRIVE_NUM"])
+        if key in drive_sides and drive_sides[key] != s:
+            ambiguous_drives.add(key)
+        else:
+            drive_sides[key] = s
+    for key in ambiguous_drives:
+        del drive_sides[key]
+
     # ------------------------------------------------- OfficialPlayByPlay ----
     offense_official, defense_official = [], []
     drives_by_key = {}  # (game_label, drive_num) -> {side, season, opponent, ...}
@@ -196,6 +229,8 @@ def main():
         if r["GAME_LABEL"] not in carroll_game_labels:
             continue
         side = classify_side(r["POSSESSION_TEAM"], r["OPPONENT"])
+        if side is None and r["DRIVE_NUM"] is not None:
+            side = drive_sides.get((r["GAME_LABEL"], r["DRIVE_NUM"]))
         if side is None:
             continue
         season = parse_label_date(r["GAME_LABEL"])

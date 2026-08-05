@@ -54,6 +54,24 @@
   table.mini.scenario-table thead th {
     position: sticky; top: 0; z-index: 2; background: var(--page); box-shadow: 0 1px 0 var(--grid);
   }
+  /* Real UX gap found 2026-08-05 (screen-size scroll audit): this table's
+     9 columns (7 for the scheme tables) don't fit inside ~294px of usable
+     width on a phone (390px viewport) -- the table needs to scroll
+     horizontally too, but with no sticky first column, scrolling right to
+     see the Direction/Pass Depth (or Top Front/Blitz/...) columns lost the
+     "Scenario" row label off the left edge, making it unclear which row's
+     percentages you were reading. Sticking the first column, the same way
+     the header row already sticks vertically, keeps the row label in view
+     during horizontal scroll. .tbl-section's own colspan group-header row
+     is excluded (`tr:not(.tbl-section)`) -- its one cell already spans the
+     full table width, so pinning just its left edge would be a no-op at
+     best and visually odd at worst. */
+  table.mini.scenario-table tbody tr:not(.tbl-section) td:first-child {
+    position: sticky; left: 0; z-index: 1; background: var(--page); box-shadow: 1px 0 0 var(--grid);
+  }
+  table.mini.scenario-table thead th:first-child {
+    left: 0; z-index: 3; box-shadow: 1px 0 0 var(--grid), 0 1px 0 var(--grid);
+  }
   .download-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
   .download-btn {
     font-family: inherit; font-size: 12px; font-weight: 600; padding: 7px 13px; border-radius: 7px;
@@ -72,6 +90,14 @@
   @media print {
     .sitenav, .intro, .tabbar, .no-print, .scout-report-head select, .filters-control, .filters-summary { display: none !important; }
     table.mini.scenario-table thead th { position: static; box-shadow: none; }
+    /* The sticky-first-column rules above are each more specific than the
+       thead th reset just above (:first-child adds a specificity point),
+       so they need their own explicit print reset rather than relying on
+       that one rule to cover them too. */
+    table.mini.scenario-table thead th:first-child,
+    table.mini.scenario-table tbody tr:not(.tbl-section) td:first-child {
+      position: static; box-shadow: none;
+    }
     /* .tbl-scroll's max-height/overflow is a screen-only convenience (frozen
        header while scanning on-screen) -- printed, the table should lay out
        in full across as many pages as it needs, not clip to one scrolled

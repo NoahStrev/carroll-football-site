@@ -62,6 +62,15 @@
    rather than becoming their own version. */
 const UPDATES = [
   {
+    version: '1.2.0',
+    date: 'August 5, 2026',
+    title: 'Fixed 388 missing snaps and a mobile scrolling gap',
+    changes: [
+      { change: 'Fixed a data-completeness bug where 388 real offense/defense snaps (spread fairly evenly across all 5 seasons) were silently missing from every official-play-by-play view — Offense Self Scout, Offense Scout, and By Opponent — caused by a scraping quirk in the source data that this site\'s own build script couldn\'t previously work around', effect: 'Every real charted snap counts now — every KPI, percentage, and scenario breakdown built from official play-by-play data across those tabs is slightly more accurate than before.' },
+      { change: 'Fixed scenario tables (Opponent Scouting\'s 4 per-opponent tabs) losing the row label (e.g. "3rd Down") off-screen when scrolling sideways on a phone', effect: 'The Scenario column now stays visible while scrolling right to see the rest of a row\'s percentages on a phone — you always know which scenario you\'re looking at.' },
+    ],
+  },
+  {
     version: '1.1.0',
     date: 'August 4, 2026',
     title: 'Opponent Scouting overhaul: real opponent names, self vs. opponent scouting, and combined views',
