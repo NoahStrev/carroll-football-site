@@ -170,6 +170,30 @@ def main():
             # collapse to one point per football_year so it still lines up on the
             # same x-axis as the other per-session metrics.
             key = (ak, fy, "—", metric)
+        # Real duplicate-record audit, 2026-08-05 (per the user: "identify
+        # places we might be duping or dropping records"): the source has 151
+        # (athlete, year, Height) keys with 2 real rows each -- Height has no
+        # testing_period to separate "measured in December" from "measured in
+        # April", so two real measurements in the same year collide on this
+        # key. 105 of those pairs have identical values (harmless: the same
+        # number recorded twice); 45 differ by 0.5-2 inches, plausible normal
+        # measurement variance between two sessions. is_better()'s "larger
+        # wins" tie-break (Height isn't in LOWER_IS_BETTER) picks one of the
+        # two arbitrarily in both cases -- reasonable when the values are this
+        # close. ONE pair is a genuine outlier, not measurement noise: Logan
+        # Sarkkinen (DL), 2022-23 -- 72" from the "Dec 2022 Recording Sheet"
+        # vs 66" from "SP 2023 January Recording Sheet", a 6-inch gap for the
+        # same athlete in the same year. This site currently silently shows
+        # 72" (the larger of the two) with no way to tell a reader that a
+        # conflicting 66" reading also exists. This is a data-entry issue in
+        # the *source* Lifting Data workbook, not something fixable here
+        # without guessing which value is correct -- flagged for the Lifting
+        # Data project/coaching staff to resolve at the source, not silently
+        # "fixed" by picking one. (Separately: 84 Pro Agility rows are exact-
+        # value duplicates too, traced to the same Dec 2022 session being
+        # recorded in two different sheets of the source workbook that both
+        # feed this consolidated file -- harmless since the values always
+        # match, just redundant provenance.)
         if key not in series_points or is_better(metric, v, series_points[key]):
             series_points[key] = v
 

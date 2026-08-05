@@ -846,6 +846,79 @@ and trusting its own print output) — found one real, significant bug:
    a shared factory onto tab-shaped code that's only mostly-similar (see
    [[project-carroll-site-workflow]]).
 
+**Same day, follow-up duplicate-record audit (2026-08-05)** — per the user,
+right after the fixes above: "since we found a couple already lets see if
+we can find any other possible issues with the underlying datasets... also
+identify places we might be duping or dropping records... i want to really
+firm up these underlying datasets and make sure they are pristine." Checked
+every source sheet for duplicate records using each sheet's own real
+unique-ID column (not a guessed natural key):
+
+- `GameMatchLog`: 0 duplicate `GAME_LABEL` values (55 rows).
+- `Plays`: 0 duplicate `OVERALL_PLAY_NUM` (global) or `(GAME_LABEL,
+  GAME_PLAY_NUM, ODK)` (9388 rows).
+- `OfficialPlayByPlay`: 0 duplicate `(GAME_LABEL, OFFICIAL_PLAY_NUM)`
+  (10464 rows). Also checked `DRIVE_NUM` for non-contiguous or
+  non-monotonic reuse within a game (which would mean two different real
+  drives sharing a number, and `drives_by_key` in `build_game_data.py`
+  silently merging them) — 0 found across all 50 games, `DRIVE_NUM` is
+  cleanly monotonic everywhere. **Understood, not a bug**: the 7 drives
+  found in the earlier "mixed side" check (see v1.2.0 above) are a real
+  source-data artifact, not corruption — inspected one in full
+  (`Carroll vs Carthage 11_6_21`, drive 3): it's a kickoff-return
+  touchdown, where the scoring team's offensive drive AND the immediately
+  following kick-return-TD share one `DRIVE_NUM`, since a return score
+  doesn't cleanly fit the source's normal "drive = one team's
+  down-and-distance possession" numbering. Confirms the earlier fix's
+  caution (never auto-recovering a row from an ambiguous drive) was the
+  right call, not just a defensive guess.
+- All 5 Special Teams sheets: 0 duplicates on each sheet's own `Overall
+  Punt/Kick Number` column.
+- CCIW/National rankings sheets: 0 duplicate `(season, category, metric)`
+  keys in either source.
+- No in-season weekly-scrape workbooks exist yet (not in-season), so that
+  code path has nothing to check right now.
+
+**One real finding, in Lifting Data**: 235 `(athlete, year, period,
+metric, attempt)` keys have 2 real rows apiece — all `Height` (151) or
+`Pro Agility` (84). 84 Pro Agility pairs and 105 Height pairs have
+IDENTICAL values (harmless — Pro Agility's is a provenance duplicate,
+the same December session recorded in two different sheets of the same
+source workbook; Height's is two real measurements in the same year that
+happen to match). 45 Height pairs differ by 0.5–2 inches — plausible
+normal variance between two measurement sessions in the same year (Height
+has no `testing_period` to keep them separate). **1 genuine outlier**:
+Logan Sarkkinen (DL), 2022-23 — 72" recorded in the "Dec 2022 Recording
+Sheet" vs 66" in "SP 2023 January Recording Sheet," a 6-inch gap for the
+same athlete in the same year, far outside the normal variance band.
+`is_better()`'s existing "larger wins" Height tie-break silently shows 72"
+with no indication a conflicting 66" reading exists. This is a data-entry
+issue in the *source* Lifting Data workbook (see
+`scripts/build_lifting_data.py`'s inline comment at the fix site) — not
+something correctable here without guessing which value is right, so it's
+flagged for the coaching staff/Lifting Data project to resolve at the
+source rather than silently picked one way or the other.
+
+**Verified the JSON-level "exact duplicate row" checks that initially
+looked alarming (7 in `offense.official`, 6 in `defense.official`, 3 in
+`kickoff`, 19 in `money_unit`, etc.) are false positives, not bugs**: the
+site's own JSON only retains a curated subset of columns, dropping each
+source sheet's real unique-ID field (`OFFICIAL_PLAY_NUM`, `Overall Kick
+Number`, etc.) — so two genuinely different, low-information-content real
+events (e.g., two same-quarter PATs by the same kicker, always the same
+distance/value/score) can coincidentally match on every retained field
+without being the same event. Confirmed by cross-referencing the source's
+own unique IDs directly (e.g., a "duplicate" `money_unit` PAT pair traced
+back to `Overall Kick Number` 2 and 3, two distinct real extra points in
+the same game) rather than trusting the JSON-level tuple match alone —
+row counts already proved 1:1 with the source for every sheet, so no
+build script could have introduced a real duplicate; this was purely a
+detection-method artifact once traced back.
+
+No code changes were needed from this round beyond the one documentation
+comment in `build_lifting_data.py` — the underlying datasets are
+confirmed clean apart from the one flagged Lifting Data source anomaly.
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the
