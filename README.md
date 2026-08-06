@@ -287,13 +287,13 @@ Visual language originates from the `Special Teams Data/mockups/*.html` prototyp
      - Team-level only for this first pass — no individual-leader rankings yet
        (Overall has no individual-player equivalent, so scoping the whole page
        to team-level keeps all three tabs symmetric).
-     - **Not automated** — per the user's explicit scope call ("site ingestion
-       only for now"), this reads a point-in-time copy of each source
-       project's output; re-running `build_rankings_data.py` after either
-       source refreshes is still manual. Both underlying scrape pipelines
-       already run on a weekly cron (`cciw-org-conference-weekly-scrape`,
-       `ncaa-d3-national-weekly-scrape`) — wiring this project's own rebuild +
-       the report-generation step into that schedule is a deferred follow-up.
+     - **Automated as of 2026-08-06** (was manual at initial build — see
+       "Weekly automation" below for the full picture): a new scheduled task,
+       `carroll-site-weekly-refresh`, now runs `scripts/refresh_all.py`
+       (this + the other 3 build scripts) every Monday during the season,
+       right after the underlying scrape pipelines
+       (`cciw-org-conference-weekly-scrape`, `ncaa-d3-national-weekly-scrape`)
+       refresh their own source workbooks, and pushes the result live.
    - **Extended since the initial build** (undocumented here until this
      pass — backfilled 2026-07-31): the "Overall" tab was renamed
      **"Additional Metrics"** (reads as a catch-all otherwise) and moved to
@@ -1124,6 +1124,57 @@ feature round.
    `customFilterRows`). No issues found: denominators, colspan arithmetic
    (`4 + fields.length` on the scheme tables), and filter logic all check
    out against their own inline documentation.
+
+**Weekly season automation built (2026-08-06, same day, per the user: "make
+sure that we have everything properly setup for the first games of the
+season, so that we are getting those weekly rankings and making sure all
+appropriate datasets and dashboards get updated").** Closes the "deferred
+follow-up" noted in Phase 4 above — the 3 raw-data scrapers already ran
+weekly, but nothing rebuilt or deployed this site itself.
+
+1. **Real limit, confirmed by reading `Game Analysis`'s own SKILL.md
+   closely, not assumed**: this site's Offense/Defense/Opponent Scouting
+   data (`game-data.json`) can **never** be weekly-automated, even for its
+   official-play-by-play half — `OfficialPlayByPlay` rows are only
+   generated per matched *raw file* in the sibling project, so a game with
+   no manually-charted `raw/*.xlsx` dropped in produces zero rows there
+   regardless of what's been scraped. Only **Rankings** and **Special
+   Teams / position-page data** can go fully automatic, since those come
+   straight from scrapes with no charting step in between.
+2. New scheduled task, `carroll-site-weekly-refresh` (Mondays, after the 3
+   existing scrapers), runs this site's own `scripts/refresh_all.py` (all
+   4 build scripts in sequence) then commits and pushes `data/*.json` if
+   anything actually changed — **full auto per the user's explicit choice**,
+   a standing authorization scoped to this one recurring job, not a general
+   license to auto-commit in this repo. Guarded against ever committing a
+   partial/broken rebuild (checks `refresh_all.py`'s own exit code first)
+   or touching anything outside `data/`.
+3. **Season-window staleness, fixed at the root instead of patched
+   per-task**: the 3 existing scrapers' active windows were hardcoded date
+   strings (`2026-09-07` to `2026-11-16`) that a human had to re-derive and
+   hand-edit every season. Verified those specific dates were correct for
+   2026 (bracket the real Sep 5 → Nov 14 schedule exactly, per
+   `Schedule/schedule.json`) but confirmed the maintenance burden was real,
+   per the user's own framing ("isn't exactly scalable in the coming
+   years"). Replaced with a new shared script,
+   `Schedule/check_in_season.py`: derives the window fresh from
+   `schedule.json` every run (first game's date through last game's date +
+   7 days), self-refreshing that file via the sibling project's own
+   `scrape_schedule.py` whenever its `season` field is stale for the
+   current calendar year. Verified end-to-end: computed window
+   `[2026-09-05, 2026-11-21]` from the real 10-game 2026 schedule; forced a
+   stale `season: 2020` and confirmed it re-scraped live and restored
+   `schedule.json` byte-identical to the original. All 4 tasks (the 3
+   existing scrapers + the new site-refresh task) now use this same guard
+   and no longer self-disable at season end — they run indefinitely,
+   silently no-op outside the season, and need zero annual maintenance.
+   Also generalized the same class of hardcoded-year staleness found
+   sitting right next to the window logic: CCIW's task had `--year 2026`
+   baked into 2 command flags/filenames, Special Teams' task had `2026`
+   baked into 2 scrape URLs and a filename pattern — both now resolve the
+   current season year at run time instead (National's task already did
+   this correctly for its own `$Year` variable, only its window was
+   hardcoded).
 
 ## Testing notes (Special Teams Overview)
 
