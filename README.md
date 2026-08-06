@@ -1075,6 +1075,56 @@ errors, no horizontal overflow at 400px, sticky-first-column behavior
 from the previous round still works correctly with the now-wider (12
 vs. 9 column) official-data scenario tables.
 
+**Whole-project coherence review (2026-08-06, new day, per the user: "do
+a full thorough review of the entire project, lets see what can be
+improved, make sure everything is up to date").** No new functional
+issues found — this round was a systematic check that the last ~10
+rounds of changes hadn't left anything inconsistent behind, not a
+feature round.
+
+1. **Build-script idempotency.** Re-ran all 4 build scripts
+   (`build_game_data.py`, `build_special_teams_data.py`,
+   `build_lifting_data.py`, `build_rankings_data.py`) against unchanged
+   source data; `git status --short` showed zero diff on every output
+   `data/*.json` file, confirming none of them have any hidden
+   non-determinism (e.g. dict/set ordering, timestamp fields) that could
+   silently drift the committed data from what the scripts would produce
+   today.
+2. **Full regression sweep.** Clicked through all 13 dashboard pages plus
+   the root redirect in-browser, checked console output and mobile width
+   on each — no errors, no layout breaks.
+3. **Site coherence pass.** Nav bar `class="links"` block confirmed
+   byte-identical across all 13 dashboard pages (compared programmatically,
+   not by eye). Footer/intro text mentioning game or season counts
+   spot-checked against real data (the "50 real Carroll games, 2021-2025"
+   note is still accurate — the earlier 388-row fix added missing snaps
+   within existing games, not new games). Every `href` across all 14 HTML
+   files resolved and checked for existence (0 broken links); every
+   script/stylesheet `src`/`href` and every `fetch()` call's target
+   likewise checked (0 broken asset refs, 0 broken data-file refs).
+   `dashboards/updates.html`'s hand-maintained `UPDATES` array confirmed
+   internally consistent (versions and dates strictly increasing, no stale
+   references). One genuinely stale inline comment found and fixed:
+   `opponent-scouting.html`'s note describing the Scouting Report scenario
+   table's column count still said "9 columns (Scenario, N, 2 Play Type, 3
+   Direction, 2 Pass Depth)" from before the 2026-08-05 round added 1st
+   Down/Success/Explosive %, when the real count is 12. Two other, similar-
+   looking comments in the same file (one describing the sticky-column fix
+   generically as "9 columns (7 for the scheme tables)", one describing the
+   scheme tabs' own "6 scenario dimensions") were checked and left as-is —
+   both describe contexts this round's changes didn't touch, and remain
+   accurate. Historical dated README/Updates entries that mention old
+   column counts were deliberately NOT retroactively edited, per this
+   project's own changelog convention: a dated entry describes the state of
+   the site at the time it was written, not its current state.
+4. **Code quality pass** on this session's most-touched shared code —
+   `renderBar()` (`js/charts.js`) and the Opponent Scouting functions
+   touched across the last several rounds (`scenarioRowHTML`,
+   `schemeScenarioRowHTML`, `buildScenarios`, `CUSTOM_FIELDS`/
+   `customFilterRows`). No issues found: denominators, colspan arithmetic
+   (`4 + fields.length` on the scheme tables), and filter logic all check
+   out against their own inline documentation.
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the

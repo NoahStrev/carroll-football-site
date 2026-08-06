@@ -22,11 +22,12 @@
   @media (max-width: 900px) {
     .chartgrid { grid-template-columns: 1fr; }
   }
-  /* Scouting Report's scenario table -- 9 columns (Scenario, N, 2 Play Type,
-     3 Direction, 2 Pass Depth) is wider than most .mini tables on this site,
-     and can run 50+ rows long (per the user: "the header isn't visible
-     making it hard to remember"). Real bug found getting a sticky header
-     working here: `overflow-x: auto` on ANY ancestor -- .tbl-scroll itself,
+  /* Scouting Report's scenario table -- 12 columns (Scenario, N, 2 Play
+     Type, 3 Direction, 2 Pass Depth, 1st Down/Success/Explosive %, added
+     2026-08-05) is wider than most .mini tables on this site, and can run
+     50+ rows long (per the user: "the header isn't visible making it hard
+     to remember"). Real bug found getting a sticky header working here:
+     `overflow-x: auto` on ANY ancestor -- .tbl-scroll itself,
      or even theme.css's shared .stage two levels up, which every dashboard's
      tab content sits inside -- forces that ancestor's overflow-y to compute
      to `auto` too per the CSS overflow spec (an author can't override this
