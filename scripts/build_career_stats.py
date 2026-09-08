@@ -21,14 +21,14 @@ special_teams()` reads this site's OWN already-clean, already-verified
 `data/special-teams.json` (Special Teams Data's own build_workbook.py
 output, read the same way build_special_teams_data.py already does) --
 real per-attempt rows, just never rolled up into a running career total
-before. Two real name-format differences from the box-score categories
-above, handled separately (see `bare_surname_match()`): most of these
-units' player fields (punter/kicker/returner/snapper) are a BARE SURNAME
-only, no first name or initial at all -- so only the unique-last-name
-match stage applies, no exact-match or initial-disambiguation stage is
-possible without a first name to compare. `money_unit`'s own `kicker`/
-`long_snapper` fields are the one exception, already full "First Last"
-names -- reuses match_player() same as every other category.
+before. Its punter/kicker/returner/snapper name fields turned out to mix
+ALL 3 raw formats the box-score categories already handle ("Last,First",
+"First Last", bare surname alone) -- a first pass assumed bare-surname-
+only, based on the first game's data happening to look that way, and
+silently mismatched most rows as a result (confirmed 2026-09-08: ~85% of
+real occurrences are actually "First Last"). `match_player()` is reused
+directly for these fields too, same as every box-score category -- see
+SPECIAL_TEAMS_UNITS' own comment.
 
 Real, confirmed source-data quirks found while building this (2026-09-08):
 Individual Defensive Statistics keys Carroll by its FULL name ("Carroll
@@ -330,51 +330,56 @@ def resolve_unmatched_identities(raw_groups):
     would risk merging 2 unrelated players' stats together, the opposite
     failure from the one this whole function exists to fix).
 
-    A first-name variant that's just an initial (one letter, optionally
-    with a trailing ".") or blank is always treated as compatible with any
-    full name -- it narrows nothing on its own, so it never counts toward
-    "how many distinct people share this last name."""
+    A first-name variant that's just an initial -- one letter ("K."), or a
+    COMPOUND initial like "J.R"/"J.R."/"JR" (all 3 real, confirmed
+    2026-09-08: the same real person's money_unit rows spelled it 3
+    different ways across different games, fragmenting into 3 separate
+    buckets until this function started normalizing them) -- is always
+    treated as compatible with any full name, and multiple initial
+    variants that reduce to the same letters are treated as the SAME
+    initial, not competing identities. `initial_letters()` strips
+    everything but letters and uppercases, so "J.R", "J.R.", and "JR" all
+    normalize to "JR" -- only a genuinely different letter sequence (e.g.
+    "K." vs "J.") counts as a real conflict."""
     resolved = {}
     for last_key, pairs in raw_groups.items():
         last = next(iter(pairs))[1]  # real spelling -- identical across every pair by construction (same norm() key)
         firsts = {p[0] for p in pairs}
-        full_names = {f for f in firsts if f and len(f.rstrip(".")) > 1}
-        initials = {f.rstrip(".").lower() for f in firsts if f and len(f.rstrip(".")) == 1}
+        full_names = {f for f in firsts if f and len(initial_letters(f)) > 3}
+        initial_keys = {initial_letters(f) for f in firsts if f and 1 <= len(initial_letters(f)) <= 3}
         if len(full_names) > 1:
             resolved[last_key] = None  # genuine ambiguity -- don't guess
             continue
         if len(full_names) == 1:
             full = next(iter(full_names))
-            if initials and not all(full[0].lower() == i for i in initials):
+            if initial_keys and not all(k == initial_letters(full)[: len(k)] for k in initial_keys):
                 resolved[last_key] = None  # an initial contradicts the one full name found -- don't guess
                 continue
             resolved[last_key] = f"{full} {last}"
+        elif len(initial_keys) == 1:
+            # No full first name ever appeared, but every initial variant
+            # reduces to the same letters (e.g. "J.R"/"J.R."/"JR") -- show
+            # a canonically-dotted form ("J.R.") rather than whichever
+            # literal spelling happened to be seen first/most.
+            letters = next(iter(initial_keys))
+            canonical = "".join(f"{c}." for c in letters)
+            resolved[last_key] = f"{canonical} {last}"
         else:
-            # No full first name ever appeared for this last name (every
-            # row was an initial or fully bare) -- nothing better to show
-            # than the bare last name itself.
+            # Either no first-name signal at all (every row bare), or 2+
+            # genuinely different initials with no full name to arbitrate
+            # between them -- nothing safe to merge to.
             resolved[last_key] = None
     return resolved
 
 
-def bare_surname_match(surname, roster, last_name_to_keys):
-    """A punter/kicker/returner/snapper field with no first name at all
-    (e.g. "Streveler") -- can only ever resolve via the unique-last-name
-    stage, since there's no first-name signal to exact-match or
-    disambiguate an initial against. An ambiguous or unmatched surname is
-    shown under that bare surname itself (no fancy cross-format identity
-    merge like match_player's unmatched_display -- these fields don't have
-    the "same person under 3 different formats" problem the box-score
-    Passing/Rushing/etc. categories did, since every row for a given unit
-    uses this exact same bare-surname convention consistently)."""
-    if not surname:
-        return None, None
-    cands = last_name_to_keys.get(surname.lower(), set())
-    if len(cands) == 1:
-        key = next(iter(cands))
-        person = roster[key]
-        return key, f"{person['first_name']} {person['last_name']}"
-    return None, surname
+def initial_letters(s):
+    """"K." -> "K", "J.R" -> "JR", "J.R." -> "JR", "JR" -> "JR", "Kyle" ->
+    "KYLE" -- strips everything but letters and uppercases, so every
+    spelling variant of the same initial (or the same full name) reduces
+    to one comparable key. Callers distinguish "a real initial" from "a
+    full name" by length (<=3 letters covers every real compound initial
+    seen in this archive; nothing that short is a genuine first name)."""
+    return re.sub(r"[^A-Za-z]", "", s).upper()
 
 
 def bump(bucket, key, amount=1):
@@ -386,14 +391,25 @@ def bump_max(bucket, key, value):
 
 
 # (unit key in data/special-teams.json, field holding the player's name,
-# True if that field is a full "First Last" name (money_unit) rather than
-# a bare surname, output category name).
+# output category name). Every one of these name fields turns out to mix
+# ALL 3 raw formats match_player()/split_raw_name() already handle for the
+# box-score categories -- "Last,First", "First Last", and a bare surname
+# alone -- confirmed by counting real occurrences of each 2026-09-08
+# (a first pass wrongly assumed every field here was bare-surname-only,
+# based on the first game's data happening to look that way; the real
+# archive is ~85% "First Last", with both other formats mixed in too,
+# even within the SAME field). match_player() (with the SAME
+# unmatched_display cross-format merge every box-score category already
+# gets) is reused directly rather than a separate bare-surname-only
+# resolver, so a specialist named 3 different ways across different rows
+# merges into one identity here exactly the same way "K. Burlingame"/
+# "Kyle Burlingame"/"Burlingame" did for the box-score categories.
 SPECIAL_TEAMS_UNITS = [
-    ("punt", "punter", False, "Punting"),
-    ("kickoff", "kicker", False, "Kickoffs"),
-    ("punt_return", "returner", False, "PuntReturn"),
-    ("kickoff_return", "returner", False, "KickoffReturn"),
-    ("money_unit", "kicker", True, "PATFG"),
+    ("punt", "punter", "Punting"),
+    ("kickoff", "kicker", "Kickoffs"),
+    ("punt_return", "returner", "PuntReturn"),
+    ("kickoff_return", "returner", "KickoffReturn"),
+    ("money_unit", "kicker", "PATFG"),
 ]
 
 
@@ -445,7 +461,7 @@ def add_special_teams_derived(cat, bucket):
             bucket["exp_pct"] = round(100 * bucket.get("exp_made", 0) / bucket["exp_att"], 1)
 
 
-def accumulate_special_teams(players, roster, last_name_to_keys):
+def accumulate_special_teams(players, roster, last_name_to_keys, unmatched_display):
     """Mutates `players` (the same dict main() builds from the box-score
     categories) in place, adding Punting/Kickoffs/PuntReturn/
     KickoffReturn/PATFG career+season totals from this site's own
@@ -460,15 +476,12 @@ def accumulate_special_teams(players, roster, last_name_to_keys):
         return
     with open(SPECIAL_TEAMS_SRC, encoding="utf-8") as f:
         st = json.load(f)
-    for unit_key, name_field, is_full_name, category in SPECIAL_TEAMS_UNITS:
+    for unit_key, name_field, category in SPECIAL_TEAMS_UNITS:
         for row in st["units"].get(unit_key, []):
             raw_name = row.get(name_field)
             if not raw_name:
                 continue  # e.g. money_unit rows with no credited snapper -- not this row's kicker, unrelated to this unit's own name field
-            if is_full_name:
-                athlete_key, display = match_player(raw_name, roster, last_name_to_keys, {})
-            else:
-                athlete_key, display = bare_surname_match(raw_name, roster, last_name_to_keys)
+            athlete_key, display = match_player(raw_name, roster, last_name_to_keys, unmatched_display)
             if display is None:
                 continue
             season = int(row["season"]) if row.get("season") else None
@@ -496,7 +509,7 @@ def accumulate_special_teams(players, roster, last_name_to_keys):
             raw_name = row.get(name_field)
             if not raw_name:
                 continue
-            athlete_key, display = bare_surname_match(raw_name, roster, last_name_to_keys)
+            athlete_key, display = match_player(raw_name, roster, last_name_to_keys, unmatched_display)
             if display is None:
                 continue
             season = int(row["season"]) if row.get("season") else None
@@ -519,7 +532,23 @@ def main():
     # name per last name before any stats are actually accumulated (see
     # resolve_unmatched_identities -- needs the full picture across every
     # file before deciding anything, so this has to be a separate pass,
-    # not folded into the main accumulation loop below).
+    # not folded into the main accumulation loop below). Scans BOTH the
+    # box-score archive and data/special-teams.json's own name fields --
+    # a specialist with no offensive/defensive box-score line at all still
+    # needs their special-teams-only name variants merged the same way
+    # (found 2026-09-08: special-teams.json's punter/kicker/returner/
+    # snapper fields mix all 3 raw-name formats too, not just a bare
+    # surname as first assumed -- see SPECIAL_TEAMS_UNITS' own comment).
+    def collect_unmatched_variant(raw_name, unmatched_variants):
+        last, first = split_raw_name(raw_name)
+        if last is None:
+            return
+        key, _ = match_player(raw_name, roster, last_name_to_keys, {})
+        if key is not None:
+            return
+        lk = merge_key_for_unmatched(last, first)
+        unmatched_variants.setdefault(lk, set()).add((first, last))
+
     unmatched_variants = {}
     for fn in files:
         with open(fn, encoding="utf-8") as f:
@@ -533,15 +562,18 @@ def main():
             if car_key is None:
                 continue
             for row in teams[car_key]:
-                raw_name = row.get("player", "")
-                last, first = split_raw_name(raw_name)
-                if last is None:
-                    continue
-                key, _ = match_player(raw_name, roster, last_name_to_keys, {})
-                if key is not None:
-                    continue
-                lk = merge_key_for_unmatched(last, first)
-                unmatched_variants.setdefault(lk, set()).add((first, last))
+                collect_unmatched_variant(row.get("player", ""), unmatched_variants)
+    if SPECIAL_TEAMS_SRC.exists():
+        with open(SPECIAL_TEAMS_SRC, encoding="utf-8") as f:
+            st = json.load(f)
+        for unit_key, name_field, _category in SPECIAL_TEAMS_UNITS:
+            for row in st["units"].get(unit_key, []):
+                if row.get(name_field):
+                    collect_unmatched_variant(row[name_field], unmatched_variants)
+        for unit_key, name_field in [("money_unit", "long_snapper"), ("punt", "snapper")]:
+            for row in st["units"].get(unit_key, []):
+                if row.get(name_field):
+                    collect_unmatched_variant(row[name_field], unmatched_variants)
     unmatched_display = resolve_unmatched_identities(unmatched_variants)
 
     # players[display_name] -> {athlete_key, categories: {...}}
@@ -577,7 +609,7 @@ def main():
                     accumulate(season_bucket, spec, row)
                     cat_bucket["season_games"].setdefault(year, set()).add(game_label)
 
-    accumulate_special_teams(players, roster, last_name_to_keys)
+    accumulate_special_teams(players, roster, last_name_to_keys, unmatched_display)
 
     # Derived rate stats -- never a naive average of per-game rates, always
     # recomputed from the summed counting stats (this project's established

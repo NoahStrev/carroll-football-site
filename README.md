@@ -2119,6 +2119,60 @@ return career totals too."
    categories, no position to filter by) too. Verified at 375px mobile
    width, all 4 tabs: no horizontal overflow, no console errors.
 
+**Same day, fifth round: full sitewide audit (2026-09-08)** — per the
+user, "do a thorough check across the whole site." Re-ran all 6 build
+scripts (the original 4 via `refresh_all.py` plus the 2 new
+`build_career_stats.py`/`build_records_data.py`) — byte-identical to
+committed output, zero drift. Force-refreshed all 6 gopios.com scrapes
+from a completely clean `raw/` cache (not the local HTML cache) —
+identical row counts, confirms the scrapers are stable against the live
+source, not just internally consistent. Then went looking specifically
+for duplicate/fragmented player identities (the exact class of bug the
+last 2 rounds kept finding) by fuzzy-matching every `career-stats.json`
+display name against every other one — found and fixed 3 more real bugs,
+none from lack of effort in the original build, all from a genuinely
+wrong assumption checked too late:
+
+1. **`NAME_ALIASES` (the Kerkoff/Kerkhoff-style typo table) was never
+   applied to special-teams' bare-surname fields** — only to the
+   box-score `match_player()` path. A bare "Kerkoff" surname in
+   `punt_return`'s own data stayed unmatched and fragmented from the
+   correctly-resolved "Nick Kerkhoff" everywhere else.
+2. **Compound initials ("J.R", "J.R.", "JR") were being treated as 3
+   competing "full names" instead of 3 spellings of the same initial** --
+   `resolve_unmatched_identities()`'s "is this just an initial" check only
+   recognized a single bare letter, not a multi-letter abbreviation, so a
+   real person spelled 3 ways across different rows fragmented into (up
+   to) 3 buckets. Fixed with `initial_letters()`, which strips punctuation
+   and compares letter sequences instead of raw string length.
+3. **The much bigger one: special-teams.json's punter/kicker/returner/
+   snapper fields are NOT bare-surname-only**, contradicting the original
+   build's own explicit assumption (based on the first game's data
+   happening to look that way). Counted every real occurrence: ~85% are
+   actually full "First Last" names, with a bare surname and a
+   "Last,First" comma format both also mixed in across the SAME field.
+   `bare_surname_match()` (a dedicated, more limited resolver) is removed
+   entirely -- `match_player()` (already correct for all 3 formats, via
+   `split_raw_name()`) is now reused directly for every special-teams
+   name field too, and the cross-format identity-merge first pass now
+   scans `data/special-teams.json` as well as the box-score archive, so a
+   specialist-only player (no offensive/defensive line at all) gets the
+   same "merge every spelling variant into one identity" treatment a
+   box-score player already did.
+
+Re-verified against the same known record-book values after each fix
+(Streveler's 149 punts/5,794 yards, Laurent's 28 FGs/101 PATs, Lamont
+Williams' 3,844 rushing yards, Burlingame's 56 passing TDs) — all still
+exact, confirming these were real identity-fragmentation fixes, not
+regressions. **18 remaining close-name pairs found and left alone** —
+genuine raw box-score typos in a player's actual last-name spelling
+(e.g. "Piekarski"/"Piekrski", "Fuchas"/"Fuchs"), not a format issue this
+script can safely resolve — some pairs (e.g. "Ryan Schmidt"/"Ryan
+Schmitt") could just as easily be 2 different real people, so guessing a
+merge risks the opposite failure. Flagged here rather than auto-merged.
+Finally, clicked through all 14 dashboard pages (console check + 375px
+mobile overflow check on each) — all clean, nothing else found.
+
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly

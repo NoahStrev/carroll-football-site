@@ -25317,6 +25317,41 @@
    },
    {
     "statistic": "PATs Attempted",
+    "player": "Jackson Swink",
+    "position": "SPEC",
+    "current_value": 1,
+    "top_value": 156,
+    "fifth_value": 68,
+    "leaderboard": [
+     {
+      "rank": 1,
+      "player": "Tyler Raymaker",
+      "value": "156"
+     },
+     {
+      "rank": 2,
+      "player": "Brian Jachimek",
+      "value": "137"
+     },
+     {
+      "rank": 3,
+      "player": "Jacob Laurent",
+      "value": "110"
+     },
+     {
+      "rank": 4,
+      "player": "Joe Cascio",
+      "value": "100"
+     },
+     {
+      "rank": 5,
+      "player": "Pat Belson",
+      "value": "68"
+     }
+    ]
+   },
+   {
+    "statistic": "PATs Attempted",
     "player": "Matthew Swink",
     "position": "SPEC",
     "current_value": 62,
@@ -25352,6 +25387,41 @@
    },
    {
     "statistic": "Total Punts",
+    "player": "Jackson Swink",
+    "position": "SPEC",
+    "current_value": 28,
+    "top_value": 193,
+    "fifth_value": 143,
+    "leaderboard": [
+     {
+      "rank": 1,
+      "player": "Jason Velicer",
+      "value": "193"
+     },
+     {
+      "rank": 2,
+      "player": "John Paul",
+      "value": "190"
+     },
+     {
+      "rank": 3,
+      "player": "Austin Harter",
+      "value": "185"
+     },
+     {
+      "rank": 4,
+      "player": "Noah Streveler",
+      "value": "149"
+     },
+     {
+      "rank": 5,
+      "player": "Matt Traub",
+      "value": "143"
+     }
+    ]
+   },
+   {
+    "statistic": "Total Punts",
     "player": "Michael Hankinson",
     "position": "SAF",
     "current_value": 24,
@@ -25382,6 +25452,41 @@
       "rank": 5,
       "player": "Matt Traub",
       "value": "143"
+     }
+    ]
+   },
+   {
+    "statistic": "Punting Yards",
+    "player": "Jackson Swink",
+    "position": "SPEC",
+    "current_value": 865,
+    "top_value": 7042,
+    "fifth_value": 5385,
+    "leaderboard": [
+     {
+      "rank": 1,
+      "player": "John Paul",
+      "value": "7,042"
+     },
+     {
+      "rank": 2,
+      "player": "Jason Velicer",
+      "value": "6,973"
+     },
+     {
+      "rank": 3,
+      "player": "Austin Harter",
+      "value": "6,611"
+     },
+     {
+      "rank": 4,
+      "player": "Noah Streveler",
+      "value": "5,794"
+     },
+     {
+      "rank": 5,
+      "player": "Matt Traub",
+      "value": "5,385"
      }
     ]
    },
