@@ -770,24 +770,46 @@ function schemeScenarios(rows) {
 }
 
 function schemeTableHeadHTML(fields) {
-  return `<tr><th>Scenario</th><th>N</th>${fields.map((f) => `<th>Top ${f.label}</th>`).join('')}<th>Success %</th><th>Explosive %</th></tr>`;
+  return `<tr><th>Scenario</th><th>N</th>${fields.map((f) => `<th>Top ${f.label}</th>`).join('')}<th>Success %</th><th>Explosive %</th><th>Takeaway %</th><th>Sack %</th></tr>`;
 }
 
 // Success/Explosive % added 2026-08-05, per the user ("add some more
 // percentages... any other percentages you think would be useful"). Uses
 // play_efficiency, a systematically-computed field present on the
 // hand-charted Plays sheet too (not the inconsistent "1st DN" free-text
-// tag scenarioRowHTML's own comment explains -- that one's why First Down %
-// is NOT added here, only on the official-play-by-play report tabs).
+// tag). That's also why First Down % is still NOT added here (only on the
+// official-play-by-play report tabs) -- re-checked fresh 2026-09-08 (per
+// the user asking for "first down allowed percentage and those types of
+// things" on Defense Self Scout) and the same finding holds on the full
+// current dataset: every one of 564 "1st DN" RESULT tags site-wide (468 on
+// 'D' rows alone) is a lone/standalone tag, never combined with "Rush"/
+// "Complete"/etc the way a real first down achieved on a run or completion
+// would need to be -- deriving a percentage from it would silently
+// undercount every first down that wasn't its own separate charted event.
+// Takeaway %/Sack % added instead, from 2 fields that ARE safe: turnover_type
+// is the combiner's own already-computed field (not a raw free-text tag),
+// and the "Sack" play_outcome tag was independently checked for the same
+// compound-tagging risk and found clean (112 occurrences site-wide on 'D'
+// rows, only ever paired with "Fumble" when a sack also forces one -- never
+// silently absent from a play that's actually a sack). Both read correctly
+// from either side's data: on Defense Self Scout (defense.plays) they're
+// Carroll's own takeaways/sacks; on Defense Scout (offense.plays, the
+// opponent's D shown against Carroll's O) the exact same fields describe
+// that opponent's defense taking the ball away from / sacking Carroll --
+// real scouting signal either way, no relabeling needed.
 function schemeScenarioRowHTML(label, rows, fields) {
   const successN = rows.filter((r) => isSuccess(r.play_efficiency)).length;
   const explosiveN = rows.filter((r) => r.play_efficiency === 'Explosive').length;
+  const takeawayN = rows.filter((r) => isTakeaway(r.turnover_type)).length;
+  const sackN = rows.filter((r) => isSack(r.play_outcome)).length;
   return `<tr>
     <td class="name">${label}</td>
     <td>${rows.length}</td>
     ${fields.map((f) => `<td>${schemeModalCellHTML(rows, f.key)}</td>`).join('')}
     <td>${pct(rows.length ? successN / rows.length : null, 0)}</td>
     <td>${pct(rows.length ? explosiveN / rows.length : null, 0)}</td>
+    <td>${pct(rows.length ? takeawayN / rows.length : null, 0)}</td>
+    <td>${pct(rows.length ? sackN / rows.length : null, 0)}</td>
   </tr>`;
 }
 
@@ -797,7 +819,7 @@ function renderSchemeScenarioTable(containerId, rows, fields) {
   sections.forEach((sec) => {
     const items = sec.items.filter((it) => it.rows.length > 0);
     if (!items.length) return;
-    rowsHTML += sectionRowHTML(sec.title, 4 + fields.length);
+    rowsHTML += sectionRowHTML(sec.title, 6 + fields.length);
     items.forEach((it) => { rowsHTML += schemeScenarioRowHTML(it.label, it.rows, fields); });
   });
   // Same fix as renderScenarioTable() -- a single-season opponent with that
@@ -932,7 +954,7 @@ function schemeScoutTab(root, config) {
             <div class="card-head"><h3>Most-Used Call by Scenario</h3></div>
             <div class="card-body">
               <div id="${side}-table"></div>
-              <div class="data-note">Top ${fields.map((f) => f.label).join('/')} is the single most-common real call charted for that scenario, with its share of that scenario's charted snaps for that field — "—" means nothing was charted for that field in that scenario, not that nothing was ever called. Success/Explosive % are of every charted snap in that scenario (the N column).</div>
+              <div class="data-note">Top ${fields.map((f) => f.label).join('/')} is the single most-common real call charted for that scenario, with its share of that scenario's charted snaps for that field — "—" means nothing was charted for that field in that scenario, not that nothing was ever called. Success/Explosive/Takeaway/Sack % are each of every charted snap in that scenario (the N column) — Takeaway % counts an interception or a fumble recovered by the other side, Sack % counts a sack tagged on that snap.</div>
             </div>
           </div>
           <div class="chartgrid">

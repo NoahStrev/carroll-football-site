@@ -1865,6 +1865,62 @@ Report/.../Carroll/`, not `Special Teams Data/raw/`, not
    written the same day per this project's "one entry per calendar day"
    rule.
 
+**Same day, follow-up: sitewide re-check + Defense Self Scout/Scout
+percentages** (still 2026-09-08, per the user: "make sure that everything
+is looking as expected and see if there is anything that can be cleaned
+up, be thorough. also for defense self scout add in more things like
+first down allowed percentage").
+
+1. **Full re-verification pass, found nothing new to fix** (unlike most
+   prior audit rounds on this project): re-ran all 4 build scripts fresh
+   (`refresh_all.py`) and confirmed byte-identical output to what's
+   committed; independently re-derived the `offense.official`/
+   `defense.official` row counts straight from `OfficialPlayByPlay`
+   (every one of 6856 real scrimmage-type rows sitewide is accounted for
+   in one side or the other, zero still dropped); re-checked
+   `OfficialPlayByPlay` for duplicate `(GAME_LABEL, OFFICIAL_PLAY_NUM)`
+   keys (zero); clicked through all 13 `dashboards/*.html` pages checking
+   the console after each (zero errors anywhere). Genuinely clean this
+   time — a useful data point in itself, not just "nothing to report."
+2. **First Down % re-investigated for Defense Self Scout, re-confirmed
+   still not safely derivable** — re-ran the exact tag-co-occurrence
+   check from 2026-08-05 against the current, larger dataset (564
+   `"1st DN"` RESULT tags sitewide now, 468 on `'D'` rows alone) and got
+   the identical result: every single occurrence is a lone/standalone
+   tag, never combined with `"Rush"`/`"Complete"`/etc. A percentage
+   derived from it would silently undercount every first down actually
+   achieved on a play tagged with something else. Explained this to the
+   user rather than building a misleading number.
+3. **Added 2 metrics that ARE safely derivable instead: Takeaway % and
+   Sack %**, on both Defense Self Scout and Defense Scout's scenario
+   table + Custom Situation builder (`schemeScenarioRowHTML()`/
+   `schemeTableHeadHTML()`, `opponent-scouting.html`, plus 2 new shared
+   helpers in `js/charts.js`: `isTakeaway()`/`isSack()`). Both read
+   `turnover_type` (the combiner's own already-computed field, not a raw
+   free-text tag) and the `"Sack"` `play_outcome` tag, independently
+   checked for the same compound-tagging risk as `"1st DN"` and found
+   clean (112 real `"Sack"` occurrences on `'D'` rows sitewide, only ever
+   additionally paired with `"Fumble"` when a sack also forces one — never
+   silently missing from an actual sack). No data-pipeline change needed
+   at all — both fields were already present in `game-data.json`, unused
+   until now (same "check what's already there before assuming a gap is
+   structural" pattern as the 2026-08-05 Hash/Play Type/Clock Situation
+   additions). Generalizes correctly to both tabs with no relabeling: on
+   Defense Self Scout these are Carroll's own takeaways/sacks; on Defense
+   Scout, `DATA.offense.plays`'s same fields describe the *opponent's*
+   defense taking the ball away from / sacking Carroll — real scouting
+   signal either way. Verified every number against an independent
+   from-scratch Python count against the raw `Plays` sheet (not just
+   "looks plausible"): all-snaps (2.2%/3.1% → displayed 2%/3%), 3rd Down
+   (3.7%/4.9% → 4%/5%), and a deliberate zero-check (`Run` snaps show
+   0%/0% for both on Defense Self Scout, confirmed genuinely zero real
+   occurrences in the source, not a formula bug) all match exactly.
+   Confirmed working on Defense Scout too (offense.plays) with real,
+   different numbers (opponent defenses' own takeaway/sack rates against
+   Carroll). Mobile-checked at 375px: table grew from 7 to 9 columns,
+   existing sticky-header/sticky-first-column/horizontal-scroll
+   infrastructure handled it with no CSS changes needed.
+
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly

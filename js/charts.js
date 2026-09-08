@@ -797,6 +797,17 @@ const SITUATIONS = ['Standard Down', 'Passing Down', 'Money Down'];
 const FIELD_ZONES = ['Backed Up', 'Own Territory', 'Midfield', 'Opponent Territory', 'Red Zone'];
 function isSuccess(eff) { return eff === 'Successful' || eff === 'Explosive'; }
 
+/** Turnover_type/play_outcome are both comma-space-joined tag strings on the
+ * hand-charted Plays sheet (e.g. "Turnover, Turnover on Downs", "Fumble, Sack")
+ * -- these check for one specific tag, not an exact-string match, the same way
+ * schemeRealRows() etc. treat these fields as sets, not enums. Added 2026-09-08
+ * for Defense Self Scout/Defense Scout's 2 new scenario-table columns -- unlike
+ * "1st DN" (see schemeScenarioRowHTML's own comment for why that one's NOT
+ * safely derivable here), both of these are clean, already-computed/tagged
+ * fields with no compound-tagging inconsistency found on a fresh recheck. */
+function isTakeaway(turnoverType) { return !!turnoverType && turnoverType.split(', ').includes('Turnover'); }
+function isSack(playOutcome) { return !!playOutcome && playOutcome.split(', ').includes('Sack'); }
+
 /** Top N keys of a groupBy() Map, ordered by descending row count -- for
  * open-ended categorical fields (formation, personnel, defensive front,
  * coverage, play call, ...) that have no fixed canonical order the way
