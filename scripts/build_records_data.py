@@ -144,11 +144,27 @@ def _trim_to_meaningful(entries):
     return out
 
 
-def _build_watch_entries(players, leaders_by_statistic, current_season, value_fn):
+def _build_watch_entries(players, leaders_by_statistic, current_season, value_fn, view_label, warnings):
     """value_fn(player, category, field) -> that player's value for this
     view (career total, or current-season-only total) or None/0 if they
     don't have one. Shared by both the Career and Season views -- only
-    what supplies the comparison value differs."""
+    what supplies the comparison value differs.
+
+    `warnings` (a shared list, appended to, not returned) collects a
+    message any time an active player's own real value already matches or
+    exceeds the record book's own scraped #1 -- added 2026-09-08. The
+    record book (`records.xlsx`) is a static one-time scrape of Carroll
+    Athletics' own site, only ever re-scraped when the user asks (see the
+    sibling `Records & Awards` project's own SKILL.md) -- unlike every
+    other data source this site rebuilds weekly, nothing re-fetches it on
+    a schedule. If a real record actually gets broken mid-season, this
+    site's own Record Watch total can end up ahead of the scraped
+    leaderboard's own #1 well before anyone remembers to re-scrape it.
+    This can't tell "genuinely broke the real record" apart from "the
+    record book just hasn't been re-scraped in a while and this player
+    was always this good" -- it only flags the specific, checkable
+    condition (this site's own number vs. the last scraped #1), which is
+    exactly the signal worth a human's attention either way."""
     watch = {}
     for stat, (cat, field) in RECORD_WATCH_MAP.items():
         leaders = leaders_by_statistic.get(stat)
@@ -166,6 +182,13 @@ def _build_watch_entries(players, leaders_by_statistic, current_season, value_fn
             value = value_fn(p, cat, field)
             if not value:
                 continue  # a real 0 (or no value) isn't a player "chasing" this record
+            if top_value is not None and value >= top_value:
+                verb = "TIED" if value == top_value else "SURPASSED"
+                warnings.append(
+                    f"{view_label} {stat}: {p['display_name']} has {value}, {verb} the record book's "
+                    f"scraped #1 ({leaders[0]['player']}, {leaders[0]['value']}) -- consider re-scraping "
+                    f"Records & Awards to confirm and update the record book"
+                )
             gap = (fifth_value - value) if (fifth_value is not None and value <= fifth_value) else None
             candidates.append({
                 "statistic": stat, "player": p["display_name"], "position": p["position"],
@@ -188,7 +211,7 @@ def _build_watch_entries(players, leaders_by_statistic, current_season, value_fn
     return watch
 
 
-def build_record_watch(records, career_stats):
+def build_record_watch(records, career_stats, warnings):
     players = career_stats["players"]
     all_seasons = sorted({s["season"] for p in players for cat in p["categories"].values() for s in cat["seasons"]})
     current_season = all_seasons[-1] if all_seasons else None
@@ -199,13 +222,17 @@ def build_record_watch(records, career_stats):
     career_watch = _build_watch_entries(
         players, career_leaders, current_season,
         value_fn=lambda p, cat, field: p["categories"][cat]["career"].get(field),
+        view_label="career", warnings=warnings,
     )
 
     def season_value(p, cat, field):
         season_bucket = next((s for s in p["categories"][cat]["seasons"] if s["season"] == current_season), None)
         return season_bucket.get(field) if season_bucket else None
 
-    season_watch = _build_watch_entries(players, season_leaders, current_season, value_fn=season_value)
+    season_watch = _build_watch_entries(
+        players, season_leaders, current_season, value_fn=season_value,
+        view_label="season", warnings=warnings,
+    )
 
     return {"current_season": current_season, "career": career_watch, "season": season_watch}
 
@@ -230,7 +257,8 @@ def main():
     with open(CAREER_STATS_SRC, encoding="utf-8") as f:
         career_stats = json.load(f)
 
-    record_watch = build_record_watch(records, career_stats)
+    warnings = []
+    record_watch = build_record_watch(records, career_stats, warnings)
 
     out = {"records": records, "awards": awards, "record_watch": record_watch}
     OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -245,6 +273,8 @@ def main():
           f"career {career_n} entries across {len(record_watch['career'])} stats, "
           f"season {season_n} entries across {len(record_watch['season'])} stats")
     print(f"wrote {OUT}")
+    for w in warnings:
+        print(f"WARNING: {w}")
 
 
 if __name__ == "__main__":

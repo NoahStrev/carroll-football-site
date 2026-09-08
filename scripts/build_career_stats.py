@@ -92,6 +92,8 @@ scrape) or the Lifting Data roster changes:
     python build_career_stats.py
 """
 
+import collections
+import difflib
 import glob
 import json
 import re
@@ -427,10 +429,11 @@ def merge_key_for_unmatched(last, first):
 
 
 def resolve_unmatched_identities(raw_groups):
-    """raw_groups: {last_name_key: {(first, last), ...}} -- every real
-    (first, last) pair seen for that normalized last name (last preserves
-    its real spelling/capitalization; first is "" for a bare-last-name-only
-    row). Returns {(first, last): display_name or None} -- one verdict PER
+    """raw_groups: {last_name_key: Counter({(first, last): occurrence_count})}
+    -- every real (first, last) pair seen for that normalized last name
+    (last preserves its real spelling/capitalization; first is "" for a
+    bare-last-name-only row), with how many raw rows had that exact pair.
+    Returns {(first, last): display_name or None} -- one verdict PER
     RAW VARIANT, not one blanket verdict for the whole last-name group
     (changed 2026-09-08, found during a routine re-audit: a single stray
     "Campbell, G." amid many real "Campbell, H"/"H."/"Hunter" rows -- almost
@@ -462,7 +465,20 @@ def resolve_unmatched_identities(raw_groups):
     matching none of them) or a bare row stays unresolved."""
     resolved = {}
     for last_key, pairs in raw_groups.items():
-        last = next(iter(pairs))[1]  # real spelling -- identical across every pair by construction (same norm() key)
+        # norm() strips ALL non-letters, so 2 literal spellings that differ
+        # only in punctuation/spacing (e.g. "O'Donoghue" vs "O' Donoghue")
+        # land in the same group despite NOT being identical raw text --
+        # picking deterministically by real occurrence count (not
+        # `next(iter(pairs))`, whose result depended on Python's per-
+        # process hash-seed randomization -- found 2026-09-08 causing the
+        # SAME input to rebuild with a different spelling from one run to
+        # the next) both fixes that reproducibility bug and picks the
+        # actually-most-common real spelling, same principle as every
+        # manual NAME_ALIASES entry.
+        last_counts = collections.Counter()
+        for (_first, last_spelling), count in pairs.items():
+            last_counts[last_spelling] += count
+        last = last_counts.most_common(1)[0][0]
         firsts = {p[0] for p in pairs}
         full_names = {f for f in firsts if f and len(initial_letters(f)) > 3}
 
@@ -683,6 +699,39 @@ def accumulate_special_teams(players, roster, last_name_to_keys, unmatched_displ
                 cat_bucket["season_games"].setdefault(season, set()).add(game_label)
 
 
+def check_near_duplicate_names(out_players):
+    """Prints a WARNING for any pair of display names that are suspiciously
+    close (difflib ratio >= 0.88) but not identical -- the exact scan used
+    2026-09-08 to find the Campbell/Zimmerman multi-identity bugs and the 13
+    scrape-typo NAME_ALIASES pairs, now run automatically on every build
+    instead of only when someone remembers to do it by hand. A new raw game
+    each week can introduce a brand-new name-spelling variant for an
+    existing unmatched (non-roster) player -- this is the only thing that
+    would catch a FUTURE fragmentation like that early, before it silently
+    sits unnoticed for weeks. Not every hit here is a real bug (2 genuinely
+    different people can have similar names, e.g. "Josh Ruano"/"Josh Bottoms"
+    would NOT trigger this since they're not close enough, but 2 different
+    real "Smith"s with similar first names could) -- a human still has to
+    look at each one, this just surfaces the candidates instead of requiring
+    someone to think to go looking."""
+    names = sorted(p["display_name"] for p in out_players)
+    seen = set()
+    pairs = []
+    for a in names:
+        for b in difflib.get_close_matches(a, names, n=5, cutoff=0.88):
+            if b == a:
+                continue
+            key = tuple(sorted((a, b)))
+            if key in seen:
+                continue
+            seen.add(key)
+            pairs.append(key)
+    if pairs:
+        print(f"WARNING: {len(pairs)} near-duplicate display-name pair(s) found -- check whether these are the same real person fragmented across 2 entries (see NAME_ALIASES / resolve_unmatched_identities) or 2 genuinely different people who just happen to have similar names:")
+        for a, b in sorted(pairs):
+            print(f"  {a!r} <-> {b!r}")
+
+
 def main():
     roster, last_name_to_keys = load_roster()
     files = glob.glob(RAW_GLOB)
@@ -716,7 +765,21 @@ def main():
         # chance to merge in resolve_unmatched_identities.
         last, first = NAME_ALIASES.get((last, first), (last, first))
         lk = merge_key_for_unmatched(last, first)
-        unmatched_variants.setdefault(lk, set()).add((first, last))
+        # A Counter, not a set -- norm() strips ALL non-letters, so 2
+        # genuinely different literal last-name spellings (e.g.
+        # "O'Donoghue" vs "O' Donoghue", both stripping to "odonoghue")
+        # can land in the same group despite the comment below claiming
+        # they're "identical by construction." Found 2026-09-08: a plain
+        # set here made `next(iter(pairs))[1]`'s canonical-spelling choice
+        # depend on Python's per-process hash-seed randomization -- the
+        # SAME input could rebuild to "Connor O'Donoghue" one run and
+        # "Connor O' Donoghue" the next, a real reproducibility bug that
+        # would show up as a spurious weekly-automation diff with nothing
+        # in the source data actually having changed. Counting occurrences
+        # lets resolve_unmatched_identities() deterministically pick
+        # whichever spelling is actually most common, the same principle
+        # already used to pick every manual NAME_ALIASES entry.
+        unmatched_variants.setdefault(lk, collections.Counter())[(first, last)] += 1
 
     unmatched_variants = {}
     for fn in files:
@@ -825,6 +888,7 @@ def main():
     matched = sum(1 for p in out_players if p["athlete_key"])
     print(f"players: {len(out_players)} ({matched} matched to roster, {len(out_players) - matched} unmatched)")
     print(f"wrote {OUT}")
+    check_near_duplicate_names(out_players)
 
 
 if __name__ == "__main__":

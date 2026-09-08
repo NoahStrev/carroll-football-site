@@ -2468,6 +2468,71 @@ downstream reference in that function for a 2-line savings, not a real
 win. No other exact-duplicate function bodies exist anywhere across the
 6 scripts (confirmed via the same AST comparison, not assumed).
 
+**Eleventh round: making next week's automated run smoother (2026-09-08,
+per the user, right after the pipeline audit above).** 3 concrete
+additions, all aimed at the exact same goal -- catch a problem BEFORE it
+silently sits unnoticed for weeks, the same failure pattern behind
+several of this day's earlier bugs:
+- **Fixed a real, confirmed reproducibility bug in
+  `build_career_stats.py`**: `resolve_unmatched_identities()` picked a
+  group's canonical last-name spelling via `next(iter(pairs))[1]` on what
+  was a plain `set` -- fine as long as every pair in a group shared the
+  literal same spelling, which the code's own comment assumed but turned
+  out to be false. `norm()` strips ALL non-letter characters, so 2
+  genuinely different raw spellings that both reduce to the same key
+  (found: "O'Donoghue" 236 occurrences vs. "O' Donoghue" 85, both -> 
+  `odonoghue`) land in the same group -- and which one `next(iter(...))`
+  returns depends on Python's per-process hash-seed randomization, so the
+  exact same source data could rebuild as "Connor O'Donoghue" one run and
+  "Connor O' Donoghue" the next. Confirmed both the bug (diffed 2 runs,
+  saw the spelling flip) and the fix (re-ran with `PYTHONHASHSEED=1` and
+  `PYTHONHASHSEED=99999` explicitly, byte-identical output both times).
+  Fixed by changing `raw_groups` from `{last_key: {(first,last), ...}}`
+  to `{last_key: Counter({(first,last): count})}` and picking whichever
+  real spelling has the highest total count -- deterministic AND
+  actually the most-common real spelling, same principle as every manual
+  `NAME_ALIASES` entry already uses. **Why this mattered for the weekly
+  automation specifically**: `carroll-site-weekly-refresh`'s Step 3 diff
+  check would have treated a pure hash-seed-driven spelling flip as a
+  real change worth committing, even in a week with zero actual new data.
+- **`build_career_stats.py` now runs its own duplicate-name check on
+  every build**, not just when someone remembers to do one by hand: a
+  new `check_near_duplicate_names()` (the exact `difflib.get_close_matches`
+  scan from earlier today's audit) prints a `WARNING` for any suspiciously
+  close but non-identical display-name pair in its own output. A future
+  week's new raw game can introduce a fresh name-spelling variant for an
+  existing non-roster player at any time -- this is what would actually
+  catch a new instance of that early instead of it sitting unnoticed like
+  the original Campbell bug did for who knows how long.
+- **`build_records_data.py` now flags a possibly-stale record book**:
+  `records.xlsx`/`awards.xlsx` (the sibling Records & Awards project's
+  scraped output) are static, only ever re-scraped when the user asks --
+  unlike everything else this site rebuilds weekly, nothing re-fetches
+  them on a schedule. If a real record gets broken mid-season, this
+  site's own Record Watch total can end up ahead of the scraped
+  leaderboard's own #1 well before anyone remembers to re-scrape it. New
+  logic in `_build_watch_entries()` prints a `WARNING` any time an active
+  player's real value ties or surpasses the record book's own scraped #1
+  for that statistic, naming the player, the value, and the scraped #1
+  being compared against. Verified with a synthetic test case (a
+  fabricated player set 500 yards above a fabricated #1) that the warning
+  fires with the right message, and confirmed zero warnings fire against
+  today's real data (expected -- no one's actually ahead of a real record
+  yet). This is a targeted, event-driven alternative to guessing at a
+  periodic re-scrape cadence for a data source that rarely changes.
+- `scripts/refresh_all.py`'s own script list and the
+  `carroll-site-weekly-refresh` scheduled task's SKILL.md were both
+  updated to describe all of the above -- the task now also polls
+  `gh api .../pages/builds/latest` after pushing to confirm the actual
+  GitHub Pages build completed (not just that `git push` succeeded), and
+  its final report step now surfaces any `WARNING` line from either build
+  script's output.
+- **Verified**: full pipeline re-run confirms zero data drift from any of
+  these changes (`git diff --stat -- data/` empty both after the
+  reproducibility fix and after the stale-record-book check landed) --
+  every change here is either a new check or a determinism fix, no real
+  data or displayed value changed.
+
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly
