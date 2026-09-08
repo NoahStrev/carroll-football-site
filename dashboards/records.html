@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Records — Carroll Football Analytics</title>
+<link rel="stylesheet" href="../css/theme.css">
+<style>
+  .subtabbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .subtabbtn {
+    font-family: inherit; font-size: 12.5px; font-weight: 600; padding: 7px 13px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary); cursor: pointer;
+  }
+  .subtabbtn:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
+  .subtabbtn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .record-section-title { font-size: 14px; font-weight: 800; margin: 20px 0 8px; }
+  .record-section-title:first-child { margin-top: 0; }
+  table.mini.records-table td.name { font-weight: 600; }
+  .name-search {
+    font-family: inherit; font-size: 12.5px; padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--page); color: var(--text-primary); width: 220px; max-width: 100%;
+  }
+  .watch-gap-good { color: var(--good); font-weight: 700; }
+  .watch-gap-crit { color: var(--critical); font-weight: 700; }
+  .scout-select {
+    font-family: inherit; font-size: 12.5px; padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--page); color: var(--text-primary); font-weight: 600;
+  }
+  .toolbar-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .tbl-scroll { max-height: 65vh; overflow-y: auto; overflow-x: auto; }
+  table.records-table thead th { position: sticky; top: 0; z-index: 1; background: var(--page); box-shadow: 0 1px 0 var(--grid); }
+  @media print {
+    .sitenav, .intro, .tabbar, .subtabbar, .no-print, select, input { display: none !important; }
+    .tbl-scroll { max-height: none !important; overflow: visible !important; }
+    table.records-table thead th { position: static; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="special-teams-overview.html">Special Teams</a>
+      <a href="placekicker.html">Positions</a>
+      <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html">Offense</a>
+      <a href="defense.html">Defense</a>
+      <a href="opponent-scouting.html">Opponent Scouting</a>
+      <a href="rankings.html">Rankings</a>
+      <a href="records.html" class="active">Records</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="updates.html">Updates</a>
+    </div>
+  </nav>
+
+  <div class="intro">
+    <h1>Records</h1>
+    <p>The program's all-time record book, current players closing in on a spot in it, real career stat totals, and the full All-Conference/All-Region/All-American award history — all scraped directly from Carroll Athletics' own gopios.com record book.</p>
+  </div>
+
+  <div class="tabbar" id="records-tabs">
+    <button class="tabbtn active" data-tab="record_book">Record Book</button>
+    <button class="tabbtn" data-tab="record_watch">Record Watch</button>
+    <button class="tabbtn" data-tab="career_stats">Career Stats</button>
+    <button class="tabbtn" data-tab="awards">Awards History</button>
+  </div>
+
+  <div class="stage" id="records-stage"></div>
+</div>
+
+<script src="../js/charts.js"></script>
+<script>
+let DATA = null;
+
+// Scraped cells that are genuinely blank in the source (e.g. a record with
+// no opponent listed) come through as JSON null, not an empty string --
+// interpolating that directly into a template literal renders the literal
+// text "null". Every raw-field interpolation on this page goes through
+// this instead.
+function blank(v) { return v === null || v === undefined || v === '' ? '—' : v; }
+
+function printPage(filenameTitle) {
+  const prevTitle = document.title;
+  document.title = filenameTitle;
+  window.print();
+  document.title = prevTitle;
+}
+
+/* ============================================================= Record Book == */
+
+const RECORD_BOOK_VIEWS = [
+  { id: 'single_game', label: 'Single-Game' },
+  { id: 'single_season', label: 'Single-Season (Team)' },
+  { id: 'career', label: 'Career (Individual)' },
+  { id: 'season', label: 'Single-Season (Individual)' },
+];
+
+function groupBySection(rows) {
+  const map = new Map();
+  rows.forEach((r) => {
+    const key = r.section || '';
+    if (!map.has(key)) map.set(key, []);
+    map.get(key).push(r);
+  });
+  return map;
+}
+
+function singleGameSectionHTML(individualRows, teamRows) {
+  const iBySection = groupBySection(individualRows);
+  const tBySection = groupBySection(teamRows);
+  const sections = [...new Set([...iBySection.keys(), ...tBySection.keys()])];
+  return sections.map((sec) => `
+    <div class="record-section-title">${sec}</div>
+    <div class="chartgrid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+      <div class="card"><div class="card-head"><h3>Individual</h3></div><div class="card-body" style="padding:0;">
+        <div class="tbl-scroll"><table class="mini records-table">
+          <thead><tr><th>Statistic</th><th>Value</th><th>Player</th><th>Opponent</th><th>Date</th></tr></thead>
+          <tbody>${(iBySection.get(sec) || []).map((r) => `<tr><td class="name">${r.statistic}</td><td>${blank(r.value)}</td><td>${blank(r.player)}</td><td>${blank(r.opponent)}</td><td>${blank(r.date)}</td></tr>`).join('')}</tbody>
+        </table></div>
+      </div></div>
+      <div class="card"><div class="card-head"><h3>Team</h3></div><div class="card-body" style="padding:0;">
+        <div class="tbl-scroll"><table class="mini records-table">
+          <thead><tr><th>Statistic</th><th>Value</th><th>Opponent</th><th>Date</th></tr></thead>
+          <tbody>${(tBySection.get(sec) || []).map((r) => `<tr><td class="name">${r.statistic}</td><td>${blank(r.value)}</td><td>${blank(r.opponent)}</td><td>${blank(r.date)}</td></tr>`).join('')}</tbody>
+        </table></div>
+      </div></div>
+    </div>`).join('');
+}
+
+function singleSeasonTeamHTML(rows) {
+  const bySection = groupBySection(rows);
+  return [...bySection.entries()].map(([sec, secRows]) => `
+    <div class="record-section-title">${sec}</div>
+    <div class="card"><div class="card-body" style="padding:0;">
+      <div class="tbl-scroll"><table class="mini records-table">
+        <thead><tr><th>Statistic</th><th>Value</th><th>Season</th></tr></thead>
+        <tbody>${secRows.map((r) => `<tr><td class="name">${r.statistic}</td><td>${blank(r.value)}</td><td>${blank(r.season)}</td></tr>`).join('')}</tbody>
+      </table></div>
+    </div></div>`).join('');
+}
+
+function leaderboardRecordsHTML(rows) {
+  const byCategory = new Map();
+  rows.forEach((r) => {
+    if (!byCategory.has(r.category)) byCategory.set(r.category, new Map());
+    const stats = byCategory.get(r.category);
+    if (!stats.has(r.statistic)) stats.set(r.statistic, []);
+    stats.get(r.statistic).push(r);
+  });
+  let html = '';
+  byCategory.forEach((stats, category) => {
+    html += `<div class="record-section-title">${category}</div><div class="chartgrid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 14px;">`;
+    stats.forEach((entries, statistic) => {
+      html += `
+      <div class="card"><div class="card-head"><h3>${statistic}</h3></div><div class="card-body" style="padding:0;">
+        <table class="mini records-table">
+          <thead><tr><th>Rank</th><th>Player</th><th>Value</th><th>Years</th></tr></thead>
+          <tbody>${entries.map((e) => `<tr><td>${blank(e.rank_label)}</td><td class="name">${blank(e.player)}</td><td>${blank(e.value)}</td><td>${blank(e.years)}</td></tr>`).join('')}</tbody>
+        </table>
+      </div></div>`;
+    });
+    html += `</div>`;
+  });
+  return html;
+}
+
+function recordBookTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header">
+        <div class="brandmark"><span class="crest">CU</span><h2>Record Book</h2></div>
+        <div class="sub">All-Time Records · gopios.com</div>
+      </div>
+      <div class="body">
+        <div class="toolbar-row">
+          <div class="subtabbar" id="rb-subtabs">
+            ${RECORD_BOOK_VIEWS.map((v, i) => `<button class="subtabbtn${i === 0 ? ' active' : ''}" data-view="${v.id}">${v.label}</button>`).join('')}
+          </div>
+          <button type="button" class="download-btn no-print" id="rb-pdf" style="margin-left:auto;">&#8595; PDF</button>
+        </div>
+        <div id="rb-content"></div>
+      </div>
+      <div class="footer-note">Source: Carroll Athletics' own gopios.com record book (Records &amp; Awards project's scrape of the site's All-Time Records pages). Shown exactly as published, including any real ties.</div>
+    </div></div>`;
+
+  function render(view) {
+    const el = document.getElementById('rb-content');
+    if (view === 'single_game') el.innerHTML = singleGameSectionHTML(DATA.records.SingleGameIndividual, DATA.records.SingleGameTeam);
+    else if (view === 'single_season') el.innerHTML = singleSeasonTeamHTML(DATA.records.SingleSeasonTeam);
+    else if (view === 'career') el.innerHTML = leaderboardRecordsHTML(DATA.records.CareerIndividual);
+    else el.innerHTML = leaderboardRecordsHTML(DATA.records.SeasonIndividual);
+  }
+  document.querySelectorAll('#rb-subtabs .subtabbtn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#rb-subtabs .subtabbtn').forEach((b) => b.classList.toggle('active', b === btn));
+      render(btn.dataset.view);
+    });
+  });
+  document.getElementById('rb-pdf').addEventListener('click', () => printPage('Record Book - Carroll Football'));
+  render('single_game');
+}
+
+/* ============================================================ Record Watch == */
+
+// Deliberately limited to the 5 categories with a real per-player career
+// total already computed (see build_records_data.py's RECORD_WATCH_MAP) --
+// Kicking/Punting/Return records exist in the book above but have no
+// per-player career-total pipeline yet (data/special-teams.json has
+// per-attempt rows, not accumulated totals), called out explicitly rather
+// than silently missing from this tab.
+// "Close" (highlighted) means within 10% of the current #5's value -- close
+// enough that another good game or two could realistically move them into
+// the book, not just "somewhere on the same leaderboard eventually."
+function watchStatusHTML(e) {
+  if (e.top_value !== null && e.current_value > e.top_value) {
+    return `<span class="watch-gap-good">Ahead of the current #1</span>`;
+  }
+  if (e.fifth_value !== null && e.current_value > e.fifth_value) {
+    return `<span class="watch-gap-good">Already inside the current Top 5</span>`;
+  }
+  if (e.fifth_value === null) return '—';
+  const gap = e.fifth_value - e.current_value;
+  const close = gap <= e.fifth_value * 0.1;
+  return `<span class="${close ? 'watch-gap-crit' : ''}">${fmt(gap, Number.isInteger(gap) ? 0 : 1)} from the current #5</span>`;
+}
+
+function watchRowHTML(e) {
+  return `<tr><td class="name">${e.player}</td><td>${e.position || '—'}</td><td>${fmt(e.current_value, Number.isInteger(e.current_value) ? 0 : 1)}</td><td>${watchStatusHTML(e)}</td></tr>`;
+}
+
+function recordWatchTab(root) {
+  const rw = DATA.record_watch;
+  const byStat = new Map();
+  rw.entries.forEach((e) => {
+    if (!byStat.has(e.statistic)) byStat.set(e.statistic, []);
+    byStat.get(e.statistic).push(e);
+  });
+  byStat.forEach((entries) => entries.sort((a, b) => {
+    const gapA = a.fifth_value !== null ? a.fifth_value - a.current_value : Infinity;
+    const gapB = b.fifth_value !== null ? b.fifth_value - b.current_value : Infinity;
+    return gapA - gapB;
+  }));
+
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header">
+        <div class="brandmark"><span class="crest">CU</span><h2>Record Watch</h2></div>
+        <div class="sub">Current Players vs. the Career Record Book</div>
+      </div>
+      <div class="body">
+        <div class="insight" style="margin-bottom:14px;">Current players (credited with a stat in ${rw.active_seasons.join(' or ')}) compared against the real Career leaderboard for the same statistic. Covers Rushing, Passing, Receiving, Interceptions, Tackles, and Sacks — the categories with a real per-player career total already built. Kicking, Punting, and Return records aren't tracked here yet (that data exists per-attempt but hasn't been rolled up into career totals).</div>
+        ${[...byStat.entries()].map(([stat, entries]) => `
+          <div class="record-section-title">${stat}</div>
+          <div class="card"><div class="card-body" style="padding:0;">
+            <table class="mini records-table">
+              <thead><tr><th>Player</th><th>Position</th><th>Current Career Total</th><th>Status</th></tr></thead>
+              <tbody>${entries.slice(0, 8).map(watchRowHTML).join('')}</tbody>
+            </table>
+          </div></div>
+        `).join('')}
+      </div>
+      <div class="footer-note">Career totals from this site's own build_career_stats.py (real box-score archive, 2010-present, joined to the roster). Record book values from the scraped Career leaderboard. "Current" means at least one stat-line in ${rw.active_seasons.join(' or ')}.</div>
+    </div></div>`;
+}
+
+/* ============================================================ Career Stats == */
+
+const CAREER_CATEGORIES = [
+  { id: 'Rushing', label: 'Rushing', headline: 'net', headlineLabel: 'Yards', cols: [['att', 'Att'], ['net', 'Yds'], ['td', 'TD'], ['yards_per_carry', 'Avg']] },
+  { id: 'Passing', label: 'Passing', headline: 'yds', headlineLabel: 'Yards', cols: [['att', 'Att'], ['cmp', 'Cmp'], ['yds', 'Yds'], ['td', 'TD'], ['int', 'Int'], ['completion_pct', 'Cmp%']] },
+  { id: 'Receiving', label: 'Receiving', headline: 'yds', headlineLabel: 'Yards', cols: [['rec', 'Rec'], ['yds', 'Yds'], ['td', 'TD'], ['yards_per_rec', 'Avg']] },
+  { id: 'Individual Defensive Statistics', label: 'Defense', headline: 'tot', headlineLabel: 'Tackles', cols: [['solo', 'Solo'], ['ast', 'Ast'], ['tot', 'Tot'], ['sacks', 'Sacks'], ['int', 'Int'], ['ff', 'FF']] },
+];
+
+function careerStatsRows(categoryId) {
+  return DATA.players
+    .filter((p) => p.categories[categoryId])
+    .map((p) => ({ player: p.display_name, position: p.position, matched: !!p.athlete_key, games: p.categories[categoryId].career_games, ...p.categories[categoryId].career }));
+}
+
+function careerStatsTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header">
+        <div class="brandmark"><span class="crest">CU</span><h2>Career Stats</h2></div>
+        <div class="sub">Real Per-Player Career Totals · 2010-Present</div>
+      </div>
+      <div class="body">
+        <div class="toolbar-row">
+          <div class="subtabbar" id="cs-subtabs">
+            ${CAREER_CATEGORIES.map((c, i) => `<button class="subtabbtn${i === 0 ? ' active' : ''}" data-cat="${c.id}">${c.label}</button>`).join('')}
+          </div>
+          <input type="text" class="name-search" id="cs-search" placeholder="Search player name…" autocomplete="off" spellcheck="false" style="margin-left:auto;">
+        </div>
+        <div class="insight" style="margin-bottom:14px;">Position/class shown only when the player has a Lifting Data roster match — a real stat total with no position shown just means that player hasn't had a testing session captured in that program's roster yet, not that the stats are wrong.</div>
+        <div id="cs-content"></div>
+      </div>
+      <div class="footer-note">Source: Special Teams Data's raw box-score archive (2010-present), aggregated by this site's own build_career_stats.py. Rate stats (Avg/Cmp%) are computed from the summed counting stats, never averaged per-game.</div>
+    </div></div>`;
+
+  function render(catId, query) {
+    const cat = CAREER_CATEGORIES.find((c) => c.id === catId);
+    let rows = careerStatsRows(catId);
+    const q = (query || '').trim().toLowerCase();
+    if (q) rows = rows.filter((r) => r.player.toLowerCase().includes(q));
+    rows.sort((a, b) => (b[cat.headline] || 0) - (a[cat.headline] || 0));
+    document.getElementById('cs-content').innerHTML = `
+      <div class="tbl-scroll"><table class="mini records-table">
+        <thead><tr><th>Player</th><th>Pos</th><th>Games</th>${cat.cols.map(([, label]) => `<th>${label}</th>`).join('')}</tr></thead>
+        <tbody>${rows.map((r) => `<tr><td class="name">${r.player}</td><td>${r.position || '—'}</td><td>${r.games}</td>${cat.cols.map(([key]) => `<td>${r[key] ?? '—'}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table></div>
+      ${rows.length ? '' : '<div class="insight">No players match this search.</div>'}`;
+  }
+  const state = { cat: 'Rushing' };
+  document.querySelectorAll('#cs-subtabs .subtabbtn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#cs-subtabs .subtabbtn').forEach((b) => b.classList.toggle('active', b === btn));
+      state.cat = btn.dataset.cat;
+      render(state.cat, document.getElementById('cs-search').value);
+    });
+  });
+  document.getElementById('cs-search').addEventListener('input', (e) => render(state.cat, e.target.value));
+  render(state.cat, '');
+}
+
+/* ============================================================= Awards History == */
+
+const AWARD_VIEWS = [
+  { id: 'AllConference', label: 'All-Conference', cols: [['player', 'Player'], ['year', 'Year'], ['recognition', 'Recognition'], ['conference', 'Conference']] },
+  { id: 'AllRegion', label: 'All-Region', cols: [['player', 'Player'], ['year', 'Year'], ['position', 'Position'], ['class_year', 'Class'], ['team', 'Team']] },
+  { id: 'AllAmerican', label: 'All-American', cols: [['player', 'Player'], ['year', 'Year'], ['position', 'Position'], ['class_year', 'Class'], ['team', 'Team'], ['affiliation', 'Affiliation']] },
+];
+
+function awardsTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="unit-header">
+        <div class="brandmark"><span class="crest">CU</span><h2>Awards History</h2></div>
+        <div class="sub">All-Conference · All-Region · All-American</div>
+      </div>
+      <div class="body">
+        <div class="toolbar-row">
+          <div class="subtabbar" id="aw-subtabs">
+            ${AWARD_VIEWS.map((v, i) => `<button class="subtabbtn${i === 0 ? ' active' : ''}" data-view="${v.id}">${v.label}</button>`).join('')}
+          </div>
+          <input type="text" class="name-search" id="aw-search" placeholder="Search player name…" autocomplete="off" spellcheck="false" style="margin-left:auto;">
+          <button type="button" class="download-btn no-print" id="aw-pdf">&#8595; PDF</button>
+        </div>
+        <div id="aw-content"></div>
+      </div>
+      <div class="footer-note">Source: Carroll Athletics' own gopios.com award-winner history (Records &amp; Awards project's scrape). Shown exactly as published, including real historical spelling/formatting quirks in older entries.</div>
+    </div></div>`;
+
+  function render(viewId, query) {
+    const view = AWARD_VIEWS.find((v) => v.id === viewId);
+    let rows = DATA.awards[viewId];
+    const q = (query || '').trim().toLowerCase();
+    if (q) rows = rows.filter((r) => (r.player || '').toLowerCase().includes(q));
+    document.getElementById('aw-content').innerHTML = `
+      <div class="insight" style="margin-bottom:10px;">${rows.length} entries</div>
+      <div class="tbl-scroll"><table class="mini records-table">
+        <thead><tr>${view.cols.map(([, label]) => `<th>${label}</th>`).join('')}</tr></thead>
+        <tbody>${rows.map((r) => `<tr>${view.cols.map(([key], i) => `<td${i === 0 ? ' class="name"' : ''}>${r[key] || '—'}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table></div>`;
+  }
+  const state = { view: 'AllConference' };
+  document.querySelectorAll('#aw-subtabs .subtabbtn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#aw-subtabs .subtabbtn').forEach((b) => b.classList.toggle('active', b === btn));
+      state.view = btn.dataset.view;
+      render(state.view, document.getElementById('aw-search').value);
+    });
+  });
+  document.getElementById('aw-search').addEventListener('input', (e) => render(state.view, e.target.value));
+  document.getElementById('aw-pdf').addEventListener('click', () => printPage(`${AWARD_VIEWS.find((v) => v.id === state.view).label} - Carroll Football`));
+  render(state.view, '');
+}
+
+const TAB_RENDERERS = {
+  record_book: recordBookTab,
+  record_watch: recordWatchTab,
+  career_stats: careerStatsTab,
+  awards: awardsTab,
+};
+
+function showTab(tab) {
+  document.querySelectorAll('#records-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  TAB_RENDERERS[tab](document.getElementById('records-stage'));
+}
+
+document.querySelectorAll('#records-tabs .tabbtn').forEach((btn) => {
+  btn.addEventListener('click', () => showTab(btn.dataset.tab));
+});
+
+Promise.all([
+  fetch('../data/records.json').then((r) => r.json()),
+  fetch('../data/career-stats.json').then((r) => r.json()),
+]).then(([records, careerStats]) => {
+  DATA = { ...records, players: careerStats.players };
+  showTab('record_book');
+}).catch((err) => {
+  document.getElementById('records-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/records.json or data/career-stats.json — ${err}. Run scripts/build_career_stats.py then scripts/build_records_data.py first, and serve over http:// not file://.</div></div>`;
+});
+</script>
+</body>
+</html>

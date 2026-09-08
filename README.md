@@ -1233,6 +1233,22 @@ just the already-automated raw-scrape piece.
    until the following Monday unless `scripts/refresh_all.py` is run and
    pushed manually in between.
 
+## Phase 6 — Records & Awards
+
+Added 2026-09-08, per the user: a new top-level `dashboards/records.html`
+covering the program's full all-time record book, a Record Watch of
+current players' progress against it, real per-player career stat
+totals (2010-present), and the complete All-Conference/All-Region/
+All-American award history — all scraped from Carroll Athletics' own
+gopios.com pages via a new sibling project, `Records & Awards`. See the
+dated 2026-09-08 entry above for the full build detail, including 4 real
+scraper bugs and 4 real career-stats aggregation bugs found and fixed
+along the way. **Not yet built**: Record Watch only covers Rushing/
+Passing/Receiving/Interceptions/Tackles/Sacks — Kicking/Punting/Return
+records have no per-player career-total rollup yet (real per-attempt
+rows already exist in `data/special-teams.json`, just never
+accumulated) — a natural next step if this page gets revisited.
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the
@@ -1920,6 +1936,134 @@ first down allowed percentage").
    Carroll). Mobile-checked at 375px: table grew from 7 to 9 columns,
    existing sticky-header/sticky-first-column/horizontal-scroll
    infrastructure handled it with no CSS changes needed.
+
+**Same day, third round: new "Records" page (2026-09-08)** — per the user:
+"lets add a 'school record watch' section... along with a historical all
+conference, all region, and all american section... get the scrapers
+created", then mid-build, "now that we're calculating the individual
+stats for the players, lets also have a career stats section added." A
+genuinely new data domain for this site, built in 3 layers:
+
+1. **New sibling project, `Records & Awards`**, scraping Carroll
+   Athletics' own gopios.com record book — 3 record pages (Single-Game,
+   Single-Season Team, Career/Season Individual) and 3 award pages
+   (All-Conference, All-Region, All-American) — into `records.xlsx`/
+   `awards.xlsx`. Built two generic, reusable table parsers
+   (`scrape_lib.py`'s `parse_labeled_table`, driven by a `label_detector`
+   for either real table shape these pages use — an alphabet-divider row
+   on the award pages, or an in-table section-header row like "OFFENSE"/
+   "RUSHING" on the record pages) rather than 6 one-off per-page parsers,
+   per the user's explicit "keep this reusable" instruction. Found and
+   fixed 4 real bugs verifying against the actual live pages, not just a
+   clean run with no warnings:
+   - A literal column-header row (e.g. `['Statistic', '', 'Player', ...]`)
+     was slipping through as a bogus data row — the table's OWN header
+     text never reliably matches a hardcoded column-name list (case/
+     spacing differs), fixed with a dedicated `is_plain_header_row()`
+     keyword check instead.
+   - The Career/Season Individual Records page's real headings (H1
+     splitting Career from Season, H2 per category) sit AFTER the table
+     they describe in the raw HTML, not before — confirmed by reading the
+     actual source, not assumed from how the rendered page looks. Also,
+     one H2-scoped table BUNDLES several distinct statistics back to back
+     (e.g. "CAREER RUSHING RECORDS" is one table containing Rushing
+     Yards, then Touchdowns, then Attempts, then Yards Per Carry), not
+     one table per statistic as a first, truncated-preview read assumed.
+     Fixed with `tables_with_trailing_headings()` (a forward-looking
+     heading/table pairer) plus reusing the record pages' own
+     `is_section_header_row` detector for the per-statistic label rows
+     inside each bundled table.
+   - All-Region has NO leading blank/divider column at all, unlike
+     All-Conference/All-American (which do) — assuming all 3 award pages
+     shared that shape silently shifted every All-Region column left by
+     one (a player's name went missing, years landed in the name column).
+     Caught by spot-checking the actual scraped output against the real
+     page, not by trusting a clean, warning-free run.
+   - Fill-down (the "blank cell = same as the row above" convention both
+     page shapes use for ties/multi-year entries) was applying to EVERY
+     blank cell in a row, not just rows that are genuinely a continuation
+     of the one above — so a brand-new record with a real blank field
+     (e.g. "Most TD Passes" has no opponent listed for one co-holder)
+     silently inherited an unrelated PREVIOUS statistic's opponent value
+     instead of staying blank, and the same bug hit the award pages'
+     blank Conference cells too, just at a different identity column
+     (name lives in column 1 there, not 0). Fixed with a real "is this
+     row's own leading identity cell blank" check (`identity_col`,
+     configurable per caller) instead of "is this specific cell blank."
+     Verified directly against the live gopios.com page for both affected
+     rows (Casper's real blank opponent, Albanese's real blank
+     conference) before trusting the fix.
+2. **`scripts/build_career_stats.py`** (this site) — real per-player
+   Passing/Rushing/Receiving/Individual-Defensive-Statistics CAREER and
+   SEASON totals, joined from Special Teams Data's raw box-score archive
+   (2010-present, previously never ingested anywhere on this site — see
+   the 2026-07-31 "Real per-player box-score stats DO exist" note above)
+   against the Lifting Data roster. Per the user's explicit decision when
+   asked how to handle players with no roster match: include them under
+   their own scraped name with position/class left blank, never silently
+   dropped. Name-matching: exact match, then a unique-last-name fallback
+   (catches nicknames, e.g. "Coleman,Mikey" → roster's "Michael Coleman"),
+   then a first-initial-uniquely-narrows-an-otherwise-ambiguous-last-name
+   check (e.g. "K. Miller" → the one Miller starting with K, out of 4 on
+   the roster), then a tiny confirmed-typo alias table (fuzzy-matched
+   every remaining name against the full roster and hand-checked each
+   candidate — only "Kerkoff"/"Kerkhoff", "Hartman"/"Hartmann", and
+   "Joshua"/"Josh Wilkes" turned out real; every other "close" match was a
+   genuinely different person). **Verified against this site's OWN
+   independently-scraped Career Records** (Lamont Williams' 3,844 rushing
+   yards, Kyle Burlingame's 56 TDs/5,613 yards) rather than just trusting
+   the aggregation script's own output — this caught 4 more real bugs
+   along the way, each found because a spot-check computed the wrong
+   number:
+   - A pervasive "First Last" vs "Last,First" raw-name format split
+     (coexisting within the same seasons, not a clean year cutoff) —
+     Lamont Williams' entire 2014 season was silently missing because
+     that year's rows read "Lamont Williams," not "Williams,Lamont."
+   - Individual Defensive Statistics keys Carroll by its full name
+     ("Carroll (WI)"/"Carroll"/"Carroll University"), not the short
+     abbreviation code every other category uses — a first pass checking
+     only "CAR" found zero defensive rows for every single game.
+   - That short abbreviation code itself isn't stable either — confirmed
+     real: CAR/CU/CARROLL/PIO all appear depending on scrape era (2012-13
+     games use "CU", one set of games uses "PIO" — Carroll's mascot). A
+     whitelist-based first pass silently dropped whole seasons whose code
+     wasn't yet on the list (every 2012-2013 game). Replaced with
+     `carroll_key_for_game()` — resolves the correct code per-game
+     dynamically from the game's own `home_away`/`matchup` fields instead
+     of a list that can only ever be as complete as what's been checked.
+   - The same real, unmatched person (no roster entry) appeared under 3
+     different name spellings across different seasons — "K. Burlingame,"
+     "Kyle Burlingame," bare "Burlingame" — fragmenting his career total
+     into 3 separate, each badly incomplete buckets (39 of his real 56
+     TDs). Fixed with a proper two-pass merge (`resolve_unmatched_
+     identities()`): groups every raw name variant by normalized last
+     name first, then only merges when there's exactly one real full
+     first name in the group (an initial or bare name is compatible with
+     any full name; 2+ DIFFERENT full first names sharing a last name is
+     a genuine ambiguity, left unmerged rather than guessed).
+3. **`scripts/build_records_data.py`** (this site) — combines both
+   scraped workbooks plus `career-stats.json` into `data/records.json`,
+   including **Record Watch**: cross-references current players' real
+   career totals (2 most recent season years actually present in the
+   data, not a hardcoded year) against the scraped Career leaderboard,
+   for the 5 categories with a real per-player total already built
+   (Rushing/Passing/Receiving/Interceptions/Tackles/Sacks) — Kicking/
+   Punting/Return records exist in the book but have no per-player career
+   rollup yet (real per-attempt rows already exist in
+   `data/special-teams.json`, just never accumulated into a running
+   total), called out explicitly on the page rather than silently absent.
+4. **`dashboards/records.html`**, new top-level nav entry between Rankings
+   and Glossary on every page — 4 tabs: Record Book (browse every scraped
+   record), Record Watch, Career Stats (searchable per-player leaderboard
+   by category), Awards History (searchable All-Conference/All-Region/
+   All-American). One more real bug found building the page itself: a
+   genuinely blank scraped field (e.g. Casper's real blank opponent)
+   serializes as JSON `null`, and interpolating that directly into a
+   template literal renders the literal text "null" on the page — fixed
+   with a shared `blank()` helper applied to every raw-field
+   interpolation, verified by checking the whole page's text for the
+   literal string afterward, not just eyeballing a few rows. Verified at
+   390px mobile width on all 4 tabs: no horizontal page overflow.
 
 ## Running locally
 
