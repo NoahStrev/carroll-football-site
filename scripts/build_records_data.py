@@ -174,7 +174,13 @@ def _build_watch_entries(players, leaders_by_statistic, current_season, value_fn
             candidates.append({
                 "statistic": stat, "player": p["display_name"], "position": p["position"],
                 "current_value": value, "top_value": top_value, "fifth_value": fifth_value, "gap": gap,
-                "leaderboard": [{"rank": r["rank"], "player": r["player"], "value": r["value"]} for r in leaders],
+                # value_numeric alongside the raw display value (e.g.
+                # "3,844") -- added 2026-09-08 so the page can compute an
+                # exact distance to whichever rank a player is closest to
+                # beating, not just the current #1/#5, without
+                # re-implementing _numeric()'s comma/percent stripping in
+                # JS a second time.
+                "leaderboard": [{"rank": r["rank"], "player": r["player"], "value": r["value"], "value_numeric": _numeric(r["value"])} for r in leaders],
             })
         # Ahead-of-record entries (gap None because value > fifth_value, or
         # no top_value/fifth_value comparison even applies) sort first;

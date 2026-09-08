@@ -8524,32 +8524,38 @@
       {
        "rank": 1,
        "player": "Jacob Laurent",
-       "value": "28"
+       "value": "28",
+       "value_numeric": 28
       },
       {
        "rank": 2,
        "player": "Brian Jachimek",
-       "value": "24"
+       "value": "24",
+       "value_numeric": 24
       },
       {
        "rank": 3,
        "player": "Tyler Raymaker",
-       "value": "19"
+       "value": "19",
+       "value_numeric": 19
       },
       {
        "rank": 4,
        "player": "Matthew Swink",
-       "value": "18"
+       "value": "18",
+       "value_numeric": 18
       },
       {
        "rank": 5,
        "player": "Ryan O'Laire",
-       "value": "14"
+       "value": "14",
+       "value_numeric": 14
       },
       {
        "rank": 5,
        "player": "Pat Belson",
-       "value": "14"
+       "value": "14",
+       "value_numeric": 14
       }
      ]
     }
@@ -8566,27 +8572,32 @@
       {
        "rank": 1,
        "player": "Jacob Laurent",
-       "value": "43"
+       "value": "43",
+       "value_numeric": 43
       },
       {
        "rank": 2,
        "player": "Brian Jachimek",
-       "value": "35"
+       "value": "35",
+       "value_numeric": 35
       },
       {
        "rank": 3,
        "player": "Tyler Raymaker",
-       "value": "26"
+       "value": "26",
+       "value_numeric": 26
       },
       {
        "rank": 4,
        "player": "Ryan O'Laire",
-       "value": "24"
+       "value": "24",
+       "value_numeric": 24
       },
       {
        "rank": 4,
        "player": "Pat Belson",
-       "value": "24"
+       "value": "24",
+       "value_numeric": 24
       }
      ]
     }
@@ -8603,27 +8614,32 @@
       {
        "rank": 1,
        "player": "Tyler Raymaker",
-       "value": "138"
+       "value": "138",
+       "value_numeric": 138
       },
       {
        "rank": 2,
        "player": "Brian Jachimek",
-       "value": "129"
+       "value": "129",
+       "value_numeric": 129
       },
       {
        "rank": 3,
        "player": "Jacob Laurent",
-       "value": "101"
+       "value": "101",
+       "value_numeric": 101
       },
       {
        "rank": 4,
        "player": "Joe Cascio",
-       "value": "79"
+       "value": "79",
+       "value_numeric": 79
       },
       {
        "rank": 5,
        "player": "Pat Belson",
-       "value": "56"
+       "value": "56",
+       "value_numeric": 56
       }
      ]
     }
@@ -8640,27 +8656,32 @@
       {
        "rank": 1,
        "player": "Tyler Raymaker",
-       "value": "156"
+       "value": "156",
+       "value_numeric": 156
       },
       {
        "rank": 2,
        "player": "Brian Jachimek",
-       "value": "137"
+       "value": "137",
+       "value_numeric": 137
       },
       {
        "rank": 3,
        "player": "Jacob Laurent",
-       "value": "110"
+       "value": "110",
+       "value_numeric": 110
       },
       {
        "rank": 4,
        "player": "Joe Cascio",
-       "value": "100"
+       "value": "100",
+       "value_numeric": 100
       },
       {
        "rank": 5,
        "player": "Pat Belson",
-       "value": "68"
+       "value": "68",
+       "value_numeric": 68
       }
      ]
     }

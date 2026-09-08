@@ -204,26 +204,48 @@ function recordBookTab(root) {
 
 /* ============================================================ Record Watch == */
 
-// Deliberately limited to the 5 categories with a real per-player career
-// total already computed (see build_records_data.py's RECORD_WATCH_MAP) --
-// Kicking/Punting/Return records exist in the book above but have no
-// per-player career-total pipeline yet (data/special-teams.json has
-// per-attempt rows, not accumulated totals), called out explicitly rather
-// than silently missing from this tab.
-// "Close" (highlighted) means within 10% of the current #5's value -- close
-// enough that another good game or two could realistically move them into
-// the book, not just "somewhere on the same leaderboard eventually."
+// Limited to the categories with a real per-player career/season total
+// already computed (see build_records_data.py's RECORD_WATCH_MAP) --
+// Kicking/Punting/Return records ARE covered (added 2026-09-08, from
+// data/special-teams.json's own already-verified per-attempt rows), but
+// their rate-stat variants (e.g. "Average Yards Per Punt") aren't, since
+// that title's "(Min. N Attempts)" qualifier isn't consistent enough to
+// key a lookup on safely.
+// "Close" (highlighted) means within 10% of the target rank's own value --
+// close enough that another good game or two could realistically close it,
+// not just "somewhere on the same leaderboard eventually."
+//
+// Someone ALREADY inside the list (2026-09-08, per the user: "if someone
+// is already inside the top five, but not first, i want to show the count
+// away from the next number") shows their distance to the next BETTER
+// rank directly above them, not a generic "already in the Top 5" -- e.g.
+// a real #3 sees exactly how far they are from #2, by name.
 function watchStatusHTML(e) {
-  if (e.top_value !== null && e.current_value > e.top_value) {
-    return `<span class="watch-gap-good">Ahead of the current #1</span>`;
+  const lb = e.leaderboard;
+  if (!lb.length) return '—';
+  // Index of the best (lowest-rank-number) leaderboard entry the player
+  // already matches or beats -- e.g. current_value=20 against
+  // [28, 24, 19, 18, 14] finds index 2 (they beat the #3 spot, 19).
+  const i = lb.findIndex((r) => e.current_value >= r.value_numeric);
+  if (i === -1) {
+    // Behind every listed entry -- chasing in from outside the list.
+    const target = lb[lb.length - 1];
+    const gap = target.value_numeric - e.current_value;
+    const close = gap <= target.value_numeric * 0.1;
+    return `<span class="${close ? 'watch-gap-crit' : ''}">${fmt(gap, Number.isInteger(gap) ? 0 : 1)} from the current #${target.rank}</span>`;
   }
-  if (e.fifth_value !== null && e.current_value > e.fifth_value) {
-    return `<span class="watch-gap-good">Already inside the current Top 5</span>`;
+  if (i === 0) {
+    return e.current_value > lb[0].value_numeric
+      ? `<span class="watch-gap-good">Ahead of the current #1</span>`
+      : `<span class="watch-gap-good">Tied with the current #1 (${lb[0].player})</span>`;
   }
-  if (e.fifth_value === null) return '—';
-  const gap = e.fifth_value - e.current_value;
-  const close = gap <= e.fifth_value * 0.1;
-  return `<span class="${close ? 'watch-gap-crit' : ''}">${fmt(gap, Number.isInteger(gap) ? 0 : 1)} from the current #5</span>`;
+  // Already inside the list at rank i+1 or better -- show the distance to
+  // the next better rank directly above them, by name.
+  const target = lb[i - 1];
+  const gap = target.value_numeric - e.current_value;
+  return gap === 0
+    ? `<span class="watch-gap-good">Tied with #${target.rank} (${target.player})</span>`
+    : `<span class="watch-gap-good">${fmt(gap, Number.isInteger(gap) ? 0 : 1)} from #${target.rank} (${target.player})</span>`;
 }
 
 function watchRowHTML(e) {

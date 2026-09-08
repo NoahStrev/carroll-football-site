@@ -2272,6 +2272,26 @@ overlapped in time) would still slip through -- season_plausible() is a
 real mitigation for the specific temporal-collision failure mode, not a
 complete fix for every possible name-collision shape.
 
+**Same day, eighth round: Record Watch shows distance to the exact next
+rank (2026-09-08)** — per the user: "if someone is already inside the top
+five, but not first, i want to show the count away from the next
+number." Previously, anyone already inside the Top 5 just showed a
+generic "Already inside the current Top 5" with no further detail.
+`build_records_data.py`'s leaderboard entries now carry a
+`value_numeric` alongside the existing display `value` string (parsed
+once server-side rather than re-implementing the comma/percent-stripping
+in JS), and `watchStatusHTML()` walks the leaderboard to find exactly
+where the player's current value would insert -- ahead of #1, tied with
+#1, already past some rank N (shows the gap to rank N-1 by name), or
+still chasing the lowest listed rank from outside. Verified against a
+real case already inside the list: Matthew Swink's Field Goals Made
+(current 20, ahead of the 4th/5th-ranked entries on the scraped
+leaderboard) now correctly shows "4 from #2 (Brian Jachimek)" instead of
+a generic "already in the Top 5"; his Field Goals Attempted (25) shows
+"1 from #3 (Tyler Raymaker)"; PATs Made (60) shows "19 from #4 (Joe
+Cascio)"; PATs Attempted (62), not yet inside the list, still correctly
+shows "6 from the current #5" via the unchanged outside-the-list branch.
+
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly
