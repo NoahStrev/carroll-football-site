@@ -237,7 +237,7 @@ function byOpponentTab(root) {
             <div class="card"><div class="card-head"><h3>Takeaway Rate by Opponent</h3></div><div class="card-body" id="bo-def-to"></div></div>
           </div>
         </div>
-        <div class="footer-note">Source: Game Analysis's OfficialPlayByPlay sheet, combined_play_data.xlsx (50 real Carroll games, 2021–2025).</div>
+        <div class="footer-note">Source: Game Analysis's OfficialPlayByPlay sheet, combined_play_data.xlsx (${gameCoverageText(DATA.games)}).</div>
       </div>
     </div>`;
 
@@ -645,7 +645,7 @@ function opponentReportTab(root, side, subtitle, note, sourceRows) {
           </div>
           ${reportPageHTML(side, note)}
         </div>
-        <div class="footer-note">Source: Game Analysis's OfficialPlayByPlay sheet, combined_play_data.xlsx (50 real Carroll games, 2021–2025). Run/Pass excludes Kneel and Two-Point Conversion snaps; Sack counts as a pass call.</div>
+        <div class="footer-note">Source: Game Analysis's OfficialPlayByPlay sheet, combined_play_data.xlsx (${gameCoverageText(DATA.games)}). Run/Pass excludes Kneel and Two-Point Conversion snaps; Sack counts as a pass call.</div>
       </div>
     </div>`;
 

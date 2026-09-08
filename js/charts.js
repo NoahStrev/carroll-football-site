@@ -90,6 +90,20 @@ function pct(n, decimals = 1) {
   return `${(n * 100).toFixed(decimals)}%`;
 }
 
+/** "50 real Carroll games, 2021–2025" computed from data/game-data.json's own
+ * `games` array, instead of a hardcoded string -- offense.html/defense.html/
+ * opponent-scouting.html's footer notes used to hardcode this and would have
+ * silently gone stale the moment a 2026 game got charted and combined in.
+ * Interpolate directly into each footer-note template literal (they're built
+ * fresh per tab-render, not static markup, so a one-time post-load DOM patch
+ * wouldn't reach a tab that hasn't rendered yet). */
+function gameCoverageText(games) {
+  const seasons = games.map((g) => Number(g.season)).filter((s) => !Number.isNaN(s));
+  if (!seasons.length) return '0 real Carroll games';
+  const min = Math.min(...seasons), max = Math.max(...seasons);
+  return `${games.length} real Carroll games, ${min}${min === max ? '' : `–${max}`}`;
+}
+
 /** Two-letter initials for an avatar circle, e.g. "Jacob Laurent" -> "JL".
  * Hoisted 2026-08-01 -- was duplicated verbatim in placekicker.html and
  * kickoff-kicker.html, will be needed again by the remaining position pages. */

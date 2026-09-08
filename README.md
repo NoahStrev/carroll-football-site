@@ -1176,6 +1176,63 @@ weekly, but nothing rebuilt or deployed this site itself.
    this correctly for its own `$Year` variable, only its window was
    hardcoded).
 
+**Game-week readiness review (2026-08-06, same day), per the user ("review
+anything else that might have to happen when a game is played... since the
+season is coming up").** Traced the full post-game path end to end, not
+just the already-automated raw-scrape piece.
+
+1. **Real bug fixed: 4 footer notes hardcoded "50 real Carroll games,
+   2021–2025"** (`offense.html`, `defense.html`, `opponent-scouting.html`
+   ×2) — would have silently gone stale and started lying to a coach the
+   moment a 2026 game got charted and combined in. New shared
+   `gameCoverageText(games)` (`js/charts.js`) computes the real count and
+   season range from `data/game-data.json`'s own `games` array, interpolated
+   directly into each footer-note template literal (not a post-load DOM
+   patch — these notes are built fresh per tab-render, not static markup,
+   so a patch-once-after-load approach wouldn't reach a tab that hasn't
+   rendered yet). Verified in-browser on all 3 pages (4 sites): renders
+   `50 real Carroll games, 2021–2025` today, matching the real data exactly,
+   with each site's own surrounding text (the "opponent's-possession rows"
+   and "Run/Pass excludes..." clauses) preserved.
+2. **`check_in_season.py` hardened**: now re-scrapes the live schedule on
+   *every* run instead of only when the calendar year changes — a
+   year-only refresh would have locked in the regular-season-only window
+   from the first check of the year and never noticed an NCAA D3 playoff
+   game added to the schedule after the regular season ends. Also now
+   degrades gracefully on a scrape failure (falls back to the cached
+   `schedule.json` for the current year rather than failing the whole
+   guard) instead of hard-failing on a network blip. Verified: forced
+   `scrape_schedule.py`'s own base URL to something unresolvable, confirmed
+   the fallback path engages and still returns the correct window from the
+   cached file; restored the script byte-identical afterward.
+3. **Real operational trap found and documented, not fixed in code (can't
+   be — it's a workflow ordering issue, not a bug)**: `Game Analysis`'s
+   append-only combiner keys its "is this game new" check purely on
+   `GAME_LABEL` already existing in `Plays`, not on whether that game's
+   `OfficialPlayByPlay` match succeeded. Charting and combining a game
+   *before* `carroll-special-teams-weekly-scrape` has scraped that game's
+   official box score (e.g. combining the same Saturday night as the game,
+   before Monday's scrape runs) permanently strands that game with zero
+   `OfficialPlayByPlay` rows — plain append mode never reprocesses a game
+   already in `Plays`, so it doesn't get a second chance once the official
+   data does arrive. Full detail and the fix (an explicit `--rebuild`,
+   only if this is ever actually hit) documented in `Game Analysis`'s own
+   `playlist-play-combiner` SKILL.md. **The practical rule for this
+   season**: always combine a newly-charted game after that week's
+   Special Teams scrape has run (Mondays, ~9:06 AM), never same-day as the
+   game itself.
+4. **Confirmed clean, not just assumed**: no build script in this project
+   has a hardcoded season/year filter that would silently exclude 2026 data
+   once it exists (checked all 4 — every "2021"/"2025" reference found was
+   inside a comment/docstring, not filtering logic); the full 2026 schedule
+   (`Schedule/schedule.json`) already has every CCIW opponent mapped to
+   both Buddah Report projects' own team-name strings, so no opponent-name
+   gap will block Rankings the first week a conference game is scraped.
+5. **Also worth remembering, not something to build**: `carroll-site-weekly-refresh`
+   only runs Mondays — charting a game mid-week won't reach the live site
+   until the following Monday unless `scripts/refresh_all.py` is run and
+   pushed manually in between.
+
 ## Testing notes (Special Teams Overview)
 
 Real bugs found and fixed while testing in the browser (not just eyeballing the
