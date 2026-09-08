@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Career Stats — Carroll Football Analytics</title>
+<link rel="stylesheet" href="../css/theme.css">
+<style>
+  .tbl-scroll { max-height: 65vh; overflow-y: auto; overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <nav class="sitenav">
+    <div class="brand"><span class="mark">CU</span> Carroll Football Analytics</div>
+    <div class="links">
+      <a href="special-teams-overview.html">Special Teams</a>
+      <a href="placekicker.html">Positions</a>
+      <a href="lifting-strength.html">Lifting &amp; Strength</a>
+      <a href="offense.html">Offense</a>
+      <a href="defense.html">Defense</a>
+      <a href="opponent-scouting.html">Opponent Scouting</a>
+      <a href="rankings.html">Rankings</a>
+      <a href="records.html">Records</a>
+      <a href="career-stats.html" class="active">Career Stats</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="updates.html">Updates</a>
+    </div>
+  </nav>
+
+  <div class="intro">
+    <h1>Career Stats</h1>
+    <p>Real per-player career totals from Carroll's own box-score archive (2010-present) — search any player to see their season-by-season and career numbers. Looking for who's chasing an all-time record, or the full record book? See <a href="records.html">Records</a>.</p>
+  </div>
+
+  <div class="stage" id="cs-stage"></div>
+</div>
+
+<script src="../js/charts.js"></script>
+<script>
+let DATA = null;
+
+// Every real category build_career_stats.py can produce, with how to
+// label/format it. `cols` drives both the per-category table AND which
+// fields exist at all -- a category simply isn't rendered for a player who
+// has no data in it.
+const CAREER_CATEGORIES = {
+  Rushing: { label: 'Rushing', cols: [['att', 'Att'], ['net', 'Yds'], ['td', 'TD'], ['yards_per_carry', 'Avg']] },
+  Passing: { label: 'Passing', cols: [['att', 'Att'], ['cmp', 'Cmp'], ['yds', 'Yds'], ['td', 'TD'], ['int', 'Int'], ['completion_pct', 'Cmp%'], ['yards_per_att', 'Y/A']] },
+  Receiving: { label: 'Receiving', cols: [['rec', 'Rec'], ['yds', 'Yds'], ['td', 'TD'], ['yards_per_rec', 'Avg']] },
+  'Individual Defensive Statistics': { label: 'Defense', cols: [['solo', 'Solo'], ['ast', 'Ast'], ['tot', 'Tot'], ['sacks', 'Sacks'], ['int', 'Int'], ['ff', 'FF'], ['brup', 'BrUp'], ['blkd', 'Blkd'], ['qh', 'QH']] },
+  Punting: { label: 'Punting', cols: [['att', 'Punts'], ['gross_yds', 'Yds'], ['gross_avg', 'Avg'], ['net_avg', 'Net Avg'], ['long', 'Long'], ['i20', 'In 20'], ['blocked', 'Blocked']] },
+  Kickoffs: { label: 'Kickoffs', cols: [['att', 'No.'], ['yds', 'Yds'], ['avg', 'Avg'], ['long', 'Long'], ['tb', 'TB'], ['ob', 'OB'], ['inside_25', 'In 25']] },
+  KickoffReturn: { label: 'Kickoff Return', cols: [['att', 'Ret'], ['yds', 'Yds'], ['avg', 'Avg'], ['long', 'Long']] },
+  PuntReturn: { label: 'Punt Return', cols: [['att', 'Ret'], ['yds', 'Yds'], ['avg', 'Avg'], ['long', 'Long']] },
+  PATFG: { label: 'Kicking (PAT/FG)', cols: [['fg_made', 'FG'], ['fg_att', 'FGA'], ['fg_pct', 'FG%'], ['exp_made', 'PAT'], ['exp_att', 'PATA'], ['exp_pct', 'PAT%']] },
+  ShortSnapping: { label: 'Short Snapping (PAT/FG)', cols: [['att', 'Snaps']] },
+  LongSnapping: { label: 'Long Snapping (Punt)', cols: [['att', 'Snaps']] },
+};
+
+// Which categories are worth showing for a given roster position -- a real
+// judgment call (this site has no explicit "these are a player's real
+// position-group duties" field), not an assertion that e.g. a WR could
+// never legitimately have a punting stat. Purely a display filter per the
+// user's own framing ("if a quarterback is selected, don't show punt
+// stats") -- an unmatched player (no roster position at all) still shows
+// every category they have real data in, since there's no position to
+// filter by. OL has no offensive skill-position category of its own on
+// this site (no real per-lineman stat exists in the source data).
+const POSITION_CATEGORIES = {
+  QB: ['Passing', 'Rushing'],
+  RB: ['Rushing', 'Receiving', 'KickoffReturn', 'PuntReturn'],
+  WR: ['Receiving', 'Rushing', 'KickoffReturn', 'PuntReturn'],
+  TE: ['Receiving', 'Rushing'],
+  OL: [],
+  DL: ['Individual Defensive Statistics'],
+  LB: ['Individual Defensive Statistics'],
+  OLB: ['Individual Defensive Statistics'],
+  SAM: ['Individual Defensive Statistics'],
+  BOB: ['Individual Defensive Statistics'],
+  CB: ['Individual Defensive Statistics', 'KickoffReturn', 'PuntReturn'],
+  SAF: ['Individual Defensive Statistics', 'KickoffReturn', 'PuntReturn'],
+  DB: ['Individual Defensive Statistics', 'KickoffReturn', 'PuntReturn'],
+  SPEC: ['Punting', 'Kickoffs', 'PATFG', 'ShortSnapping', 'LongSnapping'],
+};
+
+function relevantCategoriesFor(player) {
+  const real = Object.keys(player.categories);
+  if (!player.position || !POSITION_CATEGORIES[player.position]) return real;
+  const allowed = new Set(POSITION_CATEGORIES[player.position]);
+  return real.filter((c) => allowed.has(c));
+}
+
+function categoryCardHTML(catId, player) {
+  const cat = CAREER_CATEGORIES[catId];
+  const catData = player.categories[catId];
+  const seasonRows = catData.seasons.map((s) => `<tr><td>${s.season}</td><td>${s.games}</td>${cat.cols.map(([key]) => `<td>${s[key] ?? '—'}</td>`).join('')}</tr>`).join('');
+  return `
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-head"><h3>${cat.label}</h3><span class="data-note" style="margin:0;">${catData.career_games} games</span></div>
+      <div class="card-body" style="padding:0;">
+        <div class="tbl-scroll"><table class="mini">
+          <thead><tr><th>Season</th><th>Games</th>${cat.cols.map(([, label]) => `<th>${label}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${seasonRows}
+            <tr style="font-weight:700; border-top: 2px solid var(--border);"><td>Career</td><td>${catData.career_games}</td>${cat.cols.map(([key]) => `<td>${catData.career[key] ?? '—'}</td>`).join('')}</tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>`;
+}
+
+function renderPage(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="body">
+        <div style="max-width:360px; margin-bottom:14px;" id="cs-combobox"></div>
+        <div id="cs-content"></div>
+      </div>
+      <div class="footer-note">Source: Special Teams Data's raw box-score archive (2010-present) and this site's own data/special-teams.json, aggregated by build_career_stats.py. Rate stats (Avg/Cmp%/FG%) are computed from the summed counting stats, never averaged per-game. Only categories relevant to a player's own roster position are shown; a player with no Lifting Data roster match shows every category they have real stats in instead, since there's no position on file to filter by.</div>
+    </div></div>`;
+
+  const options = DATA.players
+    .slice()
+    .sort((a, b) => a.display_name.localeCompare(b.display_name))
+    .map((p) => ({ value: p.display_name, label: p.position ? `${p.display_name} (${p.position})` : p.display_name }));
+
+  function render(name) {
+    const player = DATA.players.find((p) => p.display_name === name);
+    const contentEl = document.getElementById('cs-content');
+    if (!player) {
+      contentEl.innerHTML = '<div class="insight">Search for a player above to see their career stats.</div>';
+      return;
+    }
+    const cats = relevantCategoriesFor(player);
+    if (!cats.length) {
+      contentEl.innerHTML = `<div class="insight">No tracked individual stat categories apply to ${player.display_name}'s position (${player.position || '—'}) on this site.</div>`;
+      return;
+    }
+    contentEl.innerHTML = cats.map((c) => categoryCardHTML(c, player)).join('');
+  }
+
+  makeSearchCombobox(document.getElementById('cs-combobox'), {
+    options, value: options[0]?.value, onChange: render, placeholder: 'Search player name…',
+  });
+  render(options[0]?.value);
+}
+
+fetch('../data/career-stats.json')
+  .then((r) => r.json())
+  .then((data) => {
+    DATA = data;
+    renderPage(document.getElementById('cs-stage'));
+  })
+  .catch((err) => {
+    document.getElementById('cs-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/career-stats.json — ${err}. Run scripts/build_career_stats.py first, and serve over http:// not file://.</div></div>`;
+  });
+</script>
+</body>
+</html>

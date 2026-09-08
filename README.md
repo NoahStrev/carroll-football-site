@@ -2173,6 +2173,57 @@ merge risks the opposite failure. Flagged here rather than auto-merged.
 Finally, clicked through all 14 dashboard pages (console check + 375px
 mobile overflow check on each) — all clean, nothing else found.
 
+**Same day, sixth round: Record Watch tightened, Career Stats made its
+own page (2026-09-08)** — per the user, right after that audit: "for
+record watch we should only show the top 3-5 for every category unless
+there is a really big gap then don't, and also it should only appear for
+people that are still active... don't display anyone that has 0 in a
+given stat, additionally... there should be both a single season and
+career subtab. for career stats make that its own full tab."
+
+1. **"Active" tightened from the 2 most recent seasons to just the single
+   most recent one** (`build_records_data.py`) — a player who only played
+   last year has left the program, even if last year still technically
+   counted as "recent" under the old window. Self-adjusts every season
+   from the real data, same as everywhere else on this site.
+2. **Zero-value entries excluded outright** — a player who shares a
+   category with a record-chaser but has never actually attempted the
+   stat isn't "chasing" anything.
+3. **Capped at 5 per statistic, with an early cutoff on a real gap** — new
+   `GAP_CUTOFF_FRACTION` (0.5): a candidate only counts as a genuine
+   "chaser" if their gap to the current #5 is within half of that #5's
+   own value; past that, the list stops early rather than padding out to
+   5 with someone who isn't realistically in range. A player already
+   ahead of the current #1, or already inside the current Top 5, always
+   shows regardless (they're not chasing, they've arguably arrived) --
+   confirmed with a real example: Matthew Swink's career field-goal total
+   (20 made) already exceeds the scraped record book's own snapshot (18,
+   4th place as of when gopios.com last updated it) -- a genuinely
+   interesting signal this feature is designed to surface, not a bug.
+4. **Season subtab added alongside Career** — same `RECORD_WATCH_MAP` (the
+   record book uses identical statistic names for both leaderboards), but
+   compares an active player's CURRENT SEASON total (not their career
+   total) against the Single-Season leaderboard instead. Early in a new
+   season this is often genuinely empty (checked directly: after 1 real
+   2026 game, the closest anyone is to a single-season rushing-yards spot
+   is 104 yards against a 1,261-yard 5th-place bar -- correctly excluded
+   by the gap cutoff, not a bug) -- shows a clear "nothing yet" message
+   rather than an empty table.
+5. **Career Stats moved to its own top-level page**
+   (`dashboards/career-stats.html`, new nav entry between Records and
+   Glossary on every page) instead of a tab inside Records -- the
+   position-filtered player-search UI, `CAREER_CATEGORIES`/
+   `POSITION_CATEGORIES` mapping, and its own `data/career-stats.json`
+   fetch moved there unchanged; Records no longer needs to fetch
+   `career-stats.json` at all now that Record Watch's comparison work
+   happens entirely server-side in `build_records_data.py`.
+
+Verified: Record Watch's Career/Season subtabs and Career Stats' position
+filtering all still work identically to before the split; all 15
+dashboard pages (the 14 from the prior round plus the new
+`career-stats.html`) checked again for console errors and 375px mobile
+overflow -- clean.
+
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly
