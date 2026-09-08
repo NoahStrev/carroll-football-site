@@ -100,6 +100,8 @@ from pathlib import Path
 
 import openpyxl
 
+from build_lib import distinct
+
 FOOTBALL_ROOT = Path(__file__).resolve().parent.parent.parent
 CCIW_SRC = FOOTBALL_ROOT / "CCIW Buddah Report" / "output_carroll" / "Carroll_Football_AllTime.xlsx"
 NATIONAL_SRC = FOOTBALL_ROOT / "National Buddah Report" / "CCIW_D3_Football_Stats" / "Carroll" / "Carroll_AllYears.xlsx"
@@ -262,9 +264,6 @@ def build_national():
 def main():
     cciw_rows, cciw_weekly_files, cciw_weeks = build_cciw()
     national_rows, national_weekly_files, national_weeks = build_national()
-
-    def distinct(rows, field):
-        return sorted({r[field] for r in rows if r.get(field) not in (None, "")}, key=str)
 
     payload = {
         "generated_from": {

@@ -80,13 +80,7 @@ let DATA = null;
 // text "null". Every raw-field interpolation on this page goes through
 // this instead.
 function blank(v) { return v === null || v === undefined || v === '' ? '—' : v; }
-
-function printPage(filenameTitle) {
-  const prevTitle = document.title;
-  document.title = filenameTitle;
-  window.print();
-  document.title = prevTitle;
-}
+// printPage() is shared -- see js/charts.js (hoisted 2026-09-08, was duplicated here + rankings.html + opponent-scouting.html)
 
 /* ============================================================= Record Book == */
 

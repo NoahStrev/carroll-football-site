@@ -37,6 +37,8 @@ from pathlib import Path
 
 import openpyxl
 
+from build_lib import distinct, sheet_rows
+
 SRC = Path(__file__).resolve().parent.parent.parent / "Game Analysis" / "processed" / "combined_play_data.xlsx"
 OUT = Path(__file__).resolve().parent.parent / "data" / "game-data.json"
 
@@ -71,12 +73,6 @@ OPPONENT_ALIASES = {
 
 def canonical_opponent(name):
     return OPPONENT_ALIASES.get(name, name)
-
-
-def sheet_rows(ws):
-    headers = [c.value for c in next(ws.iter_rows(min_row=1, max_row=1))]
-    for r in ws.iter_rows(min_row=2, values_only=True):
-        yield dict(zip(headers, r))
 
 
 def parse_label_date(label):
@@ -161,10 +157,10 @@ def outcome_flags(outcome):
 def main():
     wb = openpyxl.load_workbook(SRC, data_only=True, read_only=True)
 
-    gml = list(sheet_rows(wb["GameMatchLog"]))
+    gml = sheet_rows(wb["GameMatchLog"])
     carroll_game_labels = {r["GAME_LABEL"] for r in gml if r["HAS_OFFICIAL_PBP"]}
 
-    opbp_all = list(sheet_rows(wb["OfficialPlayByPlay"]))
+    opbp_all = sheet_rows(wb["OfficialPlayByPlay"])
     for r in opbp_all:
         r["OPPONENT"] = canonical_opponent(r["OPPONENT"])
     opponent_by_game = {r["GAME_LABEL"]: r["OPPONENT"] for r in opbp_all}
@@ -304,9 +300,6 @@ def main():
     defense_drives = [{"drive_num": k[1], "game_label": k[0], **v} for k, v in drives_by_key.items() if v["side"] == "defense"]
     for d in (*offense_drives, *defense_drives):
         del d["side"]
-
-    def distinct(rows, field):
-        return sorted({r[field] for r in rows if r.get(field) not in (None, "")}, key=str)
 
     payload = {
         "generated_from": SRC.name,

@@ -109,6 +109,17 @@ function gameCoverageText(games) {
  * kickoff-kicker.html, will be needed again by the remaining position pages. */
 function initials(name) { return name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2); }
 
+/** Print the page with a specific document title (restored after printing)
+ * so the browser's "Save as PDF" filename matches the content, not the
+ * page's own <title>. Hoisted 2026-09-08 -- was duplicated verbatim in
+ * records.html, rankings.html, and opponent-scouting.html. */
+function printPage(filenameTitle) {
+  const prevTitle = document.title;
+  document.title = filenameTitle;
+  window.print();
+  document.title = prevTitle;
+}
+
 function el(tag, cls, html) {
   const e = document.createElement(tag);
   if (cls) e.className = cls;

@@ -161,12 +161,7 @@ function isPassPlay(r) { return r.play_type === 'Pass' || r.play_type === 'Sack'
 // visible in the tab as-is (print CSS above hides the nav/tabbar/controls),
 // no per-card isolation needed since each tab here is already just one
 // self-contained report.
-function printPage(filenameTitle) {
-  const prevTitle = document.title;
-  document.title = filenameTitle;
-  window.print();
-  document.title = prevTitle;
-}
+// printPage() is shared -- see js/charts.js (hoisted 2026-09-08, was duplicated here + records.html + rankings.html)
 
 // Per the user (2026-08-04): "make it able to use the combined data of all
 // teams, along with another filter which will be a checkbox of what years to

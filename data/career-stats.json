@@ -3319,9 +3319,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 2,
+      "solo": 3,
       "ast": 1,
-      "tot": 3,
+      "tot": 4,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -3334,10 +3334,28 @@
       "fr": 0,
       "fr_yds": 0
      },
-     "career_games": 3,
+     "career_games": 4,
      "seasons": [
       {
        "season": 2013,
+       "solo": 1,
+       "ast": 0,
+       "tot": 1,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 1
+      },
+      {
+       "season": 2014,
        "solo": 1,
        "ast": 0,
        "tot": 1,
@@ -3376,13 +3394,13 @@
     },
     "Receiving": {
      "career": {
-      "rec": 16,
-      "yds": 256,
-      "td": 2,
+      "rec": 21,
+      "yds": 324,
+      "td": 3,
       "long": 50,
-      "yards_per_rec": 16.0
+      "yards_per_rec": 15.4
      },
-     "career_games": 12,
+     "career_games": 15,
      "seasons": [
       {
        "season": 2013,
@@ -3391,6 +3409,15 @@
        "td": 0,
        "long": 20,
        "yards_per_rec": 14.5,
+       "games": 3
+      },
+      {
+       "season": 2014,
+       "rec": 5,
+       "yds": 68,
+       "td": 1,
+       "long": 18,
+       "yards_per_rec": 13.6,
        "games": 3
       },
       {
@@ -3410,73 +3437,6 @@
        "long": 28,
        "yards_per_rec": 14.0,
        "games": 5
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Austin Piekrski",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Receiving": {
-     "career": {
-      "rec": 5,
-      "yds": 68,
-      "td": 1,
-      "long": 18,
-      "yards_per_rec": 13.6
-     },
-     "career_games": 3,
-     "seasons": [
-      {
-       "season": 2014,
-       "rec": 5,
-       "yds": 68,
-       "td": 1,
-       "long": 18,
-       "yards_per_rec": 13.6,
-       "games": 3
-      }
-     ]
-    },
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 1,
-      "ast": 0,
-      "tot": 1,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2014,
-       "solo": 1,
-       "ast": 0,
-       "tot": 1,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 1
       }
      ]
     }
@@ -4126,28 +4086,28 @@
    }
   },
   {
-   "display_name": "Billy Kraczyk",
+   "display_name": "Billy Krawczyk",
    "athlete_key": null,
    "position": null,
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 12,
-      "ast": 13,
-      "tot": 25,
+      "solo": 87,
+      "ast": 50,
+      "tot": 137,
       "ff": 0,
-      "int": 0,
-      "brup": 1,
+      "int": 4,
+      "brup": 7,
       "blkd": 0,
       "qh": 0,
-      "tfl": 2.0,
-      "tfl_yds": 2,
-      "sacks": 0,
-      "sack_yds": 0,
+      "tfl": 6.0,
+      "tfl_yds": 17,
+      "sacks": 2.0,
+      "sack_yds": 11,
       "fr": 0,
       "fr_yds": 0
      },
-     "career_games": 9,
+     "career_games": 29,
      "seasons": [
       {
        "season": 2016,
@@ -4166,35 +4126,7 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 8
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Billy Krawczyk",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 75,
-      "ast": 37,
-      "tot": 112,
-      "ff": 0,
-      "int": 4,
-      "brup": 6,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 4.0,
-      "tfl_yds": 15,
-      "sacks": 2.0,
-      "sack_yds": 11,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 20,
-     "seasons": [
+      },
       {
        "season": 2017,
        "solo": 32,
@@ -5194,47 +5126,6 @@
    }
   },
   {
-   "display_name": "C. O'Donoghue",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Receiving": {
-     "career": {
-      "rec": 39,
-      "yds": 382,
-      "td": 2,
-      "long": 35,
-      "yards_per_rec": 9.8
-     },
-     "career_games": 9,
-     "seasons": [
-      {
-       "season": 2015,
-       "rec": 34,
-       "yds": 326,
-       "td": 2,
-       "long": 28,
-       "yards_per_rec": 9.6,
-       "games": 8
-      }
-     ]
-    },
-    "Rushing": {
-     "career": {
-      "att": 1,
-      "gain": 8,
-      "loss": 0,
-      "net": 8,
-      "td": 0,
-      "long": 8,
-      "yards_per_carry": 8.0
-     },
-     "career_games": 1,
-     "seasons": []
-    }
-   }
-  },
-  {
    "display_name": "C. Roseleip",
    "athlete_key": null,
    "position": null,
@@ -5299,73 +5190,6 @@
        "td": 0,
        "long": 0,
        "yards_per_carry": -2.0,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "C. Zimmerman",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 16,
-      "ast": 9,
-      "tot": 25,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 9,
-     "seasons": [
-      {
-       "season": 2015,
-       "solo": 14,
-       "ast": 8,
-       "tot": 22,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 8
-      }
-     ]
-    },
-    "Receiving": {
-     "career": {
-      "rec": 1,
-      "yds": 2,
-      "td": 0,
-      "long": 2,
-      "yards_per_rec": 2.0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2015,
-       "rec": 1,
-       "yds": 2,
-       "td": 0,
-       "long": 2,
-       "yards_per_rec": 2.0,
        "games": 1
       }
      ]
@@ -6946,52 +6770,6 @@
    }
   },
   {
-   "display_name": "Clay. Zimmerman",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 3,
-      "ast": 3,
-      "tot": 6,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 3,
-     "seasons": [
-      {
-       "season": 2014,
-       "solo": 3,
-       "ast": 3,
-       "tot": 6,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 3
-      }
-     ]
-    }
-   }
-  },
-  {
    "display_name": "Clayton Huber",
    "athlete_key": "huber_clayton",
    "position": "DL",
@@ -7098,9 +6876,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 1,
-      "ast": 0,
-      "tot": 1,
+      "solo": 20,
+      "ast": 12,
+      "tot": 32,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -7113,13 +6891,13 @@
       "fr": 0,
       "fr_yds": 0
      },
-     "career_games": 1,
+     "career_games": 13,
      "seasons": [
       {
-       "season": 2015,
-       "solo": 1,
-       "ast": 0,
-       "tot": 1,
+       "season": 2014,
+       "solo": 3,
+       "ast": 3,
+       "tot": 6,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -7131,6 +6909,45 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
+       "games": 3
+      },
+      {
+       "season": 2015,
+       "solo": 15,
+       "ast": 8,
+       "tot": 23,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 9
+      }
+     ]
+    },
+    "Receiving": {
+     "career": {
+      "rec": 1,
+      "yds": 2,
+      "td": 0,
+      "long": 2,
+      "yards_per_rec": 2.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2015,
+       "rec": 1,
+       "yds": 2,
+       "td": 0,
+       "long": 2,
+       "yards_per_rec": 2.0,
        "games": 1
       }
      ]
@@ -8119,13 +7936,13 @@
    "categories": {
     "Receiving": {
      "career": {
-      "rec": 25,
-      "yds": 264,
-      "td": 0,
+      "rec": 64,
+      "yds": 646,
+      "td": 2,
       "long": 40,
-      "yards_per_rec": 10.6
+      "yards_per_rec": 10.1
      },
-     "career_games": 9,
+     "career_games": 18,
      "seasons": [
       {
        "season": 2014,
@@ -8138,14 +7955,27 @@
       },
       {
        "season": 2015,
-       "rec": 4,
-       "yds": 67,
-       "td": 0,
+       "rec": 38,
+       "yds": 393,
+       "td": 2,
        "long": 38,
-       "yards_per_rec": 16.8,
-       "games": 1
+       "yards_per_rec": 10.3,
+       "games": 9
       }
      ]
+    },
+    "Rushing": {
+     "career": {
+      "att": 1,
+      "gain": 8,
+      "loss": 0,
+      "net": 8,
+      "td": 0,
+      "long": 8,
+      "yards_per_carry": 8.0
+     },
+     "career_games": 1,
+     "seasons": []
     }
    }
   },
@@ -8379,70 +8209,6 @@
        "long": 28,
        "yards_per_rec": 12.8,
        "games": 3
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "D. O'Donoghue",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 26,
-      "ast": 19,
-      "tot": 45,
-      "ff": 0,
-      "int": 4,
-      "brup": 3,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 1.5,
-      "tfl_yds": 3,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 1
-     },
-     "career_games": 11,
-     "seasons": [
-      {
-       "season": 2014,
-       "solo": 1,
-       "ast": 3,
-       "tot": 4,
-       "ff": 0,
-       "int": 1,
-       "brup": 2,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 1.0,
-       "tfl_yds": 2,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 2
-      },
-      {
-       "season": 2015,
-       "solo": 21,
-       "ast": 15,
-       "tot": 36,
-       "ff": 0,
-       "int": 2,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0.5,
-       "tfl_yds": 1,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 1,
-       "games": 8
       }
      ]
     }
@@ -9414,12 +9180,12 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 24,
-      "ast": 6,
-      "tot": 30,
+      "solo": 27,
+      "ast": 9,
+      "tot": 36,
       "ff": 1,
       "int": 2,
-      "brup": 4,
+      "brup": 7,
       "blkd": 0,
       "qh": 0,
       "tfl": 1.0,
@@ -9429,8 +9195,26 @@
       "fr": 1,
       "fr_yds": 0
      },
-     "career_games": 9,
+     "career_games": 13,
      "seasons": [
+      {
+       "season": 2016,
+       "solo": 3,
+       "ast": 3,
+       "tot": 6,
+       "ff": 0,
+       "int": 0,
+       "brup": 3,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 4
+      },
       {
        "season": 2017,
        "solo": 24,
@@ -10578,80 +10362,70 @@
    }
   },
   {
-   "display_name": "Dillon O' Donoghue",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 4,
-      "ast": 2,
-      "tot": 6,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2016,
-       "solo": 4,
-       "ast": 2,
-       "tot": 6,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
    "display_name": "Dillon O'Donoghue",
    "athlete_key": null,
    "position": null,
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 4,
-      "ast": 1,
-      "tot": 5,
+      "solo": 34,
+      "ast": 22,
+      "tot": 56,
       "ff": 0,
-      "int": 0,
-      "brup": 0,
+      "int": 4,
+      "brup": 3,
       "blkd": 0,
       "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
+      "tfl": 1.5,
+      "tfl_yds": 3,
       "sacks": 0,
       "sack_yds": 0,
       "fr": 0,
-      "fr_yds": 0
+      "fr_yds": 1
      },
-     "career_games": 1,
+     "career_games": 13,
      "seasons": [
       {
+       "season": 2014,
+       "solo": 1,
+       "ast": 3,
+       "tot": 4,
+       "ff": 0,
+       "int": 1,
+       "brup": 2,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 1.0,
+       "tfl_yds": 2,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 2
+      },
+      {
        "season": 2015,
+       "solo": 25,
+       "ast": 16,
+       "tot": 41,
+       "ff": 0,
+       "int": 2,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0.5,
+       "tfl_yds": 1,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 1,
+       "games": 9
+      },
+      {
+       "season": 2016,
        "solo": 4,
-       "ast": 1,
-       "tot": 5,
+       "ast": 2,
+       "tot": 6,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -10774,52 +10548,6 @@
        "fr": 0,
        "fr_yds": 1,
        "games": 7
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Diquan Smith",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 3,
-      "ast": 3,
-      "tot": 6,
-      "ff": 0,
-      "int": 0,
-      "brup": 3,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 4,
-     "seasons": [
-      {
-       "season": 2016,
-       "solo": 3,
-       "ast": 3,
-       "tot": 6,
-       "ff": 0,
-       "int": 0,
-       "brup": 3,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 4
       }
      ]
     }
@@ -11805,52 +11533,6 @@
    }
   },
   {
-   "display_name": "Eliot Fields",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 17,
-      "ast": 3,
-      "tot": 20,
-      "ff": 1,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 2.0,
-      "tfl_yds": 5,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 1,
-      "fr_yds": 0
-     },
-     "career_games": 6,
-     "seasons": [
-      {
-       "season": 2012,
-       "solo": 17,
-       "ast": 3,
-       "tot": 20,
-       "ff": 1,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 2.0,
-       "tfl_yds": 5,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 1,
-       "fr_yds": 0,
-       "games": 6
-      }
-     ]
-    }
-   }
-  },
-  {
    "display_name": "Elisha Nieves",
    "athlete_key": "nieves_elisha",
    "position": "QB",
@@ -11981,23 +11663,41 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 18,
-      "ast": 15,
-      "tot": 33,
-      "ff": 0,
+      "solo": 35,
+      "ast": 18,
+      "tot": 53,
+      "ff": 1,
       "int": 3,
       "brup": 3,
       "blkd": 0,
       "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
+      "tfl": 2.0,
+      "tfl_yds": 5,
       "sacks": 0,
       "sack_yds": 0,
-      "fr": 0,
+      "fr": 1,
       "fr_yds": 0
      },
-     "career_games": 9,
+     "career_games": 15,
      "seasons": [
+      {
+       "season": 2012,
+       "solo": 17,
+       "ast": 3,
+       "tot": 20,
+       "ff": 1,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 2.0,
+       "tfl_yds": 5,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 1,
+       "fr_yds": 0,
+       "games": 6
+      },
       {
        "season": 2013,
        "solo": 18,
@@ -12339,9 +12039,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 6,
-      "ast": 6,
-      "tot": 12,
+      "solo": 8,
+      "ast": 7,
+      "tot": 15,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -12354,7 +12054,7 @@
       "fr": 0,
       "fr_yds": 0
      },
-     "career_games": 7,
+     "career_games": 10,
      "seasons": [
       {
        "season": 2014,
@@ -12393,52 +12093,6 @@
        "games": 1
       },
       {
-       "season": 2018,
-       "solo": 5,
-       "ast": 4,
-       "tot": 9,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 4
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Eric Meliahn",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 2,
-      "ast": 1,
-      "tot": 3,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 3,
-     "seasons": [
-      {
        "season": 2017,
        "solo": 2,
        "ast": 1,
@@ -12455,6 +12109,24 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 3
+      },
+      {
+       "season": 2018,
+       "solo": 5,
+       "ast": 4,
+       "tot": 9,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 4
       }
      ]
     }
@@ -13167,34 +12839,6 @@
    }
   },
   {
-   "display_name": "G. Campbell",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Receiving": {
-     "career": {
-      "rec": 2,
-      "yds": 25,
-      "td": 1,
-      "long": 17,
-      "yards_per_rec": 12.5
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2018,
-       "rec": 2,
-       "yds": 25,
-       "td": 1,
-       "long": 17,
-       "yards_per_rec": 12.5,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
    "display_name": "Gabriel Terstriep",
    "athlete_key": "terstriep_gabriel",
    "position": "DL",
@@ -13275,22 +12919,22 @@
    "categories": {
     "Receiving": {
      "career": {
-      "rec": 1,
-      "yds": 10,
-      "td": 0,
-      "long": 10,
-      "yards_per_rec": 10.0
+      "rec": 3,
+      "yds": 35,
+      "td": 1,
+      "long": 17,
+      "yards_per_rec": 11.7
      },
-     "career_games": 1,
+     "career_games": 2,
      "seasons": [
       {
        "season": 2018,
-       "rec": 1,
-       "yds": 10,
-       "td": 0,
-       "long": 10,
-       "yards_per_rec": 10.0,
-       "games": 1
+       "rec": 3,
+       "yds": 35,
+       "td": 1,
+       "long": 17,
+       "yards_per_rec": 11.7,
+       "games": 2
       }
      ]
     }
@@ -13880,119 +13524,6 @@
    }
   },
   {
-   "display_name": "H Campbell",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 1,
-      "ast": 2,
-      "tot": 3,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 2,
-     "seasons": [
-      {
-       "season": 2018,
-       "solo": 1,
-       "ast": 2,
-       "tot": 3,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 2
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "H. Campbell",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Receiving": {
-     "career": {
-      "rec": 10,
-      "yds": 96,
-      "td": 0,
-      "long": 30,
-      "yards_per_rec": 9.6
-     },
-     "career_games": 3,
-     "seasons": [
-      {
-       "season": 2019,
-       "rec": 10,
-       "yds": 96,
-       "td": 0,
-       "long": 30,
-       "yards_per_rec": 9.6,
-       "games": 3
-      }
-     ]
-    },
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 2,
-      "ast": 1,
-      "tot": 3,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 3,
-     "seasons": [
-      {
-       "season": 2019,
-       "solo": 2,
-       "ast": 1,
-       "tot": 3,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 3
-      }
-     ]
-    }
-   }
-  },
-  {
    "display_name": "Hayden Hartmann",
    "athlete_key": "hartmann_hayden",
    "position": "LB",
@@ -14261,15 +13792,72 @@
    "athlete_key": null,
    "position": null,
    "categories": {
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 3,
+      "ast": 3,
+      "tot": 6,
+      "ff": 0,
+      "int": 0,
+      "brup": 0,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 0,
+      "tfl_yds": 0,
+      "sacks": 0,
+      "sack_yds": 0,
+      "fr": 0,
+      "fr_yds": 0
+     },
+     "career_games": 5,
+     "seasons": [
+      {
+       "season": 2018,
+       "solo": 1,
+       "ast": 2,
+       "tot": 3,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 2
+      },
+      {
+       "season": 2019,
+       "solo": 2,
+       "ast": 1,
+       "tot": 3,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 3
+      }
+     ]
+    },
     "Receiving": {
      "career": {
-      "rec": 1,
-      "yds": 5,
+      "rec": 11,
+      "yds": 101,
       "td": 0,
-      "long": 5,
-      "yards_per_rec": 5.0
+      "long": 30,
+      "yards_per_rec": 9.2
      },
-     "career_games": 1,
+     "career_games": 4,
      "seasons": [
       {
        "season": 2018,
@@ -14279,6 +13867,15 @@
        "long": 5,
        "yards_per_rec": 5.0,
        "games": 1
+      },
+      {
+       "season": 2019,
+       "rec": 10,
+       "yds": 96,
+       "td": 0,
+       "long": 30,
+       "yards_per_rec": 9.6,
+       "games": 3
       }
      ]
     }
@@ -14458,75 +14055,29 @@
    "athlete_key": null,
    "position": null,
    "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 3,
-      "ast": 0,
-      "tot": 3,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 4,
-     "seasons": [
-      {
-       "season": 2018,
-       "solo": 2,
-       "ast": 0,
-       "tot": 2,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 2
-      },
-      {
-       "season": 2021,
-       "solo": 1,
-       "ast": 0,
-       "tot": 1,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 2
-      }
-     ]
-    },
     "Rushing": {
      "career": {
-      "att": 123,
-      "gain": 421,
-      "loss": 44,
-      "net": 377,
+      "att": 177,
+      "gain": 576,
+      "loss": 70,
+      "net": 506,
       "td": 6,
       "long": 48,
-      "yards_per_carry": 3.07
+      "yards_per_carry": 2.86
      },
-     "career_games": 19,
+     "career_games": 27,
      "seasons": [
+      {
+       "season": 2017,
+       "att": 54,
+       "gain": 155,
+       "loss": 26,
+       "net": 129,
+       "td": 0,
+       "long": 18,
+       "yards_per_carry": 2.39,
+       "games": 8
+      },
       {
        "season": 2018,
        "att": 4,
@@ -14564,14 +14115,23 @@
     },
     "Receiving": {
      "career": {
-      "rec": 10,
-      "yds": 84,
+      "rec": 14,
+      "yds": 141,
       "td": 1,
-      "long": 27,
-      "yards_per_rec": 8.4
+      "long": 40,
+      "yards_per_rec": 10.1
      },
-     "career_games": 8,
+     "career_games": 11,
      "seasons": [
+      {
+       "season": 2017,
+       "rec": 4,
+       "yds": 57,
+       "td": 0,
+       "long": 40,
+       "yards_per_rec": 14.2,
+       "games": 3
+      },
       {
        "season": 2019,
        "rec": 7,
@@ -14589,6 +14149,81 @@
        "long": 27,
        "yards_per_rec": 12.7,
        "games": 4
+      }
+     ]
+    },
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 4,
+      "ast": 0,
+      "tot": 4,
+      "ff": 0,
+      "int": 0,
+      "brup": 0,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 0,
+      "tfl_yds": 0,
+      "sacks": 0,
+      "sack_yds": 0,
+      "fr": 0,
+      "fr_yds": 0
+     },
+     "career_games": 5,
+     "seasons": [
+      {
+       "season": 2017,
+       "solo": 1,
+       "ast": 0,
+       "tot": 1,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 1
+      },
+      {
+       "season": 2018,
+       "solo": 2,
+       "ast": 0,
+       "tot": 2,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 2
+      },
+      {
+       "season": 2021,
+       "solo": 1,
+       "ast": 0,
+       "tot": 1,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 2
       }
      ]
     }
@@ -14699,98 +14334,6 @@
        "yds": 0,
        "long": 0,
        "avg": 0.0,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Issac Allen",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Rushing": {
-     "career": {
-      "att": 54,
-      "gain": 155,
-      "loss": 26,
-      "net": 129,
-      "td": 0,
-      "long": 18,
-      "yards_per_carry": 2.39
-     },
-     "career_games": 8,
-     "seasons": [
-      {
-       "season": 2017,
-       "att": 54,
-       "gain": 155,
-       "loss": 26,
-       "net": 129,
-       "td": 0,
-       "long": 18,
-       "yards_per_carry": 2.39,
-       "games": 8
-      }
-     ]
-    },
-    "Receiving": {
-     "career": {
-      "rec": 4,
-      "yds": 57,
-      "td": 0,
-      "long": 40,
-      "yards_per_rec": 14.2
-     },
-     "career_games": 3,
-     "seasons": [
-      {
-       "season": 2017,
-       "rec": 4,
-       "yds": 57,
-       "td": 0,
-       "long": 40,
-       "yards_per_rec": 14.2,
-       "games": 3
-      }
-     ]
-    },
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 1,
-      "ast": 0,
-      "tot": 1,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2017,
-       "solo": 1,
-       "ast": 0,
-       "tot": 1,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
        "games": 1
       }
      ]
@@ -18251,22 +17794,22 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 2,
-      "ast": 0,
-      "tot": 2,
+      "solo": 7,
+      "ast": 1,
+      "tot": 8,
       "ff": 0,
-      "int": 1,
-      "brup": 0,
+      "int": 2,
+      "brup": 1,
       "blkd": 0,
       "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
+      "tfl": 1.0,
+      "tfl_yds": 1,
       "sacks": 0,
       "sack_yds": 0,
       "fr": 0,
       "fr_yds": 0
      },
-     "career_games": 3,
+     "career_games": 7,
      "seasons": [
       {
        "season": 2010,
@@ -18285,6 +17828,24 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 3
+      },
+      {
+       "season": 2011,
+       "solo": 5,
+       "ast": 1,
+       "tot": 6,
+       "ff": 0,
+       "int": 1,
+       "brup": 1,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 1.0,
+       "tfl_yds": 1,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 4
       }
      ]
     }
@@ -18406,52 +17967,6 @@
        "completion_pct": 0.0,
        "yards_per_att": 0.0,
        "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Jon Sain",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 5,
-      "ast": 1,
-      "tot": 6,
-      "ff": 0,
-      "int": 1,
-      "brup": 1,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 1.0,
-      "tfl_yds": 1,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 4,
-     "seasons": [
-      {
-       "season": 2011,
-       "solo": 5,
-       "ast": 1,
-       "tot": 6,
-       "ff": 0,
-       "int": 1,
-       "brup": 1,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 1.0,
-       "tfl_yds": 1,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 4
       }
      ]
     }
@@ -19410,52 +18925,6 @@
    }
   },
   {
-   "display_name": "Josh Bottoms",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 1,
-      "ast": 0,
-      "tot": 1,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2015,
-       "solo": 1,
-       "ast": 0,
-       "tot": 1,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
    "display_name": "Josh Dummer",
    "athlete_key": null,
    "position": null,
@@ -20021,52 +19490,6 @@
    }
   },
   {
-   "display_name": "Josh Ruano",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 3,
-      "ast": 2,
-      "tot": 5,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 2.0,
-      "tfl_yds": 5,
-      "sacks": 1.0,
-      "sack_yds": 3,
-      "fr": 0,
-      "fr_yds": 1
-     },
-     "career_games": 4,
-     "seasons": [
-      {
-       "season": 2013,
-       "solo": 3,
-       "ast": 2,
-       "tot": 5,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 2.0,
-       "tfl_yds": 5,
-       "sacks": 1.0,
-       "sack_yds": 3,
-       "fr": 0,
-       "fr_yds": 1,
-       "games": 4
-      }
-     ]
-    }
-   }
-  },
-  {
    "display_name": "Josh Wilkes",
    "athlete_key": "wilkes_josh",
    "position": "CB",
@@ -20219,9 +19642,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 0,
+      "solo": 1,
       "ast": 1,
-      "tot": 1,
+      "tot": 2,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -20234,12 +19657,30 @@
       "fr": 0,
       "fr_yds": 0
      },
-     "career_games": 1,
+     "career_games": 2,
      "seasons": [
       {
        "season": 2012,
        "solo": 0,
        "ast": 1,
+       "tot": 1,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 1
+      },
+      {
+       "season": 2015,
+       "solo": 1,
+       "ast": 0,
        "tot": 1,
        "ff": 0,
        "int": 0,
@@ -20265,23 +19706,41 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 28,
-      "ast": 22,
-      "tot": 50,
+      "solo": 31,
+      "ast": 24,
+      "tot": 55,
       "ff": 1,
       "int": 0,
       "brup": 2,
       "blkd": 0,
       "qh": 0,
-      "tfl": 8.5,
-      "tfl_yds": 23,
-      "sacks": 1.5,
-      "sack_yds": 12,
+      "tfl": 10.5,
+      "tfl_yds": 28,
+      "sacks": 2.5,
+      "sack_yds": 15,
       "fr": 1,
-      "fr_yds": 0
+      "fr_yds": 1
      },
-     "career_games": 15,
+     "career_games": 19,
      "seasons": [
+      {
+       "season": 2013,
+       "solo": 3,
+       "ast": 2,
+       "tot": 5,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 2.0,
+       "tfl_yds": 5,
+       "sacks": 1.0,
+       "sack_yds": 3,
+       "fr": 0,
+       "fr_yds": 1,
+       "games": 4
+      },
       {
        "season": 2014,
        "solo": 11,
@@ -20637,9 +20096,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 103,
-      "ast": 81,
-      "tot": 184,
+      "solo": 114,
+      "ast": 83,
+      "tot": 197,
       "ff": 1,
       "int": 0,
       "brup": 4,
@@ -20650,9 +20109,9 @@
       "sacks": 2.5,
       "sack_yds": 29,
       "fr": 1,
-      "fr_yds": 2
+      "fr_yds": 3
      },
-     "career_games": 24,
+     "career_games": 29,
      "seasons": [
       {
        "season": 2017,
@@ -20671,6 +20130,24 @@
        "fr": 0,
        "fr_yds": 1,
        "games": 4
+      },
+      {
+       "season": 2018,
+       "solo": 11,
+       "ast": 2,
+       "tot": 13,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 1,
+       "games": 5
       },
       {
        "season": 2019,
@@ -20707,52 +20184,6 @@
        "fr": 1,
        "fr_yds": 0,
        "games": 10
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Justin Konty",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 11,
-      "ast": 2,
-      "tot": 13,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 1
-     },
-     "career_games": 5,
-     "seasons": [
-      {
-       "season": 2018,
-       "solo": 11,
-       "ast": 2,
-       "tot": 13,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 1,
-       "games": 5
       }
      ]
     }
@@ -23285,9 +22716,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 3,
+      "solo": 4,
       "ast": 0,
-      "tot": 3,
+      "tot": 4,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -23300,8 +22731,26 @@
       "fr": 0,
       "fr_yds": 0
      },
-     "career_games": 3,
+     "career_games": 4,
      "seasons": [
+      {
+       "season": 2016,
+       "solo": 1,
+       "ast": 0,
+       "tot": 1,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 1
+      },
       {
        "season": 2017,
        "solo": 3,
@@ -23340,52 +22789,6 @@
        "long": 35,
        "yards_per_rec": 12.3,
        "games": 4
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Lucas Luedtke",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 1,
-      "ast": 0,
-      "tot": 1,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2016,
-       "solo": 1,
-       "ast": 0,
-       "tot": 1,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 1
       }
      ]
     }
@@ -23941,88 +23344,6 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 10
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "M. Johnson",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Passing": {
-     "career": {
-      "att": 57,
-      "cmp": 39,
-      "yds": 260,
-      "td": 0,
-      "int": 4,
-      "sack": 10,
-      "long": 16,
-      "completion_pct": 68.4,
-      "yards_per_att": 4.6
-     },
-     "career_games": 3,
-     "seasons": [
-      {
-       "season": 2017,
-       "att": 57,
-       "cmp": 39,
-       "yds": 260,
-       "td": 0,
-       "int": 4,
-       "sack": 10,
-       "long": 16,
-       "completion_pct": 68.4,
-       "yards_per_att": 4.6,
-       "games": 3
-      }
-     ]
-    },
-    "Rushing": {
-     "career": {
-      "att": 20,
-      "gain": 34,
-      "loss": 67,
-      "net": -33,
-      "td": 0,
-      "long": 9,
-      "yards_per_carry": -1.65
-     },
-     "career_games": 3,
-     "seasons": [
-      {
-       "season": 2017,
-       "att": 20,
-       "gain": 34,
-       "loss": 67,
-       "net": -33,
-       "td": 0,
-       "long": 9,
-       "yards_per_carry": -1.65,
-       "games": 3
-      }
-     ]
-    },
-    "Receiving": {
-     "career": {
-      "rec": 12,
-      "yds": 118,
-      "td": 0,
-      "long": 26,
-      "yards_per_rec": 9.8
-     },
-     "career_games": 4,
-     "seasons": [
-      {
-       "season": 2018,
-       "rec": 12,
-       "yds": 118,
-       "td": 0,
-       "long": 26,
-       "yards_per_rec": 9.8,
-       "games": 4
       }
      ]
     }
@@ -24648,86 +23969,40 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 29,
-      "ast": 28,
-      "tot": 57,
+      "solo": 41,
+      "ast": 39,
+      "tot": 80,
       "ff": 1,
       "int": 0,
-      "brup": 1,
+      "brup": 2,
       "blkd": 0,
       "qh": 0,
-      "tfl": 5.5,
+      "tfl": 6.0,
       "tfl_yds": 16,
       "sacks": 1.0,
       "sack_yds": 10,
       "fr": 1,
       "fr_yds": 0
      },
-     "career_games": 7,
+     "career_games": 10,
      "seasons": [
       {
        "season": 2013,
-       "solo": 29,
-       "ast": 28,
-       "tot": 57,
+       "solo": 41,
+       "ast": 39,
+       "tot": 80,
        "ff": 1,
        "int": 0,
-       "brup": 1,
+       "brup": 2,
        "blkd": 0,
        "qh": 0,
-       "tfl": 5.5,
+       "tfl": 6.0,
        "tfl_yds": 16,
        "sacks": 1.0,
        "sack_yds": 10,
        "fr": 1,
        "fr_yds": 0,
-       "games": 7
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Mark Spratted",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 12,
-      "ast": 11,
-      "tot": 23,
-      "ff": 0,
-      "int": 0,
-      "brup": 1,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0.5,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 3,
-     "seasons": [
-      {
-       "season": 2013,
-       "solo": 12,
-       "ast": 11,
-       "tot": 23,
-       "ff": 0,
-       "int": 0,
-       "brup": 1,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0.5,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 3
+       "games": 10
       }
      ]
     }
@@ -26586,41 +25861,33 @@
    "athlete_key": null,
    "position": null,
    "categories": {
-    "Receiving": {
-     "career": {
-      "rec": 4,
-      "yds": 24,
-      "td": 0,
-      "long": 17,
-      "yards_per_rec": 6.0
-     },
-     "career_games": 3,
-     "seasons": [
-      {
-       "season": 2018,
-       "rec": 4,
-       "yds": 24,
-       "td": 0,
-       "long": 17,
-       "yards_per_rec": 6.0,
-       "games": 3
-      }
-     ]
-    },
     "Passing": {
      "career": {
-      "att": 282,
-      "cmp": 167,
-      "yds": 1894,
+      "att": 339,
+      "cmp": 206,
+      "yds": 2154,
       "td": 18,
-      "int": 5,
-      "sack": 23,
+      "int": 9,
+      "sack": 33,
       "long": 66,
-      "completion_pct": 59.2,
-      "yards_per_att": 6.7
+      "completion_pct": 60.8,
+      "yards_per_att": 6.4
      },
-     "career_games": 9,
+     "career_games": 12,
      "seasons": [
+      {
+       "season": 2017,
+       "att": 57,
+       "cmp": 39,
+       "yds": 260,
+       "td": 0,
+       "int": 4,
+       "sack": 10,
+       "long": 16,
+       "completion_pct": 68.4,
+       "yards_per_att": 4.6,
+       "games": 3
+      },
       {
        "season": 2021,
        "att": 282,
@@ -26638,16 +25905,27 @@
     },
     "Rushing": {
      "career": {
-      "att": 64,
-      "gain": 211,
-      "loss": 152,
-      "net": 59,
+      "att": 84,
+      "gain": 245,
+      "loss": 219,
+      "net": 26,
       "td": 1,
       "long": 30,
-      "yards_per_carry": 0.92
+      "yards_per_carry": 0.31
      },
-     "career_games": 8,
+     "career_games": 11,
      "seasons": [
+      {
+       "season": 2017,
+       "att": 20,
+       "gain": 34,
+       "loss": 67,
+       "net": -33,
+       "td": 0,
+       "long": 9,
+       "yards_per_carry": -1.65,
+       "games": 3
+      },
       {
        "season": 2021,
        "att": 64,
@@ -26658,6 +25936,27 @@
        "long": 30,
        "yards_per_carry": 0.92,
        "games": 8
+      }
+     ]
+    },
+    "Receiving": {
+     "career": {
+      "rec": 16,
+      "yds": 142,
+      "td": 0,
+      "long": 26,
+      "yards_per_rec": 8.9
+     },
+     "career_games": 7,
+     "seasons": [
+      {
+       "season": 2018,
+       "rec": 16,
+       "yds": 142,
+       "td": 0,
+       "long": 26,
+       "yards_per_rec": 8.9,
+       "games": 7
       }
      ]
     }
@@ -31006,7 +30305,7 @@
    }
   },
   {
-   "display_name": "Ryan Fuchas",
+   "display_name": "Ryan Fuchs",
    "athlete_key": null,
    "position": null,
    "categories": {
@@ -31038,14 +30337,7 @@
        "games": 1
       }
      ]
-    }
-   }
-  },
-  {
-   "display_name": "Ryan Fuchs",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
+    },
     "Receiving": {
      "career": {
       "rec": 3,
@@ -31298,9 +30590,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 2,
-      "ast": 6,
-      "tot": 8,
+      "solo": 7,
+      "ast": 8,
+      "tot": 15,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -31313,7 +30605,7 @@
       "fr": 0,
       "fr_yds": 0
      },
-     "career_games": 7,
+     "career_games": 11,
      "seasons": [
       {
        "season": 2010,
@@ -31332,35 +30624,7 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 7
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Ryan Schmitt",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 5,
-      "ast": 2,
-      "tot": 7,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 4,
-     "seasons": [
+      },
       {
        "season": 2011,
        "solo": 5,
@@ -37006,8 +36270,8 @@
     "Individual Defensive Statistics": {
      "career": {
       "solo": 1,
-      "ast": 1,
-      "tot": 2,
+      "ast": 2,
+      "tot": 3,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -37020,8 +36284,26 @@
       "fr": 0,
       "fr_yds": 0
      },
-     "career_games": 2,
+     "career_games": 3,
      "seasons": [
+      {
+       "season": 2012,
+       "solo": 0,
+       "ast": 1,
+       "tot": 1,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 1
+      },
       {
        "season": 2014,
        "solo": 1,
@@ -37102,52 +36384,6 @@
        "td": 0,
        "long": 4,
        "yards_per_rec": 1.5,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Zachery Wech",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 0,
-      "ast": 1,
-      "tot": 1,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "tfl_yds": 0,
-      "sacks": 0,
-      "sack_yds": 0,
-      "fr": 0,
-      "fr_yds": 0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2012,
-       "solo": 0,
-       "ast": 1,
-       "tot": 1,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
-       "sacks": 0,
-       "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
        "games": 1
       }
      ]

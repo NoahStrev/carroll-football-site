@@ -56,16 +56,12 @@ from pathlib import Path
 
 import openpyxl
 
+from build_lib import sheet_rows
+
 RECORDS_SRC = Path(__file__).resolve().parent.parent.parent / "Records & Awards" / "output" / "records.xlsx"
 AWARDS_SRC = Path(__file__).resolve().parent.parent.parent / "Records & Awards" / "output" / "awards.xlsx"
 CAREER_STATS_SRC = Path(__file__).resolve().parent.parent / "data" / "career-stats.json"
 OUT = Path(__file__).resolve().parent.parent / "data" / "records.json"
-
-
-def sheet_rows(ws):
-    rows = ws.iter_rows(values_only=True)
-    header = next(rows)
-    return [dict(zip(header, r)) for r in rows]
 
 
 def load_workbook_sheets(path):

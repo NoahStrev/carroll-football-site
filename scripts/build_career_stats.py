@@ -147,6 +147,29 @@ NAME_ALIASES = {
     ("Kerkoff", "Nick"): ("Kerkhoff", "Nick"),
     ("Hartman", "Hayden"): ("Hartmann", "Hayden"),
     ("Wilkes", "Joshua"): ("Wilkes", "Josh"),
+    # Confirmed 2026-09-08 by the thorough-check fuzzy-name scan: these are
+    # all NON-roster players (no Lifting Data entry), so unlike the 3
+    # above they were never merged by the roster-matching stage at all --
+    # each spelling pair fragmented one real person into 2 separate
+    # career-stats.json entries. Verified real (not 2 different people)
+    # by checking season spans overlap/are adjacent for the same shared
+    # first name, then picking the more frequent raw spelling as
+    # canonical (row-count tiebreak noted per entry).
+    ("Piekrski", "Austin"): ("Piekarski", "Austin"),  # 40 raw rows vs 96 for "Piekarski"
+    ("Piekrski", "A."): ("Piekarski", "A."),
+    ("Kraczyk", "Billy"): ("Krawczyk", "Billy"),  # 47 vs 193 for "Krawczyk"
+    ("Meliahn", "Eric"): ("Meilahn", "Eric"),  # 11 vs 32 for "Meilahn"
+    ("Konty", "Justin"): ("Kontny", "Justin"),  # 25 vs 262 for "Kontny"
+    ("Luedtke", "Lucas"): ("Luedke", "Lucas"),  # 24 vs 42 for "Luedke"
+    ("Spratted", "Mark"): ("Spratte", "Mark"),  # 33 vs 113 for "Spratte"
+    ("Fuchas", "Ryan"): ("Fuchs", "Ryan"),  # 4 rows vs 44 for "Fuchs"
+    ("Schmitt", "Ryan"): ("Schmidt", "Ryan"),  # only 1 season each (2010/2011) -- "Schmidt" kept as the
+    # family's established spelling (2 other real Carroll Schmidts on record: Jason, Sean)
+    ("Allen", "Issac"): ("Allen", "Isaac"),  # 12 rows vs 31 for "Isaac"
+    ("Smith", "Diquan"): ("Smith", "Daquan"),  # 4 rows vs 10 for "Daquan"
+    ("Fields", "Eliot"): ("Fields", "Elliot"),  # 6 rows vs 9 for "Elliot"
+    ("Sain", "Jon"): ("Sain", "John"),  # 3 vs 4 rows -- near-even, kept the fuller spelling
+    ("Wech", "Zachery"): ("Wech", "Zachary"),  # 1 row vs 8 for "Zachary"
 }
 
 
@@ -311,7 +334,7 @@ def match_player(raw_name, roster, last_name_to_keys, unmatched_display, season=
             if len(starts) == 1:
                 person = roster[starts[0]]
                 return starts[0], f"{person['first_name']} {person['last_name']}"
-    resolved = unmatched_display.get(merge_key_for_unmatched(last, first))
+    resolved = unmatched_display.get((first, last))
     display = resolved if resolved else (f"{first} {last}".strip() if first else last)
     return None, display
 
@@ -407,52 +430,105 @@ def resolve_unmatched_identities(raw_groups):
     """raw_groups: {last_name_key: {(first, last), ...}} -- every real
     (first, last) pair seen for that normalized last name (last preserves
     its real spelling/capitalization; first is "" for a bare-last-name-only
-    row). Returns {last_name_key: display_name or None} -- None means
-    "don't merge, treat every variant under this last name as its own
-    separate identity" (a real ambiguity: 2+ DIFFERENT full first names
-    share this last name, so guessing which rows belong to which person
-    would risk merging 2 unrelated players' stats together, the opposite
-    failure from the one this whole function exists to fix).
+    row). Returns {(first, last): display_name or None} -- one verdict PER
+    RAW VARIANT, not one blanket verdict for the whole last-name group
+    (changed 2026-09-08, found during a routine re-audit: a single stray
+    "Campbell, G." amid many real "Campbell, H"/"H."/"Hunter" rows -- almost
+    certainly a one-off scrape typo for the same Hunter Campbell, but not
+    confirmable -- was blocking the otherwise-completely-clear H/H./Hunter
+    merge too, because the old per-last-name version gave up entirely the
+    moment ANY variant contradicted the group's real full name). The
+    outlier itself still resolves to None here (kept as its own separate,
+    un-merged identity, never guessed into the dominant cluster) -- only
+    the genuinely-consistent variants merge.
 
     A first-name variant that's just an initial -- one letter ("K."), or a
     COMPOUND initial like "J.R"/"J.R."/"JR" (all 3 real, confirmed
     2026-09-08: the same real person's money_unit rows spelled it 3
-    different ways across different games, fragmenting into 3 separate
-    buckets until this function started normalizing them) -- is always
-    treated as compatible with any full name, and multiple initial
-    variants that reduce to the same letters are treated as the SAME
-    initial, not competing identities. `initial_letters()` strips
+    different ways across different games) -- is always treated as
+    compatible with any full name it's a real prefix of, and multiple
+    initial variants that reduce to the same letters are treated as the
+    SAME initial, not competing identities. `initial_letters()` strips
     everything but letters and uppercases, so "J.R", "J.R.", and "JR" all
     normalize to "JR" -- only a genuinely different letter sequence (e.g.
-    "K." vs "J.") counts as a real conflict."""
+    "K." vs "J.") counts as a real conflict.
+
+    2+ DIFFERENT full names under one last name (e.g. a real "Hunter
+    Campbell" and a real, different "Garret Campbell") does NOT give up on
+    every variant the way a first version of this function did -- each
+    initial still resolves to whichever ONE of the multiple full names it
+    uniquely matches ("H"/"H." -> Hunter, "G." -> Garret), and only a
+    truly ambiguous initial (matching 2+ of the real full names, or
+    matching none of them) or a bare row stays unresolved."""
     resolved = {}
     for last_key, pairs in raw_groups.items():
         last = next(iter(pairs))[1]  # real spelling -- identical across every pair by construction (same norm() key)
         firsts = {p[0] for p in pairs}
         full_names = {f for f in firsts if f and len(initial_letters(f)) > 3}
-        initial_keys = {initial_letters(f) for f in firsts if f and 1 <= len(initial_letters(f)) <= 3}
-        if len(full_names) > 1:
-            resolved[last_key] = None  # genuine ambiguity -- don't guess
+
+        if full_names:
+            # Two "full names" (both > 3 letters) aren't necessarily two
+            # different real people -- a nickname/formal-name pair like
+            # "Clay."/"Clayton" both clear the length bar, but "Clay" is
+            # just a shorthand spelling of "Clayton" (confirmed 2026-09-08:
+            # found alongside a genuinely different "Ty Zimmerman" in the
+            # same last-name group -- Ty correctly stays unresolved on its
+            # own since it isn't a prefix of Clayton, while "C." previously
+            # matched BOTH "Clay." and "Clayton" and was wrongly dropped as
+            # ambiguous). Cluster full names where one's letters are a
+            # prefix of another's before doing initial-matching, so an
+            # initial checks against each real IDENTITY once, not once per
+            # spelling of the same identity. Longest spelling in a cluster
+            # wins as canonical (more complete, so more likely the given
+            # name rather than a nickname).
+            canon_for = {}  # spelling -> canonical spelling for its cluster
+            canon_anchor = {}  # canonical spelling -> its initial_letters
+            for f in sorted(full_names, key=lambda f: -len(initial_letters(f))):
+                key = initial_letters(f)
+                match = next((c for c, a in canon_anchor.items() if a[: len(key)] == key), None)
+                if match:
+                    canon_for[f] = match
+                else:
+                    canon_for[f] = f
+                    canon_anchor[f] = key
+            canonicals = set(canon_for.values())
+            sole_full_name = next(iter(canonicals)) if len(canonicals) == 1 else None
+            for p in pairs:
+                first = p[0]
+                if not first:
+                    # A bare row is only safely mergeable when there's
+                    # exactly one real identity to attach it to -- with
+                    # 2+, there's no way to tell which person it belongs to.
+                    resolved[p] = f"{sole_full_name} {last}" if sole_full_name else None
+                    continue
+                if first in full_names:
+                    resolved[p] = f"{canon_for[first]} {last}"
+                    continue
+                key = initial_letters(first)
+                matches = [c for c in canonicals if 1 <= len(key) <= 3 and canon_anchor[c][: len(key)] == key]
+                resolved[p] = f"{matches[0]} {last}" if len(matches) == 1 else None
             continue
-        if len(full_names) == 1:
-            full = next(iter(full_names))
-            if initial_keys and not all(k == initial_letters(full)[: len(k)] for k in initial_keys):
-                resolved[last_key] = None  # an initial contradicts the one full name found -- don't guess
-                continue
-            resolved[last_key] = f"{full} {last}"
-        elif len(initial_keys) == 1:
-            # No full first name ever appeared, but every initial variant
-            # reduces to the same letters (e.g. "J.R"/"J.R."/"JR") -- show
-            # a canonically-dotted form ("J.R.") rather than whichever
-            # literal spelling happened to be seen first/most.
-            letters = next(iter(initial_keys))
-            canonical = "".join(f"{c}." for c in letters)
-            resolved[last_key] = f"{canonical} {last}"
+
+        # No full first name anywhere in this group -- merge same-initial
+        # variants only (still per-variant: an initial that matches the
+        # group's single dominant cluster merges, a genuinely different
+        # one does not).
+        initial_groups = {}
+        for p in pairs:
+            key = initial_letters(p[0])
+            if 1 <= len(key) <= 3:
+                initial_groups.setdefault(key, []).append(p)
+        if len(initial_groups) == 1:
+            # A bare row (first="") carries no contradicting information --
+            # merges into the one real cluster found, same as an initial
+            # merges into a real full name above.
+            letters = next(iter(initial_groups))
+            canonical = f"{''.join(f'{c}.' for c in letters)} {last}"
+            for p in pairs:
+                resolved[p] = canonical
         else:
-            # Either no first-name signal at all (every row bare), or 2+
-            # genuinely different initials with no full name to arbitrate
-            # between them -- nothing safe to merge to.
-            resolved[last_key] = None
+            for p in pairs:
+                resolved[p] = None
     return resolved
 
 
@@ -630,6 +706,15 @@ def main():
         key, _ = match_player(raw_name, roster, last_name_to_keys, {}, season)
         if key is not None:
             return
+        # Apply the same NAME_ALIASES correction match_player() applies
+        # internally -- otherwise a last-name-typo alias whose TARGET
+        # isn't a roster name (found 2026-09-08: several confirmed
+        # scrape-typo pairs like "Piekrski"/"Piekarski" where neither
+        # spelling is on the roster) never reaches match_player's own
+        # alias lookup here, so the two spellings would still fragment
+        # into separate raw_groups buckets by last name and never get a
+        # chance to merge in resolve_unmatched_identities.
+        last, first = NAME_ALIASES.get((last, first), (last, first))
         lk = merge_key_for_unmatched(last, first)
         unmatched_variants.setdefault(lk, set()).add((first, last))
 

@@ -2318,6 +2318,156 @@ values exactly (Coleman's 262 rushing attempts/1,337 yards). Checked at
 collapses the two-column header to one column with no other changes
 needed, no overflow.
 
+**Ninth round: extremely thorough sitewide check + consolidation pass
+(2026-09-08)** — per the user: "do an extremely in depth and thorough
+check across the whole site. then since we've made a lot of changes see
+what can be condensed, removed, and improved, and made more efficient."
+Re-verified all 6 build scripts and a fresh re-scrape of all 6 gopios.com
+pages for zero drift (scraper stability + build reproducibility both
+still hold), then ran the same near-duplicate-display-name fuzzy scan
+used earlier in the day (`difflib.get_close_matches`, cutoff=0.88) across
+`career-stats.json` and this time found 20 close pairs -- up from the
+previously-known 18, 2 of them new (`"G. Campbell"`/`"H. Campbell"`,
+`"H Campbell"`/`"H. Campbell"`). Investigating found 2 real, distinct
+bugs in `resolve_unmatched_identities()` (see `build_career_stats.py`'s
+own docstring/comments for the full detail), both genuine gaps in the
+2026-09-08 identity-merge system built earlier the same day, not
+regressions:
+- **Multi-full-name bailout was all-or-nothing.** `'Campbell, H'`,
+  `'Campbell, G.'`, `'Campbell, Hunter'`, `'Campbell, H.'`, and
+  `'Campbell, Garret'` are 2 real different people (Hunter Campbell,
+  Garret Campbell) plus their own initial variants, but the function's
+  old rule -- 2+ "full names" (>3 letters) under one last name means
+  give up and resolve every variant to `None` -- fragmented all 5 raw
+  variants into 5 separate career-stats.json entries instead of the
+  correct 2. Fixed to resolve each initial-only variant against
+  whichever SPECIFIC full name it's a real letter-prefix of ("H"/"H."
+  only prefixes "Hunter", not "Garret"), only falling back to `None` for
+  a variant that's genuinely ambiguous (0 or 2+ matches) or bare with
+  2+ candidates.
+- **Nickname pairs were treated as 2 competing full identities.**
+  Zimmerman's raw group had `'Ty'`, `'Clay.'`, `'C.'`, and `'Clayton'` --
+  both `"Clay."` and `"Clayton"` clear the >3-letter "full name" bar, but
+  they're the SAME person (nickname vs. formal spelling), which meant
+  `"C."` matched both and got dropped as ambiguous even after the first
+  fix above. Added a clustering pass that merges any 2 "full names" where
+  one's letters are a genuine prefix of the other (using the longer,
+  more complete spelling as canonical) before doing initial-matching --
+  correctly produces "Clayton Zimmerman" (absorbing Clay./C./Clayton)
+  while "Ty Zimmerman" stays its own person (Ty isn't a prefix of
+  Clayton). This also auto-merged "Josh"/"Joshua" pairs (JOSH is a
+  literal prefix of JOSHUA) that turned out to be the same fix needed for
+  2 more real people found by the same scan (Bottoms, Ruano) -- no manual
+  alias needed for those.
+- Also found and fixed a real gap in the FIRST pass: `collect_unmatched_variant()`
+  (which builds the raw name groups before any merging decision is made)
+  called `split_raw_name()` directly without applying `NAME_ALIASES`,
+  unlike `match_player()` which already did. This was invisible for the
+  existing 3 aliases (their correction targets are all roster names, so
+  those rows match the roster and short-circuit before ever reaching the
+  buggy line) but would have silently broken any NEW alias whose target
+  ISN'T a roster name -- exactly the situation for every alias added
+  below. Fixed by applying the same `NAME_ALIASES.get(...)` correction in
+  `collect_unmatched_variant()` too.
+- The remaining 16 close pairs after those 2 fixes were all confirmed
+  real last-name/first-name SPELLING typos (not initials/nicknames, so
+  outside what `resolve_unmatched_identities()` can catch on its own) --
+  verified one-by-one, not guessed: every pair's season spans are
+  adjacent or overlapping for the same shared first name (e.g. "Ryan
+  Fuchas" 2013 / "Ryan Fuchs" 2014-15), and none of the 13 pairs are
+  roster-matched, so there's no roster spelling to defer to. Picked the
+  majority raw-row-count spelling as canonical for each (counted directly,
+  not assumed) and added 13 new `NAME_ALIASES` entries; the 2 basically-tied
+  ones ("Sain, Jon"/"Sain, John" 3-vs-4 rows) kept the fuller spelling as
+  a tiebreak. Also double-checked the risk case of 2 real DIFFERENT people
+  sharing a name colliding here (e.g. "Ryan Schmidt" merging with an
+  unrelated "Ryan Schmitt") -- every pair's season pattern looks like
+  one continuous career, and Carroll's other 2 real Schmidts (Jason,
+  Sean, different seasons/first names entirely) stayed correctly
+  untouched, so this wasn't a repeat of the season-collision problem
+  fixed earlier in the day.
+- **Verified, not just asserted:** re-ran `build_career_stats.py` after
+  each fix; total player count went 494 -> 487 (Campbell fix alone) ->
+  470 (full alias table); the fuzzy-duplicate scan went from 20 close
+  pairs down to **0**; all 4 previously-verified record-book values
+  (Streveler 149 punts/5,794 yds/38.9 avg, Laurent 28/43 FG-101/110 PAT,
+  Lamont Williams 3,844 rushing yards, Kyle Burlingame 56 passing
+  TDs/5,613 yards) are still exact; re-ran `build_records_data.py` with
+  no unexpected row-count changes in any Record Book/Awards sheet.
+  Browser-verified live: Career Stats' player search for "Campbell" now
+  lists exactly the 3 real people (Garret, Hunter, Will), and Hunter
+  Campbell's page shows one correctly-merged 2018-2019 career instead of
+  3 fragments. Swept all 16 site pages (index.html's redirect + all 15
+  `dashboards/*.html`) at 375px mobile width for console errors and
+  horizontal overflow -- zero of either, sitewide.
+- **Consolidation pass:** `printPage()` (identical in `records.html`,
+  `rankings.html`, and `opponent-scouting.html`) hoisted into
+  `js/charts.js` alongside the project's other hoisted small helpers
+  (`initials()`, `fmt()`, etc.) -- verified `typeof printPage === 'function'`
+  and zero console errors on all 3 pages afterward. Checked `.tbl-scroll`
+  (duplicated in `records.html`/`career-stats.html`) and left it alone --
+  it's 1 trivial CSS line, and `opponent-scouting.html`'s own `.tbl-scroll`
+  is intentionally page-specific (documented sticky-header behavior that
+  the other two pages don't need), so unifying would add print-behavior
+  complexity for no real benefit. Checked both `build_career_stats.py`
+  and `build_records_data.py` for dead code from the day's iterative
+  fixes (every top-level function is still called at least once, no
+  unused imports, both compile clean) -- nothing to remove.
+
+**Tenth round: Python build-pipeline audit (2026-09-08, per the user:
+"lets look into any of the underlying python and other logic aswell").**
+The single most important find of this round wasn't duplication -- it
+was a real, silent gap in `scripts/refresh_all.py`: `build_career_stats.py`
+and `build_records_data.py` (both built earlier the same day) had never
+been added to its `BUILD_SCRIPTS` list. `carroll-site-weekly-refresh`
+(the scheduled task that runs `refresh_all.py` every Monday and
+auto-pushes whatever changed) would have kept silently rebuilding
+Rankings/Special Teams/Lifting/Game Data every week while Career Stats
+and Record Watch never updated again, ever, no error or warning of any
+kind -- a new game's punter/kicker/returner stats would show up correctly
+in Special Teams Overview but never reach Career Stats or Record Watch.
+Fixed by adding both to `BUILD_SCRIPTS` in the correct dependency
+position (`build_career_stats.py` reads `build_special_teams_data.py`'s
+own output, so it has to run right after it; `build_records_data.py`
+reads `build_career_stats.py`'s output, so it runs right after that) --
+verified by running the full 6-script `refresh_all.py` end to end
+afterward, no failures, and confirming every one of the original 4
+scripts' outputs stayed byte-identical to before the reorder. Also
+updated the scheduled task's own SKILL.md (`carroll-site-weekly-refresh`)
+to describe 6 scripts instead of 4, so a future reader of that
+automation isn't working from a stale description of what it actually
+does.
+
+Beyond that, an AST-level scan across all 6 build scripts for exact-
+duplicate function bodies (not just eyeballing) found 3 genuine, safe
+consolidation targets, all hoisted into a new `scripts/build_lib.py`
+(matching the sibling "Records & Awards" project's own `scrape_lib.py`
+precedent for shared build-script helpers):
+- `distinct()` -- byte-identical in `build_special_teams_data.py`,
+  `build_game_data.py`, and `build_rankings_data.py`.
+- `sheet_rows()` -- functionally identical in all 3 of those plus
+  `build_records_data.py`, but implemented 3 different ways: one read
+  cell-by-cell via `ws.cell(r, c)` (correct, but slower than `iter_rows()`
+  for a large sheet), one used `iter_rows()` but returned a generator,
+  and one (`build_records_data.py`'s own) already used the fastest form
+  (`iter_rows(values_only=True)` returning a list). Kept that fastest
+  version as the one shared implementation.
+- `snap_to_kick_of()` (new, extracted from `build_special_teams_data.py`
+  only) -- the exact same 3-line "Snap to Catch + Catch to Kick, or None"
+  calculation was copy-pasted verbatim in `build_punt()`,
+  `build_punt_return()`, and `build_money_unit()` inside that one file.
+Verified byte-identical `data/*.json` output before/after every one of
+these 3 hoists (`git diff --stat` on each affected file showed zero
+changes), then re-ran the full `refresh_all.py` pipeline one final time
+end to end to confirm nothing regressed. `load_roster()` in
+`build_career_stats.py` reads its own workbook with a similar-looking
+but structurally different pattern (positional column-index lookups
+into raw tuples, not a per-row dict) -- left alone rather than forced
+into `sheet_rows()`'s shape, since unifying it would mean rewriting every
+downstream reference in that function for a 2-line savings, not a real
+win. No other exact-duplicate function bodies exist anywhere across the
+6 scripts (confirmed via the same AST comparison, not assumed).
+
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly

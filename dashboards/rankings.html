@@ -214,13 +214,7 @@ function printCard(cardEl, filenameTitle) {
   printPage(filenameTitle);
 }
 
-// Prints whatever's currently visible in the tab as-is -- no card isolation.
-function printPage(filenameTitle) {
-  const prevTitle = document.title;
-  document.title = filenameTitle;
-  window.print();
-  document.title = prevTitle;
-}
+// printPage() is shared -- see js/charts.js (hoisted 2026-09-08, was duplicated here + records.html + opponent-scouting.html)
 
 function footerSourceText() {
   const cciw = DATA.generated_from.cciw.join(', ');

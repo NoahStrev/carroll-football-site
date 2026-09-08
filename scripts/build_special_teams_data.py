@@ -18,14 +18,10 @@ from pathlib import Path
 
 import openpyxl
 
+from build_lib import distinct, sheet_rows
+
 SRC = Path(__file__).resolve().parent.parent.parent / "Special Teams Data" / "Carroll_Special_Teams_2021_Current.xlsx"
 OUT = Path(__file__).resolve().parent.parent / "data" / "special-teams.json"
-
-
-def sheet_rows(ws):
-    headers = [ws.cell(1, c).value for c in range(1, ws.max_column + 1)]
-    for r in range(2, ws.max_row + 1):
-        yield dict(zip(headers, (ws.cell(r, c).value for c in range(1, ws.max_column + 1))))
 
 
 def field_bucket(converted_los):
@@ -63,14 +59,21 @@ def outcome_bucket(points):
     return f"{points} pts"
 
 
+def snap_to_kick_of(r):
+    """Snap to Catch + Catch to Kick, or None if either leg wasn't charted --
+    identical across the 3 units (Punt, Punt Return, Money Unit) that time a
+    snap-to-kick sequence."""
+    if r["Snap to Catch"] is None or r["Catch to Kick"] is None:
+        return None
+    return round(r["Snap to Catch"] + r["Catch to Kick"], 3)
+
+
 def build_punt(wb):
     ws = wb["Carroll Punt"]
     rows = []
     for r in sheet_rows(ws):
         pts = r["Next Drive Outcome"]
-        snap_to_kick = None
-        if r["Snap to Catch"] is not None and r["Catch to Kick"] is not None:
-            snap_to_kick = round(r["Snap to Catch"] + r["Catch to Kick"], 3)
+        snap_to_kick = snap_to_kick_of(r)
         rows.append({
             "season": r["Season"], "date": r["Date"], "opponent": r["Opponent"],
             "is_home": r["Is Home"], "quarter": r["Quarter"],
@@ -112,9 +115,7 @@ def build_punt_return(wb):
     rows = []
     for r in sheet_rows(ws):
         pts = r["Next Drive Outcome"]
-        snap_to_kick = None
-        if r["Snap to Catch"] is not None and r["Catch to Kick"] is not None:
-            snap_to_kick = round(r["Snap to Catch"] + r["Catch to Kick"], 3)
+        snap_to_kick = snap_to_kick_of(r)
         rows.append({
             "season": r["Season"], "date": r["Date"], "opponent": r["Opponent"],
             "is_home": r["Is Home"], "quarter": r["Quarter"], "returner": r["Returner"],
@@ -181,9 +182,7 @@ def build_money_unit(wb):
     ws = wb["Carroll PAT-FG"]
     rows = []
     for r in sheet_rows(ws):
-        snap_to_kick = None
-        if r["Snap to Catch"] is not None and r["Catch to Kick"] is not None:
-            snap_to_kick = round(r["Snap to Catch"] + r["Catch to Kick"], 3)
+        snap_to_kick = snap_to_kick_of(r)
         rows.append({
             "season": r["Season"], "date": r["Date"], "opponent": r["Opponent"],
             "is_home": r["Is Home"], "quarter": r["Quarter"], "kicker": r["Kicker"],
@@ -196,13 +195,6 @@ def build_money_unit(wb):
             "value": r["PAT/FG Value"], "score": r["PAT/FG Score"],
         })
     return rows
-
-
-def distinct(rows, field):
-    # Sort by string form -- some fields mix types (quarter is int 1-4 but "OT" is
-    # a str), and Python can't compare int/str directly (crashes sorted() on any
-    # unit that has an OT row, which money_unit does).
-    return sorted({r[field] for r in rows if r.get(field) not in (None, "")}, key=str)
 
 
 def main():
