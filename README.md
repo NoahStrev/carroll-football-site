@@ -2292,6 +2292,32 @@ a generic "already in the Top 5"; his Field Goals Attempted (25) shows
 Cascio)"; PATs Attempted (62), not yet inside the list, still correctly
 shows "6 from the current #5" via the unchanged outside-the-list branch.
 
+**Same day, ninth round: Career Stats gets a Compare Players tab
+(2026-09-08)** — per the user: "i would like to add another sub tab to
+be able to compare two people's stats." `dashboards/career-stats.html`
+gained a tabbar (Player Lookup / Compare Players) — Player Lookup is the
+existing single-player search, unchanged. Compare Players reuses the
+same searchable-combobox two-column header layout every position page's
+own Kicker/Player Head-to-Head tab already established (`.colcard-2`/
+`.kicker-col`/`.kicker-head`/`.avatar`, all shared in `css/theme.css`),
+but keeps the actual comparison to plain career-total tables rather than
+building bespoke per-category charts the way e.g. Placekicker's H2H
+does -- Career Stats spans too many structurally different categories
+(Rushing/Passing/Receiving/Defense/5 special-teams categories) for one
+custom chart design to fit all of them. For each category in the UNION
+of both players' own `relevantCategoriesFor()` (the same position-based
+filter Player Lookup uses), one Stat/Player A/Player B table renders
+side by side, "—" for whichever player lacks that category entirely --
+comparing a QB and a RB naturally still shows whatever they genuinely
+share (e.g. both have Rushing) without forcing an irrelevant category
+onto either side. Verified live: Charlie King (QB) vs. Michael Coleman
+(RB) correctly shows Passing/Rushing/Receiving/Kickoff Return, with each
+player's own numbers matching their already-verified Player Lookup
+values exactly (Coleman's 262 rushing attempts/1,337 yards). Checked at
+375px mobile width -- theme.css's existing `.colcard-2` breakpoint
+collapses the two-column header to one column with no other changes
+needed, no overflow.
+
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly

@@ -31,7 +31,12 @@
 
   <div class="intro">
     <h1>Career Stats</h1>
-    <p>Real per-player career totals from Carroll's own box-score archive (2010-present) — search any player to see their season-by-season and career numbers. Looking for who's chasing an all-time record, or the full record book? See <a href="records.html">Records</a>.</p>
+    <p>Real per-player career totals from Carroll's own box-score archive (2010-present) — search any player to see their season-by-season and career numbers, or compare two players side by side. Looking for who's chasing an all-time record, or the full record book? See <a href="records.html">Records</a>.</p>
+  </div>
+
+  <div class="tabbar" id="cs-tabs">
+    <button class="tabbtn active" data-tab="lookup">Player Lookup</button>
+    <button class="tabbtn" data-tab="compare">Compare Players</button>
   </div>
 
   <div class="stage" id="cs-stage"></div>
@@ -111,7 +116,14 @@ function categoryCardHTML(catId, player) {
     </div>`;
 }
 
-function renderPage(root) {
+function playerOptions() {
+  return DATA.players
+    .slice()
+    .sort((a, b) => a.display_name.localeCompare(b.display_name))
+    .map((p) => ({ value: p.display_name, label: p.position ? `${p.display_name} (${p.position})` : p.display_name }));
+}
+
+function playerLookupTab(root) {
   root.innerHTML = `
     <div class="frame-wrap active"><div class="slide">
       <div class="body">
@@ -121,10 +133,7 @@ function renderPage(root) {
       <div class="footer-note">Source: Special Teams Data's raw box-score archive (2010-present) and this site's own data/special-teams.json, aggregated by build_career_stats.py. Rate stats (Avg/Cmp%/FG%) are computed from the summed counting stats, never averaged per-game. Only categories relevant to a player's own roster position are shown; a player with no Lifting Data roster match shows every category they have real stats in instead, since there's no position on file to filter by.</div>
     </div></div>`;
 
-  const options = DATA.players
-    .slice()
-    .sort((a, b) => a.display_name.localeCompare(b.display_name))
-    .map((p) => ({ value: p.display_name, label: p.position ? `${p.display_name} (${p.position})` : p.display_name }));
+  const options = playerOptions();
 
   function render(name) {
     const player = DATA.players.find((p) => p.display_name === name);
@@ -147,11 +156,106 @@ function renderPage(root) {
   render(options[0]?.value);
 }
 
+/* ============================================================== Compare == */
+
+// One category's Stat/Player A/Player B table -- reused for every category
+// in the UNION of both players' own relevant categories (relevantCategoriesFor,
+// same position-based filter Player Lookup uses), so comparing 2 players at
+// different positions still shows whatever they genuinely share (e.g. both
+// have Rushing) without forcing an irrelevant category onto either side.
+// A player missing a given category entirely shows "—" throughout their
+// column rather than omitting the row, so the comparison stays readable as
+// one consistent table per category.
+function compareCategoryTableHTML(catId, playerA, playerB) {
+  const cat = CAREER_CATEGORIES[catId];
+  const a = playerA.categories[catId];
+  const b = playerB.categories[catId];
+  const rows = cat.cols.map(([key, label]) => `
+    <tr><td class="name">${label}</td><td>${a ? (a.career[key] ?? '—') : '—'}</td><td>${b ? (b.career[key] ?? '—') : '—'}</td></tr>`).join('');
+  return `
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-head"><h3>${cat.label}</h3></div>
+      <div class="card-body" style="padding:0;">
+        <table class="mini">
+          <thead><tr><th>Career Total</th><th>${playerA.display_name}</th><th>${playerB.display_name}</th></tr></thead>
+          <tbody>
+            <tr><td class="name">Games</td><td>${a ? a.career_games : '—'}</td><td>${b ? b.career_games : '—'}</td></tr>
+            ${rows}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function compareTab(root) {
+  root.innerHTML = `
+    <div class="frame-wrap active"><div class="slide">
+      <div class="body">
+        <div class="colcard-2" style="margin-bottom:14px;">
+          <div class="kicker-col">
+            <div class="kicker-head">
+              <div class="avatar" id="cmp-A-avatar" style="background:var(--cat-6);"></div>
+              <div style="flex:1; min-width:0;" id="cmp-A-sel"></div>
+            </div>
+          </div>
+          <div class="kicker-col">
+            <div class="kicker-head">
+              <div class="avatar" id="cmp-B-avatar" style="background:var(--cat-3);"></div>
+              <div style="flex:1; min-width:0;" id="cmp-B-sel"></div>
+            </div>
+          </div>
+        </div>
+        <div id="cmp-content"></div>
+      </div>
+      <div class="footer-note">Career totals only -- see Player Lookup for a season-by-season breakdown of either player. Only categories relevant to either player's own roster position are compared (see Player Lookup's own footer note for what that means for an unmatched player).</div>
+    </div></div>`;
+
+  const options = playerOptions();
+  const state = { a: options[0]?.value, b: options[1]?.value || options[0]?.value };
+
+  function render() {
+    const playerA = DATA.players.find((p) => p.display_name === state.a);
+    const playerB = DATA.players.find((p) => p.display_name === state.b);
+    document.getElementById('cmp-A-avatar').textContent = playerA ? initials(playerA.display_name) : '';
+    document.getElementById('cmp-B-avatar').textContent = playerB ? initials(playerB.display_name) : '';
+    const contentEl = document.getElementById('cmp-content');
+    if (!playerA || !playerB) {
+      contentEl.innerHTML = '<div class="insight">Search for 2 players above to compare their career stats.</div>';
+      return;
+    }
+    const cats = [...new Set([...relevantCategoriesFor(playerA), ...relevantCategoriesFor(playerB)])];
+    if (!cats.length) {
+      contentEl.innerHTML = `<div class="insight">Neither ${playerA.display_name} nor ${playerB.display_name} has a tracked individual stat category that applies to their position on this site.</div>`;
+      return;
+    }
+    contentEl.innerHTML = cats.map((c) => compareCategoryTableHTML(c, playerA, playerB)).join('');
+  }
+
+  makeSearchCombobox(document.getElementById('cmp-A-sel'), {
+    options, value: state.a, onChange: (v) => { state.a = v; render(); }, placeholder: 'Search player name…',
+  });
+  makeSearchCombobox(document.getElementById('cmp-B-sel'), {
+    options, value: state.b, onChange: (v) => { state.b = v; render(); }, placeholder: 'Search player name…',
+  });
+  render();
+}
+
+const TAB_RENDERERS = { lookup: playerLookupTab, compare: compareTab };
+
+function showTab(tab) {
+  document.querySelectorAll('#cs-tabs .tabbtn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+  TAB_RENDERERS[tab](document.getElementById('cs-stage'));
+}
+
+document.querySelectorAll('#cs-tabs .tabbtn').forEach((btn) => {
+  btn.addEventListener('click', () => showTab(btn.dataset.tab));
+});
+
 fetch('../data/career-stats.json')
   .then((r) => r.json())
   .then((data) => {
     DATA = data;
-    renderPage(document.getElementById('cs-stage'));
+    showTab('lookup');
   })
   .catch((err) => {
     document.getElementById('cs-stage').innerHTML = `<div class="card"><div class="card-body">Couldn't load data/career-stats.json — ${err}. Run scripts/build_career_stats.py first, and serve over http:// not file://.</div></div>`;
