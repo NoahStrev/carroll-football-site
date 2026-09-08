@@ -7,13 +7,16 @@ award history, and a "Record Watch" cross-reference of current players'
 real career totals against the scraped Career leaderboards.
 
 Record Watch scope, deliberately limited to what's honestly derivable
-today: only the 5 categories with a real per-player career total already
-in career-stats.json (Rushing/Passing/Receiving/Interceptions/Tackles/
-Sacks -- see RECORD_WATCH_MAP below). Kicking/Punting/Return records exist
-in the scraped record book but have no per-player career-total pipeline
-yet (data/special-teams.json has real per-attempt rows, not accumulated
-career totals) -- out of scope for this pass, called out explicitly on the
-page rather than silently absent.
+today: only the categories with a real per-player career total already in
+career-stats.json -- see RECORD_WATCH_MAP below. As of 2026-09-08 that's
+Rushing/Passing/Receiving/Interceptions/Tackles/Sacks (from the raw
+box-score archive) plus Field Goals/PATs/Punting/Kickoff+Punt Returns
+(from this site's own already-verified data/special-teams.json, rolled up
+into career totals by build_career_stats.py's accumulate_special_teams()).
+Not every record-book category has a mapping -- rate-stat categories whose
+title carries a "(Min. N Attempts)" qualifier (e.g. "Average Yards Per
+Punt") are skipped, since that qualifier isn't consistent enough across
+categories/seasons to key a lookup on safely.
 
 "Current" is the 2 most recent season years actually present in
 career-stats.json (not a hardcoded year) -- self-adjusts every season
@@ -69,6 +72,23 @@ RECORD_WATCH_MAP = {
     "Solo Tackles": ("Individual Defensive Statistics", "solo"),
     "Assisted Tackles": ("Individual Defensive Statistics", "ast"),
     "Sacks": ("Individual Defensive Statistics", "sacks"),
+    # Added 2026-09-08 alongside the new Punting/Kickoffs/Return/PAT-FG
+    # career totals. Deliberately excludes the record book's own rate-stat
+    # categories here (e.g. "Average Yards Per Punt (Min. 50 Attempts)") --
+    # those titles carry a parenthetical minimum-attempts qualifier that
+    # isn't consistent across categories/seasons, so a plain string-key
+    # lookup would be a real, silent mismatch risk; only the counting
+    # stats (no qualifier in the name) are mapped.
+    "Field Goals Made": ("PATFG", "fg_made"),
+    "Field Goals Attempted": ("PATFG", "fg_att"),
+    "PATs Made": ("PATFG", "exp_made"),
+    "PATs Attempted": ("PATFG", "exp_att"),
+    "Total Punts": ("Punting", "att"),
+    "Punting Yards": ("Punting", "gross_yds"),
+    "Kickoff Returns": ("KickoffReturn", "att"),
+    "Kickoff Return Yards": ("KickoffReturn", "yds"),
+    "Punt Returns": ("PuntReturn", "att"),
+    "Punt Return Yards": ("PuntReturn", "yds"),
 }
 
 

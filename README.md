@@ -2065,6 +2065,60 @@ genuinely new data domain for this site, built in 3 layers:
    literal string afterward, not just eyeballing a few rows. Verified at
    390px mobile width on all 4 tabs: no horizontal page overflow.
 
+**Same day, fourth round: Career Stats made position-aware, kicking/
+punting/return career totals built (2026-09-08)** — per the user: "for
+career stats, only show the stats relevant to their position," then "I
+would like this to be a player by player selector... if a quarterback is
+selected, don't show punt stats," plus "let's build the kicking/punting/
+return career totals too."
+
+1. **`accumulate_special_teams()`** (new, `build_career_stats.py`) — 7 more
+   real per-player career categories (Punting, Kickoffs, Kickoff/Punt
+   Return, PAT/FG, and Short/Long Snapping), sourced from this site's own
+   already-verified `data/special-teams.json` rather than re-parsing the
+   raw box-score archive's own messier PATs/Field Goals/Kickoffs/Punting/
+   All Returns categories a second time (see the module's own docstring
+   for why). Two real name-format wrinkles specific to this source,
+   handled with a dedicated `bare_surname_match()`: most of these units'
+   player fields (punter/kicker/returner/snapper) are a bare surname only,
+   no first name or initial at all, so only the unique-last-name match
+   stage is even possible there; `money_unit`'s own `kicker`/
+   `long_snapper` fields are the one exception (already full "First Last"
+   names), reusing `match_player()` same as every box-score category.
+   **Verified exactly against this site's own independently-scraped
+   Career Records** (not just "looks plausible"): Noah Streveler's 149
+   career punts / 5,794 yards / 38.9 average, and Jacob Laurent's 28-of-43
+   field goals (65.1%) / 101-of-110 PATs (91.8%) all match the scraped
+   record book exactly.
+2. **`RECORD_WATCH_MAP` extended** (`build_records_data.py`) to cross-
+   reference these new categories too (Field Goals/PATs Made/Attempted,
+   Total Punts, Punting Yards, Kickoff/Punt Returns and their yards) —
+   deliberately excludes the record book's own rate-stat categories
+   (titles carrying a "(Min. N Attempts)" qualifier, e.g. "Average Yards
+   Per Punt") since that qualifier isn't consistent enough across
+   categories/seasons to key a plain-string lookup on safely.
+3. **Career Stats rebuilt as a player selector**, replacing the previous
+   category-tabs-plus-leaderboard layout — a searchable combobox (reusing
+   the same shared `makeSearchCombobox()` every position page's Head-to-
+   Head tab already uses, not a new component) picks one player, and the
+   page shows every stat category relevant to THAT player's own roster
+   position (`POSITION_CATEGORIES`, e.g. `QB: ['Passing', 'Rushing']`) —
+   a real, deliberate judgment call about which categories make sense per
+   position (documented inline as exactly that, not asserted as some
+   official designation this site's data actually carries). A player with
+   no roster position on file still shows every category they have real
+   data in, since there's nothing to filter by. **Verified the filter is
+   actually filtering, not just reflecting an empty dataset**: Charlie
+   King (QB) genuinely has an `Individual Defensive Statistics` stat line
+   in the underlying data (a fluke special-teams-coverage tackle) that
+   correctly does NOT appear on his page — confirmed by inspecting
+   `DATA.players` directly, not just trusting the rendered output looked
+   right. Spot-checked a specialist (Brayden Partlow, Short + Long
+   Snapping only, 122 career long snaps matching the Long Snapper page's
+   own documented total) and an unmatched player (shows all their real
+   categories, no position to filter by) too. Verified at 375px mobile
+   width, all 4 tabs: no horizontal overflow, no console errors.
+
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly

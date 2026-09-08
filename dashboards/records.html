@@ -250,7 +250,7 @@ function recordWatchTab(root) {
         <div class="sub">Current Players vs. the Career Record Book</div>
       </div>
       <div class="body">
-        <div class="insight" style="margin-bottom:14px;">Current players (credited with a stat in ${rw.active_seasons.join(' or ')}) compared against the real Career leaderboard for the same statistic. Covers Rushing, Passing, Receiving, Interceptions, Tackles, and Sacks — the categories with a real per-player career total already built. Kicking, Punting, and Return records aren't tracked here yet (that data exists per-attempt but hasn't been rolled up into career totals).</div>
+        <div class="insight" style="margin-bottom:14px;">Current players (credited with a stat in ${rw.active_seasons.join(' or ')}) compared against the real Career leaderboard for the same statistic. Covers Rushing, Passing, Receiving, Interceptions, Tackles, Sacks, Field Goals, PATs, Punting, and Kickoff/Punt Returns — the categories with a real per-player career total already built. Rate-stat records (e.g. "Average Yards Per Punt") aren't compared here, only counting stats.</div>
         ${[...byStat.entries()].map(([stat, entries]) => `
           <div class="record-section-title">${stat}</div>
           <div class="card"><div class="card-body" style="padding:0;">
@@ -267,17 +267,74 @@ function recordWatchTab(root) {
 
 /* ============================================================ Career Stats == */
 
-const CAREER_CATEGORIES = [
-  { id: 'Rushing', label: 'Rushing', headline: 'net', headlineLabel: 'Yards', cols: [['att', 'Att'], ['net', 'Yds'], ['td', 'TD'], ['yards_per_carry', 'Avg']] },
-  { id: 'Passing', label: 'Passing', headline: 'yds', headlineLabel: 'Yards', cols: [['att', 'Att'], ['cmp', 'Cmp'], ['yds', 'Yds'], ['td', 'TD'], ['int', 'Int'], ['completion_pct', 'Cmp%']] },
-  { id: 'Receiving', label: 'Receiving', headline: 'yds', headlineLabel: 'Yards', cols: [['rec', 'Rec'], ['yds', 'Yds'], ['td', 'TD'], ['yards_per_rec', 'Avg']] },
-  { id: 'Individual Defensive Statistics', label: 'Defense', headline: 'tot', headlineLabel: 'Tackles', cols: [['solo', 'Solo'], ['ast', 'Ast'], ['tot', 'Tot'], ['sacks', 'Sacks'], ['int', 'Int'], ['ff', 'FF']] },
-];
+// Every real category build_career_stats.py can produce, with how to
+// label/format it. `cols` drives both the per-category table AND which
+// fields exist at all -- a category simply isn't rendered for a player who
+// has no data in it (see careerStatsRows), same as before.
+const CAREER_CATEGORIES = {
+  Rushing: { label: 'Rushing', cols: [['att', 'Att'], ['net', 'Yds'], ['td', 'TD'], ['yards_per_carry', 'Avg']] },
+  Passing: { label: 'Passing', cols: [['att', 'Att'], ['cmp', 'Cmp'], ['yds', 'Yds'], ['td', 'TD'], ['int', 'Int'], ['completion_pct', 'Cmp%'], ['yards_per_att', 'Y/A']] },
+  Receiving: { label: 'Receiving', cols: [['rec', 'Rec'], ['yds', 'Yds'], ['td', 'TD'], ['yards_per_rec', 'Avg']] },
+  'Individual Defensive Statistics': { label: 'Defense', cols: [['solo', 'Solo'], ['ast', 'Ast'], ['tot', 'Tot'], ['sacks', 'Sacks'], ['int', 'Int'], ['ff', 'FF'], ['brup', 'BrUp'], ['blkd', 'Blkd'], ['qh', 'QH']] },
+  Punting: { label: 'Punting', cols: [['att', 'Punts'], ['gross_yds', 'Yds'], ['gross_avg', 'Avg'], ['net_avg', 'Net Avg'], ['long', 'Long'], ['i20', 'In 20'], ['blocked', 'Blocked']] },
+  Kickoffs: { label: 'Kickoffs', cols: [['att', 'No.'], ['yds', 'Yds'], ['avg', 'Avg'], ['long', 'Long'], ['tb', 'TB'], ['ob', 'OB'], ['inside_25', 'In 25']] },
+  KickoffReturn: { label: 'Kickoff Return', cols: [['att', 'Ret'], ['yds', 'Yds'], ['avg', 'Avg'], ['long', 'Long']] },
+  PuntReturn: { label: 'Punt Return', cols: [['att', 'Ret'], ['yds', 'Yds'], ['avg', 'Avg'], ['long', 'Long']] },
+  PATFG: { label: 'Kicking (PAT/FG)', cols: [['fg_made', 'FG'], ['fg_att', 'FGA'], ['fg_pct', 'FG%'], ['exp_made', 'PAT'], ['exp_att', 'PATA'], ['exp_pct', 'PAT%']] },
+  ShortSnapping: { label: 'Short Snapping (PAT/FG)', cols: [['att', 'Snaps']] },
+  LongSnapping: { label: 'Long Snapping (Punt)', cols: [['att', 'Snaps']] },
+};
 
-function careerStatsRows(categoryId) {
-  return DATA.players
-    .filter((p) => p.categories[categoryId])
-    .map((p) => ({ player: p.display_name, position: p.position, matched: !!p.athlete_key, games: p.categories[categoryId].career_games, ...p.categories[categoryId].career }));
+// Which categories are worth showing for a given roster position -- a real
+// judgment call (this site has no explicit "these are a player's real
+// position-group duties" field), not an assertion that e.g. a WR could
+// never legitimately have a punting stat. Purely a display filter per the
+// user's own framing ("if a quarterback is selected, don't show punt
+// stats") -- an unmatched player (no roster position at all) still shows
+// every category they have real data in, since there's no position to
+// filter by. OL has no offensive skill-position category of its own on
+// this site (no real per-lineman stat exists in the source data).
+const POSITION_CATEGORIES = {
+  QB: ['Passing', 'Rushing'],
+  RB: ['Rushing', 'Receiving', 'KickoffReturn', 'PuntReturn'],
+  WR: ['Receiving', 'Rushing', 'KickoffReturn', 'PuntReturn'],
+  TE: ['Receiving', 'Rushing'],
+  OL: [],
+  DL: ['Individual Defensive Statistics'],
+  LB: ['Individual Defensive Statistics'],
+  OLB: ['Individual Defensive Statistics'],
+  SAM: ['Individual Defensive Statistics'],
+  BOB: ['Individual Defensive Statistics'],
+  CB: ['Individual Defensive Statistics', 'KickoffReturn', 'PuntReturn'],
+  SAF: ['Individual Defensive Statistics', 'KickoffReturn', 'PuntReturn'],
+  DB: ['Individual Defensive Statistics', 'KickoffReturn', 'PuntReturn'],
+  SPEC: ['Punting', 'Kickoffs', 'PATFG', 'ShortSnapping', 'LongSnapping'],
+};
+
+function relevantCategoriesFor(player) {
+  const real = Object.keys(player.categories);
+  if (!player.position || !POSITION_CATEGORIES[player.position]) return real;
+  const allowed = new Set(POSITION_CATEGORIES[player.position]);
+  return real.filter((c) => allowed.has(c));
+}
+
+function categoryCardHTML(catId, player) {
+  const cat = CAREER_CATEGORIES[catId];
+  const catData = player.categories[catId];
+  const seasonRows = catData.seasons.map((s) => `<tr><td>${s.season}</td><td>${s.games}</td>${cat.cols.map(([key]) => `<td>${s[key] ?? '—'}</td>`).join('')}</tr>`).join('');
+  return `
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-head"><h3>${cat.label}</h3><span class="data-note" style="margin:0;">${catData.career_games} games</span></div>
+      <div class="card-body" style="padding:0;">
+        <div class="tbl-scroll"><table class="mini records-table">
+          <thead><tr><th>Season</th><th>Games</th>${cat.cols.map(([, label]) => `<th>${label}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${seasonRows}
+            <tr style="font-weight:700; border-top: 2px solid var(--border);"><td>Career</td><td>${catData.career_games}</td>${cat.cols.map(([key]) => `<td>${catData.career[key] ?? '—'}</td>`).join('')}</tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>`;
 }
 
 function careerStatsTab(root) {
@@ -288,41 +345,36 @@ function careerStatsTab(root) {
         <div class="sub">Real Per-Player Career Totals · 2010-Present</div>
       </div>
       <div class="body">
-        <div class="toolbar-row">
-          <div class="subtabbar" id="cs-subtabs">
-            ${CAREER_CATEGORIES.map((c, i) => `<button class="subtabbtn${i === 0 ? ' active' : ''}" data-cat="${c.id}">${c.label}</button>`).join('')}
-          </div>
-          <input type="text" class="name-search" id="cs-search" placeholder="Search player name…" autocomplete="off" spellcheck="false" style="margin-left:auto;">
-        </div>
-        <div class="insight" style="margin-bottom:14px;">Position/class shown only when the player has a Lifting Data roster match — a real stat total with no position shown just means that player hasn't had a testing session captured in that program's roster yet, not that the stats are wrong.</div>
+        <div style="max-width:360px; margin-bottom:14px;" id="cs-combobox"></div>
         <div id="cs-content"></div>
       </div>
-      <div class="footer-note">Source: Special Teams Data's raw box-score archive (2010-present), aggregated by this site's own build_career_stats.py. Rate stats (Avg/Cmp%) are computed from the summed counting stats, never averaged per-game.</div>
+      <div class="footer-note">Source: Special Teams Data's raw box-score archive (2010-present) and this site's own data/special-teams.json, aggregated by build_career_stats.py. Rate stats (Avg/Cmp%/FG%) are computed from the summed counting stats, never averaged per-game. Only categories relevant to a player's own roster position are shown; a player with no Lifting Data roster match shows every category they have real stats in instead, since there's no position on file to filter by.</div>
     </div></div>`;
 
-  function render(catId, query) {
-    const cat = CAREER_CATEGORIES.find((c) => c.id === catId);
-    let rows = careerStatsRows(catId);
-    const q = (query || '').trim().toLowerCase();
-    if (q) rows = rows.filter((r) => r.player.toLowerCase().includes(q));
-    rows.sort((a, b) => (b[cat.headline] || 0) - (a[cat.headline] || 0));
-    document.getElementById('cs-content').innerHTML = `
-      <div class="tbl-scroll"><table class="mini records-table">
-        <thead><tr><th>Player</th><th>Pos</th><th>Games</th>${cat.cols.map(([, label]) => `<th>${label}</th>`).join('')}</tr></thead>
-        <tbody>${rows.map((r) => `<tr><td class="name">${r.player}</td><td>${r.position || '—'}</td><td>${r.games}</td>${cat.cols.map(([key]) => `<td>${r[key] ?? '—'}</td>`).join('')}</tr>`).join('')}</tbody>
-      </table></div>
-      ${rows.length ? '' : '<div class="insight">No players match this search.</div>'}`;
+  const options = DATA.players
+    .slice()
+    .sort((a, b) => a.display_name.localeCompare(b.display_name))
+    .map((p) => ({ value: p.display_name, label: p.position ? `${p.display_name} (${p.position})` : p.display_name }));
+
+  function render(name) {
+    const player = DATA.players.find((p) => p.display_name === name);
+    const contentEl = document.getElementById('cs-content');
+    if (!player) {
+      contentEl.innerHTML = '<div class="insight">Search for a player above to see their career stats.</div>';
+      return;
+    }
+    const cats = relevantCategoriesFor(player);
+    if (!cats.length) {
+      contentEl.innerHTML = `<div class="insight">No tracked individual stat categories apply to ${player.display_name}'s position (${player.position || '—'}) on this site.</div>`;
+      return;
+    }
+    contentEl.innerHTML = cats.map((c) => categoryCardHTML(c, player)).join('');
   }
-  const state = { cat: 'Rushing' };
-  document.querySelectorAll('#cs-subtabs .subtabbtn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#cs-subtabs .subtabbtn').forEach((b) => b.classList.toggle('active', b === btn));
-      state.cat = btn.dataset.cat;
-      render(state.cat, document.getElementById('cs-search').value);
-    });
+
+  makeSearchCombobox(document.getElementById('cs-combobox'), {
+    options, value: options[0]?.value, onChange: render, placeholder: 'Search player name…',
   });
-  document.getElementById('cs-search').addEventListener('input', (e) => render(state.cat, e.target.value));
-  render(state.cat, '');
+  render(options[0]?.value);
 }
 
 /* ============================================================= Awards History == */

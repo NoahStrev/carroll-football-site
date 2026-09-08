@@ -1629,6 +1629,25 @@
        "games": 1
       }
      ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 0,
+      "long": 0,
+      "avg": 0.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 1,
+       "yds": 0,
+       "long": 0,
+       "avg": 0.0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -2187,6 +2206,25 @@
        "long": 13,
        "yards_per_rec": 13.0,
        "games": 1
+      }
+     ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 13,
+      "yds": 43,
+      "long": 21,
+      "avg": 3.3
+     },
+     "career_games": 4,
+     "seasons": [
+      {
+       "season": 2022,
+       "att": 13,
+       "yds": 43,
+       "long": 21,
+       "avg": 3.3,
+       "games": 4
       }
      ]
     }
@@ -3091,6 +3129,25 @@
        "games": 9
       }
      ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 2,
+      "yds": 39,
+      "long": 25,
+      "avg": 19.5
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 2,
+       "yds": 39,
+       "long": 25,
+       "avg": 19.5,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -3600,6 +3657,31 @@
        "long": 64,
        "completion_pct": 100.0,
        "yards_per_att": 64.0,
+       "games": 1
+      }
+     ]
+    },
+    "Punting": {
+     "career": {
+      "att": 2,
+      "gross_yds": 67,
+      "net_yds": 67,
+      "long": 37,
+      "i20": 1,
+      "gross_avg": 33.5,
+      "net_avg": 33.5
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2026,
+       "att": 2,
+       "gross_yds": 67,
+       "net_yds": 67,
+       "long": 37,
+       "i20": 1,
+       "gross_avg": 33.5,
+       "net_avg": 33.5,
        "games": 1
       }
      ]
@@ -4377,6 +4459,25 @@
        "games": 10
       }
      ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 5,
+      "long": 5,
+      "avg": 5.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2022,
+       "att": 1,
+       "yds": 5,
+       "long": 5,
+       "avg": 5.0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -4797,6 +4898,57 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 1
+      }
+     ]
+    },
+    "ShortSnapping": {
+     "career": {
+      "att": 148
+     },
+     "career_games": 29,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 62,
+       "games": 10
+      },
+      {
+       "season": 2024,
+       "att": 42,
+       "games": 9
+      },
+      {
+       "season": 2025,
+       "att": 37,
+       "games": 9
+      },
+      {
+       "season": 2026,
+       "att": 7,
+       "games": 1
+      }
+     ]
+    },
+    "LongSnapping": {
+     "career": {
+      "att": 122
+     },
+     "career_games": 25,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 25,
+       "games": 6
+      },
+      {
+       "season": 2024,
+       "att": 52,
+       "games": 10
+      },
+      {
+       "season": 2025,
+       "att": 45,
+       "games": 9
       }
      ]
     }
@@ -5889,6 +6041,51 @@
        "fr": 0,
        "fr_yds": 1,
        "games": 4
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "Carlos Cadet, Jr.",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "PuntReturn": {
+     "career": {
+      "att": 1,
+      "yds": 1,
+      "long": 1,
+      "avg": 1.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2025,
+       "att": 1,
+       "yds": 1,
+       "long": 1,
+       "avg": 1.0,
+       "games": 1
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 7,
+      "yds": 114,
+      "long": 49,
+      "avg": 16.3
+     },
+     "career_games": 2,
+     "seasons": [
+      {
+       "season": 2025,
+       "att": 7,
+       "yds": 114,
+       "long": 49,
+       "avg": 16.3,
+       "games": 2
       }
      ]
     }
@@ -9026,6 +9223,44 @@
        "games": 3
       }
      ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 8,
+      "yds": 73,
+      "long": 20,
+      "avg": 9.1
+     },
+     "career_games": 6,
+     "seasons": [
+      {
+       "season": 2025,
+       "att": 8,
+       "yds": 73,
+       "long": 20,
+       "avg": 9.1,
+       "games": 6
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 32,
+      "yds": 555,
+      "long": 38,
+      "avg": 17.3
+     },
+     "career_games": 10,
+     "seasons": [
+      {
+       "season": 2025,
+       "att": 32,
+       "yds": 555,
+       "long": 38,
+       "avg": 17.3,
+       "games": 10
+      }
+     ]
     }
    }
   },
@@ -9157,6 +9392,25 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
+       "games": 1
+      }
+     ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 1,
+      "yds": 7,
+      "long": 7,
+      "avg": 7.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2026,
+       "att": 1,
+       "yds": 7,
+       "long": 7,
+       "avg": 7.0,
        "games": 1
       }
      ]
@@ -9764,6 +10018,25 @@
        "games": 1
       }
      ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 22,
+      "long": 22,
+      "avg": 22.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2024,
+       "att": 1,
+       "yds": 22,
+       "long": 22,
+       "avg": 22.0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -9988,6 +10261,40 @@
    }
   },
   {
+   "display_name": "Demetrios Brillakis",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Punting": {
+     "career": {
+      "att": 45,
+      "gross_yds": 1395,
+      "net_yds": 1299,
+      "long": 66,
+      "i20": 10,
+      "blocked": 1,
+      "gross_avg": 31.0,
+      "net_avg": 28.9
+     },
+     "career_games": 9,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 45,
+       "gross_yds": 1395,
+       "net_yds": 1299,
+       "long": 66,
+       "i20": 10,
+       "blocked": 1,
+       "gross_avg": 31.0,
+       "net_avg": 28.9,
+       "games": 9
+      }
+     ]
+    }
+   }
+  },
+  {
    "display_name": "Demetrius Bissen",
    "athlete_key": "bissen_demetrius",
    "position": "BOB",
@@ -10091,6 +10398,25 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
+       "games": 1
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 28,
+      "long": 28,
+      "avg": 28.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2026,
+       "att": 1,
+       "yds": 28,
+       "long": 28,
+       "avg": 28.0,
        "games": 1
       }
      ]
@@ -11038,6 +11364,25 @@
        "games": 6
       }
      ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 16,
+      "long": 16,
+      "avg": 16.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2025,
+       "att": 1,
+       "yds": 16,
+       "long": 16,
+       "avg": 16.0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -11846,6 +12191,44 @@
        "games": 10
       }
      ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 1,
+      "yds": 0,
+      "long": 0,
+      "avg": 0.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 1,
+       "yds": 0,
+       "long": 0,
+       "avg": 0.0,
+       "games": 1
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 14,
+      "long": 14,
+      "avg": 14.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 1,
+       "yds": 14,
+       "long": 14,
+       "avg": 14.0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -12410,6 +12793,25 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
+       "games": 1
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 0,
+      "long": 0,
+      "avg": 0.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 1,
+       "yds": 0,
+       "long": 0,
+       "avg": 0.0,
        "games": 1
       }
      ]
@@ -13760,6 +14162,19 @@
        "games": 1
       }
      ]
+    },
+    "ShortSnapping": {
+     "career": {
+      "att": 1
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2025,
+       "att": 1,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -14229,6 +14644,59 @@
    }
   },
   {
+   "display_name": "J.R Muth",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "PuntReturn": {
+     "career": {
+      "att": 7,
+      "yds": 30,
+      "long": 14,
+      "avg": 4.3
+     },
+     "career_games": 6,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 6,
+       "yds": 30,
+       "long": 14,
+       "avg": 5.0,
+       "games": 5
+      },
+      {
+       "season": 2022,
+       "att": 1,
+       "yds": 0,
+       "long": 0,
+       "avg": 0.0,
+       "games": 1
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 3,
+      "yds": 49,
+      "long": 19,
+      "avg": 16.3
+     },
+     "career_games": 3,
+     "seasons": [
+      {
+       "season": 2022,
+       "att": 3,
+       "yds": 49,
+       "long": 19,
+       "avg": 16.3,
+       "games": 3
+      }
+     ]
+    }
+   }
+  },
+  {
    "display_name": "J.R. Muth",
    "athlete_key": "muth_j_r",
    "position": "WR",
@@ -14512,6 +14980,32 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "JR Muth",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "PuntReturn": {
+     "career": {
+      "att": 10,
+      "yds": 44,
+      "long": 20,
+      "avg": 4.4
+     },
+     "career_games": 5,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 10,
+       "yds": 44,
+       "long": 20,
+       "avg": 4.4,
+       "games": 5
       }
      ]
     }
@@ -14803,6 +15297,53 @@
    }
   },
   {
+   "display_name": "Jackson Swink",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Punting": {
+     "career": {
+      "att": 28,
+      "gross_yds": 865,
+      "net_yds": 697,
+      "long": 43,
+      "i20": 3,
+      "gross_avg": 30.9,
+      "net_avg": 24.9
+     },
+     "career_games": 8,
+     "seasons": [
+      {
+       "season": 2025,
+       "att": 28,
+       "gross_yds": 865,
+       "net_yds": 697,
+       "long": 43,
+       "i20": 3,
+       "gross_avg": 30.9,
+       "net_avg": 24.9,
+       "games": 8
+      }
+     ]
+    },
+    "PATFG": {
+     "career": {
+      "exp_att": 1,
+      "exp_pct": 0.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2026,
+       "exp_att": 1,
+       "exp_pct": 0.0,
+       "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
    "display_name": "Jacob Laurent",
    "athlete_key": "laurent_jacob",
    "position": "SPEC",
@@ -14878,6 +15419,96 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
+       "games": 10
+      }
+     ]
+    },
+    "Kickoffs": {
+     "career": {
+      "att": 155,
+      "yds": 7363,
+      "long": 77,
+      "inside_25": 55,
+      "ob": 11,
+      "tb": 16,
+      "avg": 47.5
+     },
+     "career_games": 28,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 39,
+       "yds": 2006,
+       "long": 64,
+       "inside_25": 15,
+       "ob": 3,
+       "tb": 1,
+       "avg": 51.4,
+       "games": 9
+      },
+      {
+       "season": 2022,
+       "att": 49,
+       "yds": 2356,
+       "long": 77,
+       "inside_25": 18,
+       "tb": 7,
+       "ob": 6,
+       "avg": 48.1,
+       "games": 9
+      },
+      {
+       "season": 2023,
+       "att": 67,
+       "yds": 3001,
+       "long": 64,
+       "inside_25": 22,
+       "tb": 8,
+       "ob": 2,
+       "avg": 44.8,
+       "games": 10
+      }
+     ]
+    },
+    "PATFG": {
+     "career": {
+      "exp_att": 110,
+      "exp_made": 101,
+      "fg_att": 43,
+      "fg_made": 28,
+      "fg_pct": 65.1,
+      "exp_pct": 91.8
+     },
+     "career_games": 28,
+     "seasons": [
+      {
+       "season": 2021,
+       "exp_att": 28,
+       "exp_made": 24,
+       "fg_att": 13,
+       "fg_made": 9,
+       "fg_pct": 69.2,
+       "exp_pct": 85.7,
+       "games": 10
+      },
+      {
+       "season": 2022,
+       "exp_att": 36,
+       "exp_made": 34,
+       "fg_att": 13,
+       "fg_made": 6,
+       "fg_pct": 46.2,
+       "exp_pct": 94.4,
+       "games": 8
+      },
+      {
+       "season": 2023,
+       "exp_att": 46,
+       "exp_made": 43,
+       "fg_att": 17,
+       "fg_made": 13,
+       "fg_pct": 76.5,
+       "exp_pct": 93.5,
        "games": 10
       }
      ]
@@ -14998,6 +15629,44 @@
        "long": 8,
        "yards_per_rec": 8.0,
        "games": 4
+      }
+     ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 9,
+      "yds": 25,
+      "long": 13,
+      "avg": 2.8
+     },
+     "career_games": 4,
+     "seasons": [
+      {
+       "season": 2024,
+       "att": 9,
+       "yds": 25,
+       "long": 13,
+       "avg": 2.8,
+       "games": 4
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 3,
+      "yds": 58,
+      "long": 21,
+      "avg": 19.3
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 3,
+       "yds": 58,
+       "long": 21,
+       "avg": 19.3,
+       "games": 1
       }
      ]
     }
@@ -15374,6 +16043,52 @@
        "games": 1
       }
      ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 9,
+      "yds": 23,
+      "long": 16,
+      "avg": 2.6
+     },
+     "career_games": 4,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 4,
+       "yds": -8,
+       "long": 0,
+       "avg": -2.0,
+       "games": 3
+      },
+      {
+       "season": 2026,
+       "att": 5,
+       "yds": 31,
+       "long": 16,
+       "avg": 6.2,
+       "games": 1
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 20,
+      "long": 20,
+      "avg": 20.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 1,
+       "yds": 20,
+       "long": 20,
+       "avg": 20.0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -15554,6 +16269,25 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 10
+      }
+     ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 1,
+      "yds": 45,
+      "long": 45,
+      "avg": 45.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2024,
+       "att": 1,
+       "yds": 45,
+       "long": 45,
+       "avg": 45.0,
+       "games": 1
       }
      ]
     }
@@ -16558,6 +17292,26 @@
    }
   },
   {
+   "display_name": "Jaylin Pritchett",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "ShortSnapping": {
+     "career": {
+      "att": 1
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2022,
+       "att": 1,
+       "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
    "display_name": "Jayvion Williams",
    "athlete_key": "williams_jayvion",
    "position": "WR",
@@ -16875,6 +17629,25 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 7
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 9,
+      "long": 9,
+      "avg": 9.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 1,
+       "yds": 9,
+       "long": 9,
+       "avg": 9.0,
+       "games": 1
       }
      ]
     }
@@ -17678,6 +18451,25 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 7
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 17,
+      "long": 17,
+      "avg": 17.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 1,
+       "yds": 17,
+       "long": 17,
+       "avg": 17.0,
+       "games": 1
       }
      ]
     }
@@ -18732,6 +19524,41 @@
        "long": 59,
        "yards_per_rec": 12.6,
        "games": 9
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 27,
+      "yds": 388,
+      "long": 40,
+      "avg": 14.4
+     },
+     "career_games": 15,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 7,
+       "yds": 105,
+       "long": 30,
+       "avg": 15.0,
+       "games": 3
+      },
+      {
+       "season": 2022,
+       "att": 12,
+       "yds": 181,
+       "long": 40,
+       "avg": 15.1,
+       "games": 7
+      },
+      {
+       "season": 2023,
+       "att": 8,
+       "yds": 102,
+       "long": 27,
+       "avg": 12.8,
+       "games": 5
       }
      ]
     }
@@ -20550,6 +21377,60 @@
        "games": 6
       }
      ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 1,
+      "yds": 7,
+      "long": 7,
+      "avg": 7.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2022,
+       "att": 1,
+       "yds": 7,
+       "long": 7,
+       "avg": 7.0,
+       "games": 1
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 65,
+      "yds": 1428,
+      "long": 87,
+      "avg": 22.0
+     },
+     "career_games": 22,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 14,
+       "yds": 379,
+       "long": 87,
+       "avg": 27.1,
+       "games": 6
+      },
+      {
+       "season": 2022,
+       "att": 27,
+       "yds": 461,
+       "long": 55,
+       "avg": 17.1,
+       "games": 7
+      },
+      {
+       "season": 2023,
+       "att": 24,
+       "yds": 588,
+       "long": 49,
+       "avg": 24.5,
+       "games": 9
+      }
+     ]
     }
    }
   },
@@ -20953,6 +21834,25 @@
        "fr": 1,
        "fr_yds": 0,
        "games": 3
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 0,
+      "long": 0,
+      "avg": 0.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2025,
+       "att": 1,
+       "yds": 0,
+       "long": 0,
+       "avg": 0.0,
+       "games": 1
       }
      ]
     }
@@ -23292,6 +24192,52 @@
        "games": 1
       }
      ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 1,
+      "yds": 15,
+      "long": 15,
+      "avg": 15.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 1,
+       "yds": 15,
+       "long": 15,
+       "avg": 15.0,
+       "games": 1
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 6,
+      "yds": 103,
+      "long": 38,
+      "avg": 17.2
+     },
+     "career_games": 3,
+     "seasons": [
+      {
+       "season": 2024,
+       "att": 4,
+       "yds": 71,
+       "long": 38,
+       "avg": 17.8,
+       "games": 2
+      },
+      {
+       "season": 2026,
+       "att": 2,
+       "yds": 32,
+       "long": 19,
+       "avg": 16.0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -24638,6 +25584,95 @@
        "games": 1
       }
      ]
+    },
+    "Kickoffs": {
+     "career": {
+      "att": 78,
+      "yds": 2941,
+      "long": 65,
+      "inside_25": 15,
+      "tb": 11,
+      "ob": 5,
+      "avg": 37.7
+     },
+     "career_games": 18,
+     "seasons": [
+      {
+       "season": 2024,
+       "att": 25,
+       "yds": 988,
+       "long": 63,
+       "inside_25": 6,
+       "tb": 1,
+       "ob": 2,
+       "avg": 39.5,
+       "games": 7
+      },
+      {
+       "season": 2025,
+       "att": 45,
+       "yds": 1813,
+       "long": 65,
+       "inside_25": 8,
+       "tb": 5,
+       "ob": 3,
+       "avg": 40.3,
+       "games": 10
+      },
+      {
+       "season": 2026,
+       "att": 8,
+       "yds": 140,
+       "long": 63,
+       "tb": 5,
+       "inside_25": 1,
+       "avg": 17.5,
+       "games": 1
+      }
+     ]
+    },
+    "PATFG": {
+     "career": {
+      "exp_att": 62,
+      "exp_made": 60,
+      "fg_att": 25,
+      "fg_made": 20,
+      "fg_pct": 80.0,
+      "exp_pct": 96.8
+     },
+     "career_games": 21,
+     "seasons": [
+      {
+       "season": 2024,
+       "exp_att": 31,
+       "exp_made": 30,
+       "fg_att": 12,
+       "fg_made": 10,
+       "fg_pct": 83.3,
+       "exp_pct": 96.8,
+       "games": 10
+      },
+      {
+       "season": 2025,
+       "exp_att": 27,
+       "exp_made": 26,
+       "fg_att": 11,
+       "fg_made": 8,
+       "fg_pct": 72.7,
+       "exp_pct": 96.3,
+       "games": 10
+      },
+      {
+       "season": 2026,
+       "exp_att": 4,
+       "exp_made": 4,
+       "fg_att": 2,
+       "fg_made": 2,
+       "fg_pct": 100.0,
+       "exp_pct": 100.0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -25197,6 +26232,31 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 3
+      }
+     ]
+    },
+    "Punting": {
+     "career": {
+      "att": 24,
+      "gross_yds": 828,
+      "net_yds": 753,
+      "long": 55,
+      "i20": 7,
+      "gross_avg": 34.5,
+      "net_avg": 31.4
+     },
+     "career_games": 5,
+     "seasons": [
+      {
+       "season": 2025,
+       "att": 24,
+       "gross_yds": 828,
+       "net_yds": 753,
+       "long": 55,
+       "i20": 7,
+       "gross_avg": 34.5,
+       "net_avg": 31.4,
+       "games": 5
       }
      ]
     }
@@ -25772,6 +26832,32 @@
    }
   },
   {
+   "display_name": "Mikey Coleman",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "KickoffReturn": {
+     "career": {
+      "att": 3,
+      "yds": 62,
+      "long": 26,
+      "avg": 20.7
+     },
+     "career_games": 2,
+     "seasons": [
+      {
+       "season": 2024,
+       "att": 3,
+       "yds": 62,
+       "long": 26,
+       "avg": 20.7,
+       "games": 2
+      }
+     ]
+    }
+   }
+  },
+  {
    "display_name": "Mitchell Ahmad",
    "athlete_key": null,
    "position": null,
@@ -26013,6 +27099,25 @@
        "games": 1
       }
      ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 1,
+      "yds": 6,
+      "long": 6,
+      "avg": 6.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 1,
+       "yds": 6,
+       "long": 6,
+       "avg": 6.0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -26075,6 +27180,25 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 8
+      }
+     ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 1,
+      "yds": 0,
+      "long": 0,
+      "avg": 0.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2025,
+       "att": 1,
+       "yds": 0,
+       "long": 0,
+       "avg": 0.0,
+       "games": 1
       }
      ]
     }
@@ -26901,6 +28025,32 @@
    }
   },
   {
+   "display_name": "Nick Kerkoff",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "PuntReturn": {
+     "career": {
+      "att": 1,
+      "yds": 7,
+      "long": 7,
+      "avg": 7.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2024,
+       "att": 1,
+       "yds": 7,
+       "long": 7,
+       "avg": 7.0,
+       "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
    "display_name": "Nick Legnaioli",
    "athlete_key": "legnaioli_nick",
    "position": "RB",
@@ -27125,6 +28275,76 @@
        "completion_pct": 0.0,
        "yards_per_att": 0.0,
        "games": 1
+      }
+     ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 20,
+      "yds": 137,
+      "long": 22,
+      "avg": 6.8
+     },
+     "career_games": 9,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 1,
+       "yds": 7,
+       "long": 7,
+       "avg": 7.0,
+       "games": 1
+      },
+      {
+       "season": 2023,
+       "att": 3,
+       "yds": 21,
+       "long": 20,
+       "avg": 7.0,
+       "games": 2
+      },
+      {
+       "season": 2024,
+       "att": 16,
+       "yds": 109,
+       "long": 22,
+       "avg": 6.8,
+       "games": 6
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 40,
+      "yds": 780,
+      "long": 54,
+      "avg": 19.5
+     },
+     "career_games": 16,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 19,
+       "yds": 324,
+       "long": 44,
+       "avg": 17.1,
+       "games": 6
+      },
+      {
+       "season": 2023,
+       "att": 1,
+       "yds": 19,
+       "long": 19,
+       "avg": 19.0,
+       "games": 1
+      },
+      {
+       "season": 2024,
+       "att": 20,
+       "yds": 437,
+       "long": 54,
+       "avg": 21.9,
+       "games": 9
       }
      ]
     }
@@ -27735,6 +28955,89 @@
        "long": 0,
        "yards_per_carry": -12.0,
        "games": 1
+      }
+     ]
+    },
+    "Punting": {
+     "career": {
+      "att": 149,
+      "gross_yds": 5794,
+      "net_yds": 5229,
+      "long": 70,
+      "i20": 41,
+      "gross_avg": 38.9,
+      "net_avg": 35.1
+     },
+     "career_games": 29,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 4,
+       "gross_yds": 136,
+       "net_yds": 136,
+       "long": 49,
+       "i20": 1,
+       "gross_avg": 34.0,
+       "net_avg": 34.0,
+       "games": 1
+      },
+      {
+       "season": 2022,
+       "att": 57,
+       "gross_yds": 2015,
+       "net_yds": 1781,
+       "long": 70,
+       "i20": 10,
+       "gross_avg": 35.4,
+       "net_avg": 31.2,
+       "games": 9
+      },
+      {
+       "season": 2023,
+       "att": 36,
+       "gross_yds": 1451,
+       "net_yds": 1312,
+       "long": 58,
+       "i20": 11,
+       "gross_avg": 40.3,
+       "net_avg": 36.4,
+       "games": 9
+      },
+      {
+       "season": 2024,
+       "att": 52,
+       "gross_yds": 2192,
+       "net_yds": 2000,
+       "long": 62,
+       "i20": 19,
+       "gross_avg": 42.2,
+       "net_avg": 38.5,
+       "games": 10
+      }
+     ]
+    },
+    "Kickoffs": {
+     "career": {
+      "att": 25,
+      "yds": 878,
+      "long": 65,
+      "inside_25": 7,
+      "tb": 10,
+      "ob": 2,
+      "avg": 35.1
+     },
+     "career_games": 7,
+     "seasons": [
+      {
+       "season": 2024,
+       "att": 25,
+       "yds": 878,
+       "long": 65,
+       "inside_25": 7,
+       "tb": 10,
+       "ob": 2,
+       "avg": 35.1,
+       "games": 7
       }
      ]
     }
@@ -30527,6 +31830,25 @@
        "games": 1
       }
      ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 5,
+      "yds": 36,
+      "long": 15,
+      "avg": 7.2
+     },
+     "career_games": 3,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 5,
+       "yds": 36,
+       "long": 15,
+       "avg": 7.2,
+       "games": 3
+      }
+     ]
     }
    }
   },
@@ -30991,6 +32313,79 @@
        "games": 1
       }
      ]
+    },
+    "Punting": {
+     "career": {
+      "att": 1,
+      "gross_yds": 50,
+      "net_yds": 50,
+      "long": 50,
+      "gross_avg": 50.0,
+      "net_avg": 50.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 1,
+       "gross_yds": 50,
+       "net_yds": 50,
+       "long": 50,
+       "gross_avg": 50.0,
+       "net_avg": 50.0,
+       "games": 1
+      }
+     ]
+    },
+    "Kickoffs": {
+     "career": {
+      "att": 12,
+      "yds": 595,
+      "long": 63,
+      "tb": 1,
+      "inside_25": 4,
+      "ob": 1,
+      "avg": 49.6
+     },
+     "career_games": 3,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 10,
+       "yds": 505,
+       "long": 63,
+       "tb": 1,
+       "inside_25": 4,
+       "avg": 50.5,
+       "games": 2
+      },
+      {
+       "season": 2022,
+       "att": 2,
+       "yds": 90,
+       "long": 55,
+       "ob": 1,
+       "avg": 45.0,
+       "games": 1
+      }
+     ]
+    },
+    "PATFG": {
+     "career": {
+      "exp_att": 1,
+      "exp_made": 1,
+      "exp_pct": 100.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2022,
+       "exp_att": 1,
+       "exp_made": 1,
+       "exp_pct": 100.0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -31391,6 +32786,25 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 10
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 8,
+      "long": 8,
+      "avg": 8.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2022,
+       "att": 1,
+       "yds": 8,
+       "long": 8,
+       "avg": 8.0,
+       "games": 1
       }
      ]
     }
@@ -32037,6 +33451,32 @@
    }
   },
   {
+   "display_name": "Tanner Ludwig",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "PuntReturn": {
+     "career": {
+      "att": 1,
+      "yds": 0,
+      "long": 0,
+      "avg": 0.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2023,
+       "att": 1,
+       "yds": 0,
+       "long": 0,
+       "avg": 0.0,
+       "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
    "display_name": "Tate Koester",
    "athlete_key": null,
    "position": null,
@@ -32233,6 +33673,21 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 1,
+       "games": 1
+      }
+     ]
+    },
+    "PATFG": {
+     "career": {
+      "exp_att": 1,
+      "exp_pct": 0.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2021,
+       "exp_att": 1,
+       "exp_pct": 0.0,
        "games": 1
       }
      ]
@@ -32916,6 +34371,60 @@
        "games": 2
       }
      ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 8,
+      "yds": 6,
+      "long": 4,
+      "avg": 0.8
+     },
+     "career_games": 4,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 4,
+       "yds": 6,
+       "long": 4,
+       "avg": 1.5,
+       "games": 2
+      },
+      {
+       "season": 2022,
+       "att": 4,
+       "yds": 0,
+       "long": 0,
+       "avg": 0.0,
+       "games": 2
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 6,
+      "yds": 128,
+      "long": 50,
+      "avg": 21.3
+     },
+     "career_games": 6,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 4,
+       "yds": 93,
+       "long": 50,
+       "avg": 23.2,
+       "games": 4
+      },
+      {
+       "season": 2022,
+       "att": 2,
+       "yds": 35,
+       "long": 19,
+       "avg": 17.5,
+       "games": 2
+      }
+     ]
     }
    }
   },
@@ -33129,6 +34638,19 @@
        "games": 2
       }
      ]
+    },
+    "ShortSnapping": {
+     "career": {
+      "att": 32
+     },
+     "career_games": 7,
+     "seasons": [
+      {
+       "season": 2022,
+       "att": 32,
+       "games": 7
+      }
+     ]
     }
    }
   },
@@ -33248,6 +34770,25 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 2
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 2,
+      "yds": 29,
+      "long": 17,
+      "avg": 14.5
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2024,
+       "att": 2,
+       "yds": 29,
+       "long": 17,
+       "avg": 14.5,
+       "games": 1
       }
      ]
     }

@@ -10,16 +10,25 @@ see README's "Real per-player box-score stats DO exist" note): every raw
 game JSON has a `player_stats` key with real per-player lines by name, never
 ingested anywhere on this site before now.
 
-Deliberately does NOT cover Punting/Kickoffs/Kickoff-Return/Punt-Return/
-PAT-FG here, even though the same raw JSONs also have those categories --
-Special Teams Data's own build_workbook.py already parses those into a
-clean, already-verified Excel pipeline this site already reads via
-build_special_teams_data.py/data/special-teams.json. Re-deriving them here
-from the messier raw player_stats categories (PATs/Field Goals/Kickoffs/
-Punting/All Returns all have real per-category parsing quirks -- combo
-fields like "TFL/Yds", inconsistent Made/Attempted semantics -- see this
-project's own commit history) would duplicate effort AND risk a second,
-possibly-disagreeing answer for numbers the site already gets right.
+Punting/Kickoffs/Kickoff-Return/Punt-Return/PAT-FG/snapping career totals
+(added 2026-09-08, per the user) are NOT derived from the raw player_stats
+JSON's own versions of those categories -- PATs/Field Goals/Kickoffs/
+Punting/All Returns all have real per-category parsing quirks there
+(combo fields like "TFL/Yds", inconsistent Made/Attempted semantics) that
+would duplicate effort AND risk a second, possibly-disagreeing answer for
+numbers this site already gets right elsewhere. Instead, `accumulate_
+special_teams()` reads this site's OWN already-clean, already-verified
+`data/special-teams.json` (Special Teams Data's own build_workbook.py
+output, read the same way build_special_teams_data.py already does) --
+real per-attempt rows, just never rolled up into a running career total
+before. Two real name-format differences from the box-score categories
+above, handled separately (see `bare_surname_match()`): most of these
+units' player fields (punter/kicker/returner/snapper) are a BARE SURNAME
+only, no first name or initial at all -- so only the unique-last-name
+match stage applies, no exact-match or initial-disambiguation stage is
+possible without a first name to compare. `money_unit`'s own `kicker`/
+`long_snapper` fields are the one exception, already full "First Last"
+names -- reuses match_player() same as every other category.
 
 Real, confirmed source-data quirks found while building this (2026-09-08):
 Individual Defensive Statistics keys Carroll by its FULL name ("Carroll
@@ -70,6 +79,7 @@ import openpyxl
 
 RAW_GLOB = str(Path(__file__).resolve().parent.parent.parent / "Special Teams Data" / "raw" / "*.json")
 ROSTER_SRC = Path(__file__).resolve().parent.parent.parent / "Lifting Data" / "output" / "Lifting_Consolidated_AllYears.xlsx"
+SPECIAL_TEAMS_SRC = Path(__file__).resolve().parent.parent / "data" / "special-teams.json"
 OUT = Path(__file__).resolve().parent.parent / "data" / "career-stats.json"
 
 def carroll_key_for_game(data, teams):
@@ -347,6 +357,159 @@ def resolve_unmatched_identities(raw_groups):
     return resolved
 
 
+def bare_surname_match(surname, roster, last_name_to_keys):
+    """A punter/kicker/returner/snapper field with no first name at all
+    (e.g. "Streveler") -- can only ever resolve via the unique-last-name
+    stage, since there's no first-name signal to exact-match or
+    disambiguate an initial against. An ambiguous or unmatched surname is
+    shown under that bare surname itself (no fancy cross-format identity
+    merge like match_player's unmatched_display -- these fields don't have
+    the "same person under 3 different formats" problem the box-score
+    Passing/Rushing/etc. categories did, since every row for a given unit
+    uses this exact same bare-surname convention consistently)."""
+    if not surname:
+        return None, None
+    cands = last_name_to_keys.get(surname.lower(), set())
+    if len(cands) == 1:
+        key = next(iter(cands))
+        person = roster[key]
+        return key, f"{person['first_name']} {person['last_name']}"
+    return None, surname
+
+
+def bump(bucket, key, amount=1):
+    bucket[key] = bucket.get(key, 0) + amount
+
+
+def bump_max(bucket, key, value):
+    bucket[key] = max(bucket.get(key, 0), value or 0)
+
+
+# (unit key in data/special-teams.json, field holding the player's name,
+# True if that field is a full "First Last" name (money_unit) rather than
+# a bare surname, output category name).
+SPECIAL_TEAMS_UNITS = [
+    ("punt", "punter", False, "Punting"),
+    ("kickoff", "kicker", False, "Kickoffs"),
+    ("punt_return", "returner", False, "PuntReturn"),
+    ("kickoff_return", "returner", False, "KickoffReturn"),
+    ("money_unit", "kicker", True, "PATFG"),
+]
+
+
+def accumulate_one_special_teams_row(category, bucket, row):
+    if category == "Punting":
+        bump(bucket, "att")
+        gross = row.get("total_distance") or 0
+        ret = row.get("return_length") or 0
+        bump(bucket, "gross_yds", gross)
+        bump(bucket, "net_yds", gross - ret)
+        bump_max(bucket, "long", gross)
+        if row.get("i20"):
+            bump(bucket, "i20")
+        if row.get("blocked"):
+            bump(bucket, "blocked")
+    elif category == "Kickoffs":
+        bump(bucket, "att")
+        bump(bucket, "yds", row.get("total_distance") or 0)
+        bump_max(bucket, "long", row.get("total_distance") or 0)
+        if row.get("touchback"):
+            bump(bucket, "tb")
+        if row.get("out_of_bounds"):
+            bump(bucket, "ob")
+        if row.get("inside_25"):
+            bump(bucket, "inside_25")
+    elif category in ("PuntReturn", "KickoffReturn"):
+        bump(bucket, "att")
+        bump(bucket, "yds", row.get("return_length") or 0)
+        bump_max(bucket, "long", row.get("return_length") or 0)
+    elif category == "PATFG":
+        is_fg = row.get("fg_exp") == "FG"
+        bump(bucket, "fg_att" if is_fg else "exp_att")
+        if row.get("make"):
+            bump(bucket, "fg_made" if is_fg else "exp_made")
+
+
+def add_special_teams_derived(cat, bucket):
+    if cat == "Punting" and bucket.get("att"):
+        bucket["gross_avg"] = round(bucket["gross_yds"] / bucket["att"], 1)
+        bucket["net_avg"] = round(bucket["net_yds"] / bucket["att"], 1)
+    elif cat == "Kickoffs" and bucket.get("att"):
+        bucket["avg"] = round(bucket["yds"] / bucket["att"], 1)
+    elif cat in ("PuntReturn", "KickoffReturn") and bucket.get("att"):
+        bucket["avg"] = round(bucket["yds"] / bucket["att"], 1)
+    elif cat == "PATFG":
+        if bucket.get("fg_att"):
+            bucket["fg_pct"] = round(100 * bucket.get("fg_made", 0) / bucket["fg_att"], 1)
+        if bucket.get("exp_att"):
+            bucket["exp_pct"] = round(100 * bucket.get("exp_made", 0) / bucket["exp_att"], 1)
+
+
+def accumulate_special_teams(players, roster, last_name_to_keys):
+    """Mutates `players` (the same dict main() builds from the box-score
+    categories) in place, adding Punting/Kickoffs/PuntReturn/
+    KickoffReturn/PATFG career+season totals from this site's own
+    data/special-teams.json. A player already present from a box-score
+    category (matched to the same athlete_key, so displayed under the
+    same canonical roster name) gets these as additional categories on
+    their existing entry; a special-teams-only player (e.g. a pure
+    kicker/punter with no offensive/defensive box-score line at all) gets
+    a new entry."""
+    if not SPECIAL_TEAMS_SRC.exists():
+        print(f"  WARNING: {SPECIAL_TEAMS_SRC} not found -- skipping special-teams career stats")
+        return
+    with open(SPECIAL_TEAMS_SRC, encoding="utf-8") as f:
+        st = json.load(f)
+    for unit_key, name_field, is_full_name, category in SPECIAL_TEAMS_UNITS:
+        for row in st["units"].get(unit_key, []):
+            raw_name = row.get(name_field)
+            if not raw_name:
+                continue  # e.g. money_unit rows with no credited snapper -- not this row's kicker, unrelated to this unit's own name field
+            if is_full_name:
+                athlete_key, display = match_player(raw_name, roster, last_name_to_keys, {})
+            else:
+                athlete_key, display = bare_surname_match(raw_name, roster, last_name_to_keys)
+            if display is None:
+                continue
+            season = int(row["season"]) if row.get("season") else None
+            game_label = f"{row.get('season')}|{row.get('opponent')}|{row.get('date')}"
+            player = players.setdefault(display, {"athlete_key": athlete_key, "categories": {}})
+            cat_bucket = player["categories"].setdefault(category, {"career": {}, "seasons": {}, "career_games": set(), "season_games": {}})
+            accumulate_one_special_teams_row(category, cat_bucket["career"], row)
+            cat_bucket["career_games"].add(game_label)
+            if season is not None:
+                season_bucket = cat_bucket["seasons"].setdefault(season, {})
+                accumulate_one_special_teams_row(category, season_bucket, row)
+                cat_bucket["season_games"].setdefault(season, set()).add(game_label)
+
+    # Snapping is tracked separately from the kicker's own PATFG stats --
+    # money_unit's `long_snapper` field (the PAT/FG "short" snap, despite
+    # its confusing column name -- see Special Teams Data's own SKILL.md)
+    # and punt's own `snapper` field (the true "long" snap). Both are bare
+    # surnames. A snap "attempt" here just means "this row credits a
+    # snapper at all" -- neither sheet tracks snap quality/grade as a
+    # per-snapper aggregate stat, only the per-attempt charted fields
+    # (Snap Location, Snap to Catch) that dashboards/short-snapper.html
+    # and long-snapper.html already chart directly from the row-level data.
+    for unit_key, name_field, category in [("money_unit", "long_snapper", "ShortSnapping"), ("punt", "snapper", "LongSnapping")]:
+        for row in st["units"].get(unit_key, []):
+            raw_name = row.get(name_field)
+            if not raw_name:
+                continue
+            athlete_key, display = bare_surname_match(raw_name, roster, last_name_to_keys)
+            if display is None:
+                continue
+            season = int(row["season"]) if row.get("season") else None
+            game_label = f"{row.get('season')}|{row.get('opponent')}|{row.get('date')}"
+            player = players.setdefault(display, {"athlete_key": athlete_key, "categories": {}})
+            cat_bucket = player["categories"].setdefault(category, {"career": {}, "seasons": {}, "career_games": set(), "season_games": {}})
+            bump(cat_bucket["career"], "att")
+            cat_bucket["career_games"].add(game_label)
+            if season is not None:
+                bump(cat_bucket["seasons"].setdefault(season, {}), "att")
+                cat_bucket["season_games"].setdefault(season, set()).add(game_label)
+
+
 def main():
     roster, last_name_to_keys = load_roster()
     files = glob.glob(RAW_GLOB)
@@ -414,6 +577,8 @@ def main():
                     accumulate(season_bucket, spec, row)
                     cat_bucket["season_games"].setdefault(year, set()).add(game_label)
 
+    accumulate_special_teams(players, roster, last_name_to_keys)
+
     # Derived rate stats -- never a naive average of per-game rates, always
     # recomputed from the summed counting stats (this project's established
     # rule, e.g. makeRate() elsewhere on this site).
@@ -425,6 +590,7 @@ def main():
             bucket["yards_per_carry"] = round(bucket["net"] / bucket["att"], 2)
         if cat == "Receiving" and bucket.get("rec"):
             bucket["yards_per_rec"] = round(bucket["yds"] / bucket["rec"], 1)
+        add_special_teams_derived(cat, bucket)
 
     out_players = []
     for display, pdata in players.items():
