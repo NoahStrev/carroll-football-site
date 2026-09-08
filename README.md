@@ -2224,6 +2224,54 @@ dashboard pages (the 14 from the prior round plus the new
 `career-stats.html`) checked again for console errors and 375px mobile
 overflow -- clean.
 
+**Same day, seventh round: name-matching gets effective dates
+(2026-09-08)** — per the user: "for the name matching, we also may want
+to add effective dates since two people can have the same name." Checked
+whether this was already a real problem, not just a theoretical one, by
+scanning `career-stats.json` for any roster-matched player with a season
+earlier than 2018 (well before Lifting Data's own 2021-22 coverage
+starts) — found 8, and 4 of them were unambiguous: the CURRENT roster's
+"Brody Wood" only ever tested in 2025-26 (a true freshman) but had been
+silently merged with a completely different "Brody Wood" from 2016-2018
+box scores via the unique-last-name match stage; "Ethan Steiner" (roster:
+2024-26) merged with a 2010 stat-line, 14+ years before he was ever
+tested; "Tim Nelson" and "Stone Newsome" similarly spanned 8-12 real
+years, impossible for one college career.
+
+Added `season_plausible()` (`build_career_stats.py`): every roster
+athlete's own known tested years (from Lifting Data's `football_year`
+column) are recorded at load time, and every one of `match_player()`'s 3
+matching stages (exact, unique-last-name, initial-disambiguation) now
+only accepts a candidate whose known years are within
+`SEASON_MATCH_BUFFER` (2 years) of the box-score row's own season --
+generous enough to cover a real gap (freshman/senior year untested) but
+firm enough to reject an 8+ year gap that's obviously a different
+person. A rejected candidate doesn't disappear -- it falls through to the
+exact same unmatched/cross-format-merge path every other unmatched name
+already uses, so "Brody Wood"'s real 2016-2018 identity (turned out to
+be a "Lucas Wood"/"Luke Wood" mismatch caught by this same fix) now shows
+up correctly as its own separate, un-merged entry instead of silently
+vanishing into the current roster player's career total.
+
+Verified: re-scanned for any remaining roster-matched player with a
+pre-2018 season -- zero, down from 8. Re-checked the same known
+record-book values (Streveler's 149 punts, Laurent's 28 FGs, Lamont
+Williams' 3,844 rushing yards, Burlingame's 56 TDs) -- all still exact,
+confirming this was a pure precision fix, not a regression. Spot-checked
+live in the browser: Ethan Steiner's page now shows only his real 2026
+stat-line. **Noted, not fixed**: 2 different NON-roster (unmatched)
+people who happen to share a name can still merge under one raw display
+bucket, since the unmatched-merge path has no roster season data to
+check against for that case -- a real but smaller residual gap than the
+one just fixed, flagged rather than silently claimed solved. Also
+noted: the unique-last-name stage itself doesn't require any first-name
+similarity (by design, to catch real nicknames like "Mikey"/"Michael"),
+so a same-era collision between 2 different people sharing a last name
+but wildly different first names (like "Lucas"/"Brody" Wood, if they'd
+overlapped in time) would still slip through -- season_plausible() is a
+real mitigation for the specific temporal-collision failure mode, not a
+complete fix for every possible name-collision shape.
+
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly

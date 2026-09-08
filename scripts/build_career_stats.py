@@ -64,6 +64,28 @@ real data (not assumed):
   output under their own scraped name, with position/class left blank
   rather than guessed -- never silently dropped.
 
+Every stage above is also gated on season_plausible() (added 2026-09-08,
+per the user: "we also may want to add effective dates since two people
+can have the same name") -- a name-only match can't tell 2 DIFFERENT real
+people with the same name apart across different eras, and this was
+confirmed actually happening, not hypothetical: the roster's "Brody Wood"
+only ever tested in 2025-26 (a true freshman) but was silently merged
+with a completely different "Brody Wood" from 2016-2018 box scores;
+"Ethan Steiner" (roster: 2024-26) merged with a 2010 stat-line, 14+ years
+before he was ever tested. A match is only accepted if the box-score
+row's own season falls within +/-2 years of that roster athlete's known
+tested years (SEASON_MATCH_BUFFER) -- generous enough to cover a real
+gap (Lifting Data missing someone's freshman or senior year), but firmly
+rejects an 8+ year gap that's obviously a different person. A rejected
+candidate falls through to the SAME unmatched/cross-format-merge path
+every other unmatched name uses -- it doesn't silently disappear, it's
+just correctly kept separate from the current roster athlete. Not fully
+solved: 2 different NON-roster (unmatched) people who happen to share a
+name still merge under one raw display bucket, since the unmatched-merge
+path (resolve_unmatched_identities) has no roster season data to check
+against for that case -- a real, smaller residual gap, flagged rather
+than silently claimed solved.
+
 Re-run whenever new raw game JSONs are added (i.e. after
 carroll-special-teams-weekly-scrape or a manual Special Teams Data
 scrape) or the Lifting Data roster changes:
@@ -132,6 +154,16 @@ def norm(s):
     return re.sub(r"[^a-z]", "", s.lower())
 
 
+SEASON_MATCH_BUFFER = 2  # see season_plausible()'s own docstring
+
+
+def football_year_to_season(fy):
+    """"2021-22" -> 2021 -- the roster's own football_year format always
+    starts with the fall (charting) season's real calendar year."""
+    m = re.match(r"^(\d{4})", str(fy or ""))
+    return int(m.group(1)) if m else None
+
+
 def load_roster():
     wb = openpyxl.load_workbook(ROSTER_SRC, read_only=True)
     ws = wb["Data"]
@@ -142,7 +174,10 @@ def load_roster():
     for r in rows:
         key = r[idx["athlete_key"]]
         first, last, pos = r[idx["first_name"]], r[idx["last_name"]], r[idx["position"]]
-        by_key[key] = {"first_name": first, "last_name": last}
+        by_key.setdefault(key, {"first_name": first, "last_name": last, "known_years": set()})
+        year = football_year_to_season(r[idx["football_year"]])
+        if year is not None:
+            by_key[key]["known_years"].add(year)
         last_name_to_keys.setdefault(last.lower(), set()).add(key)
         if pos:
             position_counts.setdefault(key, {}).setdefault(pos, 0)
@@ -154,6 +189,31 @@ def load_roster():
     for key, counts in position_counts.items():
         by_key[key]["position"] = max(counts.items(), key=lambda kv: kv[1])[0]
     return by_key, last_name_to_keys
+
+
+def season_plausible(person, season):
+    """Real, confirmed bug found 2026-09-08 (per the user: "we also may
+    want to add effective dates since two people can have the same name"):
+    name-only matching (exact, unique-last-name, or initial) has no way to
+    tell two DIFFERENT real people with the same name apart across
+    different eras -- confirmed actually happening, not hypothetical: the
+    CURRENT roster's "Brody Wood" only ever tested in 2025-26 (a true
+    freshman), but name-only matching merged him with a completely
+    different "Brody Wood" from 2016-2018 box scores; "Ethan Steiner"
+    (roster: 2024-26) got merged with a 2010 stat-line, 14+ years before
+    he was ever tested. A normal college career is 4-5 real years;
+    Lifting Data's own testing coverage can miss the first or last year or
+    two of it (freshman year untested, senior year skipped, etc.), so
+    SEASON_MATCH_BUFFER (2) is generous enough not to reject genuine edge
+    seasons while still firmly catching an 8+ year gap that's obviously a
+    different person. A roster entry with NO known_years at all (shouldn't
+    happen for a real Lifting Data row, but defensive) or `season` itself
+    unknown always passes -- nothing to validate against, so this check
+    can't be the reason a real match gets rejected."""
+    if season is None or not person.get("known_years"):
+        return True
+    lo, hi = min(person["known_years"]) - SEASON_MATCH_BUFFER, max(person["known_years"]) + SEASON_MATCH_BUFFER
+    return lo <= season <= hi
 
 
 def split_raw_name(raw_name):
@@ -194,20 +254,44 @@ def split_raw_name(raw_name):
     return parts[0], parts[1] if len(parts) > 1 else ""
 
 
-def match_player(raw_name, roster, last_name_to_keys, unmatched_display):
+def match_player(raw_name, roster, last_name_to_keys, unmatched_display, season=None):
     """Raw "player" field -> (athlete_key or None, display_name). Never
     guesses across a genuine ambiguity -- see module docstring for the
-    roster-matching stages and their verified real match rate, and
+    roster-matching stages and their verified real match rate,
     resolve_unmatched_identities() for how an unmatched player's own
-    across-season name variants get merged into one identity."""
+    across-season name variants get merged into one identity, and
+    season_plausible() for why `season` (the box-score row's own year, if
+    known) gets checked at every stage: a name-only match has no way to
+    tell 2 different real people with the same name apart across
+    different eras -- confirmed actually happening (see that function's
+    own docstring for 2 real examples), not hypothetical. A stage that
+    finds a name match rejected on season implausibility does NOT fall
+    back to a looser stage for the SAME rejected candidate -- it's
+    excluded everywhere in this call, exactly as if the name had never
+    matched it at all, and the row proceeds to whichever stage (or the
+    final unmatched fallback) would apply next."""
     last, first = split_raw_name(raw_name)
     if last is None:
         return None, None  # unparseable/jersey-number artifact -- caller skips the row entirely
     last, first = NAME_ALIASES.get((last, first), (last, first))
-    for key, person in roster.items():
-        if norm(person["last_name"]) == norm(last) and norm(person["first_name"]) == norm(first):
-            return key, f"{person['first_name']} {person['last_name']}"
+    exact = [
+        (key, person) for key, person in roster.items()
+        if norm(person["last_name"]) == norm(last) and norm(person["first_name"]) == norm(first)
+    ]
+    exact_plausible = [(k, p) for k, p in exact if season_plausible(p, season)]
+    if len(exact_plausible) == 1:
+        key, person = exact_plausible[0]
+        return key, f"{person['first_name']} {person['last_name']}"
+    if len(exact_plausible) > 1:
+        # A genuine exact-name match to 2+ roster people, all season-
+        # plausible -- can't happen on the CURRENT roster (checked
+        # 2026-09-08, zero duplicate full names exist in it), but a
+        # correct fallback if it ever does rather than an IndexError or a
+        # silent pick-the-first-one guess.
+        return None, f"{first} {last}"
+
     cands = last_name_to_keys.get(last.lower(), set())
+    cands = {k for k in cands if season_plausible(roster[k], season)}
     if len(cands) == 1:
         key = next(iter(cands))
         person = roster[key]
@@ -481,10 +565,10 @@ def accumulate_special_teams(players, roster, last_name_to_keys, unmatched_displ
             raw_name = row.get(name_field)
             if not raw_name:
                 continue  # e.g. money_unit rows with no credited snapper -- not this row's kicker, unrelated to this unit's own name field
-            athlete_key, display = match_player(raw_name, roster, last_name_to_keys, unmatched_display)
+            season = int(row["season"]) if row.get("season") else None
+            athlete_key, display = match_player(raw_name, roster, last_name_to_keys, unmatched_display, season)
             if display is None:
                 continue
-            season = int(row["season"]) if row.get("season") else None
             game_label = f"{row.get('season')}|{row.get('opponent')}|{row.get('date')}"
             player = players.setdefault(display, {"athlete_key": athlete_key, "categories": {}})
             cat_bucket = player["categories"].setdefault(category, {"career": {}, "seasons": {}, "career_games": set(), "season_games": {}})
@@ -509,10 +593,10 @@ def accumulate_special_teams(players, roster, last_name_to_keys, unmatched_displ
             raw_name = row.get(name_field)
             if not raw_name:
                 continue
-            athlete_key, display = match_player(raw_name, roster, last_name_to_keys, unmatched_display)
+            season = int(row["season"]) if row.get("season") else None
+            athlete_key, display = match_player(raw_name, roster, last_name_to_keys, unmatched_display, season)
             if display is None:
                 continue
-            season = int(row["season"]) if row.get("season") else None
             game_label = f"{row.get('season')}|{row.get('opponent')}|{row.get('date')}"
             player = players.setdefault(display, {"athlete_key": athlete_key, "categories": {}})
             cat_bucket = player["categories"].setdefault(category, {"career": {}, "seasons": {}, "career_games": set(), "season_games": {}})
@@ -539,11 +623,11 @@ def main():
     # (found 2026-09-08: special-teams.json's punter/kicker/returner/
     # snapper fields mix all 3 raw-name formats too, not just a bare
     # surname as first assumed -- see SPECIAL_TEAMS_UNITS' own comment).
-    def collect_unmatched_variant(raw_name, unmatched_variants):
+    def collect_unmatched_variant(raw_name, season, unmatched_variants):
         last, first = split_raw_name(raw_name)
         if last is None:
             return
-        key, _ = match_player(raw_name, roster, last_name_to_keys, {})
+        key, _ = match_player(raw_name, roster, last_name_to_keys, {}, season)
         if key is not None:
             return
         lk = merge_key_for_unmatched(last, first)
@@ -553,6 +637,7 @@ def main():
     for fn in files:
         with open(fn, encoding="utf-8") as f:
             data = json.load(f)
+        year = season_year(data.get("game_info", {}).get("date"))
         ps = data.get("player_stats", {})
         for category in CATEGORY_SPECS:
             teams = ps.get(category, {})
@@ -562,18 +647,20 @@ def main():
             if car_key is None:
                 continue
             for row in teams[car_key]:
-                collect_unmatched_variant(row.get("player", ""), unmatched_variants)
+                collect_unmatched_variant(row.get("player", ""), year, unmatched_variants)
     if SPECIAL_TEAMS_SRC.exists():
         with open(SPECIAL_TEAMS_SRC, encoding="utf-8") as f:
             st = json.load(f)
         for unit_key, name_field, _category in SPECIAL_TEAMS_UNITS:
             for row in st["units"].get(unit_key, []):
                 if row.get(name_field):
-                    collect_unmatched_variant(row[name_field], unmatched_variants)
+                    season = int(row["season"]) if row.get("season") else None
+                    collect_unmatched_variant(row[name_field], season, unmatched_variants)
         for unit_key, name_field in [("money_unit", "long_snapper"), ("punt", "snapper")]:
             for row in st["units"].get(unit_key, []):
                 if row.get(name_field):
-                    collect_unmatched_variant(row[name_field], unmatched_variants)
+                    season = int(row["season"]) if row.get("season") else None
+                    collect_unmatched_variant(row[name_field], season, unmatched_variants)
     unmatched_display = resolve_unmatched_identities(unmatched_variants)
 
     # players[display_name] -> {athlete_key, categories: {...}}
@@ -595,7 +682,7 @@ def main():
                 continue
             for row in teams[car_key]:
                 raw_name = row.get("player", "")
-                athlete_key, display = match_player(raw_name, roster, last_name_to_keys, unmatched_display)
+                athlete_key, display = match_player(raw_name, roster, last_name_to_keys, unmatched_display, year)
                 if display is None:
                     continue  # unparseable/jersey-number artifact -- see split_raw_name
                 if athlete_key is None:
