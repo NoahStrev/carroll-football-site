@@ -42,6 +42,17 @@ OUT = Path(__file__).resolve().parent.parent / "data" / "game-data.json"
 
 CARROLL = "Carroll (WI)"
 
+# gopios.com's own scrape started using bare "Carroll" for POSSESSION_TEAM
+# starting with the first game of the 2026 season (St. Norbert, 2026-09-05) --
+# every 2021-2025 game says "Carroll (WI)" instead (confirmed: site-wide, only
+# these two spellings ever appear, and they don't co-occur within a game).
+# Without this, classify_side() below silently classified zero rows as
+# "offense" for that entire game (every "Carroll" POSSESSION_TEAM row failed
+# to match CARROLL exactly) -- found 2026-09-08 while adding that game, same
+# category of bug as OPPONENT_ALIASES above, just on Carroll's own name this
+# time rather than an opponent's.
+CARROLL_ALIASES = {"Carroll"}
+
 # The official box-score scrape used a different OPPONENT string for the same
 # school in different seasons -- confirmed by cross-referencing GAME_LABEL
 # (which stays consistent, e.g. always "Carroll vs Wash U ...") against
@@ -105,7 +116,7 @@ def classify_side(possession_team, opponent):
     defense-side rows, since POSSESSION_TEAM still said the old name when
     Carroll's opponent had the ball)."""
     norm = canonical_opponent(normalize_team(possession_team))
-    if norm == CARROLL:
+    if norm == CARROLL or norm in CARROLL_ALIASES:
         return "offense"
     if norm == opponent:
         return "defense"

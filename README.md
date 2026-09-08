@@ -1779,6 +1779,92 @@ hardcoded A/B variables.
   `CATEGORY_SECTION` mapping, ported from `National Game Prep Report`'s own
   metric classification).
 
+**2026 season opener: automation restored, Week 1 data live (2026-09-08).**
+Discovered while checking in on the site a month into the season: all 4
+weekly scheduled tasks from the "Weekly season automation" section above
+(`cciw-org-conference-weekly-scrape`, `ncaa-d3-national-weekly-scrape`,
+`carroll-special-teams-weekly-scrape`, `carroll-site-weekly-refresh`) had
+gone missing entirely — not disabled, just absent from both the
+scheduled-tasks system and cron, with the underlying `SKILL.md` prompt
+files still sitting on disk unattached to anything. Confirmed via
+filesystem timestamps: nothing anywhere in the whole `Football/` tree
+(not `CCIW Buddah Report/output_carroll/`, not `National Buddah
+Report/.../Carroll/`, not `Special Teams Data/raw/`, not
+`Schedule/schedule.json`) had been touched since 2026-08-06, and
+`schedule.json` still showed the season's actual first game
+(Sept 5 vs. St. Norbert, 3 days prior) as `"completed": false`.
+
+1. **All 4 tasks recreated** with their original prompts (recovered
+   verbatim from the surviving `SKILL.md` files) and the same documented
+   run order — the 3 raw scrapers first (Monday mornings), then the site
+   refresh after. Root cause of the disappearance wasn't determined (no
+   error trail either scheduling system could surface); flagged to the
+   user rather than guessed at.
+2. **Manual one-time catch-up run** (per the user: "we don't need to
+   catchup 2 times... just run it once and we have the Week 1 results"),
+   following each task's own documented steps exactly: CCIW.org scrape
+   (Week 1 snapshot + progression rebuild), NCAA D3 national scrape (88
+   categories, only 4 legitimate zero-match categories — not the
+   all-zero site-outage pattern the task's own instructions warn about),
+   Carroll Special Teams scrape (found and fetched the one new box-score
+   link, St. Norbert), then this site's own `refresh_all.py` + commit +
+   push (`572dba7`, then `69edb8e`). Confirmed clean: `git status`
+   touched only `data/rankings.json` and `data/special-teams.json`,
+   exactly as the task's own guard expects.
+3. **Live-site verification, done properly this time**: after the
+   game-count footer fix (below) was pushed, checked the actual GitHub
+   Pages build status via `gh api .../pages/builds/latest` rather than
+   just re-fetching the page immediately — the first check genuinely hit
+   a `building` state, and a premature "looks good" would have been
+   wrong. Also hit one real false alarm worth remembering: this session's
+   own browser tool momentarily executed a stale cached copy of
+   `charts.js` (a `ReferenceError` for a function confirmed present in
+   the freshly-fetched file) after its pane was reset — resolved by
+   reopening the pane fresh, consistent with the tool-side-only caching
+   quirk already documented earlier in this file, not a real bug in the
+   deployed site.
+4. **The 2026-08-06 `gameCoverageText()` footer fix (documented above)
+   had also never been committed** — found sitting unstaged in the
+   working tree, verified against the diff, committed and pushed as its
+   own change (`572dba7`) before the catch-up run.
+5. **St. Norbert game ingested into Offense/Defense/Opponent Scouting**,
+   once the user confirmed the raw charting extract (`Carroll vs SNC
+   9_5_26.xlsx`) had been dropped into `Game Analysis/raw/`. Ran that
+   project's combiner in plain append mode (`python
+   build_combined_dataset.py`, no `--rebuild`) — safe to do immediately
+   since this session's own Special Teams scrape (step 2 above) had
+   already produced the matching box-score JSON, avoiding the
+   `playlist-play-combiner` SKILL.md's documented "combine before the
+   box score is scraped" trap. `GameMatchLog` confirmed an exact-date
+   match (`2026_st-norbert-college_16914.json`, `Carroll (1-0) -VS- St.
+   Norbert (0-1)`).
+   - **Real bug found and fixed while verifying the ingest**:
+     `build_game_data.py`'s `classify_side()` hardcodes `CARROLL =
+     "Carroll (WI)"` as the only string that means "Carroll has the
+     ball" — but gopios.com's own scrape started writing bare
+     `"Carroll"` (no `" (WI)"` suffix) for `POSSESSION_TEAM` starting
+     with this exact game (confirmed directly in the raw JSON's own
+     `drive` field: `"Carroll at 01:32"`, etc. — every 2021-2025 game
+     says `"Carroll (WI)"` instead, and the two spellings never
+     co-occur within a game). Silent effect: **100% of Carroll's own
+     offensive snaps for this game were dropped** (0 of an expected
+     ~50-90 `offense.official` rows), while the 75 defense-side rows
+     were unaffected (opponent-name matching was untouched). Unlike the
+     2026-08-04 WashU alias bug, `CARROLL` is referenced in exactly one
+     place (`classify_side()`), so this was a single-point fix, not a
+     two-sided one: added a `CARROLL_ALIASES = {"Carroll"}` set,
+     checked alongside the exact `CARROLL` match. Verified with a full
+     structural diff against the pre-fix output: all 50 historical
+     games' `offense`/`defense` `plays`/`official`/`drives` rows are
+     byte-identical (zero regression), and the new game now contributes
+     a properly balanced 53 offense plays/51 offense official/10
+     offense drives alongside 81 defense plays/75 defense official/13
+     defense drives — a real full game on both sides, not a
+     one-sided artifact.
+6. **Updates tab**: new `v1.3.0` entry covering all of the above,
+   written the same day per this project's "one entry per calendar day"
+   rule.
+
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly
