@@ -115,9 +115,12 @@ MAX_SHOWN_PER_STAT = 5
 GAP_CUTOFF_FRACTION = 0.5  # see module docstring
 
 
-def _leaders_by_statistic(sheet_rows):
+def _leaders_by_statistic(rows):
+    # Renamed from `sheet_rows` 2026-09-08 -- shadowed the `sheet_rows()`
+    # function now imported from build_lib into this same file (harmless,
+    # since this never calls the imported one, but confusing to read).
     by_category = {}
-    for row in sheet_rows:
+    for row in rows:
         by_category.setdefault(row["category"], []).append(row)
     by_statistic = {}
     for rows in by_category.values():

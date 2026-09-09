@@ -79,12 +79,23 @@ gap (Lifting Data missing someone's freshman or senior year), but firmly
 rejects an 8+ year gap that's obviously a different person. A rejected
 candidate falls through to the SAME unmatched/cross-format-merge path
 every other unmatched name uses -- it doesn't silently disappear, it's
-just correctly kept separate from the current roster athlete. Not fully
-solved: 2 different NON-roster (unmatched) people who happen to share a
-name still merge under one raw display bucket, since the unmatched-merge
-path (resolve_unmatched_identities) has no roster season data to check
-against for that case -- a real, smaller residual gap, flagged rather
-than silently claimed solved.
+just correctly kept separate from the current roster athlete.
+
+Not fully solved (narrower than it used to be, updated 2026-09-08 after
+resolve_unmatched_identities() learned to split a last-name group with
+2+ real full names -- see that function's own docstring for the Hunter
+Campbell/Garret Campbell case): 2 different NON-roster (unmatched)
+people who happen to share a name STILL merge under one raw display
+bucket only in the narrower case where NEITHER of them ever appears
+under a real full first name anywhere in the raw data for that last
+name -- e.g. 2 different people both always scraped as bare "Smith" or
+both always "J. Smith" with no full "Jordan"/"Jacob"/etc. ever recorded
+for either -- since there's no full name to anchor a split against, and
+(unlike the roster-matched path's season_plausible()) the unmatched-
+merge path has no roster season data available to check against for
+non-roster people either. A real, smaller residual gap than the
+original version of this note described, flagged rather than silently
+claimed solved.
 
 Re-run whenever new raw game JSONs are added (i.e. after
 carroll-special-teams-weekly-scrape or a manual Special Teams Data

@@ -100,7 +100,7 @@ from pathlib import Path
 
 import openpyxl
 
-from build_lib import distinct
+from build_lib import distinct, sheet_rows
 
 FOOTBALL_ROOT = Path(__file__).resolve().parent.parent.parent
 CCIW_SRC = FOOTBALL_ROOT / "CCIW Buddah Report" / "output_carroll" / "Carroll_Football_AllTime.xlsx"
@@ -156,12 +156,6 @@ CATEGORY_SECTION = {
     "Passes Had Intercepted": "offense",  # Carroll QB's own picks thrown -- same bucket as "Turnovers Lost"
     "Passes Intercepted": "defense",      # Carroll defense picking off the opponent -- same bucket as "Turnovers Gained"
 }
-
-
-def sheet_rows(ws):
-    headers = [c.value for c in next(ws.iter_rows(min_row=1, max_row=1))]
-    for r in ws.iter_rows(min_row=2, values_only=True):
-        yield dict(zip(headers, r))
 
 
 def build_cciw():

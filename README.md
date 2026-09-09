@@ -2533,6 +2533,68 @@ several of this day's earlier bugs:
   every change here is either a new check or a determinism fix, no real
   data or displayed value changed.
 
+**Twelfth round: full day-end review + one last code pass (2026-09-08,
+per the user, right after the automation round above).** Re-verified
+everything from scratch rather than trusting earlier-in-the-day results:
+re-ran the full 6-script pipeline independently (zero data drift, zero
+`WARNING` lines), independently re-derived the 4 known record-book
+values straight from `career-stats.json` (all still exact), re-ran the
+fuzzy-duplicate-name scan directly against the output file (0 pairs),
+and clicked through every page touched today (including Record Watch,
+Awards History, and Compare Players specifically, not just the top-level
+tabs) at 375px mobile -- zero console errors, zero overflow, everywhere.
+
+The follow-up code-quality pass found real things the earlier passes
+missed:
+- **A 4th `sheet_rows()` duplicate, missed by the earlier hoisting pass**:
+  `build_rankings_data.py` had its own copy (the exact generator-based
+  version originally in `build_game_data.py`) that never got consolidated
+  into `build_lib.py` alongside the other 3. Found by noticing it while
+  reviewing `build_records_data.py`'s imports, not by the earlier AST
+  scan -- that scan only compared what remained AFTER already removing
+  `build_game_data.py`'s own copy, so it could no longer see these two
+  bodies as duplicates of EACH OTHER once one of the twins was gone.
+  **Worth remembering**: an AST/text duplicate scan run incrementally
+  (checking as you go) can miss a match if you've already resolved one
+  side of the pair before checking the rest -- rerun the scan against the
+  FULL, currently-still-duplicated set, not one that's already been
+  partially edited. Fixed the same way as the other 3: import
+  `sheet_rows` from `build_lib`, remove the local copy. Verified
+  byte-identical `rankings.json` before/after, and re-ran the AST scan
+  (now including `build_lib.py` itself) confirming zero exact-duplicate
+  function bodies remain anywhere.
+- **A naming collision introduced by today's own hoisting work**:
+  `build_records_data.py`'s pre-existing `_leaders_by_statistic(sheet_rows)`
+  parameter name shadowed the `sheet_rows` function just imported from
+  `build_lib` into that same file -- harmless (the function never called
+  the imported one internally) but confusing to read. Renamed the
+  parameter to `rows`.
+- **A stale docstring note in `build_career_stats.py`**: the "not fully
+  solved" paragraph about 2 different unmatched people sharing a name
+  still described the ORIGINAL, broader version of that gap, written
+  before today's later Campbell/Zimmerman fix closed most of it. Narrowed
+  the note to describe the actual remaining edge case (neither person
+  ever has a real full first name recorded anywhere for that last name),
+  not the wider case that's now actually handled.
+- **2 real inaccuracies in the sibling Records & Awards project's own
+  docs**, both pre-existing (predating today, not introduced by this
+  session) but caught while double-checking the new `SKILL.md` written
+  for that project earlier today: `scrape_awards.py`'s own module
+  docstring said the All-American page's real URL year was "3025" (a
+  typo for 2025) and referred to a variable, `ALL_AMERICAN_URL`, that
+  was never actually defined in the code (the real URL lives inside the
+  `"all_american"` entry of the `PAGES` list) -- both fixed in that
+  script's docstring and in the new SKILL.md's own copy of the same
+  claim, so a future reader isn't sent looking for a variable that was
+  never real.
+- **A wrong step number in `carroll-site-weekly-refresh`'s own SKILL.md**:
+  said "Step 4's diff check" when the actual git-diff check is Step 3 --
+  fixed, and also expanded that doc to separately call out the new
+  stale-record-book `WARNING` (distinct from the near-duplicate-name one)
+  with its own concrete suggested next action, since folding both into
+  one generic "check for WARNING lines" note undersold that one of them
+  needs a real decision from the user, not just a glance.
+
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly
