@@ -52,6 +52,7 @@ career-stats.json are refreshed:
 """
 
 import json
+import re
 from pathlib import Path
 
 import openpyxl
@@ -113,6 +114,147 @@ RECORD_WATCH_MAP = {
 
 MAX_SHOWN_PER_STAT = 5
 GAP_CUTOFF_FRACTION = 0.5  # see module docstring
+
+
+def _name_key(s):
+    """Loose match for comparing a display_name against the record book's
+    own `player` text -- lowercase, letters only, so trivial formatting
+    differences ("Keon Miller" vs "Miller, Keon" vs stray whitespace)
+    don't cause a false non-match."""
+    return re.sub(r"[^a-z]", "", (s or "").lower())
+
+
+def check_same_person_value_mismatches(players, career_leaders, warnings):
+    """For every RECORD_WATCH_MAP stat, if THE SAME real person is the #1
+    leader in both this site's own computed career totals (across ALL
+    players, active or not -- unlike Record Watch, which only looks at
+    current players) AND the record book's own scraped Career leaderboard,
+    but the two sources disagree on the actual value, that's a much
+    stronger signal of a real data-completeness gap than merely "my #1
+    isn't the record book's #1" (which is often just explained by the
+    box-score/special-teams archive's 2010-present coverage window not
+    reaching a genuinely older record-holder's full, or entire, career).
+
+    Added 2026-09-08 after finding exactly this case by hand: Keon Miller
+    is correctly the #1 in both this site's own Kickoff Return computed
+    totals AND the official Kickoff Returns/Kickoff Return Yards records
+    -- a fully 2021-2023 career, entirely within this archive's stated
+    coverage -- yet undercounts by 15 real attempts / 279 real yards
+    (16-19%) versus the official number for the SAME person. Confirmed
+    this isn't a bug in this site's own accumulation (data/special-
+    teams.json's own raw kickoff_return rows for him already sum to
+    exactly the undercounted total) -- the gap is further upstream, most
+    likely missing rows in the sibling Special Teams Data project's own
+    hand-charted workbook for some of his real games. Not fixable from
+    here; this check exists to make sure a future instance of this exact
+    pattern gets surfaced automatically instead of requiring another
+    manual leaderboard-by-leaderboard comparison to notice."""
+    # First real season anywhere in this site's own box-score/special-teams
+    # archive -- a player whose earliest season sits right at this boundary
+    # plausibly has real pre-archive seasons this site simply doesn't (and
+    # structurally can't) cover, which is an expected, already-documented
+    # limitation, not a new anomaly. ARCHIVE_START_BUFFER gives a little
+    # slack (a true freshman season sometimes has few/no qualifying stat
+    # lines, so "earliest season on record" can already be a year or two
+    # into a real career that itself started at the archive boundary).
+    all_seasons = sorted({s["season"] for p in players for c in p["categories"].values() for s in c["seasons"]})
+    archive_start = all_seasons[0] if all_seasons else None
+    ARCHIVE_START_BUFFER = 2
+
+    for stat, (cat, field) in RECORD_WATCH_MAP.items():
+        leaders = career_leaders.get(stat)
+        if not leaders:
+            continue
+        official_value = _numeric(leaders[0]["value"])
+        official_key = _name_key(leaders[0]["player"])
+        if official_value is None or not official_key:
+            continue
+        best_value, best_name, best_bucket = None, None, None
+        for p in players:
+            c = p["categories"].get(cat)
+            if not c:
+                continue
+            v = c["career"].get(field)
+            if v and (best_value is None or v > best_value):
+                best_value, best_name, best_bucket = v, p["display_name"], c
+        if best_value is None or _name_key(best_name) != official_key:
+            continue  # different people lead each list -- not this check's concern
+        if best_value != official_value:
+            earliest = min((s["season"] for s in best_bucket["seasons"]), default=None)
+            near_boundary = (
+                archive_start is not None and earliest is not None
+                and earliest <= archive_start + ARCHIVE_START_BUFFER
+            )
+            explanation = (
+                f"plausibly explained by a real career that started at/near this archive's own "
+                f"{archive_start} coverage start (their earliest season on record here is {earliest}) "
+                f"-- likely just missing pre-archive seasons, not necessarily a new issue"
+                if near_boundary else
+                f"NOT explained by archive coverage (their earliest season on record here is "
+                f"{earliest}, well after this archive's {archive_start} start) -- this one is worth "
+                f"a closer look, not just an expected pre-archive gap"
+            )
+            warnings.append(
+                f"{stat}: {best_name} is the #1 leader in BOTH this site's own career "
+                f"total ({best_value}) and the record book ({official_value}) for the "
+                f"same statistic, but the two values disagree by {abs(official_value - best_value)} -- "
+                f"{explanation}. Before assuming this is purely an upstream archive gap, check "
+                f"whether this specific person's own raw rows in data/special-teams.json or the "
+                f"box-score archive already sum to the undercounted total (they did for the case "
+                f"that prompted this check, Keon Miller's Kickoff Return Yards, confirmed 2026-09-08) "
+                f"-- if they DON'T, that's a real bug in this site's own accumulation, not an upstream gap."
+            )
+
+
+def check_season_value_mismatches(players, season_rows, warnings):
+    """Like check_same_person_value_mismatches(), but checks EVERY listed
+    entry on the record book's own Single-Season leaderboard (all ~5 per
+    statistic, not just #1), cross-referencing by (player name, exact
+    season year) rather than "whoever leads each list." A season is a much
+    stronger match than a career total -- there's no "maybe their career
+    started before this archive" excuse for a single specific year, so a
+    mismatch here is a stronger, more specific signal.
+
+    Added 2026-09-09 after this exact check (run once, by hand, not yet
+    automated) found the season_year() bug just above (a bare "M/D" date
+    with no year at all in 2 of 151 raw games silently excluded from every
+    player's SEASON-level totals that game, while still correctly counting
+    toward their CAREER total -- which is exactly why the career-level
+    check above didn't catch it) and the "M. Johnson"/Marcus Johnson
+    misattribution in NAME_ALIASES' own comment. Both are now fixed, but
+    this check stays in permanently -- it's a stronger, more specific
+    signal than the career-level check and clearly catches real bugs the
+    career-level version can't."""
+    for stat, (cat, field) in RECORD_WATCH_MAP.items():
+        for r in season_rows:
+            if r["statistic"] != stat:
+                continue
+            official_value = _numeric(r["value"])
+            year_m = re.match(r"^(\d{4})", str(r.get("years") or ""))
+            if official_value is None or not year_m:
+                continue
+            season = int(year_m.group(1))
+            official_key = _name_key(r["player"])
+            for p in players:
+                if _name_key(p["display_name"]) != official_key:
+                    continue
+                c = p["categories"].get(cat)
+                if not c:
+                    continue
+                bucket = next((s for s in c["seasons"] if s["season"] == season), None)
+                if not bucket:
+                    continue
+                mine = bucket.get(field)
+                if mine is not None and mine != official_value:
+                    warnings.append(
+                        f"{stat} {season}: {p['display_name']}'s single-season total here "
+                        f"({mine}) disagrees with the record book's own {r['rank_label']} entry "
+                        f"for this exact same player and season ({official_value}) -- unlike a "
+                        f"career-total mismatch, a single season has no 'their career started "
+                        f"before this archive' excuse, so this is a stronger signal of a real "
+                        f"gap or bug (missing/incomplete game data for this specific person in "
+                        f"this specific season) worth investigating directly, not just noting."
+                    )
 
 
 def _leaders_by_statistic(rows):
@@ -262,6 +404,10 @@ def main():
 
     warnings = []
     record_watch = build_record_watch(records, career_stats, warnings)
+    check_same_person_value_mismatches(
+        career_stats["players"], _leaders_by_statistic(records["CareerIndividual"]), warnings,
+    )
+    check_season_value_mismatches(career_stats["players"], records["SeasonIndividual"], warnings)
 
     out = {"records": records, "awards": awards, "record_watch": record_watch}
     OUT.parent.mkdir(parents=True, exist_ok=True)

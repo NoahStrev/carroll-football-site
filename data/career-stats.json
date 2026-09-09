@@ -395,21 +395,21 @@
       },
       {
        "season": 2016,
-       "solo": 25,
-       "ast": 15,
-       "tot": 40,
+       "solo": 28,
+       "ast": 17,
+       "tot": 45,
        "ff": 0,
        "int": 0,
        "brup": 1,
        "blkd": 0,
        "qh": 0,
-       "tfl": 1.5,
-       "tfl_yds": 2,
+       "tfl": 2.0,
+       "tfl_yds": 3,
        "sacks": 0,
        "sack_yds": 0,
        "fr": 0,
-       "fr_yds": 0,
-       "games": 8
+       "fr_yds": 1,
+       "games": 9
       }
      ]
     }
@@ -1074,9 +1074,9 @@
       },
       {
        "season": 2015,
-       "solo": 2,
+       "solo": 3,
        "ast": 0,
-       "tot": 2,
+       "tot": 3,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -1088,25 +1088,25 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 2
+       "games": 3
       },
       {
        "season": 2016,
-       "solo": 17,
-       "ast": 14,
-       "tot": 31,
+       "solo": 19,
+       "ast": 16,
+       "tot": 35,
        "ff": 0,
        "int": 0,
        "brup": 0,
        "blkd": 0,
        "qh": 0,
-       "tfl": 2.0,
-       "tfl_yds": 16,
+       "tfl": 3.0,
+       "tfl_yds": 27,
        "sacks": 1.0,
        "sack_yds": 11,
        "fr": 0,
        "fr_yds": 0,
-       "games": 6
+       "games": 7
       }
      ]
     }
@@ -2100,20 +2100,20 @@
       {
        "season": 2016,
        "solo": 25,
-       "ast": 36,
-       "tot": 61,
+       "ast": 37,
+       "tot": 62,
        "ff": 0,
        "int": 1,
        "brup": 1,
        "blkd": 1,
        "qh": 0,
-       "tfl": 1.0,
-       "tfl_yds": 2,
+       "tfl": 1.5,
+       "tfl_yds": 3,
        "sacks": 0,
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 9
+       "games": 10
       },
       {
        "season": 2017,
@@ -2666,21 +2666,21 @@
      "seasons": [
       {
        "season": 2016,
-       "solo": 4,
-       "ast": 5,
-       "tot": 9,
+       "solo": 7,
+       "ast": 6,
+       "tot": 13,
        "ff": 0,
        "int": 1,
        "brup": 1,
        "blkd": 0,
        "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
+       "tfl": 1.0,
+       "tfl_yds": 2,
        "sacks": 0,
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 5
+       "games": 6
       }
      ]
     }
@@ -3846,25 +3846,25 @@
       },
       {
        "season": 2015,
-       "att": 108,
-       "gain": 638,
-       "loss": 18,
-       "net": 620,
+       "att": 114,
+       "gain": 655,
+       "loss": 22,
+       "net": 633,
        "td": 2,
        "long": 45,
-       "yards_per_carry": 5.74,
-       "games": 9
+       "yards_per_carry": 5.55,
+       "games": 10
       },
       {
        "season": 2016,
-       "att": 85,
-       "gain": 327,
-       "loss": 50,
-       "net": 277,
-       "td": 1,
+       "att": 114,
+       "gain": 490,
+       "loss": 63,
+       "net": 427,
+       "td": 2,
        "long": 34,
-       "yards_per_carry": 3.26,
-       "games": 8
+       "yards_per_carry": 3.75,
+       "games": 9
       }
      ]
     },
@@ -3919,21 +3919,21 @@
      "seasons": [
       {
        "season": 2015,
-       "rec": 13,
-       "yds": 178,
+       "rec": 14,
+       "yds": 204,
        "td": 2,
        "long": 55,
-       "yards_per_rec": 13.7,
-       "games": 8
+       "yards_per_rec": 14.6,
+       "games": 9
       },
       {
        "season": 2016,
-       "rec": 19,
-       "yds": 179,
+       "rec": 20,
+       "yds": 180,
        "td": 1,
        "long": 47,
-       "yards_per_rec": 9.4,
-       "games": 7
+       "yards_per_rec": 9.0,
+       "games": 8
       }
      ]
     }
@@ -4112,20 +4112,20 @@
       {
        "season": 2016,
        "solo": 12,
-       "ast": 12,
-       "tot": 24,
+       "ast": 13,
+       "tot": 25,
        "ff": 0,
        "int": 0,
        "brup": 1,
        "blkd": 0,
        "qh": 0,
-       "tfl": 1.5,
-       "tfl_yds": 1,
+       "tfl": 2.0,
+       "tfl_yds": 2,
        "sacks": 0,
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 8
+       "games": 9
       },
       {
        "season": 2017,
@@ -4559,12 +4559,12 @@
      "seasons": [
       {
        "season": 2016,
-       "rec": 31,
-       "yds": 454,
-       "td": 10,
+       "rec": 35,
+       "yds": 555,
+       "td": 11,
        "long": 40,
-       "yards_per_rec": 14.6,
-       "games": 9
+       "yards_per_rec": 15.9,
+       "games": 10
       },
       {
        "season": 2017,
@@ -5593,21 +5593,21 @@
      "seasons": [
       {
        "season": 2015,
-       "solo": 1,
+       "solo": 2,
        "ast": 1,
-       "tot": 2,
+       "tot": 3,
        "ff": 0,
        "int": 0,
        "brup": 0,
        "blkd": 0,
        "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
+       "tfl": 1.0,
+       "tfl_yds": 1,
        "sacks": 0,
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 2
+       "games": 3
       },
       {
        "season": 2016,
@@ -6121,9 +6121,9 @@
      "seasons": [
       {
        "season": 2016,
-       "solo": 21,
-       "ast": 9,
-       "tot": 30,
+       "solo": 25,
+       "ast": 10,
+       "tot": 35,
        "ff": 0,
        "int": 3,
        "brup": 0,
@@ -6135,7 +6135,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 8
+       "games": 9
       }
      ]
     }
@@ -6589,14 +6589,14 @@
      "seasons": [
       {
        "season": 2016,
-       "att": 22,
-       "gain": 27,
+       "att": 26,
+       "gain": 37,
        "loss": 16,
-       "net": 11,
+       "net": 21,
        "td": 0,
        "long": 6,
-       "yards_per_carry": 0.5,
-       "games": 6
+       "yards_per_carry": 0.81,
+       "games": 7
       }
      ]
     },
@@ -6913,9 +6913,9 @@
       },
       {
        "season": 2015,
-       "solo": 15,
-       "ast": 8,
-       "tot": 23,
+       "solo": 17,
+       "ast": 9,
+       "tot": 26,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -6927,7 +6927,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 9
+       "games": 10
       }
      ]
     },
@@ -7345,9 +7345,9 @@
       },
       {
        "season": 2016,
-       "solo": 25,
-       "ast": 13,
-       "tot": 38,
+       "solo": 28,
+       "ast": 15,
+       "tot": 43,
        "ff": 0,
        "int": 1,
        "brup": 1,
@@ -7359,7 +7359,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 2,
-       "games": 9
+       "games": 10
       },
       {
        "season": 2017,
@@ -7731,9 +7731,9 @@
       },
       {
        "season": 2015,
-       "solo": 14,
+       "solo": 15,
        "ast": 13,
-       "tot": 27,
+       "tot": 28,
        "ff": 0,
        "int": 0,
        "brup": 7,
@@ -7745,7 +7745,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 9
+       "games": 10
       }
      ]
     }
@@ -7955,12 +7955,12 @@
       },
       {
        "season": 2015,
-       "rec": 38,
-       "yds": 393,
+       "rec": 43,
+       "yds": 449,
        "td": 2,
        "long": 38,
-       "yards_per_rec": 10.3,
-       "games": 9
+       "yards_per_rec": 10.4,
+       "games": 10
       }
      ]
     },
@@ -7975,7 +7975,19 @@
       "yards_per_carry": 8.0
      },
      "career_games": 1,
-     "seasons": []
+     "seasons": [
+      {
+       "season": 2015,
+       "att": 1,
+       "gain": 8,
+       "loss": 0,
+       "net": 8,
+       "td": 0,
+       "long": 8,
+       "yards_per_carry": 8.0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -8174,8 +8186,8 @@
       {
        "season": 2016,
        "solo": 1,
-       "ast": 0,
-       "tot": 1,
+       "ast": 2,
+       "tot": 3,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -8187,7 +8199,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 1
+       "games": 2
       }
      ]
     },
@@ -8572,14 +8584,14 @@
       },
       {
        "season": 2015,
-       "att": 104,
-       "gain": 593,
+       "att": 122,
+       "gain": 676,
        "loss": 35,
-       "net": 558,
-       "td": 3,
+       "net": 641,
+       "td": 4,
        "long": 22,
-       "yards_per_carry": 5.37,
-       "games": 7
+       "yards_per_carry": 5.25,
+       "games": 8
       }
      ]
     },
@@ -8697,12 +8709,12 @@
       },
       {
        "season": 2015,
-       "rec": 6,
-       "yds": 69,
+       "rec": 8,
+       "yds": 75,
        "td": 2,
        "long": 22,
-       "yards_per_rec": 11.5,
-       "games": 4
+       "yards_per_rec": 9.4,
+       "games": 5
       }
      ]
     }
@@ -9453,9 +9465,9 @@
      "seasons": [
       {
        "season": 2016,
-       "solo": 4,
+       "solo": 6,
        "ast": 3,
-       "tot": 7,
+       "tot": 9,
        "ff": 1,
        "int": 0,
        "brup": 0,
@@ -9467,7 +9479,7 @@
        "sack_yds": 0,
        "fr": 1,
        "fr_yds": 0,
-       "games": 7
+       "games": 8
       },
       {
        "season": 2017,
@@ -10159,9 +10171,9 @@
      "seasons": [
       {
        "season": 2015,
-       "solo": 4,
+       "solo": 5,
        "ast": 5,
-       "tot": 9,
+       "tot": 10,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -10173,7 +10185,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 5
+       "games": 6
       }
      ]
     }
@@ -10405,12 +10417,12 @@
       },
       {
        "season": 2015,
-       "solo": 25,
-       "ast": 16,
-       "tot": 41,
+       "solo": 29,
+       "ast": 17,
+       "tot": 46,
        "ff": 0,
-       "int": 2,
-       "brup": 0,
+       "int": 3,
+       "brup": 1,
        "blkd": 0,
        "qh": 0,
        "tfl": 0.5,
@@ -10419,7 +10431,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 1,
-       "games": 9
+       "games": 10
       },
       {
        "season": 2016,
@@ -12177,38 +12189,38 @@
       {
        "season": 2015,
        "solo": 21,
-       "ast": 16,
-       "tot": 37,
+       "ast": 17,
+       "tot": 38,
        "ff": 0,
        "int": 0,
        "brup": 1,
        "blkd": 0,
        "qh": 1,
-       "tfl": 8.5,
-       "tfl_yds": 27,
+       "tfl": 9.0,
+       "tfl_yds": 29,
        "sacks": 3.0,
        "sack_yds": 12,
        "fr": 0,
        "fr_yds": 0,
-       "games": 9
+       "games": 10
       },
       {
        "season": 2016,
-       "solo": 19,
-       "ast": 16,
-       "tot": 35,
+       "solo": 21,
+       "ast": 17,
+       "tot": 38,
        "ff": 1,
        "int": 0,
        "brup": 2,
        "blkd": 2,
        "qh": 0,
-       "tfl": 6.0,
-       "tfl_yds": 14,
-       "sacks": 2.0,
-       "sack_yds": 7,
+       "tfl": 7.0,
+       "tfl_yds": 19,
+       "sacks": 3.0,
+       "sack_yds": 12,
        "fr": 1,
        "fr_yds": 1,
-       "games": 9
+       "games": 10
       },
       {
        "season": 2017,
@@ -13087,21 +13099,21 @@
       },
       {
        "season": 2015,
-       "solo": 14,
-       "ast": 12,
-       "tot": 26,
+       "solo": 16,
+       "ast": 13,
+       "tot": 29,
        "ff": 3,
        "int": 0,
        "brup": 1,
        "blkd": 0,
        "qh": 0,
-       "tfl": 3.5,
-       "tfl_yds": 7,
+       "tfl": 5.0,
+       "tfl_yds": 10,
        "sacks": 1.0,
        "sack_yds": 2,
        "fr": 3,
        "fr_yds": 1,
-       "games": 8
+       "games": 9
       }
      ]
     }
@@ -14768,7 +14780,26 @@
       "fr_yds": 0
      },
      "career_games": 1,
-     "seasons": []
+     "seasons": [
+      {
+       "season": 2015,
+       "solo": 3,
+       "ast": 2,
+       "tot": 5,
+       "ff": 0,
+       "int": 0,
+       "brup": 1,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -15845,9 +15876,9 @@
       },
       {
        "season": 2015,
-       "solo": 4,
+       "solo": 5,
        "ast": 4,
-       "tot": 8,
+       "tot": 9,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -15859,13 +15890,13 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 4
+       "games": 5
       },
       {
        "season": 2016,
        "solo": 10,
-       "ast": 11,
-       "tot": 21,
+       "ast": 12,
+       "tot": 22,
        "ff": 0,
        "int": 0,
        "brup": 2,
@@ -15877,7 +15908,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 7
+       "games": 8
       }
      ]
     }
@@ -16864,9 +16895,9 @@
       },
       {
        "season": 2015,
-       "solo": 9,
+       "solo": 10,
        "ast": 7,
-       "tot": 16,
+       "tot": 17,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -16878,7 +16909,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 1,
-       "games": 6
+       "games": 7
       },
       {
        "season": 2016,
@@ -17526,9 +17557,9 @@
      "seasons": [
       {
        "season": 2015,
-       "solo": 0,
+       "solo": 1,
        "ast": 1,
-       "tot": 1,
+       "tot": 2,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -17540,7 +17571,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 1
+       "games": 2
       }
      ]
     }
@@ -18227,9 +18258,9 @@
      "seasons": [
       {
        "season": 2015,
-       "solo": 4,
+       "solo": 5,
        "ast": 1,
-       "tot": 5,
+       "tot": 6,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -18241,25 +18272,25 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 3
+       "games": 4
       },
       {
        "season": 2016,
-       "solo": 8,
-       "ast": 8,
-       "tot": 16,
+       "solo": 11,
+       "ast": 11,
+       "tot": 22,
        "ff": 0,
        "int": 0,
-       "brup": 0,
+       "brup": 1,
        "blkd": 0,
        "qh": 0,
-       "tfl": 3.0,
-       "tfl_yds": 15,
-       "sacks": 1.0,
-       "sack_yds": 7,
+       "tfl": 6.0,
+       "tfl_yds": 24,
+       "sacks": 2.0,
+       "sack_yds": 13,
        "fr": 0,
        "fr_yds": 0,
-       "games": 4
+       "games": 5
       }
      ]
     }
@@ -19761,21 +19792,21 @@
       },
       {
        "season": 2015,
-       "solo": 15,
-       "ast": 14,
-       "tot": 29,
+       "solo": 17,
+       "ast": 15,
+       "tot": 32,
        "ff": 1,
        "int": 0,
-       "brup": 1,
+       "brup": 2,
        "blkd": 0,
        "qh": 0,
-       "tfl": 5.0,
-       "tfl_yds": 8,
+       "tfl": 6.0,
+       "tfl_yds": 10,
        "sacks": 0,
        "sack_yds": 0,
        "fr": 1,
        "fr_yds": 0,
-       "games": 8
+       "games": 9
       }
      ]
     }
@@ -20594,27 +20625,27 @@
      "seasons": [
       {
        "season": 2015,
-       "solo": 8,
-       "ast": 5,
-       "tot": 13,
-       "ff": 0,
+       "solo": 9,
+       "ast": 6,
+       "tot": 15,
+       "ff": 1,
        "int": 0,
-       "brup": 3,
+       "brup": 6,
        "blkd": 0,
        "qh": 0,
        "tfl": 0.5,
        "tfl_yds": 1,
        "sacks": 0,
        "sack_yds": 0,
-       "fr": 0,
-       "fr_yds": 0,
-       "games": 6
+       "fr": 1,
+       "fr_yds": 1,
+       "games": 7
       },
       {
        "season": 2016,
-       "solo": 10,
-       "ast": 6,
-       "tot": 16,
+       "solo": 14,
+       "ast": 7,
+       "tot": 21,
        "ff": 0,
        "int": 0,
        "brup": 3,
@@ -20626,7 +20657,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 5
+       "games": 6
       },
       {
        "season": 2017,
@@ -21156,12 +21187,12 @@
       },
       {
        "season": 2015,
-       "rec": 78,
-       "yds": 1102,
-       "td": 14,
+       "rec": 93,
+       "yds": 1266,
+       "td": 17,
        "long": 80,
-       "yards_per_rec": 14.1,
-       "games": 9
+       "yards_per_rec": 13.6,
+       "games": 10
       }
      ]
     },
@@ -21675,29 +21706,29 @@
       },
       {
        "season": 2015,
-       "att": 277,
-       "cmp": 159,
-       "yds": 2007,
-       "td": 23,
+       "att": 318,
+       "cmp": 185,
+       "yds": 2283,
+       "td": 26,
        "int": 10,
        "sack": 9,
        "long": 80,
-       "completion_pct": 57.4,
+       "completion_pct": 58.2,
        "yards_per_att": 7.2,
-       "games": 9
+       "games": 10
       },
       {
        "season": 2016,
-       "att": 221,
-       "cmp": 131,
-       "yds": 1577,
-       "td": 14,
-       "int": 8,
-       "sack": 39,
+       "att": 238,
+       "cmp": 139,
+       "yds": 1711,
+       "td": 16,
+       "int": 9,
+       "sack": 42,
        "long": 63,
-       "completion_pct": 59.3,
-       "yards_per_att": 7.1,
-       "games": 9
+       "completion_pct": 58.4,
+       "yards_per_att": 7.2,
+       "games": 10
       }
      ]
     },
@@ -21737,25 +21768,25 @@
       },
       {
        "season": 2015,
-       "att": 82,
-       "gain": 333,
+       "att": 91,
+       "gain": 361,
        "loss": 83,
-       "net": 250,
-       "td": 4,
+       "net": 278,
+       "td": 5,
        "long": 19,
        "yards_per_carry": 3.05,
-       "games": 9
+       "games": 10
       },
       {
        "season": 2016,
-       "att": 116,
-       "gain": 328,
-       "loss": 264,
-       "net": 64,
+       "att": 125,
+       "gain": 347,
+       "loss": 285,
+       "net": 62,
        "td": 1,
        "long": 20,
-       "yards_per_carry": 0.55,
-       "games": 9
+       "yards_per_carry": 0.5,
+       "games": 10
       }
      ]
     },
@@ -22525,9 +22556,9 @@
      "seasons": [
       {
        "season": 2015,
-       "solo": 15,
+       "solo": 16,
        "ast": 2,
-       "tot": 17,
+       "tot": 18,
        "ff": 0,
        "int": 0,
        "brup": 3,
@@ -22539,25 +22570,25 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 6
+       "games": 7
       },
       {
        "season": 2016,
-       "solo": 22,
+       "solo": 27,
        "ast": 17,
-       "tot": 39,
-       "ff": 0,
+       "tot": 44,
+       "ff": 1,
        "int": 0,
-       "brup": 9,
+       "brup": 10,
        "blkd": 0,
        "qh": 0,
        "tfl": 2.0,
        "tfl_yds": 4,
        "sacks": 0,
        "sack_yds": 0,
-       "fr": 0,
+       "fr": 1,
        "fr_yds": 1,
-       "games": 8
+       "games": 9
       },
       {
        "season": 2017,
@@ -23155,21 +23186,21 @@
       },
       {
        "season": 2016,
-       "solo": 17,
+       "solo": 20,
        "ast": 12,
-       "tot": 29,
+       "tot": 32,
        "ff": 0,
        "int": 0,
-       "brup": 0,
+       "brup": 1,
        "blkd": 0,
        "qh": 0,
-       "tfl": 8.0,
-       "tfl_yds": 23,
-       "sacks": 1.0,
-       "sack_yds": 7,
+       "tfl": 10.0,
+       "tfl_yds": 37,
+       "sacks": 2.0,
+       "sack_yds": 15,
        "fr": 0,
        "fr_yds": 0,
-       "games": 8
+       "games": 9
       }
      ]
     }
@@ -23511,58 +23542,18 @@
    "athlete_key": "johnson_marcus",
    "position": "RB",
    "categories": {
-    "Passing": {
-     "career": {
-      "att": 35,
-      "cmp": 23,
-      "yds": 242,
-      "td": 2,
-      "int": 1,
-      "sack": 2,
-      "long": 47,
-      "completion_pct": 65.7,
-      "yards_per_att": 6.9
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2021,
-       "att": 35,
-       "cmp": 23,
-       "yds": 242,
-       "td": 2,
-       "int": 1,
-       "sack": 2,
-       "long": 47,
-       "completion_pct": 65.7,
-       "yards_per_att": 6.9,
-       "games": 1
-      }
-     ]
-    },
     "Rushing": {
      "career": {
-      "att": 154,
-      "gain": 833,
-      "loss": 37,
-      "net": 796,
-      "td": 5,
+      "att": 145,
+      "gain": 811,
+      "loss": 31,
+      "net": 780,
+      "td": 4,
       "long": 72,
-      "yards_per_carry": 5.17
+      "yards_per_carry": 5.38
      },
-     "career_games": 16,
+     "career_games": 15,
      "seasons": [
-      {
-       "season": 2021,
-       "att": 9,
-       "gain": 22,
-       "loss": 6,
-       "net": 16,
-       "td": 1,
-       "long": 9,
-       "yards_per_carry": 1.78,
-       "games": 1
-      },
       {
        "season": 2023,
        "att": 46,
@@ -23806,21 +23797,21 @@
      "seasons": [
       {
        "season": 2016,
-       "solo": 15,
-       "ast": 15,
-       "tot": 30,
+       "solo": 17,
+       "ast": 20,
+       "tot": 37,
        "ff": 1,
        "int": 0,
        "brup": 1,
        "blkd": 0,
        "qh": 0,
-       "tfl": 1.5,
+       "tfl": 2.0,
        "tfl_yds": 4,
        "sacks": 0,
        "sack_yds": 0,
        "fr": 1,
        "fr_yds": 1,
-       "games": 9
+       "games": 10
       },
       {
        "season": 2017,
@@ -24978,21 +24969,21 @@
       },
       {
        "season": 2015,
-       "solo": 26,
-       "ast": 20,
-       "tot": 46,
+       "solo": 28,
+       "ast": 21,
+       "tot": 49,
        "ff": 1,
        "int": 1,
        "brup": 2,
        "blkd": 0,
        "qh": 0,
-       "tfl": 1.5,
-       "tfl_yds": 5,
+       "tfl": 2.0,
+       "tfl_yds": 6,
        "sacks": 0,
        "sack_yds": 0,
        "fr": 1,
        "fr_yds": 1,
-       "games": 9
+       "games": 10
       }
      ]
     }
@@ -25405,8 +25396,8 @@
       {
        "season": 2015,
        "solo": 2,
-       "ast": 2,
-       "tot": 4,
+       "ast": 3,
+       "tot": 5,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -25418,7 +25409,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 4
+       "games": 5
       }
      ]
     }
@@ -25863,17 +25854,17 @@
    "categories": {
     "Passing": {
      "career": {
-      "att": 339,
-      "cmp": 206,
-      "yds": 2154,
-      "td": 18,
-      "int": 9,
-      "sack": 33,
+      "att": 374,
+      "cmp": 229,
+      "yds": 2396,
+      "td": 20,
+      "int": 10,
+      "sack": 35,
       "long": 66,
-      "completion_pct": 60.8,
+      "completion_pct": 61.2,
       "yards_per_att": 6.4
      },
-     "career_games": 12,
+     "career_games": 13,
      "seasons": [
       {
        "season": 2017,
@@ -25890,30 +25881,30 @@
       },
       {
        "season": 2021,
-       "att": 282,
-       "cmp": 167,
-       "yds": 1894,
-       "td": 18,
-       "int": 5,
-       "sack": 23,
+       "att": 317,
+       "cmp": 190,
+       "yds": 2136,
+       "td": 20,
+       "int": 6,
+       "sack": 25,
        "long": 66,
-       "completion_pct": 59.2,
+       "completion_pct": 59.9,
        "yards_per_att": 6.7,
-       "games": 9
+       "games": 10
       }
      ]
     },
     "Rushing": {
      "career": {
-      "att": 84,
-      "gain": 245,
-      "loss": 219,
-      "net": 26,
-      "td": 1,
+      "att": 93,
+      "gain": 267,
+      "loss": 225,
+      "net": 42,
+      "td": 2,
       "long": 30,
-      "yards_per_carry": 0.31
+      "yards_per_carry": 0.45
      },
-     "career_games": 11,
+     "career_games": 12,
      "seasons": [
       {
        "season": 2017,
@@ -25928,14 +25919,14 @@
       },
       {
        "season": 2021,
-       "att": 64,
-       "gain": 211,
-       "loss": 152,
-       "net": 59,
-       "td": 1,
+       "att": 73,
+       "gain": 233,
+       "loss": 158,
+       "net": 75,
+       "td": 2,
        "long": 30,
-       "yards_per_carry": 0.92,
-       "games": 8
+       "yards_per_carry": 1.03,
+       "games": 9
       }
      ]
     },
@@ -26376,20 +26367,20 @@
       {
        "season": 2015,
        "solo": 8,
-       "ast": 11,
-       "tot": 19,
+       "ast": 13,
+       "tot": 21,
        "ff": 0,
        "int": 0,
        "brup": 0,
        "blkd": 0,
        "qh": 0,
-       "tfl": 0.5,
-       "tfl_yds": 1,
+       "tfl": 1.0,
+       "tfl_yds": 3,
        "sacks": 0,
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 5
+       "games": 6
       }
      ]
     }
@@ -28736,9 +28727,9 @@
      "seasons": [
       {
        "season": 2016,
-       "solo": 24,
-       "ast": 17,
-       "tot": 41,
+       "solo": 26,
+       "ast": 18,
+       "tot": 44,
        "ff": 0,
        "int": 0,
        "brup": 4,
@@ -28750,7 +28741,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 8
+       "games": 9
       }
      ]
     }
@@ -28883,21 +28874,21 @@
      "seasons": [
       {
        "season": 2015,
-       "rec": 7,
-       "yds": 73,
+       "rec": 9,
+       "yds": 93,
        "td": 0,
        "long": 17,
-       "yards_per_rec": 10.4,
-       "games": 4
+       "yards_per_rec": 10.3,
+       "games": 5
       },
       {
        "season": 2016,
-       "rec": 44,
-       "yds": 429,
-       "td": 1,
+       "rec": 45,
+       "yds": 447,
+       "td": 2,
        "long": 53,
-       "yards_per_rec": 9.8,
-       "games": 9
+       "yards_per_rec": 9.9,
+       "games": 10
       },
       {
        "season": 2017,
@@ -28931,6 +28922,17 @@
      },
      "career_games": 9,
      "seasons": [
+      {
+       "season": 2016,
+       "att": 1,
+       "gain": 3,
+       "loss": 0,
+       "net": 3,
+       "td": 0,
+       "long": 3,
+       "yards_per_carry": 3.0,
+       "games": 1
+      },
       {
        "season": 2017,
        "att": 5,
@@ -28974,6 +28976,24 @@
      },
      "career_games": 3,
      "seasons": [
+      {
+       "season": 2016,
+       "solo": 1,
+       "ast": 0,
+       "tot": 1,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 1
+      },
       {
        "season": 2018,
        "solo": 2,
@@ -29274,21 +29294,21 @@
       },
       {
        "season": 2016,
-       "solo": 12,
-       "ast": 14,
-       "tot": 26,
+       "solo": 14,
+       "ast": 16,
+       "tot": 30,
        "ff": 0,
        "int": 0,
        "brup": 0,
        "blkd": 0,
        "qh": 0,
-       "tfl": 4.0,
-       "tfl_yds": 14,
-       "sacks": 0,
-       "sack_yds": 0,
+       "tfl": 7.0,
+       "tfl_yds": 30,
+       "sacks": 1.0,
+       "sack_yds": 10,
        "fr": 0,
        "fr_yds": 0,
-       "games": 8
+       "games": 9
       },
       {
        "season": 2017,
@@ -29374,39 +29394,39 @@
       },
       {
        "season": 2015,
-       "solo": 28,
+       "solo": 31,
        "ast": 11,
-       "tot": 39,
+       "tot": 42,
        "ff": 0,
        "int": 0,
        "brup": 0,
        "blkd": 0,
        "qh": 1,
-       "tfl": 9.0,
-       "tfl_yds": 36,
+       "tfl": 10.0,
+       "tfl_yds": 38,
        "sacks": 5.0,
        "sack_yds": 23,
        "fr": 0,
        "fr_yds": 0,
-       "games": 9
+       "games": 10
       },
       {
        "season": 2016,
-       "solo": 27,
-       "ast": 29,
-       "tot": 56,
+       "solo": 28,
+       "ast": 30,
+       "tot": 58,
        "ff": 1,
        "int": 0,
        "brup": 0,
        "blkd": 0,
        "qh": 0,
-       "tfl": 2.5,
-       "tfl_yds": 25,
+       "tfl": 3.5,
+       "tfl_yds": 29,
        "sacks": 2.5,
        "sack_yds": 25,
        "fr": 1,
        "fr_yds": 2,
-       "games": 9
+       "games": 10
       }
      ]
     }
@@ -30231,8 +30251,8 @@
       {
        "season": 2016,
        "solo": 1,
-       "ast": 0,
-       "tot": 1,
+       "ast": 1,
+       "tot": 2,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -30244,7 +30264,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 1
+       "games": 2
       },
       {
        "season": 2017,
@@ -30572,12 +30592,12 @@
      "seasons": [
       {
        "season": 2016,
-       "rec": 2,
-       "yds": 7,
+       "rec": 3,
+       "yds": 15,
        "td": 0,
-       "long": 5,
-       "yards_per_rec": 3.5,
-       "games": 2
+       "long": 8,
+       "yards_per_rec": 5.0,
+       "games": 3
       }
      ]
     }
@@ -30911,21 +30931,21 @@
      "seasons": [
       {
        "season": 2015,
-       "solo": 8,
+       "solo": 9,
        "ast": 4,
-       "tot": 12,
+       "tot": 13,
        "ff": 0,
        "int": 0,
        "brup": 0,
        "blkd": 0,
        "qh": 0,
-       "tfl": 3.0,
-       "tfl_yds": 6,
+       "tfl": 4.0,
+       "tfl_yds": 9,
        "sacks": 0,
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 7
+       "games": 8
       },
       {
        "season": 2016,
@@ -32486,21 +32506,21 @@
      "seasons": [
       {
        "season": 2016,
-       "solo": 5,
+       "solo": 7,
        "ast": 5,
-       "tot": 10,
+       "tot": 12,
        "ff": 0,
        "int": 0,
        "brup": 0,
        "blkd": 0,
        "qh": 0,
-       "tfl": 0,
-       "tfl_yds": 0,
+       "tfl": 1.0,
+       "tfl_yds": 3,
        "sacks": 0,
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 0,
-       "games": 5
+       "games": 6
       },
       {
        "season": 2017,
@@ -33028,9 +33048,9 @@
       },
       {
        "season": 2015,
-       "solo": 5,
+       "solo": 6,
        "ast": 0,
-       "tot": 5,
+       "tot": 6,
        "ff": 2,
        "int": 0,
        "brup": 0,
@@ -33042,7 +33062,7 @@
        "sack_yds": 0,
        "fr": 2,
        "fr_yds": 0,
-       "games": 4
+       "games": 5
       },
       {
        "season": 2016,
@@ -33230,14 +33250,14 @@
       },
       {
        "season": 2015,
-       "att": 6,
+       "att": 8,
        "gain": 0,
-       "loss": 7,
-       "net": -7,
+       "loss": 11,
+       "net": -11,
        "td": 0,
        "long": 0,
-       "yards_per_carry": -1.17,
-       "games": 5
+       "yards_per_carry": -1.38,
+       "games": 6
       },
       {
        "season": 2016,
@@ -34122,9 +34142,9 @@
       },
       {
        "season": 2015,
-       "solo": 13,
+       "solo": 14,
        "ast": 22,
-       "tot": 35,
+       "tot": 36,
        "ff": 0,
        "int": 0,
        "brup": 3,
@@ -34136,7 +34156,7 @@
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 1,
-       "games": 8
+       "games": 9
       }
      ]
     },
@@ -34741,12 +34761,12 @@
       },
       {
        "season": 2015,
-       "solo": 30,
-       "ast": 33,
-       "tot": 63,
+       "solo": 36,
+       "ast": 36,
+       "tot": 72,
        "ff": 2,
        "int": 3,
-       "brup": 6,
+       "brup": 7,
        "blkd": 0,
        "qh": 0,
        "tfl": 3.0,
@@ -34755,7 +34775,7 @@
        "sack_yds": 0,
        "fr": 2,
        "fr_yds": 2,
-       "games": 9
+       "games": 10
       }
      ]
     }
@@ -34823,21 +34843,21 @@
       },
       {
        "season": 2015,
-       "solo": 24,
-       "ast": 17,
-       "tot": 41,
+       "solo": 26,
+       "ast": 18,
+       "tot": 44,
        "ff": 0,
        "int": 2,
        "brup": 0,
        "blkd": 0,
        "qh": 0,
-       "tfl": 5.5,
-       "tfl_yds": 11,
+       "tfl": 6.5,
+       "tfl_yds": 13,
        "sacks": 0,
        "sack_yds": 0,
        "fr": 0,
        "fr_yds": 1,
-       "games": 9
+       "games": 10
       }
      ]
     }
@@ -35013,21 +35033,21 @@
       },
       {
        "season": 2015,
-       "rec": 5,
-       "yds": 41,
+       "rec": 6,
+       "yds": 45,
        "td": 1,
        "long": 12,
-       "yards_per_rec": 8.2,
-       "games": 4
+       "yards_per_rec": 7.5,
+       "games": 5
       },
       {
        "season": 2016,
-       "rec": 9,
-       "yds": 163,
+       "rec": 10,
+       "yds": 169,
        "td": 1,
        "long": 63,
-       "yards_per_rec": 18.1,
-       "games": 6
+       "yards_per_rec": 16.9,
+       "games": 7
       }
      ]
     },
@@ -35049,7 +35069,26 @@
       "fr_yds": 0
      },
      "career_games": 1,
-     "seasons": []
+     "seasons": [
+      {
+       "season": 2016,
+       "solo": 1,
+       "ast": 0,
+       "tot": 1,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "tfl_yds": 0,
+       "sacks": 0,
+       "sack_yds": 0,
+       "fr": 0,
+       "fr_yds": 0,
+       "games": 1
+      }
+     ]
     }
    }
   },
@@ -36682,6 +36721,7 @@
   "Luedtke, Lucas",
   "Luke Everts",
   "M. El-Leboudi",
+  "M. Johnson",
   "M. Langenohl",
   "Marchewka, Luke",
   "Marcus Radue",

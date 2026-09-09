@@ -183,6 +183,39 @@ NAME_ALIASES = {
     ("Fields", "Eliot"): ("Fields", "Elliot"),  # 6 rows vs 9 for "Elliot"
     ("Sain", "Jon"): ("Sain", "John"),  # 3 vs 4 rows -- near-even, kept the fuller spelling
     ("Wech", "Zachery"): ("Wech", "Zachary"),  # 1 row vs 8 for "Zachary"
+    # Confirmed 2026-09-09 by cross-checking real single-season leaderboard
+    # values against the official record book (found via a NEW automated
+    # check, check_same_person_value_mismatches() in build_records_data.py):
+    # a different, more serious bug class than the pairs above -- this one
+    # row was silently MISATTRIBUTED to a different real ROSTER person, not
+    # just left as a separate fragment. "M. Johnson" (2021 Benedictine game,
+    # a real QB passing line: 23/35, 242 yds, 2 TD) has no full first name
+    # in that one game's own box score, so match_player()'s unique-first-
+    # initial fallback confidently matched it to roster player "Marcus
+    # Johnson" (an RB, the only "Johnson" whose known_years cover 2021 AND
+    # whose first name starts with "M") -- pure roster-candidate coincidence,
+    # since the real Michael Johnson (this program's actual 2021 starting
+    # QB, confirmed by his OTHER 10 games that season all using his full
+    # first name and correctly merging into one non-roster "Michael Johnson"
+    # identity) was never on the Lifting Data roster at all, so he was
+    # invisible to that disambiguation stage entirely. The fix works by
+    # correcting "M." to the real full first name BEFORE any roster lookup
+    # happens, which also means the initial-shortcut heuristic below no
+    # longer applies (a multi-letter first name skips it entirely) -- so
+    # this row now correctly falls through to the same non-roster merge
+    # path its other 10 games already use, instead of ever reaching the
+    # roster at all. **General risk this confirms, not just this one row**:
+    # the first-initial fallback (see match_player()'s own comment) can only
+    # ever disambiguate among roster-KNOWN candidates -- if the real person
+    # sharing that last name/initial isn't on the roster, a coincidentally-
+    # matching rostered person can absorb their stat line with no error or
+    # warning. Not fixed generally (would need cross-referencing every
+    # initial-match candidate against the broader unmatched-identity pool
+    # before trusting a roster match, a bigger change than fits this
+    # finding) -- if a future thorough check finds another real person's
+    # stats silently inflating an unrelated roster athlete's total, this is
+    # the mechanism to suspect first.
+    ("Johnson", "M."): ("Johnson", "Michael"),
 }
 
 
@@ -401,12 +434,33 @@ def get_field(row, aliases):
     return None
 
 
-def season_year(date_str):
+def season_year(date_str, fallback_stem=None):
     """"9/18/2010" -> 2010 -- a D3 football season never crosses a calendar
     year boundary, same convention build_game_data.py's own parse_label_date
-    already relies on."""
+    already relies on.
+
+    Falls back to the leading year in the raw archive's own filename
+    convention ("<year>_<opponent-slug>_<id>.json", via `fallback_stem`)
+    when the scraped date field itself has no year at all to parse. Found
+    2026-09-09 by cross-checking real single-season leaderboard values
+    (not assumed): 2 of 151 raw games ("2015_lake-forest-college_9159.json",
+    "2016_lakeland-college_9738.json") have a bare "M/D" date with no year
+    -- a genuine gopios.com scrape-era quirk on the source's own side, not
+    a parsing bug here. Without this fallback, those 2 games' season_year()
+    call returned None, which meant their real stats still landed in a
+    player's CAREER total (never gated on season) but silently never
+    reached the SEASON-level breakdown at all -- explains why e.g. Kyle
+    Burlingame's exact career passing totals matched the record book while
+    his single-season 2015 numbers came up short by exactly that one
+    game's own stat line."""
     m = re.search(r"/(\d{4})$", date_str or "")
-    return int(m.group(1)) if m else None
+    if m:
+        return int(m.group(1))
+    if fallback_stem:
+        m2 = re.match(r"^(\d{4})_", fallback_stem)
+        if m2:
+            return int(m2.group(1))
+    return None
 
 
 def accumulate(bucket, spec, row):
@@ -796,7 +850,7 @@ def main():
     for fn in files:
         with open(fn, encoding="utf-8") as f:
             data = json.load(f)
-        year = season_year(data.get("game_info", {}).get("date"))
+        year = season_year(data.get("game_info", {}).get("date"), Path(fn).stem)
         ps = data.get("player_stats", {})
         for category in CATEGORY_SPECS:
             teams = ps.get(category, {})
@@ -829,8 +883,8 @@ def main():
     for fn in files:
         with open(fn, encoding="utf-8") as f:
             data = json.load(f)
-        year = season_year(data.get("game_info", {}).get("date"))
         game_label = Path(fn).stem
+        year = season_year(data.get("game_info", {}).get("date"), game_label)
         ps = data.get("player_stats", {})
         for category, spec in CATEGORY_SPECS.items():
             teams = ps.get(category, {})

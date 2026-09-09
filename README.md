@@ -2595,6 +2595,90 @@ missed:
   one generic "check for WARNING lines" note undersold that one of them
   needs a real decision from the user, not just a glance.
 
+**Thirteenth round: a data review that found and fixed 2 genuine bugs
+(2026-09-09, per the user, "review of the data ... underlying processes").**
+Different in kind from every earlier round's identity-merge work --
+this one independently cross-checked this site's own computed leaders
+against the scraped record book itself (a completely different source),
+not just against each other, and found real numeric disagreements worth
+chasing down rather than just noting.
+
+- **Systematically compared this site's own #1 computed leader against
+  the record book's own #1 for every `RECORD_WATCH_MAP` statistic**
+  (all players, not just active ones). Most disagreements were exactly
+  what's expected (a different, older real record-holder whose career
+  predates this archive's 2010 start) -- but 2 cases were the SAME real
+  person leading both lists with disagreeing values: Josh Zank (Sacks,
+  23.5 vs 26 -- his earliest season on record is 2010 itself, plausibly
+  a real pre-archive gap) and Keon Miller (Kickoff Returns/Yards, 65/1,428
+  vs the record book's 80/1,707 -- NOT explainable that way, his entire
+  2021-2023 career sits fully inside the archive). Confirmed Miller's own
+  `data/special-teams.json` rows already sum to exactly his undercounted
+  total, so the gap is upstream of this site's own code -- flagged in the
+  sibling Special Teams Data project's own SKILL.md for whoever next
+  works on that project, not guessed at or patched over from here.
+- **Extended the same comparison to the record book's own Single-Season
+  leaderboard**, matching by exact (player, year) instead of just "who
+  leads" -- a much stronger check, since a single season has no "maybe
+  their career predates this archive" excuse. Checked all 36 matchable
+  rows and found **11 real mismatches**, 7 of them all in the SAME
+  season (2015) across 2 unrelated players (Kyle Burlingame's passing,
+  Kevin Jennings' receiving) -- a strong signal of one systemic issue,
+  not scattered noise.
+- **Root-caused and fixed both real bugs this surfaced**:
+  1. `season_year()` parses a game's season from its `game_info.date`
+     field ("9/18/2015" -> 2015) -- 2 of 151 raw games
+     ("2015_lake-forest-college_9159.json", "2016_lakeland-college_9738.json")
+     have a bare "M/D" date with NO year at all, a genuine gopios.com
+     scrape-era quirk. `season_year()` returned `None` for those, which
+     meant that game's real stats still landed in every player's CAREER
+     total (never gated on season) but silently never reached the
+     SEASON-level breakdown -- exactly why Burlingame's career passing
+     numbers already matched the record book while his single-season 2015
+     numbers came up short by exactly that one game's own line. Fixed
+     with a fallback to the raw archive's own `<year>_<opponent>_<id>.json`
+     filename convention when the date field itself has no year.
+  2. A real player-identity misattribution, a different and more serious
+     bug class than any found earlier: "M. Johnson" (a bare-initial
+     Passing line from one 2021 game, Benedictine) has no full first name
+     in that game's own box score, so `match_player()`'s unique-first-
+     initial fallback matched it to roster player "Marcus Johnson" (an
+     RB) -- the only "Johnson" on the roster whose known seasons cover
+     2021 AND whose first name starts with "M". The real Michael Johnson
+     (this program's actual 2021 starting QB, whose other 10 games that
+     season all use his full name and already correctly merge into one
+     non-roster identity) was never on the Lifting Data roster at all, so
+     he was invisible to that disambiguation stage entirely -- Marcus
+     Johnson's own real RB stats silently absorbed one game's worth of a
+     completely different real person's passing line. Fixed with a
+     `NAME_ALIASES` entry correcting "M." to "Michael" before any roster
+     lookup happens, which also means the initial-shortcut heuristic no
+     longer applies once the first name isn't a bare initial anymore. See
+     `NAME_ALIASES`' own comment for the general risk this confirms: the
+     first-initial fallback can only ever disambiguate among roster-KNOWN
+     candidates, and silently misattributes to a coincidentally-matching
+     rostered person when the real one isn't rostered at all.
+- **Verified both fixes thoroughly**: re-ran the full season-level
+  cross-check after each fix (11 mismatches -> 4 after the date fix -> 2
+  after the name fix, both remaining being the already-flagged Zank/
+  Miller upstream cases); confirmed Marcus Johnson's own real stat
+  profile (Rushing/Receiving/Defense/Returns, no more spurious Passing
+  category) is unaffected; confirmed Michael Johnson's corrected 2021
+  season (190 completions, 20 TDs) now matches the record book exactly;
+  re-verified the 4 previously-known record-book values are still exact;
+  re-ran the full 6-script pipeline and fuzzy-duplicate-name scan (0
+  pairs); player count unchanged (470) confirming no new fragmentation.
+- **Made both new comparison checks permanent**: `build_records_data.py`
+  now runs `check_same_person_value_mismatches()` (career-level, the #1
+  vs #1 comparison) and the new `check_season_value_mismatches()`
+  (season-level, all ~5 ranks per stat, matched by exact player+year) on
+  every build, printing a `WARNING` for anything future data uncovers --
+  this class of bug (a real numeric disagreement hiding behind
+  otherwise-plausible-looking totals) would never have surfaced without
+  deliberately cross-checking against an independent second source, and
+  now that check runs automatically instead of requiring another
+  by-hand session to think to do it again.
+
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly
