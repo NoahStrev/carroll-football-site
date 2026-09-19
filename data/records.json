@@ -8512,12 +8512,54 @@
  "record_watch": {
   "current_season": 2026,
   "career": {
+   "Solo Tackles": [
+    {
+     "statistic": "Solo Tackles",
+     "player": "Evan Griffiths",
+     "position": "LB",
+     "current_value": 73,
+     "top_value": 170,
+     "fifth_value": 143,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Brian Erickson",
+       "value": "170",
+       "value_numeric": 170
+      },
+      {
+       "rank": 2,
+       "player": "Jeremy Winter",
+       "value": "168",
+       "value_numeric": 168
+      },
+      {
+       "rank": 3,
+       "player": "Mike Dziewit",
+       "value": "161",
+       "value_numeric": 161
+      },
+      {
+       "rank": 4,
+       "player": "Joe Weiland",
+       "value": "143",
+       "value_numeric": 143
+      },
+      {
+       "rank": 4,
+       "player": "Mike Uelman",
+       "value": "143",
+       "value_numeric": 143
+      }
+     ]
+    }
+   ],
    "Field Goals Made": [
     {
      "statistic": "Field Goals Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 20,
+     "current_value": 21,
      "top_value": 28,
      "fifth_value": 14,
      "leaderboard": [
@@ -8565,7 +8607,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 25,
+     "current_value": 27,
      "top_value": 43,
      "fifth_value": 24,
      "leaderboard": [
@@ -8607,7 +8649,7 @@
      "statistic": "PATs Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 60,
+     "current_value": 62,
      "top_value": 138,
      "fifth_value": 56,
      "leaderboard": [
@@ -8649,7 +8691,7 @@
      "statistic": "PATs Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 62,
+     "current_value": 64,
      "top_value": 156,
      "fifth_value": 68,
      "leaderboard": [
