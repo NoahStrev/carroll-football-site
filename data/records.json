@@ -8517,7 +8517,7 @@
      "statistic": "Solo Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 73,
+     "current_value": 75,
      "top_value": 170,
      "fifth_value": 143,
      "leaderboard": [
@@ -8607,7 +8607,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 27,
+     "current_value": 29,
      "top_value": 43,
      "fifth_value": 24,
      "leaderboard": [
@@ -8649,7 +8649,7 @@
      "statistic": "PATs Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 62,
+     "current_value": 65,
      "top_value": 138,
      "fifth_value": 56,
      "leaderboard": [
@@ -8691,7 +8691,7 @@
      "statistic": "PATs Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 64,
+     "current_value": 68,
      "top_value": 156,
      "fifth_value": 68,
      "leaderboard": [
@@ -8729,6 +8729,73 @@
     }
    ]
   },
-  "season": {}
+  "season": {
+   "Field Goals Attempted": [
+    {
+     "statistic": "Field Goals Attempted",
+     "player": "Matthew Swink",
+     "position": "SPEC",
+     "current_value": 6,
+     "top_value": 17,
+     "fifth_value": 12,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Jacob Laurent",
+       "value": "17",
+       "value_numeric": 17
+      },
+      {
+       "rank": 1,
+       "player": "Pat Belson",
+       "value": "17",
+       "value_numeric": 17
+      },
+      {
+       "rank": 3,
+       "player": "Jacob Laurent",
+       "value": "13",
+       "value_numeric": 13
+      },
+      {
+       "rank": 3,
+       "player": "Jacob Laurent",
+       "value": "13",
+       "value_numeric": 13
+      },
+      {
+       "rank": 3,
+       "player": "Brian Jachimek",
+       "value": "13",
+       "value_numeric": 13
+      },
+      {
+       "rank": 6,
+       "player": "Matthew Swink",
+       "value": "12",
+       "value_numeric": 12
+      },
+      {
+       "rank": 6,
+       "player": "Ryan O'Laire",
+       "value": "12",
+       "value_numeric": 12
+      },
+      {
+       "rank": 6,
+       "player": "Ryan O'Laire",
+       "value": "12",
+       "value_numeric": 12
+      },
+      {
+       "rank": 6,
+       "player": "Chris Gustafson",
+       "value": "12",
+       "value_numeric": 12
+      }
+     ]
+    }
+   ]
+  }
  }
 }
