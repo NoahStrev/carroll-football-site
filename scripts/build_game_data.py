@@ -173,9 +173,23 @@ def main():
     games.sort(key=lambda g: (g["season"], g["date"] or ""))
 
     # ---------------------------------------------------------- Plays sheet --
+    # Real, confirmed gap (2026-09-24, site-wide data quality audit): some
+    # raw Hudl exports have trailing rows at the very end of the sheet with
+    # nothing charted at all -- TEAM/ODK/HASH carried over (presumably a
+    # fill-down artifact of the charting template) but DN/DIST/YARD LN/
+    # GN-LS/RESULT all genuinely blank. These aren't a "still being charted"
+    # gap like the individual null counts elsewhere in this file -- there's
+    # no real play here to have an opinion about at all. Confirmed 4 across
+    # the whole site (Carthage 11/15/25, Wash U 9/20/25 x2, Wheaton 9/28/24),
+    # all defense-side, all PLAY_TYPE "Unknown" -- excluded here rather than
+    # counted as 4 phantom defensive snaps with no real content.
     plays_all = [
         r for r in sheet_rows(wb["Plays"])
         if r["GAME_LABEL"] in carroll_game_labels and r["ODK"] in ("O", "D")
+        and not (
+            r["DN"] is None and r["DIST"] is None and r["YARD LN"] is None
+            and r["GN/LS"] is None and r["PLAY_OUTCOME"] is None
+        )
     ]
 
     offense_plays, defense_plays = [], []
