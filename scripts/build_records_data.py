@@ -135,30 +135,48 @@ def check_same_person_value_mismatches(players, career_leaders, warnings):
     box-score/special-teams archive's 2010-present coverage window not
     reaching a genuinely older record-holder's full, or entire, career).
 
-    Added 2026-09-08 after finding exactly this case by hand: Keon Miller
-    is correctly the #1 in both this site's own Kickoff Return computed
-    totals AND the official Kickoff Returns/Kickoff Return Yards records
-    -- a fully 2021-2023 career, entirely within this archive's stated
-    coverage -- yet undercounts by 15 real attempts / 279 real yards
-    (16-19%) versus the official number for the SAME person. Confirmed
-    this isn't a bug in this site's own accumulation (data/special-
-    teams.json's own raw kickoff_return rows for him already sum to
-    exactly the undercounted total) -- the gap is further upstream, most
-    likely missing rows in the sibling Special Teams Data project's own
-    hand-charted workbook for some of his real games. Not fixable from
-    here; this check exists to make sure a future instance of this exact
-    pattern gets surfaced automatically instead of requiring another
-    manual leaderboard-by-leaderboard comparison to notice."""
-    # First real season anywhere in this site's own box-score/special-teams
-    # archive -- a player whose earliest season sits right at this boundary
-    # plausibly has real pre-archive seasons this site simply doesn't (and
-    # structurally can't) cover, which is an expected, already-documented
+    Added 2026-09-08, corrected 2026-09-24: originally flagged Keon
+    Miller's Kickoff Returns/Kickoff Return Yards as "not explained by
+    archive coverage" because his earliest season in this site's own data
+    (2021) looked far from this check's archive-start year (2010) -- but
+    2010 is the Offense/Defense box-score archive's start, not Special
+    Teams' own. The Special Teams categories (Kickoff Return, Punt
+    Return, Punting, PAT/FG, Kickoffs) all come from a separate, more
+    narrowly-scoped workbook (`Carroll_Special_Teams_2021_Current.xlsx`)
+    that only starts in 2021, so comparing against the wrong (2010)
+    boundary made a real pre-archive gap look like an anomaly. Confirmed
+    2026-09-24: Miller's real career per the record book's own `years`
+    field is 2019-2023 -- his missing 2019 season (17 returns, 357 yards)
+    exists in the sibling Special Teams Data project's full archive
+    (`Carroll_Special_Teams_All.xlsx`) but is outside this site's
+    intentional 2021+ scope, exactly the kind of pre-archive gap
+    ARCHIVE_START_BUFFER already exists to explain away -- it just needed
+    the right per-category boundary to compare against, now fixed below.
+    This check stays in permanently to catch a genuinely new instance of
+    this pattern automatically instead of requiring another manual
+    leaderboard-by-leaderboard comparison."""
+    # First real season anywhere in this site's own data, PER STAT CATEGORY --
+    # not a single global boundary, because different categories are built
+    # from different source workbooks with different real coverage-start
+    # years (Offense/Defense box-score data goes back to 2010; every
+    # Special Teams category comes from a separate, coach-scoped workbook
+    # that only starts in 2021). A player whose earliest season in a given
+    # category sits right at THAT category's own boundary plausibly has
+    # real pre-archive seasons this site simply doesn't (and structurally
+    # can't) cover for that category -- an expected, already-documented
     # limitation, not a new anomaly. ARCHIVE_START_BUFFER gives a little
     # slack (a true freshman season sometimes has few/no qualifying stat
     # lines, so "earliest season on record" can already be a year or two
     # into a real career that itself started at the archive boundary).
-    all_seasons = sorted({s["season"] for p in players for c in p["categories"].values() for s in c["seasons"]})
-    archive_start = all_seasons[0] if all_seasons else None
+    archive_start_by_cat = {}
+    for p in players:
+        for cat_name, c in p["categories"].items():
+            seasons = [s["season"] for s in c["seasons"]]
+            if not seasons:
+                continue
+            earliest_for_cat = min(seasons)
+            if cat_name not in archive_start_by_cat or earliest_for_cat < archive_start_by_cat[cat_name]:
+                archive_start_by_cat[cat_name] = earliest_for_cat
     ARCHIVE_START_BUFFER = 2
 
     for stat, (cat, field) in RECORD_WATCH_MAP.items():
@@ -181,6 +199,7 @@ def check_same_person_value_mismatches(players, career_leaders, warnings):
             continue  # different people lead each list -- not this check's concern
         if best_value != official_value:
             earliest = min((s["season"] for s in best_bucket["seasons"]), default=None)
+            archive_start = archive_start_by_cat.get(cat)
             near_boundary = (
                 archive_start is not None and earliest is not None
                 and earliest <= archive_start + ARCHIVE_START_BUFFER
@@ -200,9 +219,8 @@ def check_same_person_value_mismatches(players, career_leaders, warnings):
                 f"same statistic, but the two values disagree by {abs(official_value - best_value)} -- "
                 f"{explanation}. Before assuming this is purely an upstream archive gap, check "
                 f"whether this specific person's own raw rows in data/special-teams.json or the "
-                f"box-score archive already sum to the undercounted total (they did for the case "
-                f"that prompted this check, Keon Miller's Kickoff Return Yards, confirmed 2026-09-08) "
-                f"-- if they DON'T, that's a real bug in this site's own accumulation, not an upstream gap."
+                f"box-score archive already sum to the undercounted total -- if they DON'T, that's "
+                f"a real bug in this site's own accumulation, not an upstream gap."
             )
 
 
