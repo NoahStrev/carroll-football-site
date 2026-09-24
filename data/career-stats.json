@@ -2716,6 +2716,26 @@
    }
   },
   {
+   "display_name": "Anthony Biancalana",
+   "athlete_key": "biancalana_anthony",
+   "position": "WR",
+   "categories": {
+    "LongSnapping": {
+     "career": {
+      "att": 7
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 7,
+       "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
    "display_name": "Anthony Martorano",
    "athlete_key": "martorano_anthony",
    "position": "RB",
@@ -5024,14 +5044,14 @@
     },
     "LongSnapping": {
      "career": {
-      "att": 122
+      "att": 150
      },
-     "career_games": 25,
+     "career_games": 32,
      "seasons": [
       {
        "season": 2023,
-       "att": 25,
-       "games": 6
+       "att": 36,
+       "games": 9
       },
       {
        "season": 2024,
@@ -5040,8 +5060,13 @@
       },
       {
        "season": 2025,
-       "att": 45,
-       "games": 9
+       "att": 52,
+       "games": 10
+      },
+      {
+       "season": 2026,
+       "att": 10,
+       "games": 3
       }
      ]
     }
@@ -15398,20 +15423,20 @@
     },
     "PuntReturn": {
      "career": {
-      "att": 17,
-      "yds": 74,
+      "att": 23,
+      "yds": 80,
       "long": 20,
-      "avg": 4.4
+      "avg": 3.5
      },
-     "career_games": 11,
+     "career_games": 13,
      "seasons": [
       {
        "season": 2021,
-       "att": 6,
-       "yds": 30,
+       "att": 12,
+       "yds": 36,
        "long": 14,
-       "avg": 5.0,
-       "games": 5
+       "avg": 3.0,
+       "games": 7
       },
       {
        "season": 2022,
@@ -15870,7 +15895,7 @@
       "yds": 7363,
       "long": 77,
       "inside_25": 55,
-      "ob": 11,
+      "ob": 13,
       "tb": 16,
       "avg": 47.5
      },
@@ -15882,7 +15907,7 @@
        "yds": 2006,
        "long": 64,
        "inside_25": 15,
-       "ob": 3,
+       "ob": 5,
        "tb": 1,
        "avg": 51.4,
        "games": 9
@@ -20975,6 +21000,25 @@
        "fr": 0,
        "fr_yds": 0,
        "games": 5
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 0,
+      "long": 0,
+      "avg": 0.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2022,
+       "att": 1,
+       "yds": 0,
+       "long": 0,
+       "avg": 0.0,
+       "games": 1
       }
      ]
     }
@@ -27055,25 +27099,6 @@
        "games": 1
       }
      ]
-    },
-    "PuntReturn": {
-     "career": {
-      "att": 1,
-      "yds": 6,
-      "long": 6,
-      "avg": 6.0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2021,
-       "att": 1,
-       "yds": 6,
-       "long": 6,
-       "avg": 6.0,
-       "games": 1
-      }
-     ]
     }
    }
   },
@@ -32592,7 +32617,7 @@
       "long": 63,
       "tb": 1,
       "inside_25": 4,
-      "ob": 1,
+      "ob": 2,
       "avg": 49.6
      },
      "career_games": 3,
@@ -32604,6 +32629,7 @@
        "long": 63,
        "tb": 1,
        "inside_25": 4,
+       "ob": 1,
        "avg": 50.5,
        "games": 2
       },
@@ -34833,6 +34859,24 @@
        "season": 2022,
        "att": 32,
        "games": 7
+      }
+     ]
+    },
+    "LongSnapping": {
+     "career": {
+      "att": 100
+     },
+     "career_games": 18,
+     "seasons": [
+      {
+       "season": 2021,
+       "att": 43,
+       "games": 9
+      },
+      {
+       "season": 2022,
+       "att": 57,
+       "games": 9
       }
      ]
     }
