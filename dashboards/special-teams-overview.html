@@ -476,7 +476,7 @@ function puntReturnTab(root) {
             <div class="card"><div class="card-head"><h3>Field Position by Outcome</h3></div><div class="card-body" id="prt-fpoutcome"></div></div>
           </div>
         </div>
-        <div class="footer-note">Source: Carroll Punt Return sheet, Carroll_Special_Teams_2021_Current.xlsx (209 rows). "Punts by Outcome" is derived from the sheet's TB/FC/Muff/Blocked flags plus return length (no single outcome column on this sheet).</div>
+        <div class="footer-note">Source: Carroll Punt Return sheet, Carroll_Special_Teams_2021_Current.xlsx (209 rows). "Punts by Outcome" reflects the sheet's own Kick Outcome column.</div>
       </div>
     </div>`;
 
@@ -512,7 +512,7 @@ function puntReturnTab(root) {
       xLabel: 'Hangtime (s)', yLabel: 'Return length (yd)', colorMap: outcomeColors,
     });
 
-    const outcomes = ['Downed', 'Fair Catch', 'Returned', 'Touchback', 'Muff', 'Blocked'].filter((o) => rows.some((r) => r.kick_outcome === o));
+    const outcomes = ['Downed', 'Fair Catch', 'Out of Bounds', 'Touchback', 'Muff', 'Blocked', 'Return', 'Return Touchdown', 'Safety'].filter((o) => rows.some((r) => r.kick_outcome === o));
     renderBar(document.getElementById('prt-outcome'), {
       categories: outcomes, values: outcomes.map((o) => rows.filter((r) => r.kick_outcome === o).length),
       labelFmt: (v) => String(v), colorFn: (name) => categoricalColorMap(outcomes)[name],

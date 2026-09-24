@@ -93,23 +93,6 @@ def build_punt(wb):
     return rows
 
 
-def punt_return_outcome(r):
-    """Carroll Punt Return has no single 'outcome' column (unlike Carroll Punt) --
-    derive one from the boolean flags, in the same priority order the sheet's own
-    rule-based overrides use (a play can't be more than one of these)."""
-    if r["TB"]:
-        return "Touchback"
-    if r["Blocked?"]:
-        return "Blocked"
-    if r["Muff?"]:
-        return "Muff"
-    if r["FC"]:
-        return "Fair Catch"
-    if (r["Return Length"] or 0) > 0:
-        return "Returned"
-    return "Downed"
-
-
 def build_punt_return(wb):
     ws = wb["Carroll Punt Return"]
     rows = []
@@ -119,7 +102,7 @@ def build_punt_return(wb):
         rows.append({
             "season": r["Season"], "date": r["Date"], "opponent": r["Opponent"],
             "is_home": r["Is Home"], "quarter": r["Quarter"], "returner": r["Returner"],
-            "kick_outcome": punt_return_outcome(r), "next_drive_points": pts,
+            "kick_outcome": r["Kick Outcome"], "next_drive_points": pts,
             "next_drive_outcome": outcome_bucket(pts), "drive_success": drive_success(pts),
             "hangtime": r["Hangtime"], "carry_distance": r["Total Distance"],
             "return_length": r["Return Length"], "snap_to_kick": snap_to_kick,
