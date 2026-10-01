@@ -62,12 +62,38 @@ CARROLL_ALIASES = {"Carroll"}
 # co-occurs in the same season, consistent with a one-time scrape naming
 # change rather than two real different opponents): "Washington (Mo.)"
 # (2021 only) / "WashU" (2022-2025), and "Wisconsin Lutheran" (2022 only) /
-# "Wis. Lutheran" (2023 only). Canonicalized to the more common of each
-# pair's two spellings. Found 2026-08-04 per the user noticing it directly
-# on the Opponent Scouting page's opponent dropdown.
+# "Wis. Lutheran" (2023 only). Found 2026-08-04 per the user noticing it
+# directly on the Opponent Scouting page's opponent dropdown.
+#
+# Added 2026-10-01 (site-wide data quality audit): this file's own OPPONENT
+# values never matched the short canonical names every other page on the
+# site uses (Special Teams/Career Stats/Records all read through the
+# sibling Special Teams Data project's own OPPONENT_NAME_MAP) -- e.g. this
+# file showed "Augustana (IL)" and "WashU" while every other page showed
+# "Augustana" and "Wash U" for the same real opponent. Not a calculation
+# bug (this file was internally self-consistent), but a real cross-page
+# naming mismatch a user would see switching between an opponent's Career
+# Stats page and their own Opponent Scouting page. Checked before adding
+# these: no dashboard/JS code hardcodes any of the old longer strings or
+# passes "opponent" as a cross-page URL parameter -- every Opponent
+# dropdown/filter site-wide is built dynamically from whatever's in the
+# data (same mechanism the 2026-08-04 fix above already relies on), so
+# changing the canonical spelling here is safe. "Washington (Mo.)" now
+# maps directly to the final "Wash U" spelling rather than the old
+# intermediate "WashU" hop, since this is a single dict lookup, not a
+# chain -- leaving it pointed at "WashU" would have left that one older
+# spelling one hop short of the new canonical name.
 OPPONENT_ALIASES = {
-    "Washington (Mo.)": "WashU",
+    "Washington (Mo.)": "Wash U",
+    "WashU": "Wash U",
     "Wis. Lutheran": "Wisconsin Lutheran",
+    "Augustana (IL)": "Augustana",
+    "Benedictine (IL)": "Benedictine",
+    "Ill. Wesleyan": "Illinois Wesleyan",
+    "North Central (IL)": "North Central",
+    "Wheaton (IL)": "Wheaton",
+    "Wis.-Eau Claire": "UW Eau Claire",
+    "Wis.-Stout": "UW Stout",
 }
 
 
