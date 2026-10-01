@@ -154,7 +154,19 @@ def check_same_person_value_mismatches(players, career_leaders, warnings):
     the right per-category boundary to compare against, now fixed below.
     This check stays in permanently to catch a genuinely new instance of
     this pattern automatically instead of requiring another manual
-    leaderboard-by-leaderboard comparison."""
+    leaderboard-by-leaderboard comparison.
+
+    Investigated 2026-10-01: Josh Zank's Sacks career total (site 23.5 vs
+    record book's 26) also double-checked directly against every one of
+    his real raw box-score rows (all 24 games, 2010-2012) -- they sum to
+    23.5 exactly, matching this site's own number, so this is genuinely
+    the archive-coverage-start explanation already given above, not a
+    site bug. Also surfaced a smaller, isolated finding while cross-
+    checking: his 2011 SEASON total disagrees with the record book by 1
+    sack even though 2011 is fully inside this archive's coverage -- see
+    check_season_value_mismatches()'s own 2026-10-01 note for that
+    investigation (same conclusion: not a site bug, a real record-book
+    vs. box-score-archive discrepancy)."""
     # First real season anywhere in this site's own data, PER STAT CATEGORY --
     # not a single global boundary, because different categories are built
     # from different source workbooks with different real coverage-start
@@ -242,7 +254,34 @@ def check_season_value_mismatches(players, season_rows, warnings):
     misattribution in NAME_ALIASES' own comment. Both are now fixed, but
     this check stays in permanently -- it's a stronger, more specific
     signal than the career-level check and clearly catches real bugs the
-    career-level version can't."""
+    career-level version can't.
+
+    Investigated 2026-10-01, both of the 2 instances firing as of that
+    date: Sacks 2011 (Josh Zank, site 10.0 vs record book's T3. entry of
+    11) and Kickoff Returns 2022 (Keon Miller, site 27 vs record book's
+    5. entry of 25). For both, every real raw row for that exact
+    player+season was pulled directly from source (Special Teams Data's
+    raw box-score JSONs for Zank's Individual Defensive Statistics;
+    data/special-teams.json's kickoff_return rows for Miller) and summed
+    by hand outside this site's own code -- in both cases the raw sum
+    matches this site's own computed value EXACTLY (Zank: 10.0 from 10
+    real 2011 games; Miller: 27 from 7 real 2022 games, confirmed not a
+    name-merge artifact -- "Keon Miller" is the only spelling of his name
+    anywhere in the raw data -- and confirmed not implausible, since his
+    9-return game that season was a real 9-61 Wheaton blowout with many
+    real Carroll kickoffs-after-Wheaton-score). Zank's OTHER single-season
+    Sacks entry (2012, 12.5) matches the record book's own 12.5 for that
+    same year exactly, so the archive itself isn't generally unreliable --
+    the 2011 gap is a true, isolated one-season discrepancy. Conclusion:
+    neither is a bug in this site's own accumulation; both are the record
+    book itself (a hand-compiled athletics-department page, scraped once,
+    never independently re-verified play-by-play the way this site's own
+    sources are) disagreeing with the real per-game box score / special-
+    teams archive. Left as permanent warnings (not suppressed) since a
+    future instance of this check firing for a NEW player/season still
+    deserves the same direct-source verification done here, not an
+    assumption that every future hit is "just the record book being
+    wrong" too."""
     for stat, (cat, field) in RECORD_WATCH_MAP.items():
         for r in season_rows:
             if r["statistic"] != stat:
