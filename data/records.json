@@ -8512,12 +8512,60 @@
  "record_watch": {
   "current_season": 2026,
   "career": {
+   "Total Tackles": [
+    {
+     "statistic": "Total Tackles",
+     "player": "Evan Griffiths",
+     "position": "LB",
+     "current_value": 126,
+     "top_value": 291,
+     "fifth_value": 243,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Brian Erickson",
+       "value": "291",
+       "value_numeric": 291
+      },
+      {
+       "rank": 2,
+       "player": "Dave Uelman",
+       "value": "286",
+       "value_numeric": 286
+      },
+      {
+       "rank": 3,
+       "player": "Mike Dziewit",
+       "value": "284",
+       "value_numeric": 284
+      },
+      {
+       "rank": 4,
+       "player": "Jeremy Winter",
+       "value": "271",
+       "value_numeric": 271
+      },
+      {
+       "rank": 5,
+       "player": "Jeff Leuck",
+       "value": "243",
+       "value_numeric": 243
+      },
+      {
+       "rank": 5,
+       "player": "Jim Vento",
+       "value": "243",
+       "value_numeric": 243
+      }
+     ]
+    }
+   ],
    "Solo Tackles": [
     {
      "statistic": "Solo Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 75,
+     "current_value": 80,
      "top_value": 170,
      "fifth_value": 143,
      "leaderboard": [
@@ -8559,7 +8607,7 @@
      "statistic": "Field Goals Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 21,
+     "current_value": 23,
      "top_value": 28,
      "fifth_value": 14,
      "leaderboard": [
@@ -8607,7 +8655,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 29,
+     "current_value": 32,
      "top_value": 43,
      "fifth_value": 24,
      "leaderboard": [
@@ -8649,7 +8697,7 @@
      "statistic": "PATs Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 65,
+     "current_value": 67,
      "top_value": 138,
      "fifth_value": 56,
      "leaderboard": [
@@ -8691,7 +8739,7 @@
      "statistic": "PATs Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 68,
+     "current_value": 70,
      "top_value": 156,
      "fifth_value": 68,
      "leaderboard": [
@@ -8730,12 +8778,114 @@
    ]
   },
   "season": {
+   "Sacks": [
+    {
+     "statistic": "Sacks",
+     "player": "August Johansen",
+     "position": "BOB",
+     "current_value": 6.0,
+     "top_value": 13.5,
+     "fifth_value": 11,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Kyle Bonin",
+       "value": "13.5",
+       "value_numeric": 13.5
+      },
+      {
+       "rank": 2,
+       "player": "Josh Zank",
+       "value": "12.5",
+       "value_numeric": 12.5
+      },
+      {
+       "rank": 3,
+       "player": "Josh Zank",
+       "value": "11",
+       "value_numeric": 11
+      },
+      {
+       "rank": 3,
+       "player": "Dan Guyette",
+       "value": "11",
+       "value_numeric": 11
+      },
+      {
+       "rank": 3,
+       "player": "Jon DeSmit",
+       "value": "11",
+       "value_numeric": 11
+      }
+     ]
+    }
+   ],
+   "Field Goals Made": [
+    {
+     "statistic": "Field Goals Made",
+     "player": "Matthew Swink",
+     "position": "SPEC",
+     "current_value": 5,
+     "top_value": 13,
+     "fifth_value": 8,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Jacob Laurent",
+       "value": "13",
+       "value_numeric": 13
+      },
+      {
+       "rank": 2,
+       "player": "Matthew Swink",
+       "value": "10",
+       "value_numeric": 10
+      },
+      {
+       "rank": 2,
+       "player": "Pat Belson",
+       "value": "10",
+       "value_numeric": 10
+      },
+      {
+       "rank": 4,
+       "player": "Jacob Laurent",
+       "value": "9",
+       "value_numeric": 9
+      },
+      {
+       "rank": 5,
+       "player": "Brian Jachimek",
+       "value": "8",
+       "value_numeric": 8
+      },
+      {
+       "rank": 5,
+       "player": "Tyler Raymaker",
+       "value": "8",
+       "value_numeric": 8
+      },
+      {
+       "rank": 5,
+       "player": "Ryan O'Laire",
+       "value": "8",
+       "value_numeric": 8
+      },
+      {
+       "rank": 5,
+       "player": "Matthew Swink",
+       "value": "8",
+       "value_numeric": 8
+      }
+     ]
+    }
+   ],
    "Field Goals Attempted": [
     {
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 6,
+     "current_value": 9,
      "top_value": 17,
      "fifth_value": 12,
      "leaderboard": [
