@@ -32,7 +32,7 @@
     if (!shown.length) {
       // While searching, a metric with no name match is skipped rather than rendered
       // as an empty card -- a wall of empty cards isn't the answer someone's looking for.
-      return q ? '' : `<div class="card"><div class="card-head"><h3>${title}</h3></div><div class="lb-empty">No qualifying sessions.</div></div>`;
+      return q ? '' : `<div class="card"><div class="card-head"><h2>${title}</h2></div><div class="lb-empty">No qualifying sessions.</div></div>`;
     }
     const body = shown.map((r) => `
       <tr><td><span class="lb-rank">${r.rank}</span></td>
@@ -40,7 +40,7 @@
       <td class="lb-value">${metricLabel(title, r.value)}</td></tr>`).join('');
     return `
       <div class="card">
-        <div class="card-head"><h3>${title}</h3><span class="count">${shown.length}${q && shown.length !== ranked.length ? ` of ${ranked.length}` : ''}</span></div>
+        <div class="card-head"><h2>${title}</h2><span class="count">${shown.length}${q && shown.length !== ranked.length ? ` of ${ranked.length}` : ''}</span></div>
         <div class="card-body lb-scroll-wrap"><table class="mini lb-scroll">
           <thead><tr><th></th><th>Athlete · session</th><th style="text-align:right;">Value</th></tr></thead>
           <tbody>${body}</tbody>
@@ -188,7 +188,7 @@
       });
       const W = 380, H = 130, PAD = 8;
       const allVals = seriesList.flatMap((s) => s.points.map((p) => p.value));
-      if (!allVals.length) { container.innerHTML = `<div class="card-head"><h3>${metric} Comparison</h3></div><div class="card-body"><div class="lb-empty">No data.</div></div>`; return; }
+      if (!allVals.length) { container.innerHTML = `<div class="card-head"><h2>${metric} Comparison</h2></div><div class="card-body"><div class="lb-empty">No data.</div></div>`; return; }
       const vMin = Math.min(...allVals), vMax = Math.max(...allVals);
       const sx = (i) => PAD + (i / Math.max(1, allKeys.length - 1)) * (W - PAD * 2);
       const sy = (v) => H - PAD - ((v - vMin) / (vMax - vMin || 1)) * (H - PAD * 2);
@@ -228,7 +228,7 @@
       svg.style.width = '100%'; svg.style.height = `${H}px`;
       seriesList.forEach((s) => svg.appendChild(pathFor(s, s.color)));
 
-      container.innerHTML = `<div class="card-head"><h3>${metric} Comparison</h3></div><div class="card-body"></div>`;
+      container.innerHTML = `<div class="card-head"><h2>${metric} Comparison</h2></div><div class="card-body"></div>`;
       const body = container.querySelector('.card-body');
       body.appendChild(svg);
       const axis = el('div', 'axis-x');

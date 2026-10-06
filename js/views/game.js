@@ -27,7 +27,7 @@
   const realCall = (field) => (r) => r[field] && r[field] !== '-';
   const withEfficiency = (rows) => rows.filter((r) => r.play_efficiency !== null);
   const RUN_PASS_COLORS = () => ({ Run: cssVar('--cat-1'), Pass: cssVar('--cat-4') });
-  // Charted play hash is only ever L/M/R (HASH_ORDER in charts.js is the 5-value kick-location order).
+  // Charted play hash is only ever L/M/R (HASH_ORDER in js/lib/data.js is the 5-value kick-location order).
   const PLAY_HASH_ORDER = ['L', 'M', 'R'];
 
   // Filter sets: Scorecard and the official-play-by-play position views share one;

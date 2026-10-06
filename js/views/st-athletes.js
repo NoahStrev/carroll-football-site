@@ -513,7 +513,7 @@
             <div class="h2h-sel"><b>${esc(name)}</b><div class="yrs">${g.length ? years(g) : `no ${R.h2hNoun || R.noun} in range`}</div></div></div>
           <div class="h2h-body">
             <div class="mini-kpi-row">${H.mini.map((m) => miniKpi(m.label, m.sub, m.value(g))).join('')}</div>
-            <div class="card-head compact"><h3>${H.outcome.title}</h3></div><div class="h2h-chart"></div>
+            <div class="card-head compact"><h2>${H.outcome.title}</h2></div><div class="h2h-chart"></div>
           </div>`;
         H.outcome.draw(el.querySelector('.h2h-chart'), g, key);
       },

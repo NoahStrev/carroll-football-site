@@ -1,12 +1,21 @@
 """
-Builds data/home.json -- the small summary behind the Home page: the current season's record,
-scoring, game log, and headline efficiency numbers next to the prior-seasons average.
+Builds data/home.json and data/meta.json.
+
+home.json is the summary behind the Home page and the Next Opponent tab: the current season's record,
+scoring, game log, and headline efficiency numbers next to the prior-seasons average, plus every
+Carroll box-score result since 2010 grouped by opponent (`history`).
+
+meta.json is small and loaded by every page: when each dataset's data runs through (the "Data through"
+label under each page title) and the season schedule (so a page can say "a game was played that isn't
+loaded yet").
 
 Reads (all already built by the other scripts / sibling projects):
   - data/game-data.json        official play-by-play (yards, success, turnovers) per game
   - data/special-teams.json    Value/Score rows for every special teams unit
+  - data/rankings.json, data/lifting.json   how fresh each is
   - Special Teams Data/raw/*.json   each box score's `game_info` (final score, home/away,
                                     Carroll's overall + conference record after the game)
+  - Schedule/schedule.json     the season schedule (kept current by that project's own scraper)
 
 Run after the other build scripts (refresh_all.py does this):
     python build_home_data.py
@@ -19,7 +28,8 @@ snaps with a classified efficiency; ST score = mean Value/Score over every unit'
 import glob
 import json
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
+from datetime import date, datetime
 from pathlib import Path
 
 from build_game_data import canonical_opponent
@@ -27,7 +37,9 @@ from build_game_data import canonical_opponent
 SITE = Path(__file__).resolve().parent.parent
 DATA = SITE / "data"
 RAW_GLOB = str(SITE.parent / "Special Teams Data" / "raw" / "*.json")
+SCHEDULE = SITE.parent / "Schedule" / "schedule.json"
 OUT = DATA / "home.json"
+META_OUT = DATA / "meta.json"
 
 SUCCESS = {"Successful", "Explosive"}
 SCORE_RE = re.compile(r"^(.+?)\s+(\d+)-(\d+)\s+(.+)$")
@@ -90,17 +102,127 @@ def parse_game_info(path):
     }
 
 
+# --- opponent naming ---------------------------------------------------------------------------
+# Box scores spell the same school many ways ("Millikan", "MILLIKIN", "Wheaton College", "#6 Wheaton
+# (IL)") and the schedule spells it a third way ("Wheaton College (Ill.)"). team_key() collapses all of
+# them to one comparison key; display names come from the play-by-play archive's own canonical names
+# where it has one, so the Next Opponent tab's opponent matches the rest of Opponent Scouting.
+TYPOS = {"millikan": "millikin", "lackeland": "lakeland", "univeristy": "university", "lacrosse": "la crosse"}
+DISPLAY_OVERRIDES = {"illinois": "Illinois College", "uw la crosse": "UW La Crosse", "cornell": "Cornell College"}
+KEY_ALIASES = {"washington": "wash u", "washu": "wash u", "wis lutheran": "wisconsin lutheran"}
+
+
+def team_key(name):
+    n = re.sub(r"^#\d+\s*", "", name.lower())
+    n = re.sub(r"\([^)]*\)", "", n)
+    n = n.replace("university of wisconsin-", "uw ").replace("wis.-", "uw ").replace("uw-", "uw ")
+    for bad, good in TYPOS.items():
+        n = n.replace(bad, good)
+    n = re.sub(r"\b(college|university|univ)\b", " ", n)
+    n = re.sub(r"\bu\.", " ", n)
+    n = " ".join(re.sub(r"[^a-z0-9 ]", " ", n).split())
+    return KEY_ALIASES.get(n, n)
+
+
+def display_names(box, canonical):
+    """key -> display name: the play-by-play archive's spelling when it has one, else the most common
+    box-score spelling with 'College'/'University' dropped."""
+    names = {team_key(c): c for c in canonical}
+    raw = defaultdict(Counter)
+    for g in box:
+        raw[team_key(g["opponent"])][g["opponent"]] += 1
+    for key, counts in raw.items():
+        if key not in names:
+            best = re.sub(r"^#\d+\s*", "", counts.most_common(1)[0][0].strip())
+            best = re.sub(r"\s+(College|University|U\.)$", "", best, flags=re.I)
+            names[key] = best.title() if best.isupper() else best
+    return {key: DISPLAY_OVERRIDES.get(key, name) for key, name in names.items()}
+
+
+def parse_schedule(names):
+    """Season schedule -> [{date, opponent, home, conference, time, venue, city, completed, result}]."""
+    if not SCHEDULE.exists():
+        # Without it Home has no "next game", the Next Opponent tab loses its default, and the
+        # "game not loaded yet" warning can never appear -- say so loudly instead of shipping quietly.
+        print(f"WARNING: {SCHEDULE} not found -- meta.json will have an empty schedule")
+        return []
+    sched = json.loads(SCHEDULE.read_text(encoding="utf-8"))
+    out = []
+    for g in sched["games"]:
+        m = re.match(r"([A-Za-z]{3})\w*\.? (\d{1,2})", g["date_text"] or "")
+        if not m:
+            continue
+        d = datetime.strptime(f"{m.group(1)} {m.group(2)} {g['season']}", "%b %d %Y").date()
+        out.append({
+            "date": d.isoformat(),
+            "opponent": names.get(team_key(g["opponent"])) or re.sub(r"\s+(College|University)$", "", g["opponent"]),
+            "home": g["home_away"] == "home",
+            "conference": bool(g["is_conference"]),
+            "time": g["time_text"],
+            "venue": g["venue"],
+            "city": g["city"],
+            "completed": bool(g["completed"]),
+            "result": g["result"],
+        })
+    return sorted(out, key=lambda x: x["date"])
+
+
+def fmt_day(iso):
+    d = date.fromisoformat(iso)
+    return f"{d.strftime('%b')} {d.day}"
+
+
+def write_meta(game_data, st, latest, names):
+    """data/meta.json: per-page "data through" text plus the schedule, for the freshness label."""
+    pbp = max(game_data["games"], key=lambda g: g["date"])
+    st_last = max(f"{y}-{int(m):02d}-{int(d):02d}" for rows in st["units"].values() for r in rows for m, d, y in [r["date"].split("/")])
+    weeks = json.loads((DATA / "rankings.json").read_text(encoding="utf-8"))["cciw"]["weeks"]
+    season = max(weeks, key=int)
+    wk = weeks[season][-1]
+    lift = json.loads((DATA / "lifting.json").read_text(encoding="utf-8"))["last_session"]["label"]
+    box_through = f"{latest['opponent']}, {fmt_day(latest['date'])}" if latest else "(no 2026 games yet)"
+    charted = {"through": pbp["date"], "text": f"Charted through {pbp['opponent']}, {fmt_day(pbp['date'])}"}
+    meta = {
+        "pages": {
+            "home": {"through": latest["date"] if latest else None, "text": f"Games through {box_through}"},
+            "offense": charted,
+            "defense": charted,
+            "scouting": charted,
+            "special-teams": {"through": st_last, "text": f"Box scores through {fmt_day(st_last)}"},
+            "players": {"through": latest["date"] if latest else None, "text": f"Career stats through {box_through}"},
+            "rankings": {"through": wk["date"], "text": f"Rankings through Week {wk['week']} ({fmt_day(wk['date'])})"},
+            "lifting": {"through": None, "text": f"Testing through {lift}"},
+        },
+        "latest_game": {"date": latest["date"], "opponent": latest["opponent"]} if latest else None,
+        "schedule": parse_schedule(names),
+    }
+    META_OUT.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"meta -> {META_OUT}")
+
+
 def main():
     game_data = json.loads((DATA / "game-data.json").read_text(encoding="utf-8"))
     st = json.loads((DATA / "special-teams.json").read_text(encoding="utf-8"))
 
     season = max(g["season"] for g in game_data["games"])
     box = sorted((g for g in map(parse_game_info, glob.glob(RAW_GLOB)) if g), key=lambda g: g["date"])
+    names = display_names(box, {g["opponent"] for g in game_data["games"]})
+    for g in box:
+        g["opponent"] = names[team_key(g["opponent"])]
     # "Prior" = the seasons the play-by-play archive covers (so every compared number spans the same
     # window as the dashboards), not every box score back to 2010.
     first_season = min(g["season"] for g in game_data["games"])
     current = [g for g in box if g["season"] == season]
     prior = [g for g in box if first_season <= g["season"] < season]
+
+    # Every result since 2010, newest first, grouped by opponent (the Next Opponent tab's meetings table).
+    history = defaultdict(list)
+    for g in reversed(box):
+        history[g["opponent"]].append({
+            "date": g["date"], "season": g["season"], "home": g["home"],
+            "carroll_pts": g["carroll_pts"], "opp_pts": g["opp_pts"],
+            "result": "W" if g["carroll_pts"] > g["opp_pts"] else "L" if g["carroll_pts"] < g["opp_pts"] else "T",
+        })
 
     # Official play-by-play rows grouped by ISO date (one Carroll game per date).
     off_by_date, def_by_date = defaultdict(list), defaultdict(list)
@@ -150,6 +272,7 @@ def main():
         "record": latest["record_after"] if latest else None,
         "conference_record": latest["conf_record_after"] if latest else None,
         "games": games,
+        "history": dict(sorted(history.items())),
         "season_stats": {
             **pooled(lambda s: s == season),
             "pts_for_pg": per_game(current, "carroll_pts"),
@@ -162,6 +285,7 @@ def main():
         },
     }
     OUT.write_text(json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8")
+    write_meta(game_data, st, latest, names)
     print(f"season {season}: {out['record']} ({out['conference_record']} CCIW), {len(games)} games -> {OUT}")
     for g in games:
         print(f"  {g['date']} {g['result']} {g['carroll_pts']}-{g['opp_pts']} {'vs' if g['home'] else '@'} {g['opponent']}")

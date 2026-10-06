@@ -37,21 +37,92 @@
     const latest = (scope) => {
       const rows = R[scope].rows.filter((r) => r.season === season);
       const week = Math.max(...rows.map((r) => (r.week === null ? -1 : r.week)));
-      return { rows: rows.filter((r) => (r.week === null ? -1 : r.week) === week), week };
+      const at = (w) => rows.filter((r) => (r.week === null ? -1 : r.week) === w);
+      return { rows: at(week), prev: week > 1 ? at(week - 1) : [], week };
     };
     const cc = latest('cciw'), nat = latest('national');
-    const find = (set, h, field) => set.rows.find((r) => r.phase === h.phase && r.category === h.category && (r.metric ?? r.stat) === field);
+    const find = (rows, h, field) => rows.find((r) => r.phase === h.phase && r.category === h.category && (r.metric ?? r.stat) === field);
+    // Rank movement since last week: a lower rank number is better, so improving is "up".
+    const moved = (set, h, field, row) => {
+      const before = row && find(set.prev, h, field);
+      const d = before ? before.rank - row.rank : 0;
+      return d ? ` <span class="rk-move ${d > 0 ? 'good' : 'crit'}" title="vs Week ${set.week - 1}">${d > 0 ? '▲' : '▼'}${Math.abs(d)}</span>` : '';
+    };
     const body = HEADLINES.map((h) => {
-      const c = h.cciw ? find(cc, h, h.cciw) : null;
-      const n = find(nat, h, h.national);
+      const c = h.cciw ? find(cc.rows, h, h.cciw) : null;
+      const n = find(nat.rows, h, h.national);
       const cell = (row, tag) => (row ? `${esc(row.value)} <span class="muted">·</span> ${tag}` : '—');
-      return `<tr><td class="name">${h.label}</td><td>${cell(c, c ? rankTag(c.rank, c.out_of) : '')}</td><td>${cell(n, n ? `#${n.rank}` : '')}</td></tr>`;
+      return `<tr><td class="name">${h.label}</td><td>${cell(c, c ? rankTag(c.rank, c.out_of) + moved(cc, h, h.cciw, c) : '')}</td><td>${cell(n, n ? `#${n.rank}${moved(nat, h, h.national, n)}` : '')}</td></tr>`;
     }).join('');
     return {
       title: 'Where Carroll ranks', wide: false,
       html: `<table class="mini"><thead><tr><th>Category</th><th>CCIW</th><th>National</th></tr></thead><tbody>${body}</tbody></table>`,
-      note: `CCIW through Week ${cc.week}, national through Week ${nat.week}. <a href="rankings.html">All rankings →</a>`,
+      note: `CCIW through Week ${cc.week}, national through Week ${nat.week}${cc.prev.length ? '; arrows show movement since the week before' : ''}. National figures can trail the CCIW ones by a game while the NCAA posts the latest results. <a href="rankings.html">All rankings →</a>`,
     };
+  }
+
+
+  /* ------------------------------------------------------------------ this week == */
+
+  const dayText = Site.dayLabel;
+
+  // Up to three sentences about the game just played: the numbers furthest from the prior-seasons
+  // average (offense/defense efficiency, turnovers), each marked good or bad for Carroll.
+  function takeaways(g, P, label) {
+    if (!g.charted) return [];
+    const o = g.offense, d = g.defense, items = [];
+    const rel = (now, base) => (base ? Math.abs(now - base) / base : 0);
+    items.push({ w: rel(o.ypp, P.offense.ypp), good: o.ypp >= P.offense.ypp, text: `Offense averaged ${fmt(o.ypp)} yards per play (${label}: ${fmt(P.offense.ypp)}).` });
+    items.push({ w: rel(d.ypp, P.defense.ypp), good: d.ypp <= P.defense.ypp, text: `Defense allowed ${fmt(d.ypp)} yards per play (${label}: ${fmt(P.defense.ypp)}).` });
+    items.push({ w: rel(o.success, P.offense.success), good: o.success >= P.offense.success, text: `Offense success rate was ${pct(o.success, 0)} (${label}: ${pct(P.offense.success, 0)}).` });
+    items.push({ w: rel(d.success, P.defense.success), good: d.success <= P.defense.success, text: `Defense held opponents to a ${pct(d.success, 0)} success rate (${label}: ${pct(P.defense.success, 0)}).` });
+    const net = d.turnovers - o.turnovers;
+    items.push({ w: Math.abs(net) / 3, good: net >= 0, text: `Turnovers: ${d.turnovers} taken away, ${o.turnovers} given up (${net > 0 ? '+' : ''}${net}).` });
+    return items.sort((a, b) => b.w - a.w).slice(0, 3);
+  }
+
+  function lastGameCard(H) {
+    const g = H.games[H.games.length - 1];
+    if (!g) return '';
+    const tags = takeaways(g, H.prior_stats, H.prior_label);
+    return `<div class="card">
+      <div class="card-head"><h2>Last game</h2><span class="data-note" style="margin:0;">${dayText(g.date, { month: 'short', day: 'numeric' })}</span></div>
+      <div class="card-body">
+        <div class="tw-score"><span class="tag ${g.result === 'W' ? 'good' : 'crit'}">${g.result}</span> <b>${g.carroll_pts}–${g.opp_pts}</b> ${g.home ? 'vs' : '@'} ${esc(g.opponent)}</div>
+        ${tags.length ? `<ul class="tw-list">${tags.map((t) => `<li class="${t.good ? 'good' : 'crit'}">${esc(t.text)}</li>`).join('')}</ul>` : `<div class="data-note">This game hasn't been charted yet.</div>`}
+      </div>
+      <div class="insight card-note"><a href="opponent-scouting.html#by-opponent">All games by opponent →</a></div>
+    </div>`;
+  }
+
+  function streakText(list) {
+    let n = 0;
+    while (n < list.length && list[n].result === list[0].result) n++;
+    return `${list[0].result === 'W' ? 'Won' : list[0].result === 'L' ? 'Lost' : 'Tied'} the last ${n === 1 ? 'meeting' : `${n} meetings`}`;
+  }
+
+  function nextGameCard(H, meta) {
+    const today = Site.today();
+    const upcoming = meta.schedule.filter((x) => x.date >= today && !x.completed);
+    const next = upcoming[0];
+    if (!next) {
+      return `<div class="card"><div class="card-head"><h2>Next game</h2></div><div class="card-body"><div class="data-note">No more games on the schedule${meta.schedule.length ? ' — the regular season is complete.' : '.'}</div></div></div>`;
+    }
+    const hist = H.history[next.opponent] || [];
+    const w = hist.filter((x) => x.result === 'W').length, l = hist.filter((x) => x.result === 'L').length;
+    const last = hist[0];
+    const rest = upcoming.slice(1, 5).map((x) => `${esc(x.opponent)} <span class="muted">${dayText(x.date, { month: 'short', day: 'numeric' })}</span>`).join(' · ');
+    return `<div class="card">
+      <div class="card-head"><h2>Next game</h2><span class="data-note" style="margin:0;">${dayText(next.date, { weekday: 'short', month: 'short', day: 'numeric' })}${next.time ? ` · ${esc(next.time)}` : ''}</span></div>
+      <div class="card-body">
+        <div class="tw-score"><b>${next.home ? 'Home vs' : 'At'} ${esc(next.opponent)}</b> ${next.conference ? '<span class="tag good">CCIW</span>' : '<span class="tag">Non-conference</span>'}</div>
+        <div class="data-note" style="margin:2px 0 8px;">${esc(next.venue || '')}${next.city ? `, ${esc(next.city)}` : ''}</div>
+        ${hist.length ? `<ul class="tw-list">
+          <li>Carroll is <b>${w}–${l}</b> against ${esc(next.opponent)} since ${hist[hist.length - 1].season}.</li>
+          <li>${streakText(hist)}${last ? `, ${last.carroll_pts}–${last.opp_pts} (${last.season})` : ''}.</li></ul>` : '<div class="data-note">No earlier meetings in the box-score archive.</div>'}
+      </div>
+      <div class="insight card-note"><a href="opponent-scouting.html#next/${encodeURIComponent(next.opponent)}">Scouting report: ${esc(next.opponent)} →</a>${rest ? `<br><span class="muted">Then: ${rest}</span>` : ''}</div>
+    </div>`;
   }
 
   /* ------------------------------------------------------------------- records == */
@@ -95,11 +166,12 @@
   ];
 
   function render(root) {
-    const { home: H, rankings: R, records: REC } = Site.data;
+    const { home: H, rankings: R, records: REC, meta } = Site.data;
     const S = H.season_stats, P = H.prior_stats, label = H.prior_label;
     const played = H.games.length;
     const lastGame = H.games[H.games.length - 1];
-    const upd = UPDATES[0];
+    // The changelog is a separate script; a typo in it must not take the front page down with it.
+    const upd = typeof UPDATES !== 'undefined' ? UPDATES[0] : null;
 
     const record = `${H.record || '—'}`;
     const tiles = [
@@ -124,20 +196,21 @@
       <section class="panel">
         <div class="body">
           <div class="kpirow-5 home-tiles">${tiles.join('')}</div>
+          <div class="cards">${lastGameCard(H)}${nextGameCard(H, meta)}</div>
           <div class="cards">
             <div class="card table-card wide">
-              <div class="card-head"><h3>${H.season} season</h3><span class="data-note" style="margin:0;">Offense / defense: yards per play · success rate. Special teams: avg Value/Score.</span></div>
+              <div class="card-head"><h2>${H.season} season</h2><span class="data-note" style="margin:0;">Offense / defense: yards per play · success rate. Special teams: avg Value/Score.</span></div>
               <div class="card-body flush"><table class="mini">
                 <thead><tr><th>Date</th><th>Opponent</th><th>Result</th><th>Offense</th><th>Defense (allowed)</th><th>Special teams</th></tr></thead>
                 <tbody>${gameRows}</tbody>
               </table></div>
             </div>
-            ${[rank, watch].map((c) => `<div class="card table-card"><div class="card-head"><h3>${c.title}</h3></div><div class="card-body flush">${c.html}</div><div class="insight card-note">${c.note}</div></div>`).join('')}
+            ${[rank, watch].map((c) => `<div class="card table-card"><div class="card-head"><h2>${c.title}</h2></div><div class="card-body flush">${c.html}</div><div class="insight card-note">${c.note}</div></div>`).join('')}
           </div>
-          <h3 class="home-heading">Explore</h3>
+          <h2 class="home-heading">Explore</h2>
           <div class="explore-grid">${EXPLORE.map((x) => `<a class="explore-card" href="${x.href}"><b>${x.title}</b><span>${x.blurb}</span></a>`).join('')}</div>
         </div>
-        <div class="footer-note">Season numbers are summaries of the same official play-by-play, special teams, and box-score data the dashboards use. Latest game: ${lastGame ? `${esc(lastGame.opponent)}, ${lastGame.date}` : '—'}. Latest update: <a href="updates.html">v${upd.version} — ${esc(upd.title)}</a> (${esc(upd.date)}).</div>
+        <div class="footer-note">Season numbers are summaries of the same official play-by-play, special teams, and box-score data the dashboards use. Latest game: ${lastGame ? `${esc(lastGame.opponent)}, ${lastGame.date}` : '—'}. ${upd ? `Latest update: <a href="updates.html">v${upd.version} — ${esc(upd.title)}</a> (${esc(upd.date)}).` : ''}</div>
       </section>`;
   }
 

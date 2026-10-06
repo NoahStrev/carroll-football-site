@@ -3,7 +3,7 @@ function versionCardHTML(u) {
   const rows = u.changes.map((c) => `<tr><td class="name change">${c.change}</td><td>${c.effect}</td></tr>`).join('');
   return `
     <div class="card version-card">
-      <div class="card-head"><h3>v${u.version} — ${u.title} <span class="version-date">${u.date}</span></h3></div>
+      <div class="card-head"><h2>v${u.version} — ${u.title} <span class="version-date">${u.date}</span></h2></div>
       <div class="card-body">
         <table class="mini">
           <thead><tr><th>Change</th><th>Effect</th></tr></thead>

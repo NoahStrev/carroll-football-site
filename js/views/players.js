@@ -63,7 +63,7 @@
     const seasonRows = catData.seasons.map((s) => `<tr><td>${s.season}</td><td>${s.games}</td>${cat.cols.map(([key]) => `<td>${s[key] ?? '—'}</td>`).join('')}</tr>`).join('');
     return `
       <div class="card wide table-card">
-        <div class="card-head"><h3>${cat.label}</h3><span class="data-note" style="margin:0;">${catData.career_games} games</span></div>
+        <div class="card-head"><h2>${cat.label}</h2><span class="data-note" style="margin:0;">${catData.career_games} games</span></div>
         <div class="card-body flush">
           <div class="tbl-scroll"><table class="mini">
             <thead><tr><th>Season</th><th>Games</th>${cat.cols.map(([, label]) => `<th>${label}</th>`).join('')}</tr></thead>
@@ -133,7 +133,7 @@
     const rows = cat.cols.map(([key, label]) => `<tr><td class="name">${label}</td><td>${a ? (a.career[key] ?? '—') : '—'}</td><td>${b ? (b.career[key] ?? '—') : '—'}</td></tr>`).join('');
     return `
       <div class="card wide table-card">
-        <div class="card-head"><h3>${cat.label}</h3></div>
+        <div class="card-head"><h2>${cat.label}</h2></div>
         <div class="card-body flush">
           <table class="mini">
             <thead><tr><th>Career Total</th><th>${esc(playerA.display_name)}</th><th>${esc(playerB.display_name)}</th></tr></thead>
@@ -203,10 +203,10 @@
     return [...new Set([...iBy.keys(), ...tBy.keys()])].map((sec) => `
       <div class="record-section-title">${esc(sec)}</div>
       <div class="cards">
-        <div class="card table-card"><div class="card-head"><h3>Individual</h3></div><div class="card-body flush">
+        <div class="card table-card"><div class="card-head"><h2>Individual</h2></div><div class="card-body flush">
           ${recordsTable(['Statistic', 'Value', 'Player', 'Opponent', 'Date'], (iBy.get(sec) || []).map((r) => `<tr><td class="name">${blank(r.statistic)}</td><td>${blank(r.value)}</td><td>${blank(r.player)}</td><td>${blank(r.opponent)}</td><td>${blank(r.date)}</td></tr>`).join(''))}
         </div></div>
-        <div class="card table-card"><div class="card-head"><h3>Team</h3></div><div class="card-body flush">
+        <div class="card table-card"><div class="card-head"><h2>Team</h2></div><div class="card-body flush">
           ${recordsTable(['Statistic', 'Value', 'Opponent', 'Date'], (tBy.get(sec) || []).map((r) => `<tr><td class="name">${blank(r.statistic)}</td><td>${blank(r.value)}</td><td>${blank(r.opponent)}</td><td>${blank(r.date)}</td></tr>`).join(''))}
         </div></div>
       </div>`).join('');
@@ -233,7 +233,7 @@
       html += `<div class="record-section-title">${esc(category)}</div><div class="cards">`;
       stats.forEach((entries, statistic) => {
         html += `
-          <div class="card table-card"><div class="card-head"><h3>${esc(statistic)}</h3></div><div class="card-body flush">
+          <div class="card table-card"><div class="card-head"><h2>${esc(statistic)}</h2></div><div class="card-body flush">
             <table class="mini records-table"><thead><tr><th>Rank</th><th>Player</th><th>Value</th><th>Years</th></tr></thead>
             <tbody>${entries.map((e) => `<tr><td>${blank(e.rank_label)}</td><td class="name">${blank(e.player)}</td><td>${blank(e.value)}</td><td>${blank(e.years)}</td></tr>`).join('')}</tbody></table>
           </div></div>`;

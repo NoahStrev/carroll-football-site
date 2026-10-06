@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Site smoke test</title>
+<style>
+  body { font: 14px/1.5 system-ui, sans-serif; margin: 24px; color: #111; background: #fafaf8; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p { color: #555; max-width: 780px; margin: 4px 0 14px; }
+  button, select { font: inherit; padding: 4px 10px; }
+  table { border-collapse: collapse; margin-top: 14px; width: 100%; max-width: 980px; }
+  th, td { text-align: left; padding: 4px 10px; border-bottom: 1px solid #ddd; vertical-align: top; }
+  .ok { color: #1a7f37; font-weight: 600; } .bad { color: #c62828; font-weight: 600; }
+  #summary { margin-top: 14px; font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>Site smoke test</h1>
+<p>Loads every dashboard page in a frame at the chosen width, opens every tab and every sub-view pill, and checks for script errors, empty views, stray "undefined"/"NaN" text, and sideways page overflow. Serve the site first
+(<code>python scripts/serve.py</code>) and open <code>/tests/smoke.html</code>. Add <code>?width=390&amp;autorun=1</code> to run on load.</p>
+<label>Viewport width <select id="width"><option>1280</option><option>820</option><option>390</option></select></label>
+<button id="run">Run</button>
+<div id="summary"></div>
+<table id="results"><thead><tr><th>Page</th><th>View</th><th>Result</th><th>Notes</th></tr></thead><tbody></tbody></table>
+
+<script>
+const PAGES = ['home', 'offense', 'defense', 'special-teams', 'opponent-scouting', 'rankings', 'lifting-strength', 'players', 'glossary', 'updates'];
+// The Updates page legitimately discusses "undefined" and "NaN" in its changelog text.
+const TEXT_CHECK_SKIP = new Set(['updates']);
+const BAD_TEXT = /undefined|\bNaN\b|\[object|Couldn't load/;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+// Wait for the page to finish rendering: the stage has real content and stops changing, rather than a fixed sleep.
+async function settle(win) {
+  const stage = () => (win.document.getElementById('site-stage') || {}).innerHTML || '';
+  let last = null, stable = 0;
+  for (let i = 0; i < 40 && stable < 3; i++) {
+    await sleep(100);
+    const now = stage();
+    stable = now === last && now.length > 200 && !now.includes('Loading data') ? stable + 1 : 0;
+    last = now;
+  }
+}
+const rows = document.querySelector('#results tbody');
+let failures = 0, checks = 0;
+
+function record(page, view, problems) {
+  checks++;
+  if (problems.length) failures++;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${page}</td><td>${view}</td><td class="${problems.length ? 'bad' : 'ok'}">${problems.length ? 'FAIL' : 'ok'}</td><td>${problems.join('<br>')}</td>`;
+  rows.appendChild(tr);
+}
+
+function inspect(page, win, errors, width) {
+  const doc = win.document, problems = errors.splice(0);
+  const stage = doc.getElementById('site-stage');
+  const text = stage ? stage.innerText : '';
+  if (text.length < 80) problems.push(`view looks empty (${text.length} characters)`);
+  const bad = !TEXT_CHECK_SKIP.has(page) && text.match(BAD_TEXT);
+  if (bad) problems.push(`stray text "${bad[0]}" near "${text.slice(Math.max(0, bad.index - 30), bad.index + 30).replace(/\s+/g, ' ')}"`);
+  const over = doc.documentElement.scrollWidth - win.innerWidth;
+  if (over > 1) {
+    const culprit = [...doc.body.querySelectorAll('*')].find((el) => el.getBoundingClientRect().right > win.innerWidth + 1 && !el.closest('.tbl-scroll, .tabbar, .links, .pillbar, .subbar'));
+    problems.push(`page is ${over}px wider than the ${width}px viewport${culprit ? ` (${culprit.tagName.toLowerCase()}.${(culprit.className || '').toString().split(' ')[0]})` : ''}`);
+  }
+  // Content cut off by an overflow:hidden box (a wide chart or table inside a card) never shows up as page overflow.
+  const clipped = [...doc.querySelectorAll('#site-stage *')].filter((el) => {
+    if (el.scrollWidth <= el.clientWidth + 1 || el.clientWidth === 0) return false;
+    const cs = win.getComputedStyle(el);
+    if (cs.textOverflow === 'ellipsis') return false; // deliberately truncated axis labels (full text is in the tooltip)
+    return cs.overflowX === 'hidden' || cs.overflowX === 'clip';
+  });
+  if (clipped.length) {
+    const el = clipped[0];
+    problems.push(`${clipped.length} box(es) clip sideways content, e.g. ${el.tagName.toLowerCase()}.${(el.className || '').toString().split(' ')[0]} (${el.scrollWidth}px of content in ${el.clientWidth}px)`);
+  }
+  return problems;
+}
+
+async function checkPage(page, width) {
+  const frame = document.createElement('iframe');
+  frame.style.cssText = `width:${width}px;height:900px;border:0;position:absolute;left:-99999px;top:0`;
+  document.body.appendChild(frame);
+  await new Promise((res) => { frame.onload = res; frame.src = `../dashboards/${page}.html`; });
+  const win = frame.contentWindow, errors = [];
+  win.addEventListener('error', (e) => errors.push(`script error: ${e.message}`));
+  win.addEventListener('unhandledrejection', (e) => errors.push(`unhandled rejection: ${e.reason && e.reason.message || e.reason}`));
+  const logError = win.console.error.bind(win.console);
+  win.console.error = (...args) => { errors.push(`console.error: ${args.join(' ')}`); logError(...args); };
+  await settle(win); // data fetches + first render
+
+  const tabs = [...win.document.querySelectorAll('#site-tabs .tabbtn')].map((b) => ({ id: b.dataset.tab, label: b.textContent.trim() }));
+  const list = tabs.length ? tabs : [{ id: null, label: '(single view)' }];
+  for (const tab of list) {
+    if (tab.id) { win.location.hash = tab.id; await settle(win); }
+    record(page, tab.label, inspect(page, win, errors, width));
+    const pills = [...win.document.querySelectorAll('#site-stage .pillbar')];
+    for (let p = 0; p < pills.length; p++) {
+      const labels = [...pills[p].querySelectorAll('.pill')].map((b) => b.textContent.trim());
+      for (let i = 0; i < labels.length; i++) {
+        const bar = [...win.document.querySelectorAll('#site-stage .pillbar')][p];
+        if (!bar) break;
+        const btn = bar.querySelectorAll('.pill')[i];
+        if (!btn) break;
+        btn.click();
+        await settle(win);
+        record(page, `${tab.label} › ${labels[i]}`, inspect(page, win, errors, width));
+      }
+    }
+  }
+  frame.remove();
+}
+
+async function run() {
+  const width = Number(document.getElementById('width').value);
+  rows.innerHTML = ''; failures = 0; checks = 0;
+  window.__smoke = { done: false };
+  document.getElementById('summary').textContent = 'Running…';
+  for (const page of PAGES) await checkPage(page, width);
+  document.getElementById('summary').innerHTML = `<span class="${failures ? 'bad' : 'ok'}">${failures ? `${failures} of ${checks} views failed` : `All ${checks} views passed`}</span> at ${width}px`;
+  window.__smoke = { done: true, checks, failures, failed: [...rows.querySelectorAll('tr')].filter((r) => r.querySelector('.bad')).map((r) => r.innerText.replace(/\s+/g, ' ')) };
+}
+
+document.getElementById('run').addEventListener('click', run);
+const q = new URLSearchParams(location.search);
+if (q.get('width')) document.getElementById('width').value = q.get('width');
+if (q.get('autorun')) run();
+</script>
+</body>
+</html>

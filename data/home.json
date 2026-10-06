@@ -102,6 +102,1292 @@
       "st_score": 39.4333
     }
   ],
+  "history": {
+    "Augustana": [
+      {
+        "date": "2025-10-18",
+        "season": 2025,
+        "home": false,
+        "carroll_pts": 24,
+        "opp_pts": 31,
+        "result": "L"
+      },
+      {
+        "date": "2024-10-19",
+        "season": 2024,
+        "home": true,
+        "carroll_pts": 30,
+        "opp_pts": 20,
+        "result": "W"
+      },
+      {
+        "date": "2023-09-30",
+        "season": 2023,
+        "home": false,
+        "carroll_pts": 19,
+        "opp_pts": 23,
+        "result": "L"
+      },
+      {
+        "date": "2022-10-01",
+        "season": 2022,
+        "home": true,
+        "carroll_pts": 44,
+        "opp_pts": 41,
+        "result": "W"
+      },
+      {
+        "date": "2021-10-23",
+        "season": 2021,
+        "home": false,
+        "carroll_pts": 29,
+        "opp_pts": 26,
+        "result": "W"
+      },
+      {
+        "date": "2019-11-09",
+        "season": 2019,
+        "home": false,
+        "carroll_pts": 6,
+        "opp_pts": 34,
+        "result": "L"
+      },
+      {
+        "date": "2018-11-03",
+        "season": 2018,
+        "home": true,
+        "carroll_pts": 14,
+        "opp_pts": 24,
+        "result": "L"
+      },
+      {
+        "date": "2017-09-16",
+        "season": 2017,
+        "home": true,
+        "carroll_pts": 28,
+        "opp_pts": 25,
+        "result": "W"
+      },
+      {
+        "date": "2016-09-17",
+        "season": 2016,
+        "home": false,
+        "carroll_pts": 14,
+        "opp_pts": 41,
+        "result": "L"
+      }
+    ],
+    "Beloit": [
+      {
+        "date": "2015-11-07",
+        "season": 2015,
+        "home": false,
+        "carroll_pts": 48,
+        "opp_pts": 24,
+        "result": "W"
+      },
+      {
+        "date": "2014-11-07",
+        "season": 2014,
+        "home": true,
+        "carroll_pts": 49,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2013-11-09",
+        "season": 2013,
+        "home": false,
+        "carroll_pts": 40,
+        "opp_pts": 17,
+        "result": "W"
+      },
+      {
+        "date": "2012-11-03",
+        "season": 2012,
+        "home": true,
+        "carroll_pts": 55,
+        "opp_pts": 0,
+        "result": "W"
+      },
+      {
+        "date": "2011-09-17",
+        "season": 2011,
+        "home": false,
+        "carroll_pts": 49,
+        "opp_pts": 20,
+        "result": "W"
+      },
+      {
+        "date": "2010-09-18",
+        "season": 2010,
+        "home": true,
+        "carroll_pts": 33,
+        "opp_pts": 21,
+        "result": "W"
+      }
+    ],
+    "Benedictine": [
+      {
+        "date": "2021-09-11",
+        "season": 2021,
+        "home": false,
+        "carroll_pts": 35,
+        "opp_pts": 24,
+        "result": "W"
+      },
+      {
+        "date": "2015-09-12",
+        "season": 2015,
+        "home": false,
+        "carroll_pts": 21,
+        "opp_pts": 13,
+        "result": "W"
+      },
+      {
+        "date": "2014-09-13",
+        "season": 2014,
+        "home": true,
+        "carroll_pts": 34,
+        "opp_pts": 6,
+        "result": "W"
+      }
+    ],
+    "Carthage": [
+      {
+        "date": "2026-09-26",
+        "season": 2026,
+        "home": true,
+        "carroll_pts": 20,
+        "opp_pts": 0,
+        "result": "W"
+      },
+      {
+        "date": "2025-11-15",
+        "season": 2025,
+        "home": false,
+        "carroll_pts": 3,
+        "opp_pts": 7,
+        "result": "L"
+      },
+      {
+        "date": "2024-11-16",
+        "season": 2024,
+        "home": true,
+        "carroll_pts": 27,
+        "opp_pts": 7,
+        "result": "W"
+      },
+      {
+        "date": "2023-10-28",
+        "season": 2023,
+        "home": false,
+        "carroll_pts": 27,
+        "opp_pts": 30,
+        "result": "L"
+      },
+      {
+        "date": "2022-10-29",
+        "season": 2022,
+        "home": true,
+        "carroll_pts": 59,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2021-11-06",
+        "season": 2021,
+        "home": true,
+        "carroll_pts": 26,
+        "opp_pts": 17,
+        "result": "W"
+      },
+      {
+        "date": "2019-09-21",
+        "season": 2019,
+        "home": false,
+        "carroll_pts": 7,
+        "opp_pts": 36,
+        "result": "L"
+      },
+      {
+        "date": "2018-09-15",
+        "season": 2018,
+        "home": true,
+        "carroll_pts": 0,
+        "opp_pts": 31,
+        "result": "L"
+      },
+      {
+        "date": "2017-09-30",
+        "season": 2017,
+        "home": false,
+        "carroll_pts": 20,
+        "opp_pts": 55,
+        "result": "L"
+      },
+      {
+        "date": "2016-10-01",
+        "season": 2016,
+        "home": true,
+        "carroll_pts": 14,
+        "opp_pts": 38,
+        "result": "L"
+      }
+    ],
+    "Cornell College": [
+      {
+        "date": "2013-11-02",
+        "season": 2013,
+        "home": true,
+        "carroll_pts": 22,
+        "opp_pts": 48,
+        "result": "L"
+      },
+      {
+        "date": "2012-10-27",
+        "season": 2012,
+        "home": false,
+        "carroll_pts": 31,
+        "opp_pts": 14,
+        "result": "W"
+      }
+    ],
+    "Elmhurst": [
+      {
+        "date": "2026-09-19",
+        "season": 2026,
+        "home": false,
+        "carroll_pts": 33,
+        "opp_pts": 0,
+        "result": "W"
+      },
+      {
+        "date": "2025-10-25",
+        "season": 2025,
+        "home": true,
+        "carroll_pts": 47,
+        "opp_pts": 7,
+        "result": "W"
+      },
+      {
+        "date": "2024-10-26",
+        "season": 2024,
+        "home": false,
+        "carroll_pts": 45,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2023-10-14",
+        "season": 2023,
+        "home": true,
+        "carroll_pts": 62,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2022-10-15",
+        "season": 2022,
+        "home": false,
+        "carroll_pts": 31,
+        "opp_pts": 28,
+        "result": "W"
+      },
+      {
+        "date": "2021-11-13",
+        "season": 2021,
+        "home": false,
+        "carroll_pts": 30,
+        "opp_pts": 28,
+        "result": "W"
+      },
+      {
+        "date": "2019-09-28",
+        "season": 2019,
+        "home": true,
+        "carroll_pts": 30,
+        "opp_pts": 32,
+        "result": "L"
+      },
+      {
+        "date": "2018-09-22",
+        "season": 2018,
+        "home": false,
+        "carroll_pts": 16,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2017-10-07",
+        "season": 2017,
+        "home": true,
+        "carroll_pts": 14,
+        "opp_pts": 17,
+        "result": "L"
+      },
+      {
+        "date": "2016-10-08",
+        "season": 2016,
+        "home": false,
+        "carroll_pts": 34,
+        "opp_pts": 45,
+        "result": "L"
+      }
+    ],
+    "Grinnell": [
+      {
+        "date": "2013-10-26",
+        "season": 2013,
+        "home": false,
+        "carroll_pts": 37,
+        "opp_pts": 0,
+        "result": "W"
+      },
+      {
+        "date": "2012-10-20",
+        "season": 2012,
+        "home": true,
+        "carroll_pts": 21,
+        "opp_pts": 20,
+        "result": "W"
+      },
+      {
+        "date": "2011-11-05",
+        "season": 2011,
+        "home": false,
+        "carroll_pts": 31,
+        "opp_pts": 21,
+        "result": "W"
+      },
+      {
+        "date": "2010-11-06",
+        "season": 2010,
+        "home": true,
+        "carroll_pts": 40,
+        "opp_pts": 7,
+        "result": "W"
+      }
+    ],
+    "Illinois College": [
+      {
+        "date": "2015-11-14",
+        "season": 2015,
+        "home": true,
+        "carroll_pts": 27,
+        "opp_pts": 30,
+        "result": "L"
+      },
+      {
+        "date": "2013-11-16",
+        "season": 2013,
+        "home": true,
+        "carroll_pts": 23,
+        "opp_pts": 21,
+        "result": "W"
+      },
+      {
+        "date": "2012-11-10",
+        "season": 2012,
+        "home": false,
+        "carroll_pts": 49,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2011-09-10",
+        "season": 2011,
+        "home": false,
+        "carroll_pts": 27,
+        "opp_pts": 34,
+        "result": "L"
+      },
+      {
+        "date": "2010-09-10",
+        "season": 2010,
+        "home": true,
+        "carroll_pts": 34,
+        "opp_pts": 20,
+        "result": "W"
+      }
+    ],
+    "Illinois Wesleyan": [
+      {
+        "date": "2025-11-08",
+        "season": 2025,
+        "home": false,
+        "carroll_pts": 34,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2024-11-09",
+        "season": 2024,
+        "home": true,
+        "carroll_pts": 21,
+        "opp_pts": 24,
+        "result": "L"
+      },
+      {
+        "date": "2023-09-23",
+        "season": 2023,
+        "home": true,
+        "carroll_pts": 70,
+        "opp_pts": 23,
+        "result": "W"
+      },
+      {
+        "date": "2022-09-24",
+        "season": 2022,
+        "home": false,
+        "carroll_pts": 21,
+        "opp_pts": 26,
+        "result": "L"
+      },
+      {
+        "date": "2021-09-18",
+        "season": 2021,
+        "home": true,
+        "carroll_pts": 34,
+        "opp_pts": 33,
+        "result": "W"
+      },
+      {
+        "date": "2019-10-05",
+        "season": 2019,
+        "home": false,
+        "carroll_pts": 14,
+        "opp_pts": 42,
+        "result": "L"
+      },
+      {
+        "date": "2018-09-29",
+        "season": 2018,
+        "home": true,
+        "carroll_pts": 13,
+        "opp_pts": 28,
+        "result": "L"
+      },
+      {
+        "date": "2017-10-14",
+        "season": 2017,
+        "home": false,
+        "carroll_pts": 0,
+        "opp_pts": 30,
+        "result": "L"
+      },
+      {
+        "date": "2016-10-15",
+        "season": 2016,
+        "home": true,
+        "carroll_pts": 10,
+        "opp_pts": 62,
+        "result": "L"
+      }
+    ],
+    "Knox": [
+      {
+        "date": "2013-09-21",
+        "season": 2013,
+        "home": true,
+        "carroll_pts": 24,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2012-09-15",
+        "season": 2012,
+        "home": false,
+        "carroll_pts": 48,
+        "opp_pts": 6,
+        "result": "W"
+      },
+      {
+        "date": "2011-10-22",
+        "season": 2011,
+        "home": true,
+        "carroll_pts": 30,
+        "opp_pts": 8,
+        "result": "W"
+      },
+      {
+        "date": "2010-10-23",
+        "season": 2010,
+        "home": false,
+        "carroll_pts": 35,
+        "opp_pts": 0,
+        "result": "W"
+      }
+    ],
+    "Lake Forest": [
+      {
+        "date": "2015-10-03",
+        "season": 2015,
+        "home": true,
+        "carroll_pts": 35,
+        "opp_pts": 13,
+        "result": "W"
+      },
+      {
+        "date": "2014-09-20",
+        "season": 2014,
+        "home": false,
+        "carroll_pts": 28,
+        "opp_pts": 7,
+        "result": "W"
+      },
+      {
+        "date": "2013-10-05",
+        "season": 2013,
+        "home": false,
+        "carroll_pts": 13,
+        "opp_pts": 14,
+        "result": "L"
+      },
+      {
+        "date": "2012-09-28",
+        "season": 2012,
+        "home": true,
+        "carroll_pts": 10,
+        "opp_pts": 13,
+        "result": "L"
+      },
+      {
+        "date": "2011-10-01",
+        "season": 2011,
+        "home": false,
+        "carroll_pts": 45,
+        "opp_pts": 34,
+        "result": "W"
+      },
+      {
+        "date": "2010-10-02",
+        "season": 2010,
+        "home": true,
+        "carroll_pts": 15,
+        "opp_pts": 7,
+        "result": "W"
+      }
+    ],
+    "Lakeland": [
+      {
+        "date": "2019-09-07",
+        "season": 2019,
+        "home": false,
+        "carroll_pts": 44,
+        "opp_pts": 34,
+        "result": "W"
+      },
+      {
+        "date": "2018-09-01",
+        "season": 2018,
+        "home": true,
+        "carroll_pts": 45,
+        "opp_pts": 26,
+        "result": "W"
+      },
+      {
+        "date": "2017-09-02",
+        "season": 2017,
+        "home": false,
+        "carroll_pts": 29,
+        "opp_pts": 43,
+        "result": "L"
+      },
+      {
+        "date": "2016-09-03",
+        "season": 2016,
+        "home": true,
+        "carroll_pts": 24,
+        "opp_pts": 27,
+        "result": "L"
+      },
+      {
+        "date": "2015-09-05",
+        "season": 2015,
+        "home": true,
+        "carroll_pts": 33,
+        "opp_pts": 34,
+        "result": "L"
+      },
+      {
+        "date": "2014-09-06",
+        "season": 2014,
+        "home": false,
+        "carroll_pts": 33,
+        "opp_pts": 7,
+        "result": "W"
+      },
+      {
+        "date": "2013-09-07",
+        "season": 2013,
+        "home": true,
+        "carroll_pts": 27,
+        "opp_pts": 18,
+        "result": "W"
+      },
+      {
+        "date": "2012-09-01",
+        "season": 2012,
+        "home": false,
+        "carroll_pts": 24,
+        "opp_pts": 17,
+        "result": "W"
+      },
+      {
+        "date": "2011-09-03",
+        "season": 2011,
+        "home": true,
+        "carroll_pts": 13,
+        "opp_pts": 0,
+        "result": "W"
+      },
+      {
+        "date": "2010-09-04",
+        "season": 2010,
+        "home": false,
+        "carroll_pts": 35,
+        "opp_pts": 21,
+        "result": "W"
+      }
+    ],
+    "Lawrence": [
+      {
+        "date": "2015-10-17",
+        "season": 2015,
+        "home": false,
+        "carroll_pts": 42,
+        "opp_pts": 6,
+        "result": "W"
+      },
+      {
+        "date": "2014-10-18",
+        "season": 2014,
+        "home": true,
+        "carroll_pts": 76,
+        "opp_pts": 7,
+        "result": "W"
+      },
+      {
+        "date": "2013-10-12",
+        "season": 2013,
+        "home": true,
+        "carroll_pts": 48,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2012-10-06",
+        "season": 2012,
+        "home": false,
+        "carroll_pts": 55,
+        "opp_pts": 6,
+        "result": "W"
+      },
+      {
+        "date": "2011-10-08",
+        "season": 2011,
+        "home": true,
+        "carroll_pts": 67,
+        "opp_pts": 17,
+        "result": "W"
+      },
+      {
+        "date": "2010-10-09",
+        "season": 2010,
+        "home": false,
+        "carroll_pts": 21,
+        "opp_pts": 14,
+        "result": "W"
+      }
+    ],
+    "Macalester": [
+      {
+        "date": "2015-10-31",
+        "season": 2015,
+        "home": true,
+        "carroll_pts": 25,
+        "opp_pts": 21,
+        "result": "W"
+      },
+      {
+        "date": "2014-11-01",
+        "season": 2014,
+        "home": false,
+        "carroll_pts": 17,
+        "opp_pts": 34,
+        "result": "L"
+      }
+    ],
+    "Millikin": [
+      {
+        "date": "2025-10-04",
+        "season": 2025,
+        "home": false,
+        "carroll_pts": 28,
+        "opp_pts": 17,
+        "result": "W"
+      },
+      {
+        "date": "2024-10-05",
+        "season": 2024,
+        "home": true,
+        "carroll_pts": 49,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2023-11-04",
+        "season": 2023,
+        "home": true,
+        "carroll_pts": 41,
+        "opp_pts": 0,
+        "result": "W"
+      },
+      {
+        "date": "2022-11-05",
+        "season": 2022,
+        "home": false,
+        "carroll_pts": 26,
+        "opp_pts": 18,
+        "result": "W"
+      },
+      {
+        "date": "2021-09-25",
+        "season": 2021,
+        "home": false,
+        "carroll_pts": 25,
+        "opp_pts": 32,
+        "result": "L"
+      },
+      {
+        "date": "2019-10-12",
+        "season": 2019,
+        "home": true,
+        "carroll_pts": 7,
+        "opp_pts": 30,
+        "result": "L"
+      },
+      {
+        "date": "2018-10-06",
+        "season": 2018,
+        "home": false,
+        "carroll_pts": 10,
+        "opp_pts": 55,
+        "result": "L"
+      },
+      {
+        "date": "2017-10-21",
+        "season": 2017,
+        "home": false,
+        "carroll_pts": 35,
+        "opp_pts": 56,
+        "result": "L"
+      },
+      {
+        "date": "2016-10-22",
+        "season": 2016,
+        "home": true,
+        "carroll_pts": 10,
+        "opp_pts": 22,
+        "result": "L"
+      }
+    ],
+    "Monmouth": [
+      {
+        "date": "2015-09-26",
+        "season": 2015,
+        "home": false,
+        "carroll_pts": 16,
+        "opp_pts": 22,
+        "result": "L"
+      },
+      {
+        "date": "2014-11-15",
+        "season": 2014,
+        "home": false,
+        "carroll_pts": 14,
+        "opp_pts": 38,
+        "result": "L"
+      },
+      {
+        "date": "2014-09-27",
+        "season": 2014,
+        "home": true,
+        "carroll_pts": 32,
+        "opp_pts": 27,
+        "result": "W"
+      },
+      {
+        "date": "2011-10-29",
+        "season": 2011,
+        "home": true,
+        "carroll_pts": 14,
+        "opp_pts": 69,
+        "result": "L"
+      },
+      {
+        "date": "2010-10-30",
+        "season": 2010,
+        "home": false,
+        "carroll_pts": 13,
+        "opp_pts": 16,
+        "result": "L"
+      }
+    ],
+    "North Central": [
+      {
+        "date": "2025-11-01",
+        "season": 2025,
+        "home": true,
+        "carroll_pts": 7,
+        "opp_pts": 64,
+        "result": "L"
+      },
+      {
+        "date": "2024-11-02",
+        "season": 2024,
+        "home": false,
+        "carroll_pts": 3,
+        "opp_pts": 56,
+        "result": "L"
+      },
+      {
+        "date": "2023-10-07",
+        "season": 2023,
+        "home": false,
+        "carroll_pts": 24,
+        "opp_pts": 69,
+        "result": "L"
+      },
+      {
+        "date": "2022-10-08",
+        "season": 2022,
+        "home": true,
+        "carroll_pts": 0,
+        "opp_pts": 73,
+        "result": "L"
+      },
+      {
+        "date": "2021-10-02",
+        "season": 2021,
+        "home": true,
+        "carroll_pts": 7,
+        "opp_pts": 62,
+        "result": "L"
+      },
+      {
+        "date": "2019-10-19",
+        "season": 2019,
+        "home": true,
+        "carroll_pts": 3,
+        "opp_pts": 62,
+        "result": "L"
+      },
+      {
+        "date": "2018-10-13",
+        "season": 2018,
+        "home": false,
+        "carroll_pts": 0,
+        "opp_pts": 59,
+        "result": "L"
+      },
+      {
+        "date": "2017-10-28",
+        "season": 2017,
+        "home": true,
+        "carroll_pts": 21,
+        "opp_pts": 60,
+        "result": "L"
+      },
+      {
+        "date": "2016-10-29",
+        "season": 2016,
+        "home": false,
+        "carroll_pts": 7,
+        "opp_pts": 62,
+        "result": "L"
+      }
+    ],
+    "North Park": [
+      {
+        "date": "2025-10-12",
+        "season": 2025,
+        "home": true,
+        "carroll_pts": 24,
+        "opp_pts": 10,
+        "result": "W"
+      },
+      {
+        "date": "2024-10-12",
+        "season": 2024,
+        "home": false,
+        "carroll_pts": 26,
+        "opp_pts": 30,
+        "result": "L"
+      },
+      {
+        "date": "2023-09-16",
+        "season": 2023,
+        "home": false,
+        "carroll_pts": 41,
+        "opp_pts": 27,
+        "result": "W"
+      },
+      {
+        "date": "2022-09-17",
+        "season": 2022,
+        "home": true,
+        "carroll_pts": 42,
+        "opp_pts": 0,
+        "result": "W"
+      },
+      {
+        "date": "2021-10-09",
+        "season": 2021,
+        "home": false,
+        "carroll_pts": 34,
+        "opp_pts": 26,
+        "result": "W"
+      },
+      {
+        "date": "2019-10-26",
+        "season": 2019,
+        "home": false,
+        "carroll_pts": 26,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2018-10-20",
+        "season": 2018,
+        "home": true,
+        "carroll_pts": 23,
+        "opp_pts": 0,
+        "result": "W"
+      },
+      {
+        "date": "2017-11-04",
+        "season": 2017,
+        "home": false,
+        "carroll_pts": 6,
+        "opp_pts": 37,
+        "result": "L"
+      },
+      {
+        "date": "2016-11-05",
+        "season": 2016,
+        "home": true,
+        "carroll_pts": 28,
+        "opp_pts": 21,
+        "result": "W"
+      }
+    ],
+    "Ripon": [
+      {
+        "date": "2015-10-24",
+        "season": 2015,
+        "home": true,
+        "carroll_pts": 15,
+        "opp_pts": 6,
+        "result": "W"
+      },
+      {
+        "date": "2014-10-25",
+        "season": 2014,
+        "home": false,
+        "carroll_pts": 48,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2013-09-14",
+        "season": 2013,
+        "home": false,
+        "carroll_pts": 20,
+        "opp_pts": 22,
+        "result": "L"
+      },
+      {
+        "date": "2012-09-08",
+        "season": 2012,
+        "home": true,
+        "carroll_pts": 30,
+        "opp_pts": 24,
+        "result": "W"
+      },
+      {
+        "date": "2011-09-23",
+        "season": 2011,
+        "home": true,
+        "carroll_pts": 21,
+        "opp_pts": 14,
+        "result": "W"
+      },
+      {
+        "date": "2010-09-25",
+        "season": 2010,
+        "home": false,
+        "carroll_pts": 24,
+        "opp_pts": 27,
+        "result": "L"
+      }
+    ],
+    "St. Norbert": [
+      {
+        "date": "2026-09-05",
+        "season": 2026,
+        "home": false,
+        "carroll_pts": 40,
+        "opp_pts": 10,
+        "result": "W"
+      },
+      {
+        "date": "2015-10-10",
+        "season": 2015,
+        "home": false,
+        "carroll_pts": 14,
+        "opp_pts": 21,
+        "result": "L"
+      },
+      {
+        "date": "2014-10-11",
+        "season": 2014,
+        "home": true,
+        "carroll_pts": 30,
+        "opp_pts": 6,
+        "result": "W"
+      },
+      {
+        "date": "2013-09-28",
+        "season": 2013,
+        "home": true,
+        "carroll_pts": 7,
+        "opp_pts": 27,
+        "result": "L"
+      },
+      {
+        "date": "2012-09-22",
+        "season": 2012,
+        "home": false,
+        "carroll_pts": 21,
+        "opp_pts": 28,
+        "result": "L"
+      },
+      {
+        "date": "2011-10-15",
+        "season": 2011,
+        "home": false,
+        "carroll_pts": 7,
+        "opp_pts": 28,
+        "result": "L"
+      },
+      {
+        "date": "2010-10-16",
+        "season": 2010,
+        "home": true,
+        "carroll_pts": 6,
+        "opp_pts": 30,
+        "result": "L"
+      }
+    ],
+    "UW Eau Claire": [
+      {
+        "date": "2026-09-12",
+        "season": 2026,
+        "home": true,
+        "carroll_pts": 17,
+        "opp_pts": 34,
+        "result": "L"
+      },
+      {
+        "date": "2025-09-04",
+        "season": 2025,
+        "home": false,
+        "carroll_pts": 7,
+        "opp_pts": 29,
+        "result": "L"
+      }
+    ],
+    "UW La Crosse": [
+      {
+        "date": "2017-09-23",
+        "season": 2017,
+        "home": false,
+        "carroll_pts": 6,
+        "opp_pts": 41,
+        "result": "L"
+      },
+      {
+        "date": "2016-09-24",
+        "season": 2016,
+        "home": true,
+        "carroll_pts": 7,
+        "opp_pts": 41,
+        "result": "L"
+      }
+    ],
+    "UW Stout": [
+      {
+        "date": "2024-09-05",
+        "season": 2024,
+        "home": false,
+        "carroll_pts": 28,
+        "opp_pts": 16,
+        "result": "W"
+      }
+    ],
+    "Wash U": [
+      {
+        "date": "2025-09-20",
+        "season": 2025,
+        "home": true,
+        "carroll_pts": 29,
+        "opp_pts": 41,
+        "result": "L"
+      },
+      {
+        "date": "2024-09-21",
+        "season": 2024,
+        "home": false,
+        "carroll_pts": 7,
+        "opp_pts": 35,
+        "result": "L"
+      },
+      {
+        "date": "2023-11-11",
+        "season": 2023,
+        "home": false,
+        "carroll_pts": 23,
+        "opp_pts": 35,
+        "result": "L"
+      },
+      {
+        "date": "2022-11-12",
+        "season": 2022,
+        "home": true,
+        "carroll_pts": 7,
+        "opp_pts": 37,
+        "result": "L"
+      },
+      {
+        "date": "2021-10-30",
+        "season": 2021,
+        "home": false,
+        "carroll_pts": 12,
+        "opp_pts": 35,
+        "result": "L"
+      },
+      {
+        "date": "2019-11-16",
+        "season": 2019,
+        "home": true,
+        "carroll_pts": 14,
+        "opp_pts": 62,
+        "result": "L"
+      },
+      {
+        "date": "2018-11-10",
+        "season": 2018,
+        "home": false,
+        "carroll_pts": 6,
+        "opp_pts": 44,
+        "result": "L"
+      }
+    ],
+    "Wheaton": [
+      {
+        "date": "2025-09-27",
+        "season": 2025,
+        "home": false,
+        "carroll_pts": 13,
+        "opp_pts": 61,
+        "result": "L"
+      },
+      {
+        "date": "2024-09-28",
+        "season": 2024,
+        "home": true,
+        "carroll_pts": 10,
+        "opp_pts": 22,
+        "result": "L"
+      },
+      {
+        "date": "2023-10-21",
+        "season": 2023,
+        "home": true,
+        "carroll_pts": 6,
+        "opp_pts": 52,
+        "result": "L"
+      },
+      {
+        "date": "2022-10-22",
+        "season": 2022,
+        "home": false,
+        "carroll_pts": 9,
+        "opp_pts": 61,
+        "result": "L"
+      },
+      {
+        "date": "2021-10-16",
+        "season": 2021,
+        "home": true,
+        "carroll_pts": 13,
+        "opp_pts": 48,
+        "result": "L"
+      },
+      {
+        "date": "2019-11-02",
+        "season": 2019,
+        "home": true,
+        "carroll_pts": 12,
+        "opp_pts": 51,
+        "result": "L"
+      },
+      {
+        "date": "2018-10-27",
+        "season": 2018,
+        "home": false,
+        "carroll_pts": 0,
+        "opp_pts": 58,
+        "result": "L"
+      },
+      {
+        "date": "2017-11-11",
+        "season": 2017,
+        "home": true,
+        "carroll_pts": 0,
+        "opp_pts": 71,
+        "result": "L"
+      },
+      {
+        "date": "2016-11-12",
+        "season": 2016,
+        "home": false,
+        "carroll_pts": 10,
+        "opp_pts": 42,
+        "result": "L"
+      }
+    ],
+    "Wisconsin Lutheran": [
+      {
+        "date": "2023-09-09",
+        "season": 2023,
+        "home": true,
+        "carroll_pts": 51,
+        "opp_pts": 7,
+        "result": "W"
+      },
+      {
+        "date": "2022-09-10",
+        "season": 2022,
+        "home": false,
+        "carroll_pts": 54,
+        "opp_pts": 7,
+        "result": "W"
+      }
+    ]
+  },
   "season_stats": {
     "offense": {
       "plays": 276,

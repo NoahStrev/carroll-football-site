@@ -84,7 +84,7 @@
           <div class="cards">
             ${SCOPES.map((s) => `
               <div class="card table-card" id="rk-${s.id}-card">
-                <div class="card-head"><h3>${s.label} Rankings <span class="print-only" id="rk-${s.id}-printlabel"></span></h3>
+                <div class="card-head"><h2>${s.label} Rankings <span class="print-only" id="rk-${s.id}-printlabel"></span></h2>
                   <span><span class="filters-summary" id="rk-${s.id}-summary"></span> <button type="button" class="download-btn no-print" id="rk-${s.id}-pdf">&#8595; PDF</button></span></div>
                 <div class="rank-scroll" id="rk-${s.id}-table"></div>
               </div>`).join('')}

@@ -5,12 +5,12 @@
 
   A dashboard page is just:
       <body></body>
-      <script src="../js/charts.js"></script>
+      <script src="../js/lib/core.js"></script>   // plus data.js, charts.js, filters.js (see js/lib/)
       <script src="../js/shell.js"></script>
       <script src="../js/views/<page>.js"></script>   // calls Site.mount({...})
 
   Nothing here knows about any specific dataset -- chart primitives live in
-  js/charts.js, page-specific analytics in js/views/*.js.
+  js/lib/charts.js, page-specific analytics in js/views/*.js.
 */
 
 const Site = (() => {
@@ -30,7 +30,7 @@ const Site = (() => {
     { key: 'updates', href: 'updates.html', label: 'Updates' },
   ];
 
-  const esc = escapeHTML; // js/charts.js
+  const esc = escapeHTML; // js/lib/core.js
 
   function navHTML(active) {
     const link = (p) => `<a href="${p.href}"${p.key === active ? ' class="active" aria-current="page"' : ''}>${esc(p.label)}</a>`;
@@ -82,6 +82,42 @@ const Site = (() => {
     return { set, get value() { return current; } };
   }
 
+
+  /* ----------------------------------------------------------- freshness --- */
+  // "Data through ..." under the page title, from data/meta.json (build_home_data.py). If the
+  // schedule says a game has been played since the latest one the data knows about, say so -- the
+  // pages quietly run a game behind otherwise. Never blocks the page: no meta.json, no label.
+
+  const GAME_PAGES = new Set(['home', 'offense', 'defense', 'scouting', 'special-teams', 'players']);
+
+  // Local calendar date as YYYY-MM-DD. (toISOString() is UTC, which is already "tomorrow" on a
+  // Saturday evening in the US, so it would call a game played tonight a finished one.)
+  const today = () => new Date().toLocaleDateString('sv-SE');
+  /** "Oct 10", or with opts (an Intl.DateTimeFormat options object) e.g. { weekday: 'short', month: 'short', day: 'numeric' }. */
+  const dayLabel = (iso, opts = { month: 'short', day: 'numeric' }) => new Date(`${iso}T12:00:00`).toLocaleDateString('en-US', opts);
+
+  const EMPTY_META = { pages: {}, latest_game: null, schedule: [] };
+
+  /** meta.json never blocks a page: if it is missing, views get an empty one and the label is skipped. */
+  function loadMeta() {
+    return fetch('../data/meta.json').then((r) => (r.ok ? r.json() : EMPTY_META)).catch(() => EMPTY_META);
+  }
+
+  function showFreshness(navKey, meta) {
+    const el = document.getElementById('site-asof');
+    const page = meta.pages[navKey];
+    if (!el || !page) return;
+    let html = `<span class="asof-through">${esc(page.text)}</span>`;
+    if (GAME_PAGES.has(navKey) && meta.latest_game) {
+      const missing = meta.schedule.filter((g) => g.date < today() && g.date > meta.latest_game.date);
+      if (missing.length) {
+        html += ` <span class="asof-warn" title="The schedule shows this game has been played; its box score and charting haven't been loaded yet.">${missing.map((g) => `${esc(g.opponent)} (${dayLabel(g.date)})`).join(', ')} not loaded yet</span>`;
+      }
+    }
+    el.innerHTML = html;
+    el.hidden = false;
+  }
+
   /* --------------------------------------------------------------- mount --- */
 
   const state = { data: {}, cfg: null };
@@ -102,7 +138,7 @@ const Site = (() => {
     document.body.innerHTML = `
       <div class="page">
         ${navHTML(cfg.nav)}
-        <header class="pagehead"><h1>${esc(cfg.title)}${cfg.badge ? `<span class="h1-badge">${esc(cfg.badge)}</span>` : ''}</h1>${cfg.lead ? `<p>${cfg.lead}</p>` : ''}</header>
+        <header class="pagehead"><h1>${esc(cfg.title)}${cfg.badge ? `<span class="h1-badge">${esc(cfg.badge)}</span>` : ''}</h1>${cfg.lead ? `<p>${cfg.lead}</p>` : ''}<div class="asof" id="site-asof" hidden></div></header>
         <div class="tabbar" id="site-tabs" role="tablist" aria-label="${esc(cfg.title)} views"></div>
         <main class="stage" id="site-stage"><div class="loading">Loading data…</div></main>
       </div>`;
@@ -122,6 +158,8 @@ const Site = (() => {
         b.tabIndex = on ? 0 : -1;
       });
       hideTooltip();
+      const activeBtn = tabbar.querySelector('.tabbtn.active');
+      if (activeBtn && tabbar.scrollWidth > tabbar.clientWidth) activeBtn.scrollIntoView({ inline: 'center', block: 'nearest' });
       stage.innerHTML = '';
       const root = document.createElement('div');
       stage.appendChild(root);
@@ -143,10 +181,15 @@ const Site = (() => {
       next.click();
     });
 
+    const activeLink = document.querySelector('.sitenav .links a.active');
+    if (activeLink) activeLink.scrollIntoView({ inline: 'center', block: 'nearest' }); // narrow screens scroll the nav row
+
     const names = Object.keys(cfg.data || {});
-    Promise.all(names.map((n) => fetch(cfg.data[n]).then((r) => { if (!r.ok) throw new Error(`${cfg.data[n]}: HTTP ${r.status}`); return r.json(); })))
-      .then((results) => {
+    Promise.all([loadMeta(), ...names.map((n) => fetch(cfg.data[n]).then((r) => { if (!r.ok) throw new Error(`${cfg.data[n]}: HTTP ${r.status}`); return r.json(); }))])
+      .then(([meta, ...results]) => {
+        state.data.meta = meta; // every page gets Site.data.meta (the schedule, per-page "data through" text)
         names.forEach((n, i) => { state.data[n] = results[i]; });
+        showFreshness(cfg.nav, meta);
         const render = () => { const h = parseHash(); show(h.tab, h.sub); };
         window.addEventListener('hashchange', render);
         render();
@@ -218,10 +261,10 @@ const Site = (() => {
           ${spec.intro ? `<div class="insight view-intro" id="${uid}-intro"></div>` : ''}
           <div class="cards">
             ${cards.map((c, i) => {
-              if (c.section) return `<h3 class="cards-heading">${c.section}</h3>`;
+              if (c.section) return `<h2 class="cards-heading">${c.section}</h2>`;
               const cls = `${c.wide ? 'card wide' : 'card'}${c.table ? ' table-card' : ''}`;
               if (c.raw) return `<div class="${cls}" id="${uid}-c${i}"></div>`;
-              return `<div class="${cls}"><div class="card-head"><h3>${c.title}</h3>${c.extra || ''}</div><div class="card-body" id="${uid}-c${i}"></div>${c.note ? `<div class="insight card-note">${c.note}</div>` : ''}</div>`;
+              return `<div class="${cls}"><div class="card-head"><h2>${c.title}</h2>${c.extra || ''}</div><div class="card-body" id="${uid}-c${i}"></div>${c.note ? `<div class="insight card-note">${c.note}</div>` : ''}</div>`;
             }).join('')}
           </div>
         </div>
@@ -270,7 +313,7 @@ const Site = (() => {
   }
 
   return {
-    mount, view, pills, tableHTML, esc, setSub,
+    mount, view, pills, tableHTML, esc, setSub, today, dayLabel,
     get data() { return state.data; },
   };
 })();

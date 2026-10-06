@@ -1,0 +1,152 @@
+{
+  "pages": {
+    "home": {
+      "through": "2026-09-26",
+      "text": "Games through Carthage, Sep 26"
+    },
+    "offense": {
+      "through": "2026-09-26",
+      "text": "Charted through Carthage, Sep 26"
+    },
+    "defense": {
+      "through": "2026-09-26",
+      "text": "Charted through Carthage, Sep 26"
+    },
+    "scouting": {
+      "through": "2026-09-26",
+      "text": "Charted through Carthage, Sep 26"
+    },
+    "special-teams": {
+      "through": "2026-09-26",
+      "text": "Box scores through Sep 26"
+    },
+    "players": {
+      "through": "2026-09-26",
+      "text": "Career stats through Carthage, Sep 26"
+    },
+    "rankings": {
+      "through": "2026-10-01",
+      "text": "Rankings through Week 4 (Oct 1)"
+    },
+    "lifting": {
+      "through": null,
+      "text": "Testing through December 2025-26"
+    }
+  },
+  "latest_game": {
+    "date": "2026-09-26",
+    "opponent": "Carthage"
+  },
+  "schedule": [
+    {
+      "date": "2026-09-05",
+      "opponent": "St. Norbert",
+      "home": false,
+      "conference": false,
+      "time": null,
+      "venue": "Donald J. Schneider Stadium",
+      "city": "De Pere. WI",
+      "completed": true,
+      "result": "W, 40-10"
+    },
+    {
+      "date": "2026-09-12",
+      "opponent": "UW Eau Claire",
+      "home": true,
+      "conference": false,
+      "time": null,
+      "venue": "Schneider Stadium",
+      "city": "Waukesha, Wis.",
+      "completed": true,
+      "result": "L, 17-34"
+    },
+    {
+      "date": "2026-09-19",
+      "opponent": "Elmhurst",
+      "home": false,
+      "conference": true,
+      "time": null,
+      "venue": "Langhorst Field",
+      "city": "Elmhurst, IL",
+      "completed": true,
+      "result": "W, 33-0"
+    },
+    {
+      "date": "2026-09-26",
+      "opponent": "Carthage",
+      "home": true,
+      "conference": true,
+      "time": null,
+      "venue": "Schneider Stadium",
+      "city": "Waukesha, Wis.",
+      "completed": true,
+      "result": "W, 20-0"
+    },
+    {
+      "date": "2026-10-03",
+      "opponent": "Millikin",
+      "home": false,
+      "conference": true,
+      "time": "1 p.m.",
+      "venue": "Frank M. Lindsay Field",
+      "city": "Decatur, IL",
+      "completed": false,
+      "result": null
+    },
+    {
+      "date": "2026-10-10",
+      "opponent": "Illinois Wesleyan",
+      "home": true,
+      "conference": true,
+      "time": "2 p.m.",
+      "venue": "Schneider Stadium",
+      "city": "Waukesha, Wis.",
+      "completed": false,
+      "result": null
+    },
+    {
+      "date": "2026-10-17",
+      "opponent": "Wheaton",
+      "home": false,
+      "conference": true,
+      "time": "1 p.m.",
+      "venue": "McCully Stadium",
+      "city": "Wheaton, IL",
+      "completed": false,
+      "result": null
+    },
+    {
+      "date": "2026-10-24",
+      "opponent": "North Central",
+      "home": true,
+      "conference": true,
+      "time": "1 p.m.",
+      "venue": "Schneider Stadium",
+      "city": "Waukesha, Wis.",
+      "completed": false,
+      "result": null
+    },
+    {
+      "date": "2026-10-31",
+      "opponent": "North Park",
+      "home": false,
+      "conference": true,
+      "time": "1 p.m.",
+      "venue": "Holmgren Athletic Complex",
+      "city": "Chicago, IL",
+      "completed": false,
+      "result": null
+    },
+    {
+      "date": "2026-11-14",
+      "opponent": "Augustana",
+      "home": true,
+      "conference": true,
+      "time": "12 p.m.",
+      "venue": "Schneider Stadium",
+      "city": "Waukesha, Wis.",
+      "completed": false,
+      "result": null
+    }
+  ]
+}

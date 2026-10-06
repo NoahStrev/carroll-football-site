@@ -21,7 +21,8 @@ run was silently rebuilding Rankings/Special Teams/Lifting/Game Data while
 Career Stats and Record Watch quietly went stale. The next 3 scripts
 have no dependency on each other or on the first 3, so their relative order
 doesn't matter. build_home_data.py runs LAST: it summarizes data/game-data.json and
-data/special-teams.json (plus the raw box scores' final scores), so it must see their fresh output.
+data/special-teams.json (plus the raw box scores' final scores), and also reads rankings.json,
+lifting.json and Schedule/schedule.json to write data/meta.json, so it must see their fresh output.
 
 Continues past a failing script (so one bad workbook doesn't block the
 others) and reports a pass/fail summary at the end. Exits non-zero if any

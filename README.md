@@ -11,11 +11,11 @@ projects in `Football/`.
 
 | Nav item | File | Views (tabs) | Data |
 |---|---|---|---|
-| (brand) Home | `dashboards/home.html` | Season at a glance: record, scoring, headline efficiency vs. history, game log, rankings, record watch, site map | `home.json`, `rankings.json`, `records.json` |
+| (brand) Home | `dashboards/home.html` | This week (last game's takeaways, next game + series history), season at a glance, game log, rankings with week-over-week movement, record watch, site map | `home.json`, `meta.json`, `rankings.json`, `records.json` |
 | Offense | `offense.html` | Scorecard · Tendencies · Outcomes · Position Groups (QB / RB / WR / OL) | `game-data.json` |
 | Defense | `defense.html` | Scorecard · Tendencies · Outcomes · Position Groups (DL / LB / CB / S) | `game-data.json` |
 | Special Teams | `special-teams.html` | Overview · Money Unit · Punt · Punt Return · Kickoff · Kickoff Return · Athletes (role × Scorecard / Head-to-Head / Deep Dive) | `special-teams.json` |
-| Opponent Scouting | `opponent-scouting.html` | By Opponent · Offense · Defense (each: Carroll self-scout / opponent scout) | `game-data.json` |
+| Opponent Scouting | `opponent-scouting.html` | Next Opponent (a game-plan page; defaults to the next scheduled opponent, `#next/<opponent>`) · By Opponent · Offense · Defense (each: Carroll self-scout / opponent scout) | `game-data.json`, `home.json`, `meta.json` |
 | Rankings | `rankings.html` | Offensive · Defensive · Special Teams · Additional Metrics (one season/week picker) | `rankings.json` |
 | Lifting & Strength | `lifting-strength.html` | Leaderboards (All Time / Last Session / each class) · Compare Athletes | `lifting.json` |
 | Players & Records | `players.html` | Career Stats · Compare Players · Record Book · Record Watch · Awards History | `career-stats.json`, `records.json` |
@@ -32,16 +32,19 @@ to their new homes so old bookmarks keep working.
 index.html            forwards to dashboards/home.html
 404.html              legacy-URL redirects (GitHub Pages serves it for any missing path)
 css/theme.css         the one stylesheet: tokens (light/dark) → shell → controls → components → charts → page sections
-js/charts.js          shared library: formatting/grouping, tooltip, glossary + KPI tile, chart renderers,
-                      checkbox filter panel, searchable combobox
+js/lib/core.js        shared library, in load order: helpers, tooltip, glossary + KPI tile
+js/lib/data.js        row helpers, grouping, play-data constants
+js/lib/charts.js      chart renderers (bar, stacked, scatter, heatmap, sparkline, grouped bar)
+js/lib/filters.js     checkbox filter panel, searchable combobox
 js/shell.js           Site.mount (nav, page header, tabs with hash routing, data loading),
                       Site.view (declarative filters + KPIs + cards), Site.pills, Site.tableHTML
 js/views/*.js         one file per page's content (game.js is shared by Offense and Defense;
                       st-units.js + st-athletes.js + special-teams.js make up Special Teams)
-dashboards/*.html     thin pages: a <head>, the three script tags, nothing else
+dashboards/*.html     thin pages: a <head>, the script tags (js/lib/*, shell.js, one view), nothing else
 data/*.json           generated, committed (the site reads these; it never touches the Excel sources)
 scripts/              build_*.py (one per JSON), refresh_all.py, serve.py (local no-cache server)
 docs/                 development-log.md (historical)
+tests/smoke.html      in-browser smoke test (see Testing)
 ```
 
 ## How a page works
@@ -83,11 +86,14 @@ Upstream projects (sibling folders) → `scripts/build_*.py` → `data/*.json` �
 | `build_lifting_data.py` | `lifting.json` | `Lifting Data/output/Lifting_Consolidated_AllYears.xlsx` |
 | `build_game_data.py` | `game-data.json` | `Game Analysis/processed/combined_play_data.xlsx` |
 | `build_rankings_data.py` | `rankings.json` | CCIW and National Buddah Report workbooks |
-| `build_home_data.py` | `home.json` | `game-data.json`, `special-teams.json`, box-score final scores |
+| `build_home_data.py` | `home.json`, `meta.json` | `game-data.json`, `special-teams.json`, `rankings.json`, `lifting.json`, box-score results back to 2010, `Schedule/schedule.json` |
 
 `python scripts/refresh_all.py` runs all seven in dependency order (the Home summary runs last) and prints a pass/fail
 summary. It only covers this site's own rebuild — each upstream project has its own scrape/build step that runs first.
 New game data is added on request, not on a schedule.
+
+`meta.json` is loaded by every page: it drives the "Data through …" label under each title, and — because it carries the
+schedule — a "game X not loaded yet" warning whenever the schedule shows a game played after the latest one in the data.
 
 ## Running locally
 
@@ -98,13 +104,22 @@ python scripts/serve.py          # http://localhost:8731 — like http.server, b
 The `carroll-site` launch config (`Football/.claude/launch.json`) runs the same thing. Pages must be served over
 http — `fetch()` of local JSON doesn't work from `file://`.
 
+## Testing
+
+`tests/smoke.html` is the regression check. With the local server running, open
+`http://localhost:8731/tests/smoke.html?width=390&autorun=1` (also try `820` and `1280`). It loads every page in a frame
+at that width, opens every tab and sub-view pill, and fails a view for script errors, a near-empty view, stray
+`undefined`/`NaN` text, sideways page overflow, or content clipped inside a card. Run it after any change to the shell,
+the shared library, or the CSS. (Opponent front/coverage views are *expected* to show their "not charted" explanation for
+2026 — that passes; it is a data gap, not a bug.)
+
 ## Conventions worth knowing
 
 - **Defaults.** Dashboards open on the latest season only (`defaultLatestOnly` on the Season filter); Opponent Scouting
   and Rankings default to all seasons / the latest week respectively.
-- **One source of truth.** Glossary definitions live in `GLOSSARY` (`js/charts.js`) and feed both the Glossary page and the
+- **One source of truth.** Glossary definitions live in `GLOSSARY` (`js/lib/core.js`) and feed both the Glossary page and the
   inline "?" hints. The changelog lives in `js/views/updates-data.js` (one entry per day of shipped work).
-- **Don't duplicate helpers.** If two views need the same thing it belongs in `js/charts.js` (data/formatting), `js/shell.js`
+- **Don't duplicate helpers.** If two views need the same thing it belongs in `js/lib/` (data/formatting/charts), `js/shell.js`
   (page structure), or `theme.css` (look). Card factories (`countCard`, `rateCard`, `detailTable` in `views/game.js`;
   `athleteTable`, `quarterBars`, ... in `views/st-athletes.js`) are the pattern for chart families.
 - **Empty views explain themselves.** When a chart has nothing to show, say why (e.g. opponent front/coverage were only

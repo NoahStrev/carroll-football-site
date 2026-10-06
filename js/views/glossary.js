@@ -1,5 +1,5 @@
 /* Presentation-only grouping/ordering for the Glossary page -- the definition
-   text always comes from the shared GLOSSARY object in js/charts.js (also what
+   text always comes from the shared GLOSSARY object in js/lib/core.js (also what
    powers the inline "?" hover hints on KPI tiles), so there's exactly one place
    a definition ever needs updating. */
 const GLOSSARY_CATEGORIES = [

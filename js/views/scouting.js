@@ -1,6 +1,7 @@
 /* Opponent Scouting: how every opponent has been attacked / has attacked Carroll.
 
-   Tabs: By Opponent (per-opponent efficiency charts), Offense and Defense (scouting
+   Tabs: Next Opponent (a game-plan page for one opponent, defaulting to the next game on the
+   schedule), By Opponent (per-opponent efficiency charts), Offense and Defense (scouting
    reports). Each report tab covers two views of the same table, switched with a pill:
    Carroll's own tendencies (self scout) and the selected opponent(s)' tendencies (scout).
 
@@ -101,15 +102,17 @@
   // A Custom Situation card: one dropdown per scenario dimension (default "Any" = ignored,
   // selections combine with AND) and a single result row for that exact combination. The
   // picks are kept across refreshes (changing opponent or season doesn't reset them).
+  let customSeq = 0;
   function customSituationCard({ fields, matches, label, resultTable, emptyMsg, note }) {
     const picked = {};
+    const uid = `cs${++customSeq}`;
     return {
       title: 'Custom Situation',
       render(el, ctx) {
         el.innerHTML = `
           <div class="custom-situation-grid no-print">${fields.map((f) => `
-            <div><label>${f.label}</label>
-              <select class="select-sm" data-field="${f.id}">
+            <div><label for="${uid}-${f.id}">${f.label}</label>
+              <select class="select-sm" id="${uid}-${f.id}" data-field="${f.id}">
                 <option value="Any">Any</option>${f.options.map((o) => `<option value="${esc(o)}"${picked[f.id] === o ? ' selected' : ''}>${esc(o)}</option>`).join('')}
               </select></div>`).join('')}</div>
           <div class="custom-result"></div>
@@ -424,7 +427,7 @@
 
   // The opponent-defense fields (def_front/blitz/coverage) were charted through 2024 only,
   // so an all-seasons view is the useful default here; say so when a field is empty.
-  function emptyFieldNote(field) {
+  function emptyFieldNote(field, where = 'in the current filter') {
     const D = G();
     const seasons = new Set();
     const total = new Map(), filled = new Map();
@@ -436,7 +439,7 @@
     filled.forEach((n, s) => { if (n / total.get(s) >= 0.1) seasons.add(s); });
     const list = [...seasons].sort();
     return list.length
-      ? `<div class="data-note">Nothing charted for this in the current filter. It was charted for ${list.length > 1 ? `${list[0]}–${list[list.length - 1]}` : `only ${list[0]}`}.</div>`
+      ? `<div class="data-note">Nothing charted for this ${where}. It was charted for ${list.length > 1 ? `${list[0]}–${list[list.length - 1]}` : `only ${list[0]}`}.</div>`
       : '<div class="data-note">This field is not charted in any season.</div>';
   }
 
@@ -508,6 +511,153 @@
     });
   }
 
+  /* ============================================================ Next Opponent == */
+
+  // One opponent's game-plan page: when/where, the series history, how they attack Carroll's
+  // defense by down, how Carroll's offense/defense did against them next to its usual numbers,
+  // and their charted defense. Defaults to the next game on the schedule; any opponent in the
+  // archive can be picked. #next/<opponent> deep-links (Home's "Scouting report" link).
+  const shortDay = (iso) => Site.dayLabel(iso, { weekday: 'short', month: 'short', day: 'numeric' });
+
+  function nextOpponentOptions(H, meta) {
+    const upcoming = meta.schedule.filter((g) => g.date >= Site.today() && !g.completed);
+    const first = new Set(upcoming.map((g) => g.opponent));
+    const rest = [...new Set([...Object.keys(H.history), ...opponentOptions().map((o) => o.value).filter((v) => v !== ALL_OPPONENTS)])]
+      .filter((o) => !first.has(o)).sort();
+    return {
+      upcoming,
+      options: [
+        ...upcoming.map((g) => ({ value: g.opponent, label: `${Site.dayLabel(g.date)} · ${g.opponent}` })),
+        ...rest.map((o) => ({ value: o, label: o })),
+      ],
+    };
+  }
+
+  // Their snaps vs Carroll's defense, sliced the same ways the Offense tab does -- the sections
+  // that matter for a game plan; the full table and Custom Situation builder live on that tab.
+  const NEXT_SECTIONS = ['By Down', 'By Distance', 'By Field Zone', 'By Score Situation'];
+
+  // Two sides next to each other: this opponent vs every other opponent. `better` is whether a
+  // higher number is good for Carroll, for the arrow color.
+  function versusRow(label, mineFn, mine, others, f, better) {
+    const a = mine.length ? mineFn(mine) : null, b = others.length ? mineFn(others) : null;
+    if (a === null || a === undefined) return [label, '—', f(b)];
+    const diff = b === null || b === undefined ? 0 : a - b;
+    const flag = Math.abs(diff) < 1e-9 ? '' : `<span class="rk-move ${(diff > 0) === better ? 'good' : 'crit'}">${diff > 0 ? '▲' : '▼'}</span>`;
+    return [label, `${f(a)} ${flag}`, f(b)];
+  }
+
+  function nextOpponentTab(root, { sub }) {
+    const D = G(), H = Site.data.home, meta = Site.data.meta;
+    const { upcoming, options } = nextOpponentOptions(H, meta);
+    const wanted = sub && options.some((o) => o.value === sub) ? sub : null;
+    const start = wanted || (upcoming[0] ? upcoming[0].opponent : options[0].value);
+
+    const view = Site.view(root, {
+      selects: [{ id: 'opponent', label: 'Opponent', options, value: start }],
+      source: 'Official play-by-play, box scores',
+      actions: [{ label: '&#8595; PDF', onClick: (st) => printPage(`Opponent Scouting - Next Opponent - ${st.opponent} - Carroll Football`) }],
+      prepare(st) {
+        const opp = st.opponent;
+        const game = meta.schedule.find((g) => g.opponent === opp && g.date >= Site.today() && !g.completed) || null;
+        const hist = H.history[opp] || [];
+        const theirs = D.defense.official.filter((r) => r.opponent === opp);
+        const ours = D.offense.official.filter((r) => r.opponent === opp);
+        const otherTheirs = D.defense.official.filter((r) => r.opponent !== opp);
+        const otherOurs = D.offense.official.filter((r) => r.opponent !== opp);
+        const charted = new Set([...theirs, ...ours].map((r) => r.game_label));
+        const seasons = [...new Set([...theirs, ...ours].map((r) => r.season))].sort();
+        return { opp, game, hist, theirs, ours, otherTheirs, otherOurs, charted, seasons, flagged: withScenarioFlags(theirs), schemeRows: D.offense.plays.filter((r) => r.opponent === opp) };
+      },
+      kpis: [
+        { label: 'Next game', value: ({ game }) => (game ? [shortDay(game.date), `${game.home ? 'Home' : 'Away'}${game.time ? ` · ${game.time}` : ''}${game.conference ? ' · CCIW' : ''}`] : ['—', 'Not on the remaining schedule']) },
+        { label: 'Series record', value: ({ hist }) => { const w = hist.filter((g) => g.result === 'W').length, l = hist.filter((g) => g.result === 'L').length; return hist.length ? [`${w}–${l}`, `since ${hist[hist.length - 1].season}`] : ['—', 'No meetings on record']; } },
+        { label: 'Their yards / play', value: ({ theirs, otherTheirs }) => (theirs.length ? [fmt(mean(theirs.map((r) => r.yards))), `others: ${fmt(mean(otherTheirs.map((r) => r.yards)))}`] : ['—', 'not charted']) },
+        { label: 'Their run %', value: ({ theirs, otherTheirs }) => { const a = runPassRows(theirs), b = runPassRows(otherTheirs); return a.length ? [pct(rate(a, isRunPlay)), `others: ${pct(rate(b, isRunPlay))}`] : ['—', 'not charted']; } },
+        { label: 'Charted games', value: ({ charted, seasons }) => [String(charted.size), seasons.length ? `${seasons[0]}${seasons.length > 1 ? `–${seasons[seasons.length - 1]}` : ''}` : 'none yet'] },
+      ],
+      intro: ({ opp, game, charted }) => (game
+        ? `${esc(opp)} is next: ${shortDay(game.date)}, ${game.home ? 'at home' : 'on the road'}${game.venue ? ` (${esc(game.venue)})` : ''}. ${charted.size ? `Carroll has ${charted.size} charted game${charted.size === 1 ? '' : 's'} against them to learn from.` : 'There are no charted games against them yet, so only the series history is available.'}`
+        : `${esc(opp)} is not on the remaining schedule — this is their history against Carroll.`),
+      cards: [
+        {
+          title: 'Past meetings', table: {
+            head: ['Date', 'Site', 'Result', 'Score'],
+            rows: ({ hist }) => hist.map((g) => [`${g.date.slice(5).replace('-', '/')}/${String(g.season).slice(2)}`, g.home ? 'Home' : 'Away', `<span class="tag ${g.result === 'W' ? 'good' : 'crit'}">${g.result}</span>`, `${g.carroll_pts}–${g.opp_pts}`]),
+            empty: 'No meetings in the box-score archive.',
+          },
+          note: 'Every box score in the archive (it reaches back to 2010 for some opponents); only 2021 onward has play-by-play to scout.',
+        },
+        {
+          title: 'Carroll against them vs everyone else',
+          render(el, { ours, theirs, otherOurs, otherTheirs }) {
+            const m = (rows) => byOpponentMetrics(rows);
+            const f1 = (v) => (v === null || v === undefined ? '—' : fmt(v, 1)), p0 = (v) => (v === null || v === undefined ? '—' : pct(v, 0));
+            const rows = [
+              versusRow('Offense: yards / play', (r) => m(r).ypp, ours, otherOurs, f1, true),
+              versusRow('Offense: success rate', (r) => m(r).success, ours, otherOurs, p0, true),
+              versusRow('Offense: explosive rate', (r) => m(r).explosive, ours, otherOurs, p0, true),
+              versusRow('Offense: turnover rate', (r) => m(r).turnover, ours, otherOurs, p0, false),
+              versusRow('Defense: yards / play allowed', (r) => m(r).ypp, theirs, otherTheirs, f1, false),
+              versusRow('Defense: success rate allowed', (r) => m(r).success, theirs, otherTheirs, p0, false),
+              versusRow('Defense: explosive rate allowed', (r) => m(r).explosive, theirs, otherTheirs, p0, false),
+              versusRow('Defense: takeaway rate', (r) => m(r).turnover, theirs, otherTheirs, p0, true),
+            ];
+            el.innerHTML = Site.tableHTML({ head: ['', 'vs this opponent', 'vs all others'], rows, empty: 'No charted games against this opponent.' })
+              + '<div class="data-note">Arrows are green when the difference favors Carroll. Small samples (one or two games) swing a lot — read them as hints, not rules.</div>';
+          },
+        },
+        {
+          title: 'How they attack (their offense vs Carroll\'s defense)', wide: true,
+          render(el, { flagged }) {
+            const wanted = buildScenarios(flagged).filter((sec) => NEXT_SECTIONS.includes(sec.title));
+            let body = '';
+            wanted.forEach((sec) => {
+              const items = sec.items.filter((it) => runPassRows(it.rows).length > 0);
+              if (!items.length) return;
+              body += sectionRowHTML(sec.title, 12);
+              items.forEach((it) => { body += scenarioRowHTML(it.label, it.rows); });
+            });
+            el.innerHTML = body
+              ? `${scenarioTableWrap(OFFENSE_TABLE_HEAD, body)}<div class="data-note">Their snaps against Carroll's defense, every charted season. For the full table and the Custom Situation builder, use Offense → Opponent (scout) and pick this opponent.</div>`
+              : '<div class="insight">No charted snaps from this opponent yet.</div>';
+          },
+        },
+        {
+          title: 'Their defense (as charted)',
+          render(el, { schemeRows }) {
+            const block = (field, label) => {
+              const by = groupBy(schemeRealRows(schemeRows, field), field);
+              const top = topKeysByCount(by, 4);
+              const total = [...by.values()].reduce((n, rows) => n + rows.length, 0);
+              return top.length ? Site.tableHTML({ head: [label, 'Snaps', 'Share'], rows: top.map((k) => [esc(k), String(by.get(k).length), pct(by.get(k).length / total, 0)]) }) : '';
+            };
+            const html = block('def_front', 'Front') + block('coverage', 'Coverage');
+            el.innerHTML = html || emptyFieldNote('def_front', 'opponent');
+          },
+        },
+        {
+          title: 'Go deeper',
+          render(el, { opp }) {
+            el.innerHTML = `<ul class="tw-list">
+              <li><a href="#offense/opponent">Offense → Opponent (scout)</a>: the full down/distance/zone/score tables and the Custom Situation builder. Pick ${esc(opp)} in its Opponent menu.</li>
+              <li><a href="#defense/opponent">Defense → Defense Scout</a>: every front, blitz, and coverage they showed, by situation.</li>
+              <li><a href="#by-opponent">By Opponent</a>: how ${esc(opp)} compares with every other opponent on the same charts.</li></ul>`;
+          },
+        },
+      ],
+      footer: () => `Source: Game Analysis's OfficialPlayByPlay sheet (${gameCoverageText(D.games)}), Special Teams Data box scores, Schedule. Run/Pass excludes kneel-downs and two-point tries; a sack counts as a pass call.`,
+    });
+
+    // Keep the picked opponent in the address so the page can be shared/bookmarked.
+    const sel = root.querySelector('select.select-sm');
+    if (sel) {
+      Site.setSub(sel.value);
+      sel.addEventListener('change', () => Site.setSub(sel.value));
+    }
+    return view;
+  }
+
   /* ================================================================== mount == */
 
   const WHO_OPTIONS = [{ id: 'self', label: 'Carroll (self scout)' }, { id: 'opponent', label: 'Opponent (scout)' }];
@@ -528,8 +678,9 @@
     nav: 'scouting',
     title: 'Opponent Scouting',
     lead: "What every opponent has done against Carroll and what Carroll tends to call, as real percentages by down, distance, field position, and more — plus a Custom Situation builder for any exact combination.",
-    data: { game: '../data/game-data.json' },
+    data: { game: '../data/game-data.json', home: '../data/home.json' },
     tabs: [
+      { id: 'next', label: 'Next Opponent', render: nextOpponentTab },
       { id: 'by-opponent', label: 'By Opponent', render: byOpponentTab },
       { id: 'offense', label: 'Offense', render: reportTab(offenseReportView) },
       { id: 'defense', label: 'Defense', render: reportTab(defenseReportView) },
