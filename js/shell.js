@@ -47,7 +47,9 @@ const Site = (() => {
   // whichever tab sets it (e.g. a role picker) via Site.setSub().
 
   function parseHash() {
-    const [tab, ...rest] = decodeURIComponent(location.hash.replace(/^#/, '')).split('/');
+    let raw = location.hash.replace(/^#/, '');
+    try { raw = decodeURIComponent(raw); } catch (e) { /* a stray % in a hand-typed link: use it as typed */ }
+    const [tab, ...rest] = raw.split('/');
     return { tab: tab || null, sub: rest.join('/') || null };
   }
 
@@ -135,12 +137,17 @@ const Site = (() => {
   function mount(cfg) {
     state.cfg = cfg;
     document.title = `${cfg.title} — Carroll Football Analytics`;
+    // The tab/icon: the "CU" mark as an inline SVG, so the browser never asks for a /favicon.ico that does not exist.
+    if (!document.querySelector('link[rel="icon"]')) {
+      document.head.insertAdjacentHTML('beforeend', '<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23121d3f%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-family=%27Arial,sans-serif%27 font-size=%2714%27 font-weight=%27700%27 fill=%27white%27 text-anchor=%27middle%27%3ECU%3C/text%3E%3C/svg%3E">');
+    }
     document.body.innerHTML = `
+      <a class="skip-link" href="#site-stage">Skip to content</a>
       <div class="page">
         ${navHTML(cfg.nav)}
         <header class="pagehead"><h1>${esc(cfg.title)}${cfg.badge ? `<span class="h1-badge">${esc(cfg.badge)}</span>` : ''}</h1>${cfg.lead ? `<p>${cfg.lead}</p>` : ''}<div class="asof" id="site-asof" hidden></div></header>
         <div class="tabbar" id="site-tabs" role="tablist" aria-label="${esc(cfg.title)} views"></div>
-        <main class="stage" id="site-stage"><div class="loading">Loading data…</div></main>
+        <main class="stage" id="site-stage" tabindex="-1"><div class="loading">Loading data…</div></main>
       </div>`;
 
     const tabbar = document.getElementById('site-tabs');
@@ -160,10 +167,18 @@ const Site = (() => {
       hideTooltip();
       const activeBtn = tabbar.querySelector('.tabbtn.active');
       if (activeBtn && tabbar.scrollWidth > tabbar.clientWidth) activeBtn.scrollIntoView({ inline: 'center', block: 'nearest' });
+      // Bookmarks, history, and a printout's file name should say which tab this is.
+      document.title = `${cfg.tabs.length > 1 ? `${tab.label} · ` : ''}${cfg.title} — Carroll Football Analytics`;
       stage.innerHTML = '';
       const root = document.createElement('div');
       stage.appendChild(root);
-      tab.render(root, { sub: sub || null });
+      try {
+        tab.render(root, { sub: sub || null });
+      } catch (err) {
+        // One broken view must not leave a blank page with the only clue in the console.
+        console.error(err);
+        root.innerHTML = `<div class="card"><div class="card-body">Something went wrong drawing this view (${esc(err.message || err)}). Try another tab, or reload the page.</div></div>`;
+      }
     }
 
     tabbar.addEventListener('click', (e) => {
@@ -217,12 +232,22 @@ const Site = (() => {
 
   let viewSeq = 0;
 
+  /** <option>s for a spec.selects entry; options with the same `group` (consecutive) share an <optgroup>. */
+  function selectOptionsHTML(sel) {
+    let html = '', open = null;
+    sel.options.forEach((o) => {
+      if ((o.group || null) !== open) { html += open ? '</optgroup>' : ''; open = o.group || null; html += open ? `<optgroup label="${esc(open)}">` : ''; }
+      html += `<option value="${esc(o.value)}"${o.value === sel.value ? ' selected' : ''}>${esc(o.label)}</option>`;
+    });
+    return html + (open ? '</optgroup>' : '');
+  }
+
   /**
    * Renders a filters + KPIs + cards dashboard into `root`.
    *
    * spec: {
    *   filters:  { defs: [...filter defs], values: {field: [options]} }  (optional)
-   *   selects:  [{ id, label, options: [{value, label}], value }]   single-select controls in the
+   *   selects:  [{ id, label, options: [{value, label, group?}], value }]   single-select controls in the
    *             shelf; their values arrive in prepare()'s state under `id`
    *   actions:  [{ label, onClick(state) }]    buttons at the right of the shelf (e.g. PDF)
    *   source:   short caption shown at the right of the filter shelf (optional)
@@ -230,7 +255,7 @@ const Site = (() => {
    *   summary:  (ctx) => string       -- the "N plays in view" text
    *   intro:    string | (ctx) => string    -- an .insight note between the KPIs and the cards
    *   kpis:     [{ label, dot, glossary, value: (ctx) => [value, foot?] }]
-   *   cards:    [{ title, wide, render(el, ctx), note, extra } |
+   *   cards:    [{ title, wide, noPrint, render(el, ctx), note, extra } |      // noPrint: leave it off a printout (links)
    *              { title, wide, table: { head, rows: (ctx) => [[...]], empty }, note } |
    *              { raw: true, wide, render(el, ctx) } |     // card body is the whole card (trend cards)
    *              { section: 'Heading' }]                    // full-width heading between card groups
@@ -249,9 +274,10 @@ const Site = (() => {
 
     root.innerHTML = `
       <section class="panel">
+        <div class="print-head" id="${uid}-printhead"></div>
         ${hasShelf ? `<div class="shelf">
           <span class="shelf-filters">
-            ${selects.map((sel) => `<label class="pill-label" for="${uid}-sel-${sel.id}">${esc(sel.label)}</label><select class="select-sm" id="${uid}-sel-${sel.id}">${sel.options.map((o) => `<option value="${esc(o.value)}"${o.value === sel.value ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}</select>`).join('')}
+            ${selects.map((sel) => `<label class="pill-label" for="${uid}-sel-${sel.id}">${esc(sel.label)}</label><select class="select-sm" id="${uid}-sel-${sel.id}">${selectOptionsHTML(sel)}</select>`).join('')}
             <span id="${uid}-shelf" class="shelf-filters"></span>
           </span>
           <span class="shelf-right">${spec.source ? `<span class="shelf-source">${esc(spec.source)}</span>` : ''}${actions.map((a, i) => `<button type="button" class="download-btn no-print" id="${uid}-act-${i}">${a.label}</button>`).join('')}</span>
@@ -262,7 +288,7 @@ const Site = (() => {
           <div class="cards">
             ${cards.map((c, i) => {
               if (c.section) return `<h2 class="cards-heading">${c.section}</h2>`;
-              const cls = `${c.wide ? 'card wide' : 'card'}${c.table ? ' table-card' : ''}`;
+              const cls = `${c.wide ? 'card wide' : 'card'}${c.table ? ' table-card' : ''}${c.noPrint ? ' no-print' : ''}`;
               if (c.raw) return `<div class="${cls}" id="${uid}-c${i}"></div>`;
               return `<div class="${cls}"><div class="card-head"><h2>${c.title}</h2>${c.extra || ''}</div><div class="card-body" id="${uid}-c${i}"></div>${c.note ? `<div class="insight card-note">${c.note}</div>` : ''}</div>`;
             }).join('')}
@@ -286,6 +312,19 @@ const Site = (() => {
     }
     actions.forEach((a, i) => document.getElementById(`${uid}-act-${i}`).addEventListener('click', () => a.onClick(readState())));
 
+    // The line at the top of a printout: which page, tab, game or opponent, what the filters leave in view,
+    // how current the data is, and the date it was printed (the page chrome and controls don't print).
+    function fillPrintHead() {
+      const tab = document.querySelector('#site-tabs .tabbtn.active');
+      const picks = selects.map((sel) => document.getElementById(`${uid}-sel-${sel.id}`).selectedOptions[0]).filter(Boolean).map((o) => o.text);
+      const asof = document.getElementById('site-asof');
+      const view = summaryEl ? summaryEl.textContent : '';
+      document.getElementById(`${uid}-printhead`).innerHTML =
+        `<div class="ph-title">Carroll Football — ${esc(state.cfg.title)}${tab && state.cfg.tabs.length > 1 ? ` · ${esc(tab.textContent)}` : ''}</div>`
+        + (picks.length ? `<div class="ph-sub">${picks.map(esc).join(' · ')}</div>` : '')
+        + `<div class="ph-meta">${[view, asof && !asof.hidden ? asof.firstElementChild.textContent : '', `Printed ${dayLabel(today(), { month: 'long', day: 'numeric', year: 'numeric' })}`].filter(Boolean).map(esc).join(' · ')}</div>`;
+    }
+
     function refresh() {
       const ctx = spec.prepare(readState());
       if (summaryEl && spec.summary) summaryEl.textContent = spec.summary(ctx);
@@ -307,6 +346,7 @@ const Site = (() => {
       if (spec.footer) {
         document.getElementById(`${uid}-footer`).textContent = typeof spec.footer === 'function' ? spec.footer(ctx) : spec.footer;
       }
+      fillPrintHead();
     }
     refresh();
     return { refresh };

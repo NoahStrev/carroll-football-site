@@ -28,7 +28,7 @@
 const PAGES = ['home', 'offense', 'defense', 'special-teams', 'opponent-scouting', 'rankings', 'lifting-strength', 'players', 'glossary', 'updates'];
 // The Updates page legitimately discusses "undefined" and "NaN" in its changelog text.
 const TEXT_CHECK_SKIP = new Set(['updates']);
-const BAD_TEXT = /undefined|\bNaN\b|\[object|Couldn't load/;
+const BAD_TEXT = /undefined|\bNaN\b|\[object|Couldn't load|Something went wrong/;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // Wait for the page to finish rendering: the stage has real content and stops changing, rather than a fixed sleep.
 async function settle(win) {
@@ -97,7 +97,7 @@ async function checkPage(page, width) {
     record(page, tab.label, inspect(page, win, errors, width));
     // Also try a few other choices in the shelf's first dropdown (an opponent, a game, ...): the second and
     // the middle and last options, which is where an edge case (no data, a non-conference team) tends to be.
-    const select = win.document.querySelector('#site-stage .shelf select');
+    const select = win.document.querySelector('#site-stage .shelf select, #site-stage .home-season select');
     if (select && select.options.length > 2) {
       const n = select.options.length;
       for (const i of [...new Set([1, Math.floor(n / 2), n - 1])]) {

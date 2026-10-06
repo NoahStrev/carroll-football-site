@@ -63,7 +63,7 @@
     const seasonRows = catData.seasons.map((s) => `<tr><td>${s.season}</td><td>${s.games}</td>${cat.cols.map(([key]) => `<td>${s[key] ?? '—'}</td>`).join('')}</tr>`).join('');
     return `
       <div class="card wide table-card">
-        <div class="card-head"><h2>${cat.label}</h2><span class="data-note" style="margin:0;">${catData.career_games} games</span></div>
+        <div class="card-head"><h2>${cat.label}</h2><span class="data-note">${catData.career_games} games</span></div>
         <div class="card-body flush">
           <div class="tbl-scroll"><table class="mini">
             <thead><tr><th>Season</th><th>Games</th>${cat.cols.map(([, label]) => `<th>${label}</th>`).join('')}</tr></thead>
@@ -74,6 +74,99 @@
           </table></div>
         </div>
       </div>`;
+  }
+
+
+  /* ============================================================ Profile == */
+  // The Career Stats tab doubles as a player profile: a header, honors (all-conference/region/American,
+  // record-book entries, record watch) and strength testing next to the stat tables. Everything here is
+  // matched by NAME, which has burned this site before, so every join is guarded: a full-name match alone is
+  // not enough -- the honor's year has to fall inside the seasons this player has stats for -- and
+  // strength testing joins only through the roster-confirmed athlete_key, never by name.
+
+  const normName = (n) => String(n || '').toLowerCase().replace(/[.'’]/g, '').replace(/\s+/g, ' ').trim();
+
+  function seasonSpan(player) {
+    const years = Object.values(player.categories).flatMap((c) => c.seasons.map((x) => Number(x.season))).filter(Number.isFinite);
+    return years.length ? { first: Math.min(...years), last: Math.max(...years), count: new Set(years).size } : null;
+  }
+
+  // "2012-2014" or "1994" -> [start, end]
+  function yearRange(text) {
+    const m = String(text || '').match(/(\d{4})(?:\s*[-–]\s*(\d{4}))?/);
+    return m ? [Number(m[1]), Number(m[2] || m[1])] : null;
+  }
+
+  function honorsFor(player) {
+    const span = seasonSpan(player);
+    if (!span) return { awards: [], records: [], watch: [] };
+    const key = normName(player.display_name);
+    const R = Site.data.records;
+    const awards = [];
+    Object.entries({ AllConference: 'All-Conference', AllRegion: 'All-Region', AllAmerican: 'All-American' }).forEach(([k, label]) => {
+      (R.awards[k] || []).forEach((a) => {
+        const y = Number(a.year);
+        if (normName(a.player) === key && Number.isFinite(y) && y >= span.first && y <= span.last + 1) awards.push({ year: y, text: `${label}${a.recognition && a.recognition !== '--' ? ` — ${a.recognition}` : a.team ? ` — ${a.team}` : ''}${a.affiliation && a.affiliation !== '--' ? ` (${a.affiliation})` : ''}` });
+      });
+    });
+    const records = [];
+    [['CareerIndividual', 'Career'], ['SeasonIndividual', 'Single season'], ['SingleGameIndividual', 'Single game']].forEach(([k, scope]) => {
+      (R.records[k] || []).forEach((r) => {
+        if (normName(r.player) !== key) return;
+        const range = r.years ? yearRange(r.years) : r.date ? yearRange(String(r.date).split('/').pop()) : null;
+        if (!range || range[1] < span.first || range[0] > span.last) return;
+        records.push({ scope, text: `${r.statistic}: ${r.value}${r.rank ? ` (#${r.rank}${r.tied ? ', tied' : ''})` : ''}`, when: r.years || r.date });
+      });
+    });
+    const watch = [];
+    ['career', 'season'].forEach((scope) => Object.values(R.record_watch[scope] || {}).forEach((list) => list.forEach((e) => { if (normName(e.player) === key) watch.push({ scope, e }); })));
+    return { awards: awards.sort((a, b) => a.year - b.year), records, watch };
+  }
+
+  function profileHeaderHTML(player, shownCats) {
+    const span = seasonSpan(player);
+    const cats = shownCats.map((c) => (CAREER_CATEGORIES[c] || { label: c }).label);
+    return `<div class="card wide"><div class="card-body profile-head">
+      <div class="avatar" style="background:var(--cat-6);">${esc(initials(player.display_name))}</div>
+      <div><div class="profile-name">${esc(player.display_name)}</div>
+      <div class="data-note" style="margin:2px 0 0;">${player.position ? `${esc(player.position)} · ` : ''}${span ? `${span.first === span.last ? span.first : `${span.first}–${span.last}`} (${span.count} season${span.count === 1 ? '' : 's'} with stats)` : 'no seasons on record'} · ${esc(cats.join(', ') || 'no stat categories')}</div></div>
+    </div></div>`;
+  }
+
+  function honorsHTML(player) {
+    const h = honorsFor(player);
+    if (!h.awards.length && !h.records.length && !h.watch.length) return '';
+    const items = [
+      ...h.awards.map((a) => `<li><b>${a.year}</b> ${esc(a.text)}</li>`),
+      ...h.records.map((r) => `<li><b>Record book</b> · ${esc(r.scope)} ${esc(r.text)} <span class="muted">${esc(r.when || '')}</span></li>`),
+      ...h.watch.map(({ scope, e }) => `<li><b>Record watch</b> · ${scope === 'career' ? 'career' : 'this season'} ${esc(e.statistic)}: ${fmt(e.current_value, Number.isInteger(e.current_value) ? 0 : 1)} — ${recordWatchStatusHTML(e)}</li>`),
+    ];
+    return `<div class="card wide"><div class="card-head"><h2>Honors and records</h2></div><div class="card-body"><ul class="tw-list">${items.join('')}</ul>
+      <div class="data-note">Matched by full name and only when the year falls inside this player's seasons on the site.</div></div></div>`;
+  }
+
+  // lifting.json is 3 MB, so it is fetched only when a player with a roster-confirmed athlete_key is opened.
+  let liftingPromise = null;
+  const loadLifting = () => (liftingPromise = liftingPromise || fetch('../data/lifting.json').then((r) => (r.ok ? r.json() : null)).catch(() => null));
+
+  const LIFT_METRICS = [['Bench', 'lb', true], ['Squat', 'lb', true], ['Clean', 'lb', true], ['Combined Total', 'lb', true], ['Vertical', 'in', true], ['Broad Jump', 'in', true], ['Pro Agility', 'sec', false], ['Weight', 'lb', null]];
+
+  function liftingHTML(player, L) {
+    const a = L && L.athletes.find((x) => x.athlete_key === player.athlete_key);
+    if (!a) return '';
+    const order = new Map(L.sessions.map((s, i) => [s.label, i]));
+    const rows = LIFT_METRICS.map(([metric, unit, higherBetter]) => {
+      const pts = a.points.filter((p) => p.metric === metric && p.value !== null && order.has(p.session_label)).sort((x, y) => order.get(x.session_label) - order.get(y.session_label));
+      if (!pts.length) return null;
+      const first = pts[0], latest = pts[pts.length - 1];
+      const best = higherBetter === null ? null : pts.reduce((b, p) => ((higherBetter ? p.value > b.value : p.value < b.value) ? p : b), pts[0]);
+      const change = pts.length > 1 ? latest.value - first.value : null;
+      const cell = (p) => `${fmt(p.value, Number.isInteger(p.value) ? 0 : 1)} <span class="muted">${esc(p.session_label)}</span>`;
+      return `<tr><td class="name">${metric} <span class="muted">(${unit})</span></td><td>${cell(first)}</td><td>${cell(latest)}</td><td>${best ? cell(best) : '—'}</td><td>${change === null ? '—' : `${change > 0 ? '+' : ''}${fmt(change, Number.isInteger(change) ? 0 : 1)}`}</td></tr>`;
+    }).filter(Boolean);
+    if (!rows.length) return '';
+    return `<div class="card wide table-card"><div class="card-head"><h2>Strength and testing</h2><span class="data-note">from Lifting &amp; Strength</span></div><div class="card-body flush"><div class="tbl-scroll"><table class="mini">
+      <thead><tr><th>Test</th><th>First</th><th>Latest</th><th>Best</th><th>Change</th></tr></thead><tbody>${rows.join('')}</tbody></table></div></div></div>`;
   }
 
   function playerOptions() {
@@ -111,11 +204,19 @@
       const player = findPlayer(name);
       if (!player) { contentEl.innerHTML = '<div class="insight wide">Search for a player above to see their career stats.</div>'; return; }
       const cats = relevantCategoriesFor(player);
+      const top = profileHeaderHTML(player, cats) + honorsHTML(player);
       if (!cats.length) {
-        contentEl.innerHTML = `<div class="insight wide">No tracked individual stat categories apply to ${esc(player.display_name)}'s position (${esc(player.position || '—')}) on this site.</div>`;
-        return;
+        contentEl.innerHTML = `${top}<div class="insight wide">No tracked individual stat categories apply to ${esc(player.display_name)}'s position (${esc(player.position || '—')}) on this site.</div><div id="cs-lifting" class="wide"></div>`;
+      } else {
+        contentEl.innerHTML = `${top}${cats.map((c) => categoryCardHTML(c, player)).join('')}<div id="cs-lifting" class="wide"></div>`;
       }
-      contentEl.innerHTML = cats.map((c) => categoryCardHTML(c, player)).join('');
+      if (player.athlete_key) {
+        loadLifting().then((L) => {
+          const slot = contentEl.querySelector('#cs-lifting');
+          if (slot && contentEl.dataset.player === name) slot.outerHTML = liftingHTML(player, L);
+        });
+      }
+      contentEl.dataset.player = name;
     }
     const start = defaultPlayers()[0];
     makeSearchCombobox(root.querySelector('#cs-combobox'), { options, value: start, onChange: render, placeholder: 'Search player name…' });

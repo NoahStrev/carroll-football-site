@@ -1,107 +1,6 @@
 {
   "generated_from": "game-data.json, special-teams.json, Special Teams Data box scores",
   "season": 2026,
-  "prior_label": "2021–2025",
-  "record": "3-1",
-  "conference_record": "2-0",
-  "games": [
-    {
-      "date": "2026-09-05",
-      "opponent": "St. Norbert",
-      "home": false,
-      "carroll_pts": 40,
-      "opp_pts": 10,
-      "result": "W",
-      "charted": true,
-      "offense": {
-        "plays": 51,
-        "ypp": 9.7255,
-        "success": 0.3333,
-        "explosive": 0.1765,
-        "turnovers": 0
-      },
-      "defense": {
-        "plays": 75,
-        "ypp": 4.1486,
-        "success": 0.3784,
-        "explosive": 0.1351,
-        "turnovers": 1
-      },
-      "st_score": 42.0519
-    },
-    {
-      "date": "2026-09-12",
-      "opponent": "UW Eau Claire",
-      "home": true,
-      "carroll_pts": 17,
-      "opp_pts": 34,
-      "result": "L",
-      "charted": true,
-      "offense": {
-        "plays": 74,
-        "ypp": 5.5972,
-        "success": 0.4167,
-        "explosive": 0.1389,
-        "turnovers": 3
-      },
-      "defense": {
-        "plays": 66,
-        "ypp": 7.4531,
-        "success": 0.381,
-        "explosive": 0.2063,
-        "turnovers": 1
-      },
-      "st_score": 39.9583
-    },
-    {
-      "date": "2026-09-19",
-      "opponent": "Elmhurst",
-      "home": false,
-      "carroll_pts": 33,
-      "opp_pts": 0,
-      "result": "W",
-      "charted": true,
-      "offense": {
-        "plays": 81,
-        "ypp": 6.8861,
-        "success": 0.5316,
-        "explosive": 0.1899,
-        "turnovers": 3
-      },
-      "defense": {
-        "plays": 47,
-        "ypp": 3.7447,
-        "success": 0.2128,
-        "explosive": 0.0851,
-        "turnovers": 0
-      },
-      "st_score": 35.8208
-    },
-    {
-      "date": "2026-09-26",
-      "opponent": "Carthage",
-      "home": true,
-      "carroll_pts": 20,
-      "opp_pts": 0,
-      "result": "W",
-      "charted": true,
-      "offense": {
-        "plays": 70,
-        "ypp": 3.1714,
-        "success": 0.2687,
-        "explosive": 0.0896,
-        "turnovers": 0
-      },
-      "defense": {
-        "plays": 67,
-        "ypp": 2.5312,
-        "success": 0.1429,
-        "explosive": 0.1111,
-        "turnovers": 5
-      },
-      "st_score": 39.4333
-    }
-  ],
   "history": {
     "Augustana": [
       {
@@ -1388,42 +1287,1554 @@
       }
     ]
   },
-  "season_stats": {
-    "offense": {
-      "plays": 276,
-      "ypp": 6.1213,
-      "success": 0.3978,
-      "explosive": 0.1487,
-      "turnovers": 6
+  "seasons": {
+    "2026": {
+      "prior_label": "2021–2025",
+      "record": "3-1",
+      "conference_record": "2-0",
+      "games": [
+        {
+          "date": "2026-09-05",
+          "opponent": "St. Norbert",
+          "home": false,
+          "carroll_pts": 40,
+          "opp_pts": 10,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 51,
+            "ypp": 9.7255,
+            "success": 0.3333,
+            "explosive": 0.1765,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 75,
+            "ypp": 4.1486,
+            "success": 0.3784,
+            "explosive": 0.1351,
+            "turnovers": 1
+          },
+          "st_score": 42.0519
+        },
+        {
+          "date": "2026-09-12",
+          "opponent": "UW Eau Claire",
+          "home": true,
+          "carroll_pts": 17,
+          "opp_pts": 34,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 74,
+            "ypp": 5.5972,
+            "success": 0.4167,
+            "explosive": 0.1389,
+            "turnovers": 3
+          },
+          "defense": {
+            "plays": 66,
+            "ypp": 7.4531,
+            "success": 0.381,
+            "explosive": 0.2063,
+            "turnovers": 1
+          },
+          "st_score": 39.9583
+        },
+        {
+          "date": "2026-09-19",
+          "opponent": "Elmhurst",
+          "home": false,
+          "carroll_pts": 33,
+          "opp_pts": 0,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 81,
+            "ypp": 6.8861,
+            "success": 0.5316,
+            "explosive": 0.1899,
+            "turnovers": 3
+          },
+          "defense": {
+            "plays": 47,
+            "ypp": 3.7447,
+            "success": 0.2128,
+            "explosive": 0.0851,
+            "turnovers": 0
+          },
+          "st_score": 35.8208
+        },
+        {
+          "date": "2026-09-26",
+          "opponent": "Carthage",
+          "home": true,
+          "carroll_pts": 20,
+          "opp_pts": 0,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 70,
+            "ypp": 3.1714,
+            "success": 0.2687,
+            "explosive": 0.0896,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 67,
+            "ypp": 2.5312,
+            "success": 0.1429,
+            "explosive": 0.1111,
+            "turnovers": 5
+          },
+          "st_score": 39.4333
+        }
+      ],
+      "season_stats": {
+        "offense": {
+          "plays": 276,
+          "ypp": 6.1213,
+          "success": 0.3978,
+          "explosive": 0.1487,
+          "turnovers": 6
+        },
+        "defense": {
+          "plays": 255,
+          "ypp": 4.506,
+          "success": 0.2874,
+          "explosive": 0.1377,
+          "turnovers": 7
+        },
+        "st_score": 39.4,
+        "pts_for_pg": 27.5,
+        "pts_against_pg": 11.0
+      },
+      "prior_stats": {
+        "offense": {
+          "plays": 3255,
+          "ypp": 5.2673,
+          "success": 0.3876,
+          "explosive": 0.1355,
+          "turnovers": 70
+        },
+        "defense": {
+          "plays": 3475,
+          "ypp": 5.676,
+          "success": 0.4195,
+          "explosive": 0.1554,
+          "turnovers": 83
+        },
+        "st_score": 44.1518,
+        "pts_for_pg": 27.28,
+        "pts_against_pg": 28.7
+      }
     },
-    "defense": {
-      "plays": 255,
-      "ypp": 4.506,
-      "success": 0.2874,
-      "explosive": 0.1377,
-      "turnovers": 7
+    "2025": {
+      "prior_label": "2021–2024",
+      "record": "4-6",
+      "conference_record": "4-5",
+      "games": [
+        {
+          "date": "2025-09-04",
+          "opponent": "UW Eau Claire",
+          "home": false,
+          "carroll_pts": 7,
+          "opp_pts": 29,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 56,
+            "ypp": 4.8364,
+            "success": 0.3636,
+            "explosive": 0.1273,
+            "turnovers": 3
+          },
+          "defense": {
+            "plays": 70,
+            "ypp": 5.2714,
+            "success": 0.4627,
+            "explosive": 0.1343,
+            "turnovers": 0
+          },
+          "st_score": 36.4125
+        },
+        {
+          "date": "2025-09-20",
+          "opponent": "Wash U",
+          "home": true,
+          "carroll_pts": 29,
+          "opp_pts": 41,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 77,
+            "ypp": 4.75,
+            "success": 0.4079,
+            "explosive": 0.1053,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 64,
+            "ypp": 6.2812,
+            "success": 0.4918,
+            "explosive": 0.1639,
+            "turnovers": 0
+          },
+          "st_score": 42.624
+        },
+        {
+          "date": "2025-09-27",
+          "opponent": "Wheaton",
+          "home": false,
+          "carroll_pts": 13,
+          "opp_pts": 61,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 56,
+            "ypp": 4.4815,
+            "success": 0.2407,
+            "explosive": 0.1111,
+            "turnovers": 2
+          },
+          "defense": {
+            "plays": 86,
+            "ypp": 7.5952,
+            "success": 0.5476,
+            "explosive": 0.2381,
+            "turnovers": 2
+          },
+          "st_score": 43.0519
+        },
+        {
+          "date": "2025-10-04",
+          "opponent": "Millikin",
+          "home": false,
+          "carroll_pts": 28,
+          "opp_pts": 17,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 51,
+            "ypp": 5.2,
+            "success": 0.42,
+            "explosive": 0.12,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 79,
+            "ypp": 4.1154,
+            "success": 0.3846,
+            "explosive": 0.0513,
+            "turnovers": 2
+          },
+          "st_score": 47.1542
+        },
+        {
+          "date": "2025-10-12",
+          "opponent": "North Park",
+          "home": true,
+          "carroll_pts": 24,
+          "opp_pts": 10,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 55,
+            "ypp": 5.9245,
+            "success": 0.3774,
+            "explosive": 0.1509,
+            "turnovers": 2
+          },
+          "defense": {
+            "plays": 79,
+            "ypp": 4.0533,
+            "success": 0.24,
+            "explosive": 0.0933,
+            "turnovers": 4
+          },
+          "st_score": 48.2333
+        },
+        {
+          "date": "2025-10-18",
+          "opponent": "Augustana",
+          "home": false,
+          "carroll_pts": 24,
+          "opp_pts": 31,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 67,
+            "ypp": 4.8636,
+            "success": 0.3636,
+            "explosive": 0.0909,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 72,
+            "ypp": 6.5634,
+            "success": 0.5775,
+            "explosive": 0.1268,
+            "turnovers": 2
+          },
+          "st_score": 47.9421
+        },
+        {
+          "date": "2025-10-25",
+          "opponent": "Elmhurst",
+          "home": true,
+          "carroll_pts": 47,
+          "opp_pts": 7,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 50,
+            "ypp": 7.8,
+            "success": 0.46,
+            "explosive": 0.28,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 74,
+            "ypp": 3.9014,
+            "success": 0.3944,
+            "explosive": 0.0845,
+            "turnovers": 5
+          },
+          "st_score": 50.2
+        },
+        {
+          "date": "2025-11-01",
+          "opponent": "North Central",
+          "home": true,
+          "carroll_pts": 7,
+          "opp_pts": 64,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 56,
+            "ypp": 3.5094,
+            "success": 0.2075,
+            "explosive": 0.1132,
+            "turnovers": 3
+          },
+          "defense": {
+            "plays": 57,
+            "ypp": 8.5614,
+            "success": 0.614,
+            "explosive": 0.2456,
+            "turnovers": 1
+          },
+          "st_score": 32.3381
+        },
+        {
+          "date": "2025-11-08",
+          "opponent": "Illinois Wesleyan",
+          "home": false,
+          "carroll_pts": 34,
+          "opp_pts": 14,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 70,
+            "ypp": 5.6857,
+            "success": 0.3857,
+            "explosive": 0.2143,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 57,
+            "ypp": 5.4727,
+            "success": 0.2778,
+            "explosive": 0.1296,
+            "turnovers": 2
+          },
+          "st_score": 53.1875
+        },
+        {
+          "date": "2025-11-15",
+          "opponent": "Carthage",
+          "home": false,
+          "carroll_pts": 3,
+          "opp_pts": 7,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 54,
+            "ypp": 3.8302,
+            "success": 0.2642,
+            "explosive": 0.0755,
+            "turnovers": 4
+          },
+          "defense": {
+            "plays": 59,
+            "ypp": 2.8644,
+            "success": 0.3158,
+            "explosive": 0.0877,
+            "turnovers": 1
+          },
+          "st_score": 31.0706
+        }
+      ],
+      "season_stats": {
+        "offense": {
+          "plays": 592,
+          "ypp": 5.0707,
+          "success": 0.3517,
+          "explosive": 0.1379,
+          "turnovers": 17
+        },
+        "defense": {
+          "plays": 697,
+          "ypp": 5.4605,
+          "success": 0.4326,
+          "explosive": 0.1348,
+          "turnovers": 19
+        },
+        "st_score": 43.9732,
+        "pts_for_pg": 21.6,
+        "pts_against_pg": 28.1
+      },
+      "prior_stats": {
+        "offense": {
+          "plays": 2663,
+          "ypp": 5.3107,
+          "success": 0.3956,
+          "explosive": 0.135,
+          "turnovers": 53
+        },
+        "defense": {
+          "plays": 2778,
+          "ypp": 5.73,
+          "success": 0.4162,
+          "explosive": 0.1606,
+          "turnovers": 64
+        },
+        "st_score": 44.1916,
+        "pts_for_pg": 28.7,
+        "pts_against_pg": 28.85
+      }
     },
-    "st_score": 39.4,
-    "pts_for_pg": 27.5,
-    "pts_against_pg": 11.0
-  },
-  "prior_stats": {
-    "offense": {
-      "plays": 3255,
-      "ypp": 5.2673,
-      "success": 0.3876,
-      "explosive": 0.1355,
-      "turnovers": 70
+    "2024": {
+      "prior_label": "2021–2023",
+      "record": "5-5",
+      "conference_record": "4-5",
+      "games": [
+        {
+          "date": "2024-09-05",
+          "opponent": "UW Stout",
+          "home": false,
+          "carroll_pts": 28,
+          "opp_pts": 16,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 57,
+            "ypp": 5.0526,
+            "success": 0.3818,
+            "explosive": 0.1273,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 67,
+            "ypp": 4.8182,
+            "success": 0.3692,
+            "explosive": 0.1385,
+            "turnovers": 2
+          },
+          "st_score": 47.25
+        },
+        {
+          "date": "2024-09-21",
+          "opponent": "Wash U",
+          "home": false,
+          "carroll_pts": 7,
+          "opp_pts": 35,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 65,
+            "ypp": 1.9375,
+            "success": 0.2031,
+            "explosive": 0.0625,
+            "turnovers": 3
+          },
+          "defense": {
+            "plays": 64,
+            "ypp": 5.0312,
+            "success": 0.4062,
+            "explosive": 0.1094,
+            "turnovers": 1
+          },
+          "st_score": 41.2
+        },
+        {
+          "date": "2024-09-28",
+          "opponent": "Wheaton",
+          "home": true,
+          "carroll_pts": 10,
+          "opp_pts": 22,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 56,
+            "ypp": 4.6296,
+            "success": 0.3333,
+            "explosive": 0.0741,
+            "turnovers": 2
+          },
+          "defense": {
+            "plays": 69,
+            "ypp": 6.1884,
+            "success": 0.3881,
+            "explosive": 0.1493,
+            "turnovers": 1
+          },
+          "st_score": 43.525
+        },
+        {
+          "date": "2024-10-05",
+          "opponent": "Millikin",
+          "home": true,
+          "carroll_pts": 49,
+          "opp_pts": 14,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 67,
+            "ypp": 6.9394,
+            "success": 0.4848,
+            "explosive": 0.1667,
+            "turnovers": 2
+          },
+          "defense": {
+            "plays": 66,
+            "ypp": 5.2462,
+            "success": 0.3333,
+            "explosive": 0.1111,
+            "turnovers": 3
+          },
+          "st_score": 47.0172
+        },
+        {
+          "date": "2024-10-12",
+          "opponent": "North Park",
+          "home": false,
+          "carroll_pts": 26,
+          "opp_pts": 30,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 69,
+            "ypp": 3.5588,
+            "success": 0.2647,
+            "explosive": 0.1029,
+            "turnovers": 4
+          },
+          "defense": {
+            "plays": 78,
+            "ypp": 4.9595,
+            "success": 0.3784,
+            "explosive": 0.0676,
+            "turnovers": 1
+          },
+          "st_score": 49.3536
+        },
+        {
+          "date": "2024-10-19",
+          "opponent": "Augustana",
+          "home": true,
+          "carroll_pts": 30,
+          "opp_pts": 20,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 63,
+            "ypp": 6.6825,
+            "success": 0.4677,
+            "explosive": 0.1774,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 67,
+            "ypp": 5.2879,
+            "success": 0.3333,
+            "explosive": 0.1364,
+            "turnovers": 1
+          },
+          "st_score": 47.3524
+        },
+        {
+          "date": "2024-10-26",
+          "opponent": "Elmhurst",
+          "home": false,
+          "carroll_pts": 45,
+          "opp_pts": 14,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 63,
+            "ypp": 6.2419,
+            "success": 0.4355,
+            "explosive": 0.1613,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 60,
+            "ypp": 3.6167,
+            "success": 0.3,
+            "explosive": 0.1,
+            "turnovers": 2
+          },
+          "st_score": 47.2097
+        },
+        {
+          "date": "2024-11-02",
+          "opponent": "North Central",
+          "home": false,
+          "carroll_pts": 3,
+          "opp_pts": 56,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 50,
+            "ypp": 3.4,
+            "success": 0.22,
+            "explosive": 0.06,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 70,
+            "ypp": 9.4493,
+            "success": 0.6087,
+            "explosive": 0.2609,
+            "turnovers": 1
+          },
+          "st_score": 43.44
+        },
+        {
+          "date": "2024-11-09",
+          "opponent": "Illinois Wesleyan",
+          "home": true,
+          "carroll_pts": 21,
+          "opp_pts": 24,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 38,
+            "ypp": 4.973,
+            "success": 0.2703,
+            "explosive": 0.1622,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 73,
+            "ypp": 4.5205,
+            "success": 0.4658,
+            "explosive": 0.0822,
+            "turnovers": 0
+          },
+          "st_score": 43.2696
+        },
+        {
+          "date": "2024-11-16",
+          "opponent": "Carthage",
+          "home": true,
+          "carroll_pts": 27,
+          "opp_pts": 7,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 55,
+            "ypp": 6.8148,
+            "success": 0.5185,
+            "explosive": 0.1481,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 74,
+            "ypp": 4.0704,
+            "success": 0.4,
+            "explosive": 0.0857,
+            "turnovers": 3
+          },
+          "st_score": 51.8684
+        }
+      ],
+      "season_stats": {
+        "offense": {
+          "plays": 583,
+          "ypp": 5.0296,
+          "success": 0.3619,
+          "explosive": 0.1241,
+          "turnovers": 15
+        },
+        "defense": {
+          "plays": 688,
+          "ypp": 5.3353,
+          "success": 0.4009,
+          "explosive": 0.1237,
+          "turnovers": 15
+        },
+        "st_score": 46.2638,
+        "pts_for_pg": 24.6,
+        "pts_against_pg": 23.8
+      },
+      "prior_stats": {
+        "offense": {
+          "plays": 2080,
+          "ypp": 5.3896,
+          "success": 0.4052,
+          "explosive": 0.138,
+          "turnovers": 38
+        },
+        "defense": {
+          "plays": 2090,
+          "ypp": 5.8602,
+          "success": 0.4212,
+          "explosive": 0.1728,
+          "turnovers": 49
+        },
+        "st_score": 43.5584,
+        "pts_for_pg": 30.0667,
+        "pts_against_pg": 30.5333
+      }
     },
-    "defense": {
-      "plays": 3475,
-      "ypp": 5.676,
-      "success": 0.4195,
-      "explosive": 0.1554,
-      "turnovers": 83
+    "2023": {
+      "prior_label": "2021–2022",
+      "record": "5-5",
+      "conference_record": "4-5",
+      "games": [
+        {
+          "date": "2023-09-09",
+          "opponent": "Wisconsin Lutheran",
+          "home": true,
+          "carroll_pts": 51,
+          "opp_pts": 7,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 70,
+            "ypp": 6.2899,
+            "success": 0.5362,
+            "explosive": 0.1304,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 58,
+            "ypp": 3.0517,
+            "success": 0.2759,
+            "explosive": 0.0517,
+            "turnovers": 2
+          },
+          "st_score": 47.452
+        },
+        {
+          "date": "2023-09-16",
+          "opponent": "North Park",
+          "home": false,
+          "carroll_pts": 41,
+          "opp_pts": 27,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 70,
+            "ypp": 6.9429,
+            "success": 0.4638,
+            "explosive": 0.1884,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 68,
+            "ypp": 5.9683,
+            "success": 0.4762,
+            "explosive": 0.1746,
+            "turnovers": 5
+          },
+          "st_score": 48.5091
+        },
+        {
+          "date": "2023-09-23",
+          "opponent": "Illinois Wesleyan",
+          "home": true,
+          "carroll_pts": 70,
+          "opp_pts": 23,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 75,
+            "ypp": 7.8514,
+            "success": 0.5135,
+            "explosive": 0.2027,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 80,
+            "ypp": 5.7143,
+            "success": 0.2987,
+            "explosive": 0.1688,
+            "turnovers": 4
+          },
+          "st_score": 44.3605
+        },
+        {
+          "date": "2023-09-30",
+          "opponent": "Augustana",
+          "home": false,
+          "carroll_pts": 19,
+          "opp_pts": 23,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 83,
+            "ypp": 5.622,
+            "success": 0.3902,
+            "explosive": 0.1463,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 67,
+            "ypp": 6.0308,
+            "success": 0.5156,
+            "explosive": 0.2031,
+            "turnovers": 1
+          },
+          "st_score": 47.6652
+        },
+        {
+          "date": "2023-10-07",
+          "opponent": "North Central",
+          "home": false,
+          "carroll_pts": 24,
+          "opp_pts": 69,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 81,
+            "ypp": 4.3291,
+            "success": 0.3797,
+            "explosive": 0.0759,
+            "turnovers": 2
+          },
+          "defense": {
+            "plays": 52,
+            "ypp": 14.6538,
+            "success": 0.6731,
+            "explosive": 0.4808,
+            "turnovers": 0
+          },
+          "st_score": 43.0741
+        },
+        {
+          "date": "2023-10-14",
+          "opponent": "Elmhurst",
+          "home": true,
+          "carroll_pts": 62,
+          "opp_pts": 14,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 66,
+            "ypp": 6.3485,
+            "success": 0.4394,
+            "explosive": 0.2273,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 71,
+            "ypp": 3.4,
+            "success": 0.2571,
+            "explosive": 0.0857,
+            "turnovers": 3
+          },
+          "st_score": 51.8444
+        },
+        {
+          "date": "2023-10-21",
+          "opponent": "Wheaton",
+          "home": true,
+          "carroll_pts": 6,
+          "opp_pts": 52,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 50,
+            "ypp": 3.5,
+            "success": 0.28,
+            "explosive": 0.1,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 65,
+            "ypp": 6.8125,
+            "success": 0.6032,
+            "explosive": 0.1746,
+            "turnovers": 0
+          },
+          "st_score": 39.276
+        },
+        {
+          "date": "2023-10-28",
+          "opponent": "Carthage",
+          "home": false,
+          "carroll_pts": 27,
+          "opp_pts": 30,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 66,
+            "ypp": 6.0317,
+            "success": 0.4444,
+            "explosive": 0.1905,
+            "turnovers": 2
+          },
+          "defense": {
+            "plays": 76,
+            "ypp": 4.3649,
+            "success": 0.3151,
+            "explosive": 0.1507,
+            "turnovers": 0
+          },
+          "st_score": 36.564
+        },
+        {
+          "date": "2023-11-04",
+          "opponent": "Millikin",
+          "home": true,
+          "carroll_pts": 41,
+          "opp_pts": 0,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 66,
+            "ypp": 5.3333,
+            "success": 0.4697,
+            "explosive": 0.1212,
+            "turnovers": 2
+          },
+          "defense": {
+            "plays": 59,
+            "ypp": 2.1786,
+            "success": 0.1818,
+            "explosive": 0.0545,
+            "turnovers": 3
+          },
+          "st_score": 44.1208
+        },
+        {
+          "date": "2023-11-11",
+          "opponent": "Wash U",
+          "home": false,
+          "carroll_pts": 23,
+          "opp_pts": 35,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 62,
+            "ypp": 7.0,
+            "success": 0.4262,
+            "explosive": 0.2131,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 65,
+            "ypp": 4.7692,
+            "success": 0.4615,
+            "explosive": 0.1538,
+            "turnovers": 1
+          },
+          "st_score": 41.7261
+        }
+      ],
+      "season_stats": {
+        "offense": {
+          "plays": 689,
+          "ypp": 5.9662,
+          "success": 0.4374,
+          "explosive": 0.1591,
+          "turnovers": 11
+        },
+        "defense": {
+          "plays": 661,
+          "ypp": 5.5528,
+          "success": 0.4,
+          "explosive": 0.1656,
+          "turnovers": 19
+        },
+        "st_score": 44.6996,
+        "pts_for_pg": 36.4,
+        "pts_against_pg": 28.0
+      },
+      "prior_stats": {
+        "offense": {
+          "plays": 1391,
+          "ypp": 5.1036,
+          "success": 0.3888,
+          "explosive": 0.1273,
+          "turnovers": 27
+        },
+        "defense": {
+          "plays": 1429,
+          "ypp": 6.0007,
+          "success": 0.431,
+          "explosive": 0.1762,
+          "turnovers": 30
+        },
+        "st_score": 42.9479,
+        "pts_for_pg": 26.9,
+        "pts_against_pg": 31.8
+      }
     },
-    "st_score": 44.1518,
-    "pts_for_pg": 27.28,
-    "pts_against_pg": 28.7
+    "2022": {
+      "prior_label": "2021",
+      "record": "6-4",
+      "conference_record": "5-4",
+      "games": [
+        {
+          "date": "2022-09-10",
+          "opponent": "Wisconsin Lutheran",
+          "home": false,
+          "carroll_pts": 54,
+          "opp_pts": 7,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 81,
+            "ypp": 6.3457,
+            "success": 0.5507,
+            "explosive": 0.2174,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 51,
+            "ypp": 3.76,
+            "success": 0.32,
+            "explosive": 0.1,
+            "turnovers": 1
+          },
+          "st_score": 43.5538
+        },
+        {
+          "date": "2022-09-17",
+          "opponent": "North Park",
+          "home": true,
+          "carroll_pts": 42,
+          "opp_pts": 0,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 65,
+            "ypp": 6.8154,
+            "success": 0.4531,
+            "explosive": 0.1719,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 75,
+            "ypp": 4.7917,
+            "success": 0.3056,
+            "explosive": 0.1111,
+            "turnovers": 5
+          },
+          "st_score": 46.7136
+        },
+        {
+          "date": "2022-09-24",
+          "opponent": "Illinois Wesleyan",
+          "home": false,
+          "carroll_pts": 21,
+          "opp_pts": 26,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 65,
+            "ypp": 4.4923,
+            "success": 0.2923,
+            "explosive": 0.1077,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 83,
+            "ypp": 5.6125,
+            "success": 0.4675,
+            "explosive": 0.1688,
+            "turnovers": 3
+          },
+          "st_score": 44.1222
+        },
+        {
+          "date": "2022-10-01",
+          "opponent": "Augustana",
+          "home": true,
+          "carroll_pts": 44,
+          "opp_pts": 41,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 84,
+            "ypp": 6.0482,
+            "success": 0.4699,
+            "explosive": 0.1566,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 69,
+            "ypp": 5.4928,
+            "success": 0.4638,
+            "explosive": 0.1594,
+            "turnovers": 0
+          },
+          "st_score": 42.529
+        },
+        {
+          "date": "2022-10-08",
+          "opponent": "North Central",
+          "home": true,
+          "carroll_pts": 0,
+          "opp_pts": 73,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 66,
+            "ypp": 2.5625,
+            "success": 0.25,
+            "explosive": 0.0781,
+            "turnovers": 2
+          },
+          "defense": {
+            "plays": 57,
+            "ypp": 10.1754,
+            "success": 0.5179,
+            "explosive": 0.3393,
+            "turnovers": 0
+          },
+          "st_score": 38.336
+        },
+        {
+          "date": "2022-10-15",
+          "opponent": "Elmhurst",
+          "home": false,
+          "carroll_pts": 31,
+          "opp_pts": 28,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 81,
+            "ypp": 5.1392,
+            "success": 0.4304,
+            "explosive": 0.1266,
+            "turnovers": 4
+          },
+          "defense": {
+            "plays": 83,
+            "ypp": 3.6265,
+            "success": 0.241,
+            "explosive": 0.0964,
+            "turnovers": 1
+          },
+          "st_score": 41.3533
+        },
+        {
+          "date": "2022-10-22",
+          "opponent": "Wheaton",
+          "home": false,
+          "carroll_pts": 9,
+          "opp_pts": 61,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 53,
+            "ypp": 4.0196,
+            "success": 0.3333,
+            "explosive": 0.098,
+            "turnovers": 2
+          },
+          "defense": {
+            "plays": 78,
+            "ypp": 9.0649,
+            "success": 0.6447,
+            "explosive": 0.2632,
+            "turnovers": 0
+          },
+          "st_score": 40.3478
+        },
+        {
+          "date": "2022-10-29",
+          "opponent": "Carthage",
+          "home": true,
+          "carroll_pts": 59,
+          "opp_pts": 14,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 80,
+            "ypp": 6.5696,
+            "success": 0.481,
+            "explosive": 0.1646,
+            "turnovers": 2
+          },
+          "defense": {
+            "plays": 54,
+            "ypp": 4.3585,
+            "success": 0.25,
+            "explosive": 0.1154,
+            "turnovers": 1
+          },
+          "st_score": 45.7
+        },
+        {
+          "date": "2022-11-05",
+          "opponent": "Millikin",
+          "home": false,
+          "carroll_pts": 26,
+          "opp_pts": 18,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 65,
+            "ypp": 3.5846,
+            "success": 0.1746,
+            "explosive": 0.0952,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 82,
+            "ypp": 4.2,
+            "success": 0.275,
+            "explosive": 0.1375,
+            "turnovers": 3
+          },
+          "st_score": 45.9971
+        },
+        {
+          "date": "2022-11-12",
+          "opponent": "Wash U",
+          "home": true,
+          "carroll_pts": 7,
+          "opp_pts": 37,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 56,
+            "ypp": 3.566,
+            "success": 0.3585,
+            "explosive": 0.1132,
+            "turnovers": 3
+          },
+          "defense": {
+            "plays": 65,
+            "ypp": 6.5231,
+            "success": 0.4308,
+            "explosive": 0.2154,
+            "turnovers": 1
+          },
+          "st_score": 37.3067
+        }
+      ],
+      "season_stats": {
+        "offense": {
+          "plays": 696,
+          "ypp": 5.0613,
+          "success": 0.3881,
+          "explosive": 0.1358,
+          "turnovers": 14
+        },
+        "defense": {
+          "plays": 697,
+          "ypp": 5.7303,
+          "success": 0.3926,
+          "explosive": 0.1691,
+          "turnovers": 15
+        },
+        "st_score": 42.9536,
+        "pts_for_pg": 29.3,
+        "pts_against_pg": 30.5
+      },
+      "prior_stats": {
+        "offense": {
+          "plays": 695,
+          "ypp": 5.1458,
+          "success": 0.3895,
+          "explosive": 0.1188,
+          "turnovers": 13
+        },
+        "defense": {
+          "plays": 732,
+          "ypp": 6.2573,
+          "success": 0.4681,
+          "explosive": 0.183,
+          "turnovers": 15
+        },
+        "st_score": 42.9415,
+        "pts_for_pg": 24.5,
+        "pts_against_pg": 33.1
+      }
+    },
+    "2021": {
+      "prior_label": null,
+      "record": "6-4",
+      "conference_record": "5-4",
+      "games": [
+        {
+          "date": "2021-09-11",
+          "opponent": "Benedictine",
+          "home": false,
+          "carroll_pts": 35,
+          "opp_pts": 24,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 74,
+            "ypp": 4.9452,
+            "success": 0.5156,
+            "explosive": 0.0781,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 77,
+            "ypp": 6.3333,
+            "success": 0.4925,
+            "explosive": 0.1791,
+            "turnovers": 3
+          },
+          "st_score": 45.008
+        },
+        {
+          "date": "2021-09-18",
+          "opponent": "Illinois Wesleyan",
+          "home": true,
+          "carroll_pts": 34,
+          "opp_pts": 33,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 68,
+            "ypp": 7.1176,
+            "success": 0.5147,
+            "explosive": 0.1176,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 67,
+            "ypp": 7.4154,
+            "success": 0.6308,
+            "explosive": 0.2154,
+            "turnovers": 1
+          },
+          "st_score": 47.6773
+        },
+        {
+          "date": "2021-09-25",
+          "opponent": "Millikin",
+          "home": false,
+          "carroll_pts": 25,
+          "opp_pts": 32,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 64,
+            "ypp": 5.629,
+            "success": 0.4032,
+            "explosive": 0.1613,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 71,
+            "ypp": 5.7286,
+            "success": 0.5294,
+            "explosive": 0.1176,
+            "turnovers": 1
+          },
+          "st_score": 43.1
+        },
+        {
+          "date": "2021-10-02",
+          "opponent": "North Central",
+          "home": true,
+          "carroll_pts": 7,
+          "opp_pts": 62,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 58,
+            "ypp": 3.8966,
+            "success": 0.2414,
+            "explosive": 0.1034,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 63,
+            "ypp": 10.2742,
+            "success": 0.7419,
+            "explosive": 0.3548,
+            "turnovers": 1
+          },
+          "st_score": 44.98
+        },
+        {
+          "date": "2021-10-09",
+          "opponent": "North Park",
+          "home": false,
+          "carroll_pts": 34,
+          "opp_pts": 26,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 78,
+            "ypp": 6.2857,
+            "success": 0.4342,
+            "explosive": 0.1579,
+            "turnovers": 3
+          },
+          "defense": {
+            "plays": 96,
+            "ypp": 5.9789,
+            "success": 0.3511,
+            "explosive": 0.1596,
+            "turnovers": 2
+          },
+          "st_score": 41.7107
+        },
+        {
+          "date": "2021-10-16",
+          "opponent": "Wheaton",
+          "home": true,
+          "carroll_pts": 13,
+          "opp_pts": 48,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 69,
+            "ypp": 3.4853,
+            "success": 0.2941,
+            "explosive": 0.0735,
+            "turnovers": 1
+          },
+          "defense": {
+            "plays": 64,
+            "ypp": 6.3906,
+            "success": 0.5,
+            "explosive": 0.2344,
+            "turnovers": 1
+          },
+          "st_score": 38.1269
+        },
+        {
+          "date": "2021-10-23",
+          "opponent": "Augustana",
+          "home": false,
+          "carroll_pts": 29,
+          "opp_pts": 26,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 83,
+            "ypp": 4.3373,
+            "success": 0.3012,
+            "explosive": 0.1325,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 75,
+            "ypp": 5.0667,
+            "success": 0.3867,
+            "explosive": 0.1467,
+            "turnovers": 4
+          },
+          "st_score": 41.3654
+        },
+        {
+          "date": "2021-10-30",
+          "opponent": "Wash U",
+          "home": false,
+          "carroll_pts": 12,
+          "opp_pts": 35,
+          "result": "L",
+          "charted": true,
+          "offense": {
+            "plays": 76,
+            "ypp": 3.9041,
+            "success": 0.3939,
+            "explosive": 0.0758,
+            "turnovers": 4
+          },
+          "defense": {
+            "plays": 71,
+            "ypp": 6.5775,
+            "success": 0.4853,
+            "explosive": 0.25,
+            "turnovers": 1
+          },
+          "st_score": 40.4176
+        },
+        {
+          "date": "2021-11-06",
+          "opponent": "Carthage",
+          "home": true,
+          "carroll_pts": 26,
+          "opp_pts": 17,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 44,
+            "ypp": 6.0,
+            "success": 0.35,
+            "explosive": 0.175,
+            "turnovers": 0
+          },
+          "defense": {
+            "plays": 86,
+            "ypp": 5.8488,
+            "success": 0.3659,
+            "explosive": 0.1341,
+            "turnovers": 0
+          },
+          "st_score": 49.0591
+        },
+        {
+          "date": "2021-11-13",
+          "opponent": "Elmhurst",
+          "home": false,
+          "carroll_pts": 30,
+          "opp_pts": 28,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 81,
+            "ypp": 6.0,
+            "success": 0.425,
+            "explosive": 0.125,
+            "turnovers": 3
+          },
+          "defense": {
+            "plays": 62,
+            "ypp": 3.3667,
+            "success": 0.2833,
+            "explosive": 0.0667,
+            "turnovers": 1
+          },
+          "st_score": 39.9133
+        }
+      ],
+      "season_stats": {
+        "offense": {
+          "plays": 695,
+          "ypp": 5.1458,
+          "success": 0.3895,
+          "explosive": 0.1188,
+          "turnovers": 13
+        },
+        "defense": {
+          "plays": 732,
+          "ypp": 6.2573,
+          "success": 0.4681,
+          "explosive": 0.183,
+          "turnovers": 15
+        },
+        "st_score": 42.9415,
+        "pts_for_pg": 24.5,
+        "pts_against_pg": 33.1
+      },
+      "prior_stats": null
+    }
   }
 }

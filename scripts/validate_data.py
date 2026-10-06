@@ -1,0 +1,202 @@
+"""
+Sanity-checks the freshly built data/*.json before anything is committed. refresh_all.py runs this
+last; it exits non-zero when an ERROR is found, so the weekly refresh does not publish a broken update.
+
+  ERROR    something that should never happen (a game twice, a score that disagrees with the box score's
+           own record, a game that vanished since the last commit, an unknown opponent spelling).
+  WARNING  worth a look but not a reason to stop (a game the schedule says was played that isn't loaded
+           yet, a stale ranking snapshot).
+
+Checks, by file:
+  home.json / box scores   no duplicate dates, every box score parsed, scores in range, each season's
+                           computed W-L matches the record the box score itself prints, <= 14 games a season
+  game-data.json           every charted game has a box score, offense AND defense rows, few missing yards,
+                           known play types, opponent spellings match the box-score canon
+  special-teams.json       every row's date is a real box-score game, every unit present for the latest season
+  rankings.json            CCIW and national cover the same weeks
+  team-stats.json          Carroll present with every category, snapshot not stale
+  career-stats.json        no team pseudo-players, no duplicate display names
+  meta.json                schedule present; games the schedule says are played but not loaded (WARNING)
+  vs. the last commit      no game, charted play, or special-teams row count may drop (a re-export that
+                           silently lost data would otherwise ship)
+
+Run:   python validate_data.py        (exit 0 = no errors)
+"""
+
+import json
+import subprocess
+import sys
+from collections import Counter
+from datetime import date
+from pathlib import Path
+
+SITE = Path(__file__).resolve().parent.parent
+DATA = SITE / "data"
+
+errors, warnings = [], []
+
+
+def err(msg):
+    errors.append(msg)
+
+
+def warn(msg):
+    warnings.append(msg)
+
+
+def load(name):
+    return json.loads((DATA / name).read_text(encoding="utf-8"))
+
+
+def committed(name):
+    """data/<name> as of the last commit, or None (not a repo, new file)."""
+    try:
+        out = subprocess.run(["git", "show", f"HEAD:data/{name}"], cwd=SITE, capture_output=True, check=True)
+        return json.loads(out.stdout.decode("utf-8"))
+    except (subprocess.CalledProcessError, FileNotFoundError, ValueError):
+        return None
+
+
+def iso(mdy):
+    m, d, y = mdy.split("/")
+    return f"{y}-{int(m):02d}-{int(d):02d}"
+
+
+def check_games(home, game):
+    history = [dict(g, opponent=o) for o, gs in home["history"].items() for g in gs]
+    dates = Counter(g["date"] for g in history)
+    for d, n in dates.items():
+        if n > 1:
+            err(f"box scores: {n} games on {d}")
+    for g in history:
+        if not (0 <= g["carroll_pts"] <= 100 and 0 <= g["opp_pts"] <= 100):
+            err(f"box scores: implausible score {g['carroll_pts']}-{g['opp_pts']} on {g['date']} vs {g['opponent']}")
+    by_season = Counter(g["season"] for g in history)
+    for s, n in sorted(by_season.items()):
+        if n > 14:
+            err(f"box scores: {n} games in {s}")
+    # the current season's record printed by the box score vs the results we parsed
+    for s_key, block in home["seasons"].items():
+        games = [g for g in history if g["season"] == int(s_key)]
+        w = sum(g["result"] == "W" for g in games)
+        l = sum(g["result"] == "L" for g in games)
+        if block["record"] and block["record"] != f"{w}-{l}" and f"{w}-{l}" not in block["record"]:
+            err(f"home.json: {s_key} record says {block['record']} but its {len(games)} box scores add up to {w}-{l}")
+        if len(block["games"]) != len(games):
+            err(f"home.json: {s_key} lists {len(block['games'])} games but the box scores have {len(games)}")
+
+    box_dates = set(dates)
+    charted = {g["date"]: g for g in game["games"]}
+    for d, g in charted.items():
+        if d not in box_dates:
+            err(f"game-data: charted game {g['opponent']} {d} has no box score")
+    canon = {g["opponent"] for g in history}
+    for side in ("offense", "defense"):
+        by_date = Counter(r["date"] for r in game[side]["official"])
+        for d in charted:
+            if by_date[d] == 0:
+                err(f"game-data: {d} has no official {side} plays")
+        rows = game[side]["official"]
+        missing = sum(1 for r in rows if r["yards"] is None)
+        if rows and missing / len(rows) > 0.05:
+            err(f"game-data: {missing} of {len(rows)} {side} plays have no yardage")
+        kinds = {r["play_type"] for r in rows}
+        odd = kinds - {"Rush", "Pass", "Sack", "Kneel", "Two-Point Conversion", "Spike", "Penalty", None}
+        if odd:
+            err(f"game-data: unknown play types in {side}: {sorted(odd)}")
+        opps = {r["opponent"] for r in rows}
+        if opps - canon:
+            err(f"game-data: opponent spelling(s) not in the box-score canon: {sorted(opps - canon)}")
+
+
+def check_special_teams(home, st):
+    box_dates = {g["date"] for gs in home["history"].values() for g in gs}
+    latest = max(int(r["season"]) for rows in st["units"].values() for r in rows)
+    for unit, rows in st["units"].items():
+        stray = {iso(r["date"]) for r in rows} - box_dates
+        if stray:
+            err(f"special-teams: {unit} has rows on {sorted(stray)} with no box score")
+        if not any(int(r["season"]) == latest for r in rows):
+            warn(f"special-teams: {unit} has no rows for {latest}")
+
+
+def check_rankings(rk):
+    a, b = rk["cciw"]["weeks"], rk["national"]["weeks"]
+    if a != b:
+        warn(f"rankings: CCIW weeks {a} and national weeks {b} differ")
+
+
+def check_team_stats(ts):
+    carroll = ts["teams"].get("Carroll")
+    if not carroll:
+        err("team-stats: Carroll is missing")
+    else:
+        missing = [c["category"] for c in ts["categories"] if c["category"] not in carroll]
+        if missing:
+            err(f"team-stats: Carroll is missing {missing}")
+    age = (date.today() - date.fromisoformat(ts["snapshot_date"])).days
+    if age > 14:
+        warn(f"team-stats: the ranking snapshot is {age} days old ({ts['snapshot_date']})")
+
+
+def check_career(cs):
+    names = Counter(p["display_name"] for p in cs["players"])
+    for n, k in names.items():
+        if k > 1:
+            err(f"career-stats: display name {n!r} appears {k} times")
+        if n.strip().lower() in {"team", "total", "totals", "opponent", "opponents"}:
+            err(f"career-stats: pseudo-player {n!r} (should have been filtered)")
+
+
+def check_meta(meta, home):
+    if not meta["schedule"]:
+        warn("meta: the schedule is empty (is Schedule/schedule.json present?)")
+        return
+    latest = meta["latest_game"]["date"] if meta["latest_game"] else ""
+    today = date.today().isoformat()
+    for g in meta["schedule"]:
+        if g["date"] < today and g["date"] > latest:
+            warn(f"schedule says {g['opponent']} ({g['date']}) was played, but it is not loaded yet")
+
+
+def check_no_regressions(home, game, st):
+    old_home = committed("home.json")
+    if old_home:
+        was = {g["date"] for gs in old_home["history"].values() for g in gs}
+        now = {g["date"] for gs in home["history"].values() for g in gs}
+        if was - now:
+            err(f"home.json: games disappeared since the last commit: {sorted(was - now)}")
+    old_game = committed("game-data.json")
+    if old_game:
+        for side in ("offense", "defense"):
+            was, now = Counter(r["date"] for r in old_game[side]["official"]), Counter(r["date"] for r in game[side]["official"])
+            for d, n in was.items():
+                if now[d] < n * 0.95:
+                    err(f"game-data: {side} plays on {d} dropped from {n} to {now[d]}")
+    old_st = committed("special-teams.json")
+    if old_st:
+        for unit, rows in old_st["units"].items():
+            if len(st["units"][unit]) < len(rows):
+                err(f"special-teams: {unit} dropped from {len(rows)} to {len(st['units'][unit])} rows")
+
+
+def main():
+    home, game, st = load("home.json"), load("game-data.json"), load("special-teams.json")
+    check_games(home, game)
+    check_special_teams(home, st)
+    check_rankings(load("rankings.json"))
+    check_team_stats(load("team-stats.json"))
+    check_career(load("career-stats.json"))
+    check_meta(load("meta.json"), home)
+    check_no_regressions(home, game, st)
+
+    for w in warnings:
+        print(f"WARNING: {w}")
+    for e in errors:
+        print(f"ERROR: {e}")
+    print(f"validate_data: {len(errors)} error(s), {len(warnings)} warning(s)")
+    sys.exit(1 if errors else 0)
+
+
+if __name__ == "__main__":
+    main()

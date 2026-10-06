@@ -18,15 +18,7 @@
   const esc = Site.esc;
   const G = () => Site.data.game;
 
-  const QUARTERS = ['1st', '2nd', '3rd', '4th', 'OT'];
-
-  // Rush/Pass/Sack/Kneel/Two-Point Conversion is official play-by-play's full play_type
-  // vocabulary. Kneel and Two-Point snaps aren't real play-calling signal, so they're
-  // dropped from every run/pass split below. Sack counts as a pass call (the standard
-  // stat-keeping convention).
-  const runPassRows = (rows) => rows.filter((r) => r.play_type === 'Rush' || r.play_type === 'Pass' || r.play_type === 'Sack');
-  const isRunPlay = (r) => r.play_type === 'Rush';
-  const isPassPlay = (r) => r.play_type === 'Pass' || r.play_type === 'Sack';
+  // QUARTERS, runPassRows/isRunPlay/isPassPlay, scoreBucket, ordinalDown, playMetrics, versusRow: js/lib/data.js
 
   // "All opponents" is a sentinel for the Opponent <select>; real opponents are plain
   // team names, never this literal.
@@ -46,16 +38,6 @@
 
   /* ================================================================ By Opponent == */
 
-  function byOpponentMetrics(rows) {
-    const withEff = rows.filter((r) => r.play_efficiency !== null);
-    return {
-      ypp: mean(rows.map((r) => r.yards)),
-      success: rate(withEff, (r) => isSuccess(r.play_efficiency)),
-      explosive: rate(withEff, (r) => r.play_efficiency === 'Explosive'),
-      turnover: rate(rows, (r) => r.is_turnover),
-    };
-  }
-
   // scroll: true -- too many opponents to flex-shrink into one card, so each chart scrolls
   // horizontally within its own card instead.
   function opponentChart(title, rowsKey, metric, fmtFn, color) {
@@ -65,7 +47,7 @@
         const byOpp = groupBy(ctx[rowsKey], 'opponent');
         const opponents = [...byOpp.keys()].sort();
         renderBar(el, {
-          categories: opponents, values: opponents.map((o) => byOpponentMetrics(byOpp.get(o))[metric]),
+          categories: opponents, values: opponents.map((o) => playMetrics(byOpp.get(o))[metric]),
           labelFmt: fmtFn, colorFn: () => cssVar(color), tooltipExtra: (o) => `${byOpp.get(o).length} plays`, scroll: true,
         });
       },
@@ -131,19 +113,6 @@
   }
 
   /* ============================================================ Offense reports == */
-
-  // Leading/trailing by more than a score (8 points: two scores down is a fundamentally
-  // different situation than one) vs by a score or less vs tied.
-  const SCORE_BUCKETS = ['Leading by 9+', 'Leading by 1-8', 'Tied', 'Trailing by 1-8', 'Trailing by 9+'];
-  function scoreBucket(sd) {
-    if (sd === null || sd === undefined) return null;
-    if (sd > 8) return 'Leading by 9+';
-    if (sd > 0) return 'Leading by 1-8';
-    if (sd === 0) return 'Tied';
-    if (sd >= -8) return 'Trailing by 1-8';
-    return 'Trailing by 9+';
-  }
-  const ordinalDown = (d) => (d === 1 ? '1st' : d === 2 ? '2nd' : d === 3 ? '3rd' : '4th');
 
   // Relies on the source array being in chronological play order (true throughout this
   // dataset). Flags whether the previous play in the same drive was Explosive and whether
@@ -264,7 +233,7 @@
     opponent: {
       title: 'Offense Scout',
       note: "The selected opponent(s)' own play-calling tendencies against Carroll's defense — real scouting signal if they're on a future schedule again.",
-      rows: () => G().defense.official,
+      rows: () => opponentOffenseRows(), // score_differential flipped to the opponent's own lead (see js/lib/data.js)
     },
   };
 
@@ -527,8 +496,8 @@
     return {
       upcoming,
       options: [
-        ...upcoming.map((g) => ({ value: g.opponent, label: `${Site.dayLabel(g.date)} · ${g.opponent}` })),
-        ...rest.map((o) => ({ value: o, label: o })),
+        ...upcoming.map((g) => ({ group: 'On the schedule', value: g.opponent, label: `${Site.dayLabel(g.date)} · ${g.opponent}` })),
+        ...rest.map((o) => ({ group: 'All opponents', value: o, label: o })),
       ],
     };
   }
@@ -536,16 +505,6 @@
   // Their snaps vs Carroll's defense, sliced the same ways the Offense tab does -- the sections
   // that matter for a game plan; the full table and Custom Situation builder live on that tab.
   const NEXT_SECTIONS = ['By Down', 'By Distance', 'By Field Zone', 'By Score Situation'];
-
-  // Two sides next to each other: this opponent vs every other opponent. `better` is whether a
-  // higher number is good for Carroll, for the arrow color.
-  function versusRow(label, mineFn, mine, others, f, better) {
-    const a = mine.length ? mineFn(mine) : null, b = others.length ? mineFn(others) : null;
-    if (a === null || a === undefined) return [label, '—', f(b)];
-    const diff = b === null || b === undefined ? 0 : a - b;
-    const flag = Math.abs(diff) < 1e-9 ? '' : `<span class="rk-move ${(diff > 0) === better ? 'good' : 'crit'}">${diff > 0 ? '▲' : '▼'}</span>`;
-    return [label, `${f(a)} ${flag}`, f(b)];
-  }
 
   function nextOpponentTab(root, { sub }) {
     const D = G(), H = Site.data.home, meta = Site.data.meta;
@@ -561,9 +520,9 @@
         const opp = st.opponent;
         const game = meta.schedule.find((g) => g.opponent === opp && g.date >= Site.today() && !g.completed) || null;
         const hist = H.history[opp] || [];
-        const theirs = D.defense.official.filter((r) => r.opponent === opp);
+        const theirs = opponentOffenseRows().filter((r) => r.opponent === opp);
         const ours = D.offense.official.filter((r) => r.opponent === opp);
-        const otherTheirs = D.defense.official.filter((r) => r.opponent !== opp);
+        const otherTheirs = opponentOffenseRows().filter((r) => r.opponent !== opp);
         const otherOurs = D.offense.official.filter((r) => r.opponent !== opp);
         const charted = new Set([...theirs, ...ours].map((r) => r.game_label));
         const seasons = [...new Set([...theirs, ...ours].map((r) => r.season))].sort();
@@ -591,17 +550,17 @@
         {
           title: 'Carroll against them vs everyone else',
           render(el, { ours, theirs, otherOurs, otherTheirs }) {
-            const m = (rows) => byOpponentMetrics(rows);
-            const f1 = (v) => (v === null || v === undefined ? '—' : fmt(v, 1)), p0 = (v) => (v === null || v === undefined ? '—' : pct(v, 0));
+            const f1 = (v) => fmt(v, 1), p0 = (v) => pct(v, 0);
+            const o = playMetrics(ours), oo = playMetrics(otherOurs), t = playMetrics(theirs), ot = playMetrics(otherTheirs);
             const rows = [
-              versusRow('Offense: yards / play', (r) => m(r).ypp, ours, otherOurs, f1, true),
-              versusRow('Offense: success rate', (r) => m(r).success, ours, otherOurs, p0, true),
-              versusRow('Offense: explosive rate', (r) => m(r).explosive, ours, otherOurs, p0, true),
-              versusRow('Offense: turnover rate', (r) => m(r).turnover, ours, otherOurs, p0, false),
-              versusRow('Defense: yards / play allowed', (r) => m(r).ypp, theirs, otherTheirs, f1, false),
-              versusRow('Defense: success rate allowed', (r) => m(r).success, theirs, otherTheirs, p0, false),
-              versusRow('Defense: explosive rate allowed', (r) => m(r).explosive, theirs, otherTheirs, p0, false),
-              versusRow('Defense: takeaway rate', (r) => m(r).turnover, theirs, otherTheirs, p0, true),
+              versusRow('Offense: yards / play', o.ypp, oo.ypp, f1, true),
+              versusRow('Offense: success rate', o.success, oo.success, p0, true),
+              versusRow('Offense: explosive rate', o.explosive, oo.explosive, p0, true),
+              versusRow('Offense: turnover rate', o.turnover, oo.turnover, p0, false),
+              versusRow('Defense: yards / play allowed', t.ypp, ot.ypp, f1, false),
+              versusRow('Defense: success rate allowed', t.success, ot.success, p0, false),
+              versusRow('Defense: explosive rate allowed', t.explosive, ot.explosive, p0, false),
+              versusRow('Defense: takeaway rate', t.turnover, ot.turnover, p0, true),
             ];
             el.innerHTML = Site.tableHTML({ head: ['', 'vs this opponent', 'vs all others'], rows, empty: 'No charted games against this opponent.' })
               + '<div class="data-note">Arrows are green when the difference favors Carroll. Small samples (one or two games) swing a lot — read them as hints, not rules.</div>';
@@ -658,7 +617,7 @@
           },
         },
         {
-          title: 'Go deeper',
+          title: 'Go deeper', noPrint: true,
           render(el, { opp }) {
             el.innerHTML = `<ul class="tw-list">
               <li><a href="#offense/opponent">Offense → Opponent (scout)</a>: the full down/distance/zone/score tables and the Custom Situation builder. Pick ${esc(opp)} in its Opponent menu.</li>

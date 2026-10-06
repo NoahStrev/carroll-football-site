@@ -151,3 +151,67 @@ function isSack(playOutcome) { return !!playOutcome && playOutcome.split(', ').i
 function topKeysByCount(map, n = 10) {
   return [...map.entries()].sort((a, b) => b[1].length - a[1].length).slice(0, n).map(([k]) => k);
 }
+
+/** Opponents' snaps as THEIR offense. game-data's defense.official is Carroll's defense, i.e. the opponent's
+ * offense, but its score_differential is still Carroll's lead (verified: Carroll up 13 reads +13 on both
+ * sheets). Anything that treats those rows as the opponent's own offense and buckets them by score ("Leading
+ * by 9+") has to flip the sign, or the labels are backwards. Memoized; the rows are otherwise unchanged. */
+let opponentOffenseCache = null, opponentOffenseSource = null;
+function opponentOffenseRows() {
+  const source = Site.data.game.defense.official;
+  if (opponentOffenseSource !== source) {
+    opponentOffenseSource = source;
+    opponentOffenseCache = source.map((r) => (r.score_differential === null || r.score_differential === undefined ? r : { ...r, score_differential: -r.score_differential }));
+  }
+  return opponentOffenseCache;
+}
+
+
+/* ----------------------------- play-by-play helpers shared by Scouting, Game Review, Tells -- */
+
+const QUARTERS = ['1st', '2nd', '3rd', '4th', 'OT'];
+const ordinalDown = (d) => (d === 1 ? '1st' : d === 2 ? '2nd' : d === 3 ? '3rd' : '4th');
+
+// Leading/trailing by more than a score (8 points: two scores down is a fundamentally different situation
+// than one) vs by a score or less vs tied. The lead is from the sheet's own side (see opponentOffenseRows).
+const SCORE_BUCKETS = ['Leading by 9+', 'Leading by 1-8', 'Tied', 'Trailing by 1-8', 'Trailing by 9+'];
+function scoreBucket(sd) {
+  if (sd === null || sd === undefined) return null;
+  if (sd > 8) return 'Leading by 9+';
+  if (sd > 0) return 'Leading by 1-8';
+  if (sd === 0) return 'Tied';
+  if (sd >= -8) return 'Trailing by 1-8';
+  return 'Trailing by 9+';
+}
+
+// Rush/Pass/Sack/Kneel/Two-Point Conversion is official play-by-play's full play_type vocabulary. Kneel and
+// Two-Point snaps aren't real play-calling signal, so every run/pass split drops them. A sack counts as a pass
+// call (the standard stat-keeping convention).
+const isRunPlay = (r) => r.play_type === 'Rush';
+const isPassPlay = (r) => r.play_type === 'Pass' || r.play_type === 'Sack';
+const runPassRows = (rows) => rows.filter((r) => isRunPlay(r) || isPassPlay(r));
+
+/** The headline numbers for any set of official play-by-play snaps. Rates are null (never a fake 0%) for an empty set. */
+function playMetrics(rows) {
+  const classified = rows.filter((r) => r.play_efficiency !== null);
+  const runPass = runPassRows(rows);
+  return {
+    plays: rows.length,
+    ypp: mean(rows.map((r) => r.yards)),
+    success: rate(classified, (r) => isSuccess(r.play_efficiency)),
+    explosive: rate(classified, (r) => r.play_efficiency === 'Explosive'),
+    turnover: rate(rows, (r) => r.is_turnover),          // turnovers per snap
+    turnovers: rows.filter((r) => r.is_turnover).length, // turnovers in total
+    runPct: runPass.length ? rate(runPass, isRunPlay) : null,
+  };
+}
+
+/** One "this vs usual" table row: [label, this (with an arrow), usual]. The arrow is green when the gap favors
+ * Carroll (`higherBetter` says which direction that is), plain when null (a number with no good or bad
+ * direction). No arrow when both read the same after formatting. */
+function versusRow(label, a, b, format, higherBetter) {
+  const diff = a === null || a === undefined || b === null || b === undefined || format(a) === format(b) ? 0 : a - b;
+  const cls = higherBetter === null ? '' : (diff > 0) === higherBetter ? 'good' : 'crit';
+  const arrow = diff === 0 ? '' : ` <span class="rk-move ${cls}">${diff > 0 ? '▲' : '▼'}</span>`;
+  return [label, `${a === null || a === undefined ? '—' : format(a)}${arrow}`, b === null || b === undefined ? '—' : format(b)];
+}

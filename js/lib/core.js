@@ -181,6 +181,8 @@ function hideTooltip() {
 // (js/views/glossary.js) and the inline "?" hover hints on KPI tiles -- add a term here once and
 // it's usable from either place.
 const GLOSSARY = {
+  'Tell': "A situation where a team's call is predictable enough, or different enough from how everyone else calls it, that an opponent can key on it. The Tells tabs only flag a spot with 20+ snaps and a gap big enough that it is probably real rather than chance (about 90% confidence).",
+  'Lean': "A situation where one call (run or pass, or one front) is made at least 65% of the time on 25+ snaps. A lean is a habit; a tell is a habit that stands out from what opponents do in the same spot.",
   'Explosive Play': 'A run gaining 10+ yards or a pass gaining 15+ yards — the "big play" threshold used across every efficiency chart on this site.',
   'Success Rate': 'Share of plays that gained enough yardage relative to down and distance: at least 50% of yards-to-go on 1st down, 70% on 2nd down, or a full conversion on 3rd/4th down.',
   'Stuffed': 'A play efficiency result meaning 0 or negative yards gained.',

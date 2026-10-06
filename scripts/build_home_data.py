@@ -217,11 +217,9 @@ def main():
     names = display_names(box, {g["opponent"] for g in game_data["games"]})
     for g in box:
         g["opponent"] = names[team_key(g["opponent"])]
-    # "Prior" = the seasons the play-by-play archive covers (so every compared number spans the same
+    # "Prior" = the earlier seasons the play-by-play archive covers (so every compared number spans the same
     # window as the dashboards), not every box score back to 2010.
     first_season = min(g["season"] for g in game_data["games"])
-    current = [g for g in box if g["season"] == season]
-    prior = [g for g in box if first_season <= g["season"] < season]
 
     # Every result since 2010, newest first, grouped by opponent (the Next Opponent tab's meetings table).
     history = defaultdict(list)
@@ -246,23 +244,6 @@ def main():
             m, d, y = r["date"].split("/")
             st_by_date[f"{y}-{int(m):02d}-{int(d):02d}"].append(r["score"])
 
-    games = []
-    for g in current:
-        off, dfn = side_metrics(off_by_date.get(g["date"], [])), side_metrics(def_by_date.get(g["date"], []))
-        charted = off["plays"] > 0
-        games.append({
-            "date": g["date"],
-            "opponent": g["opponent"],
-            "home": g["home"],
-            "carroll_pts": g["carroll_pts"],
-            "opp_pts": g["opp_pts"],
-            "result": "W" if g["carroll_pts"] > g["opp_pts"] else "L" if g["carroll_pts"] < g["opp_pts"] else "T",
-            "charted": charted,
-            "offense": off if charted else None,
-            "defense": dfn if charted else None,
-            "st_score": r4(mean(st_by_date.get(g["date"], []))),
-        })
-
     def pooled(season_filter):
         off = [r for r in game_data["offense"]["official"] if season_filter(r["season"])]
         dfn = [r for r in game_data["defense"]["official"] if season_filter(r["season"])]
@@ -272,30 +253,49 @@ def main():
     def per_game(box_games, key):
         return r4(sum(g[key] for g in box_games) / len(box_games)) if box_games else None
 
-    latest = current[-1] if current else None
+    def season_block(s):
+        """One season's record, game log, and headline numbers next to the seasons before it (back to the
+        start of the play-by-play archive). The first archive season has no earlier seasons to compare with."""
+        mine = [g for g in box if g["season"] == s]
+        before = [g for g in box if first_season <= g["season"] < s]
+        games = []
+        for g in mine:
+            off, dfn = side_metrics(off_by_date.get(g["date"], [])), side_metrics(def_by_date.get(g["date"], []))
+            charted = off["plays"] > 0
+            games.append({
+                "date": g["date"], "opponent": g["opponent"], "home": g["home"],
+                "carroll_pts": g["carroll_pts"], "opp_pts": g["opp_pts"],
+                "result": "W" if g["carroll_pts"] > g["opp_pts"] else "L" if g["carroll_pts"] < g["opp_pts"] else "T",
+                "charted": charted, "offense": off if charted else None, "defense": dfn if charted else None,
+                "st_score": r4(mean(st_by_date.get(g["date"], []))),
+            })
+        wins = sum(g["result"] == "W" for g in games)
+        losses = sum(g["result"] == "L" for g in games)
+        last = mine[-1] if mine else None
+        return {
+            "prior_label": (f"{first_season}–{s - 1}" if s - 1 > first_season else str(first_season)) if before else None,
+            # the box score prints the record from 2019 on; before that it is just the results added up
+            "record": (last["record_after"] if last and last["record_after"] else f"{wins}-{losses}") if last else None,
+            "conference_record": last["conf_record_after"] if last else None,
+            "games": games,
+            "season_stats": {**pooled(lambda x: x == s), "pts_for_pg": per_game(mine, "carroll_pts"), "pts_against_pg": per_game(mine, "opp_pts")},
+            "prior_stats": ({**pooled(lambda x: first_season <= x < s), "pts_for_pg": per_game(before, "carroll_pts"), "pts_against_pg": per_game(before, "opp_pts")} if before else None),
+        }
+
+    charted_seasons = sorted({g["season"] for g in game_data["games"]}, reverse=True)
+    seasons = {str(s): season_block(s) for s in charted_seasons}
+    latest = next((g for g in reversed(box) if g["season"] == season), None)
     out = {
         "generated_from": "game-data.json, special-teams.json, Special Teams Data box scores",
         "season": season,
-        "prior_label": f"{first_season}–{season - 1}" if prior else None,
-        "record": latest["record_after"] if latest else None,
-        "conference_record": latest["conf_record_after"] if latest else None,
-        "games": games,
         "history": dict(sorted(history.items())),
-        "season_stats": {
-            **pooled(lambda s: s == season),
-            "pts_for_pg": per_game(current, "carroll_pts"),
-            "pts_against_pg": per_game(current, "opp_pts"),
-        },
-        "prior_stats": {
-            **pooled(lambda s: first_season <= s < season),
-            "pts_for_pg": per_game(prior, "carroll_pts"),
-            "pts_against_pg": per_game(prior, "opp_pts"),
-        },
+        "seasons": seasons,
     }
     OUT.write_text(json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8")
     write_meta(game_data, st, latest, names)
-    print(f"season {season}: {out['record']} ({out['conference_record']} CCIW), {len(games)} games -> {OUT}")
-    for g in games:
+    cur = seasons[str(season)]
+    print(f"season {season}: {cur['record']} ({cur['conference_record']} CCIW), {len(cur['games'])} games; {len(seasons)} seasons -> {OUT}")
+    for g in cur["games"]:
         print(f"  {g['date']} {g['result']} {g['carroll_pts']}-{g['opp_pts']} {'vs' if g['home'] else '@'} {g['opponent']}")
 
 

@@ -1,8 +1,8 @@
 /* Offense and Defense dashboards (js/views/game.js).
 
-   Both pages are the same four tabs over the same data -- Scorecard (official
+   Both pages are the same five tabs over the same data -- Scorecard (official
    play-by-play), Tendencies and Outcomes (hand-charted plays), and Position Groups
-   (one coach-view at a time) -- so one parametrized builder produces both. Only the
+   (one coach-view at a time) -- plus Tells (js/views/tells.js) -- so one parametrized builder produces both. Only the
    labels, color semantics, and the position-group content differ per side.
 
    No player-level attribution exists in this data (plays are charted at the play
@@ -741,6 +741,7 @@
         { id: 'scorecard', label: 'Scorecard', render: scorecardTab(side) },
         { id: 'tendencies', label: 'Tendencies', render: side === 'offense' ? offenseTendencies : defenseTendencies },
         { id: 'outcomes', label: 'Outcomes', render: outcomesTab(side) },
+        { id: 'tells', label: 'Tells', render: Tells.tab(side) },
         { id: 'positions', label: 'Position Groups', render: positionGroupsTab(side, side === 'offense' ? OFFENSE_GROUPS : DEFENSE_GROUPS) },
       ],
     });

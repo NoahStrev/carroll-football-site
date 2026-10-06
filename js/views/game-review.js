@@ -12,27 +12,11 @@
 const GameReview = (function () {
   const esc = Site.esc;
 
-  const QUARTERS = ['1st', '2nd', '3rd', '4th', 'OT'];
   const DRIVE_ORDER = ['Touchdown', 'Field Goal Good', 'Field Goal No Good', 'Punt', 'Turnover', 'Turnover on Downs', 'End of Game'];
   const ST_UNITS = [['punt', 'Punt'], ['punt_return', 'Punt Return'], ['kickoff', 'Kickoff'], ['kickoff_return', 'Kickoff Return'], ['money_unit', 'PAT / Field Goal']];
 
-  const isRunPass = (r) => r.play_type === 'Rush' || r.play_type === 'Pass' || r.play_type === 'Sack';
-  const ordinal = (d) => (d === 1 ? '1st' : d === 2 ? '2nd' : d === 3 ? '3rd' : '4th');
-  const downDist = (r) => (r.down ? `${ordinal(r.down)} & ${r.is_goal_to_go ? 'Goal' : r.distance}` : '—');
+  const downDist = (r) => (r.down ? `${ordinalDown(r.down)} & ${r.is_goal_to_go ? 'Goal' : r.distance}` : '—');
   const stDate = (d) => { const [m, day, y] = d.split('/'); return `${y}-${m.padStart(2, '0')}-${day.padStart(2, '0')}`; };
-
-  function sideMetrics(rows) {
-    const classified = rows.filter((r) => r.play_efficiency !== null);
-    const runPass = rows.filter(isRunPass);
-    return {
-      plays: rows.length,
-      ypp: mean(rows.map((r) => r.yards)),
-      success: rate(classified, (r) => isSuccess(r.play_efficiency)),
-      explosive: rate(classified, (r) => r.play_efficiency === 'Explosive'),
-      turnovers: rows.filter((r) => r.is_turnover).length,
-      runPct: runPass.length ? rate(runPass, (r) => r.play_type === 'Rush') : null,
-    };
-  }
 
   // Cards built from play-by-play are hidden (not left saying "nothing here") for a game with no charting.
   function gated(el, game) {
@@ -53,15 +37,6 @@ const GameReview = (function () {
     return list.sort((a, b) => (a.date < b.date ? 1 : -1));
   }
 
-  // [label, this game, usual, difference flag] -- the flag is green when the gap favors Carroll.
-  function versus(label, a, b, f, higherBetter) {
-    const diff = a === null || b === null || f(a) === f(b) ? 0 : a - b; // no arrow when both read the same
-    // higherBetter null = a number with no good or bad direction (a plain arrow, no color)
-    const cls = higherBetter === null ? '' : (diff > 0) === higherBetter ? 'good' : 'crit';
-    const flag = Math.abs(diff) < 1e-9 ? '' : ` <span class="rk-move ${cls}">${diff > 0 ? '▲' : '▼'}</span>`;
-    return [label, `${a === null ? '—' : f(a)}${flag}`, b === null ? '—' : f(b)];
-  }
-
   function render(root, { sub }) {
     const D = Site.data.game, H = Site.data.home, ST = Site.data.st;
     const games = gameList(H, D);
@@ -72,7 +47,7 @@ const GameReview = (function () {
     const view = Site.view(root, {
       selects: [{
         id: 'game', label: 'Game', value: start,
-        options: games.map((g) => ({ value: g.date, label: `${Site.dayLabel(g.date, { month: 'short', day: 'numeric', year: 'numeric' })} · ${g.home ? 'vs' : '@'} ${g.opponent} (${g.result} ${g.carroll_pts}–${g.opp_pts})${g.charted ? '' : ' — result only'}` })),
+        options: games.map((g) => ({ group: `${g.season} season`, value: g.date, label: `${Site.dayLabel(g.date, { month: 'short', day: 'numeric', year: 'numeric' })} · ${g.home ? 'vs' : '@'} ${g.opponent} (${g.result} ${g.carroll_pts}–${g.opp_pts})${g.charted ? '' : ' — result only'}` })),
       }],
       source: 'Official play-by-play, box scores',
       actions: [{ label: '&#8595; PDF', onClick: (st) => printPage(`Game Review - ${st.game} - Carroll Football`) }],
@@ -85,7 +60,7 @@ const GameReview = (function () {
         const stRows = (key) => ST.units[key].filter((r) => stDate(r.date) === game.date);
         return {
           game, off, def, otherOff, otherDef, others, stRows,
-          offM: sideMetrics(off), defM: sideMetrics(def), otherOffM: sideMetrics(otherOff), otherDefM: sideMetrics(otherDef),
+          offM: playMetrics(off), defM: playMetrics(def), otherOffM: playMetrics(otherOff), otherDefM: playMetrics(otherDef),
           otherGames: Math.max(1, gameCount(otherOff)),
         };
       },
@@ -107,18 +82,18 @@ const GameReview = (function () {
             const perGame = (n) => n / otherGames;
             const usualPts = (key) => mean(others.map((g) => g[key]));
             const rows = [
-              versus('Points scored', game.carroll_pts, usualPts('carroll_pts'), count, true),
-              versus('Offense: plays', offM.plays, perGame(otherOffM.plays), count, true),
-              versus('Offense: yards / play', offM.ypp, otherOffM.ypp, f1, true),
-              versus('Offense: success rate', offM.success, otherOffM.success, p0, true),
-              versus('Offense: explosive rate', offM.explosive, otherOffM.explosive, p0, true),
-              versus('Offense: run %', offM.runPct, otherOffM.runPct, p0, true),
-              versus('Points allowed', game.opp_pts, usualPts('opp_pts'), count, false),
-              versus('Defense: plays faced', defM.plays, perGame(otherDefM.plays), count, null),
-              versus('Defense: yards / play allowed', defM.ypp, otherDefM.ypp, f1, false),
-              versus('Defense: success rate allowed', defM.success, otherDefM.success, p0, false),
-              versus('Defense: explosive rate allowed', defM.explosive, otherDefM.explosive, p0, false),
-              versus('Opponent run %', defM.runPct, otherDefM.runPct, p0, null),
+              versusRow('Points scored', game.carroll_pts, usualPts('carroll_pts'), count, true),
+              versusRow('Offense: plays', offM.plays, perGame(otherOffM.plays), count, true),
+              versusRow('Offense: yards / play', offM.ypp, otherOffM.ypp, f1, true),
+              versusRow('Offense: success rate', offM.success, otherOffM.success, p0, true),
+              versusRow('Offense: explosive rate', offM.explosive, otherOffM.explosive, p0, true),
+              versusRow('Offense: run %', offM.runPct, otherOffM.runPct, p0, true),
+              versusRow('Points allowed', game.opp_pts, usualPts('opp_pts'), count, false),
+              versusRow('Defense: plays faced', defM.plays, perGame(otherDefM.plays), count, null),
+              versusRow('Defense: yards / play allowed', defM.ypp, otherDefM.ypp, f1, false),
+              versusRow('Defense: success rate allowed', defM.success, otherDefM.success, p0, false),
+              versusRow('Defense: explosive rate allowed', defM.explosive, otherDefM.explosive, p0, false),
+              versusRow('Opponent run %', defM.runPct, otherDefM.runPct, p0, null),
             ];
             el.innerHTML = Site.tableHTML({ head: ['', 'This game', 'Usual'], rows })
               + '<div class="data-note">Arrows are green when the difference favors Carroll. "Usual" is the average of every other charted game; for play counts it is per game. The opponent run % has no good or bad direction, so its arrow is plain.</div>';
@@ -154,9 +129,9 @@ const GameReview = (function () {
           title: 'Run / pass by down',
           render(el, { game, off, def, otherOff, otherDef }) {
             if (!gated(el, game)) return;
-            const runPct = (rows, d) => { const rp = rows.filter((r) => r.down === d && isRunPass(r)); return rp.length ? rate(rp, (r) => r.play_type === 'Rush') : null; };
+            const runPct = (rows, d) => playMetrics(rows.filter((r) => r.down === d)).runPct;
             const cell = (rows, other, d) => { const a = runPct(rows, d), b = runPct(other, d); return `${a === null ? '—' : p0(a)} <span class="muted">(usual ${b === null ? '—' : p0(b)})</span>`; };
-            const rows = DOWNS.map((d) => [`${ordinal(d)} down`, cell(off, otherOff, d), cell(def, otherDef, d)]);
+            const rows = DOWNS.map((d) => [`${ordinalDown(d)} down`, cell(off, otherOff, d), cell(def, otherDef, d)]);
             el.innerHTML = Site.tableHTML({ head: ['', 'Carroll run %', 'Opponent run %'], rows })
               + '<div class="data-note">Run share of run, pass, and sack snaps (sacks count as passes).</div>';
           },
@@ -186,7 +161,7 @@ const GameReview = (function () {
             const rows = ST_UNITS.map(([key, label]) => {
               const mine = stRows(key).map((r) => r.score);
               const usual = ST.units[key].filter((r) => stDate(r.date) !== game.date).map((r) => r.score);
-              return versus(label, mean(mine), mean(usual), (v) => fmt(v, 1), true).concat([String(mine.length)]);
+              return versusRow(label, mean(mine), mean(usual), (v) => fmt(v, 1), true).concat([String(mine.length)]);
             }).filter((r) => r[3] !== '0');
             el.innerHTML = rows.length
               ? Site.tableHTML({ head: ['Unit', 'Avg score', 'Usual', 'Plays'], rows })

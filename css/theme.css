@@ -148,6 +148,9 @@ html, body {
 
 /* ================================================== 3. Shell: nav, header, tabs == */
 
+.skip-link { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--accent); color: #fff; padding: 8px 14px; border-radius: 6px; font-weight: 700; text-decoration: none; }
+.skip-link:focus { left: 8px; }
+#site-stage:focus { outline: none; }
 .sitenav {
   position: sticky; top: 0; z-index: 40; margin: 0 0 22px; padding: 12px max(4px, calc((100% - 1280px) / 2));
   display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
@@ -485,6 +488,10 @@ table.mini.scenario-table thead th:first-child { left: 0; z-index: 3; box-shadow
 .rk-move { font-size: 10.5px; font-weight: 700; margin-left: 3px; white-space: nowrap; }
 .rk-move.good { color: var(--delta-good); }
 .rk-move.crit { color: var(--critical-text); }
+.sub-label { display: block; font-size: 10px; font-weight: 500; color: var(--muted); }
+.card-head .data-note { margin: 0; }
+table.mini td a { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--muted); }
+table.mini td a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 .tw-score { font-size: 15px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .tw-list { margin: 6px 0 0; padding-left: 18px; font-size: 12.5px; line-height: 1.6; color: var(--text-secondary); }
 .tw-list li.good::marker { color: var(--good); }
@@ -493,6 +500,9 @@ table.mini.scenario-table thead th:first-child { left: 0; z-index: 3; box-shadow
 .delta { display: block; margin-top: 2px; font-weight: 600; color: var(--muted); }
 .delta.good { color: var(--delta-good); }
 .delta.crit { color: var(--critical-text); }
+.profile-head { display: flex; align-items: center; gap: 14px; }
+.profile-name { font-size: 18px; font-weight: 800; }
+.home-season { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; }
 .home-heading { font-size: 15px; font-weight: 800; margin: 22px 0 10px; }
 .explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
 .explore-card {
@@ -553,14 +563,45 @@ table.mini.scenario-table thead th:first-child { left: 0; z-index: 3; box-shadow
 
 /* ===================================================================== Print == */
 
+/* Print / "Save as PDF". Always the light theme on white, no site chrome or controls (the .print-head line
+   that Site.view fills in says which page, game, or opponent this is), cards in two columns that never split
+   across a page, and tighter tables. Rankings prints one card at a time (.print-target, see rankings.js). */
+@page { size: letter; margin: 0.5in; }
+.print-head { display: none; }
 @media print {
-  .sitenav, .pagehead, .tabbar, .subbar, .no-print, .filters-control, .filters-summary { display: none !important; }
-  .panel { box-shadow: none; border: none; }
+  :root:root:root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --page: #ffffff; --text-primary: #0b0b0b; --text-secondary: #52514e; --muted: #6b6a66;
+    --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11, 11, 11, 0.18);
+    --accent: #2a78d6; --good: #0ca30c; --critical: #d03b3b; --critical-text: #b52a2a; --warning: #fab219;
+    --serious: #ec835a; --delta-good: #006300;
+    --seq-100: #cde2fb; --seq-200: #9ec5f4; --seq-300: #6da7ec; --seq-400: #3987e5; --seq-500: #256abf; --seq-600: #184f95;
+  }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { background: #fff !important; color: #0b0b0b; }
+  .page { padding: 0; }
+  .sitenav, .pagehead, .tabbar, .subbar, .shelf, .download-btn, .no-print, .filters-control, .filters-summary { display: none !important; }
+  .panel { box-shadow: none; border: none; background: none; }
+  .body { padding: 0; }
   .print-only { display: inline !important; }
-  /* Rankings: only the card whose PDF button was pressed (.print-target) prints. */
+  .print-head { display: block; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid #0b0b0b; }
+  .print-head .ph-title { font-size: 17px; font-weight: 800; }
+  .print-head .ph-sub { font-size: 13px; font-weight: 600; margin-top: 2px; }
+  .print-head .ph-meta { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+  a { color: inherit; text-decoration: none; }
+  .cards { display: grid !important; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start; }
+  .cards:has(.print-target) { display: block !important; }
   .cards:has(.print-target) .card:not(.print-target) { display: none !important; }
-  .cards { display: block !important; }
+  .card { break-inside: avoid; box-shadow: none; }
+  .cards > .cards-heading { break-after: avoid; }
+  .cards > .card > .card-body { min-height: 0 !important; }
+  .kpirow, .kpirow-5, .kpirow-6 { break-inside: avoid; gap: 6px; }
   .rank-scroll, .tbl-scroll { max-height: none !important; overflow: visible !important; }
+  .barchart, .stacked, .heat-scroll, .card-body:has(> table.mini) { overflow: visible !important; }
+  table.mini th, table.mini td { padding: 3px 6px; font-size: 10px; }
+  table.mini th { white-space: normal; }
+  table.mini.scenario-table th, table.mini.scenario-table td { padding: 2px 3px; font-size: 8.5px; }
+  .insight, .data-note, .footer-note { font-size: 9.5px; }
   table.rank-table thead th, table.records-table thead th,
   table.mini.scenario-table thead th, table.mini.scenario-table thead th:first-child,
   table.mini.scenario-table tbody tr:not(.tbl-section) td:first-child { position: static; box-shadow: none; }

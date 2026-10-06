@@ -11,14 +11,14 @@ projects in `Football/`.
 
 | Nav item | File | Views (tabs) | Data |
 |---|---|---|---|
-| (brand) Home | `dashboards/home.html` | This week (last game's takeaways, next game + series history), season at a glance, game log, rankings with week-over-week movement, record watch, site map | `home.json`, `meta.json`, `rankings.json`, `records.json` |
-| Offense | `offense.html` | Scorecard · Tendencies · Outcomes · Position Groups (QB / RB / WR / OL) | `game-data.json` |
-| Defense | `defense.html` | Scorecard · Tendencies · Outcomes · Position Groups (DL / LB / CB / S) | `game-data.json` |
+| (brand) Home | `dashboards/home.html` | This week (last game's takeaways, next game + series history), a season picker (any season since 2021 — past seasons show highlights instead of next game), season at a glance, game log, rankings with week-over-week movement, record watch, site map | `home.json`, `meta.json`, `rankings.json`, `records.json` |
+| Offense | `offense.html` | Scorecard · Tendencies · Outcomes · Tells (where Carroll's run/pass calls are predictable or differ from opponents) · Position Groups (QB / RB / WR / OL) | `game-data.json` |
+| Defense | `defense.html` | Scorecard · Tendencies · Outcomes · Tells (blitz and front tendencies by situation) · Position Groups (DL / LB / CB / S) | `game-data.json` |
 | Special Teams | `special-teams.html` | Overview · Money Unit · Punt · Punt Return · Kickoff · Kickoff Return · Athletes (role × Scorecard / Head-to-Head / Deep Dive) | `special-teams.json` |
 | Opponent Scouting | `opponent-scouting.html` | Next Opponent (a game-plan page; defaults to the next scheduled opponent, `#next/<opponent>`) · Game Review (a recap of any one game, `#review/<yyyy-mm-dd>`) · By Opponent · Offense · Defense (each: Carroll self-scout / opponent scout) | `game-data.json`, `home.json`, `meta.json`, `special-teams.json`, `team-stats.json` |
 | Rankings | `rankings.html` | Offensive · Defensive · Special Teams · Additional Metrics (one season/week picker) | `rankings.json` |
 | Lifting & Strength | `lifting-strength.html` | Leaderboards (All Time / Last Session / each class) · Compare Athletes | `lifting.json` |
-| Players & Records | `players.html` | Career Stats · Compare Players · Record Book · Record Watch · Awards History | `career-stats.json`, `records.json` |
+| Players & Records | `players.html` | Career Stats (also a player profile: honors, record book, record watch, strength testing) · Compare Players · Record Book · Record Watch · Awards History | `career-stats.json`, `records.json` |
 | Glossary · Updates | `glossary.html`, `updates.html` | Utility pages (right side of the nav) | — |
 
 Views are addressable: `offense.html#positions/qb`, `special-teams.html#athletes/punter/head-to-head`,
@@ -87,14 +87,26 @@ Upstream projects (sibling folders) → `scripts/build_*.py` → `data/*.json` �
 | `build_game_data.py` | `game-data.json` | `Game Analysis/processed/combined_play_data.xlsx` |
 | `build_rankings_data.py` | `rankings.json` | CCIW and National Buddah Report workbooks |
 | `build_team_stats.py` | `team-stats.json` | National Buddah Report's latest weekly snapshot (`raw/<season>/<date>/team/*.csv`): every CCIW team's season totals and national rank |
+| `validate_data.py` | — | Sanity-checks every JSON above (duplicate or vanished games, scores vs records, unknown opponent spellings, missing plays); exits non-zero on an ERROR |
 | `build_home_data.py` | `home.json`, `meta.json` | `game-data.json`, `special-teams.json`, `rankings.json`, `lifting.json`, box-score results back to 2010, `Schedule/schedule.json` |
 
-`python scripts/refresh_all.py` runs all eight in dependency order (the Home summary runs last) and prints a pass/fail
+`python scripts/refresh_all.py` runs all eight in dependency order, then `validate_data.py` (a failed check makes the refresh exit non-zero) and prints a pass/fail
 summary. It only covers this site's own rebuild — each upstream project has its own scrape/build step that runs first.
 New game data is added on request, not on a schedule.
 
 `meta.json` is loaded by every page: it drives the "Data through …" label under each title, and — because it carries the
 schedule — a "game X not loaded yet" warning whenever the schedule shows a game played after the latest one in the data.
+
+## Printing
+
+The PDF buttons (and the browser's Print) produce a clean letter-size page: always the light theme, no site chrome or controls, a header line saying
+which page/tab/game/opponent it is plus how current the data is, cards in two columns that don't split across pages, and compact tables. `Site.view`
+fills that header (`.print-head`); a card that is only links can opt out with `noPrint: true`.
+
+## Data gotchas
+
+`game-data.json`'s `defense.official` is Carroll's defense — i.e. the OPPONENT's offense — but its `score_differential` is still Carroll's lead. Anything
+that buckets those rows by score ("Leading by 9+") as the opponent's own offense must use `opponentOffenseRows()` (js/lib/data.js), which flips the sign.
 
 ## Running locally
 
