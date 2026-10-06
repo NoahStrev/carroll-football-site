@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found — Carroll Football Analytics</title>
+<style>
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; background: #f9f9f7; color: #0b0b0b; }
+  @media (prefers-color-scheme: dark) { body { background: #0d0d0d; color: #fff; } a { color: #3987e5 !important; } }
+  main { max-width: 520px; margin: 120px auto; padding: 0 20px; text-align: center; }
+  h1 { font-size: 20px; margin: 0 0 10px; }
+  p { font-size: 14px; color: #888; line-height: 1.6; }
+  a { color: #2a78d6; font-weight: 600; text-decoration: none; }
+</style>
+</head>
+<body>
+<main id="msg"><h1>Redirecting…</h1></main>
+<script>
+/* GitHub Pages serves this file for any path that doesn't exist. Pages that were merged into
+   others (the Special Teams position pages, Career Stats, Records) redirect to their new home so
+   old bookmarks keep working; anything else gets a plain "not found" with a link back.
+   Local testing: open /404.html?path=/dashboards/placekicker.html */
+(function () {
+  const REDIRECTS = {
+    'special-teams-overview.html': 'special-teams.html#overview',
+    'placekicker.html': 'special-teams.html#athletes/placekicker/scorecard',
+    'kickoff-kicker.html': 'special-teams.html#athletes/kickoff-kicker/scorecard',
+    'punter.html': 'special-teams.html#athletes/punter/scorecard',
+    'short-snapper.html': 'special-teams.html#athletes/short-snapper/scorecard',
+    'long-snapper.html': 'special-teams.html#athletes/long-snapper/scorecard',
+    'career-stats.html': 'players.html#career',
+    'records.html': 'players.html#record-book',
+  };
+  const path = new URLSearchParams(location.search).get('path') || location.pathname;
+  const m = path.match(/^(.*\/)dashboards\/([^/]+)$/);
+  // Site root: everything before /dashboards/ when present; otherwise the first path segment
+  // on a github.io project site (or "/" elsewhere).
+  const root = m ? m[1] : (location.hostname.endsWith('github.io') ? `/${location.pathname.split('/')[1]}/` : '/');
+  if (m && REDIRECTS[m[2]]) { location.replace(`${root}dashboards/${REDIRECTS[m[2]]}`); return; }
+  document.getElementById('msg').innerHTML = `<h1>Page not found</h1><p>That page doesn't exist on this site. <a href="${root}dashboards/home.html">Go to the Home page</a>.</p>`;
+})();
+</script>
+</body>
+</html>

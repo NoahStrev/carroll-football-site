@@ -1,0 +1,100 @@
+/* Hand-maintained changelog -- per the user (2026-08-01): "Assume right now
+   we are on v1.0.0 and I want to update with any patches and effects."
+   Each entry should be a real patch, described as change -> effect (what
+   shipped, what it actually changes for a coach using the site) -- not a
+   dev-log dump of every internal fix (that's what README.md's dated
+   history is for). Newest version first.
+
+   Changed 2026-08-04, per the user ("lets also make each version on the
+   updates page a summary of the day of work, instead of every single
+   commit"): a version bump used to happen per real patch/commit within a
+   session (v1.0.1 through v1.0.5 were all separate entries from the same
+   day). Going forward, one version = one day of shipped work -- write a
+   single entry summarizing everything real that landed that day, once,
+   at the end of the day's work, instead of bumping per fix as you go.
+   Small same-day follow-up fixes get folded into that day's one entry
+   rather than becoming their own version. */
+const UPDATES = [
+  {
+    version: '1.4.0',
+    date: 'October 5, 2026',
+    title: 'A simpler site: one Home page, fewer places to look, same data',
+    changes: [
+      { change: 'New Home page (the site\'s front door): the current season\'s record and scoring, headline offense/defense/special teams numbers next to the 2021-2025 average, a game-by-game log with results, where Carroll ranks in the CCIW and nationally, who\'s closest to a record, and a one-line guide to every dashboard', effect: 'Open the site and see how the season is going in one screen — then click through only to what you want to dig into — instead of landing on the changelog.' },
+      { change: 'Navigation cut from 11 sections to 7 (plus Glossary and Updates tucked to the side): the five Special Teams position pages became one Athletes tab inside Special Teams, Career Stats and Records became one Players & Records page, and the old "Positions" section is gone', effect: 'Everything is where you\'d expect it, with no duplicate links and no second row of page tabs under the first.' },
+      { change: 'Special Teams: the Overview, five unit dashboards, and the Athletes tab (pick a role — Placekicker, Kickoff Kicker, Punter, Short Snapper, Long Snapper — then Scorecard, Head-to-Head, or Deep Dive) now live on a single page. Head-to-Head opens on the two athletes with the most recent activity instead of the first two names alphabetically', effect: 'One place for all of special teams, and the head-to-head comparison starts on athletes who actually have data in the season you\'re looking at.' },
+      { change: 'Offense and Defense: the four position-group tabs on each side (QB/RB/Receivers/OL and DL/LB/CB/Safeties) are now one "Position Groups" tab with a picker; Opponent Scouting went from five tabs to three (By Opponent, Offense, Defense), with a Carroll (self scout) / Opponent (scout) switch on the two report tabs that keeps your Custom Situation picks when you change opponents; Lifting & Strength went from four tabs to two, with one picker for All Time, Last Session, or any class', effect: 'Far fewer tabs to scan, no loss of any view, and the same filters work the same way everywhere.' },
+      { change: 'Cleaner page layout: removed the dark banner that repeated each page\'s title a second time on every tab, one shared look for tabs and pickers, Rankings now has a single season/week picker that carries across its tabs (it used to be a separate picker above every table), and every view has its own link (for example offense.html#positions/qb) that survives a refresh and works with the back button', effect: 'Less clutter and less repeated text on screen, and you can bookmark or send a link to exactly the view you mean. Old page links still work and redirect to the right place.' },
+      { change: 'Empty charts now say why. The opponent\'s defensive front, coverage, blitz, and stunt were only charted for 2021-2024 (the 2025-2026 game exports don\'t include them), so views built on them used to show blank axes by default; they now say which seasons have the data and how to see it', effect: 'No more wondering whether a blank chart is a bug — and a clear signal about which charting fields stopped being recorded.' },
+      { change: 'Fixed along the way: Career Stats listed two non-players ("TEAM" and "Team" — plays the box score credits to the team itself, like kneel-downs) as if they were players; Linebackers\' "Most Common Blitz Call" and the Defensive Line\'s movement chart were counting the "no call" placeholder as a real call; Deep Dive detail tables listed athletes with no data in view as "undefined–undefined"; Lifting class leaderboards could show one athlete in several spots (now best result per athlete); footnotes now show true row counts instead of stale hard-coded numbers; 6-season heatmaps no longer get clipped on tablets; a stray empty orange dot appeared on filter buttons; the Cornerbacks and Safeties trend cards had a duplicated title', effect: 'Numbers and labels now match what the underlying data actually says. Career Stats and the Compare tools also open on current players instead of whoever sorts first alphabetically.' },
+      { change: 'Behind the scenes: the repeated page chrome, tab wiring, and per-page scripts were replaced by one shared page shell and one declarative view engine; the stylesheet was reorganized into one ordered file with its unused and duplicated rules removed; every restructured view was checked against the old version number-for-number', effect: 'No change to any statistic — it just makes the site easier to keep accurate and faster to extend.' },
+    ],
+  },
+  {
+    version: '1.3.1',
+    date: 'October 1, 2026',
+    title: 'Weeks 2–4 data, three newly charted games, and a data-quality pass',
+    changes: [
+      { change: 'Loaded Weeks 2, 3, and 4 (UW Eau Claire, Elmhurst, Carthage): box scores, CCIW and national rankings, and the hand-charted play-by-play for all three games', effect: 'Offense, Defense, Opponent Scouting, Special Teams, Rankings, and Records all reflect the 2026 season through the Carthage game.' },
+      { change: 'Opponent names in the play-by-play data were unified (WashU / Washington (Mo.), Wisconsin Lutheran / Wis. Lutheran, UW Eau Claire, and several state-tagged names), and a handful of blank phantom defensive rows were filtered out', effect: 'Each opponent appears once everywhere on the site, and no empty rows inflate play counts.' },
+      { change: 'Several special teams scraping rules were corrected (hyphenated "out-of-bounds" text, fair catches with no stated location, a few players\' names split across games, a free kick after a safety), and the record-book cross-check was made specific to each stat category\'s own coverage window', effect: 'Career totals, return/punt counts, and the Records "closest to a record" list are more accurate. A re-audit confirmed the remaining differences from the athletics record book are in the record book itself, not this site.' },
+    ],
+  },
+  {
+    version: '1.3.0',
+    date: 'September 8, 2026',
+    title: 'Season opener, plus new Records & Career Stats pages',
+    changes: [
+      { change: 'Restored the weekly automated data-refresh routines (rankings scrapes, Carroll\'s own box-score scrape, and this site\'s own rebuild + deploy) after they\'d silently stopped running for over a month, caught up the missed Week 1 data, and made sure every one of this site\'s data-build scripts — including the 2 brand new ones below — are actually wired into that weekly refresh', effect: 'Every part of the site, including the newest additions, will keep updating automatically every Monday during the season going forward — no more silent gaps.' },
+      { change: 'Added the St. Norbert game (2026 season opener, a Carroll win) to Offense, Defense, and Opponent Scouting, and made the game-count footer note on those pages compute itself instead of a hardcoded number', effect: 'The 2026 opener shows up correctly everywhere alongside the full 2021-2025 history, and that footer note will stay accurate on its own as new games get added.' },
+      { change: 'Added Takeaway % and Sack % to Defense Self Scout and Defense Scout\'s scenario tables and Custom Situation builder', effect: 'See not just what front/blitz/movement Carroll (or an opponent) tends to call in a given scenario, but how often it actually forces a turnover or gets to the quarterback.' },
+      { change: 'New "Records" page: the program\'s full all-time record book (Single-Game, Single-Season, and Career leaderboards), a Record Watch tab showing current players\' real progress against those records — active players only, capped to realistic contenders, separate Career/Single Season subtabs, an exact distance shown once a player\'s inside the Top 5 — and the complete All-Conference/All-Region/All-American award history', effect: 'See the program\'s full history and exactly who on the current roster is closing in on a spot in it, in one place, instead of only living on the athletics department\'s own site.' },
+      { change: 'New "Career Stats" page: real career totals for every player with a box-score line since 2010 (including Punting, Kickoffs, Kickoff/Punt Returns, and PAT/FG kicking), filtered to only the categories relevant to each player\'s own position, plus a Compare Players tab to see any 2 players side by side', effect: 'A coach can look up any single player and get a clean, position-relevant career snapshot, or compare two players head to head, without hunting across several stat-category tables.' },
+      { change: 'Found and fixed several real player-identity bugs across the day\'s work where the same real person\'s stats were silently splitting across 2-5 separate entries instead of combining into one career total (special-teams specialists, a name shared with a much older former player, nickname/initial variants, and confirmed scrape typos)', effect: 'Career totals are now correctly combined into one real total per person, sitewide — no more players quietly shown as partial fragments of themselves, or mixed up with an unrelated person who happened to share their name.' },
+      { change: 'Multiple full sitewide re-checks throughout the day (data-build scripts re-verified against raw sources, all 16 pages clicked through for console errors and phone-width layout issues), plus some behind-the-scenes cleanup consolidating a few pieces of duplicated code into single shared versions', effect: 'Everything checked out clean each time — no data drift, drops, or page errors found — and a few small pieces of the site\'s plumbing are now easier to keep in sync, with no visible change to any numbers.' },
+    ],
+  },
+  {
+    version: '1.2.0',
+    date: 'August 5, 2026',
+    title: 'Data cleanup, player search, and a Two-Minute Drill filter',
+    changes: [
+      { change: 'Fixed a data-completeness bug where 388 real offense/defense snaps (spread fairly evenly across all 5 seasons) were silently missing from every official-play-by-play view — Offense Self Scout, Offense Scout, and By Opponent — caused by a scraping quirk in the source data that this site\'s own build script couldn\'t previously work around', effect: 'Every real charted snap counts now — every KPI, percentage, and scenario breakdown built from official play-by-play data across those tabs is slightly more accurate than before.' },
+      { change: 'Fixed scenario tables (Opponent Scouting\'s 4 per-opponent tabs) losing the row label (e.g. "3rd Down") off-screen when scrolling sideways on a phone', effect: 'The Scenario column now stays visible while scrolling right to see the rest of a row\'s percentages on a phone — you always know which scenario you\'re looking at.' },
+      { change: 'Full audit of every underlying dataset for duplicate or double-counted records, on top of the earlier missing-record check', effect: 'The data behind every dashboard is now confirmed clean — no duplicated or double-counted records found anywhere on this site. One real issue was found and flagged in the source Lifting Data spreadsheet (a likely typo in one athlete\'s height) for the coaching staff to correct at the source.' },
+      { change: 'Added a player-name search box to Lifting & Strength\'s All Time/Last Session and Senior-Junior/Sophomore-Freshman tabs', effect: 'Search for a specific player and instantly see their real rank on every leaderboard, instead of scrolling through the full roster to find them each time.' },
+      { change: 'Added "Clock Situation" (Two-Minute Drill vs. Other Snaps) as a new scenario breakdown and Custom Situation filter on Offense Self Scout and Offense Scout', effect: 'See real hurry-up tendencies for the last 2 minutes of either half — e.g. run/pass mix swings sharply toward pass in a two-minute drill, now visible at a glance instead of hidden in the full-game numbers.' },
+      { change: 'Added 1st Down %, Success %, and Explosive % to Offense Self Scout and Offense Scout\'s scenario tables (plus Success %/Explosive % on Defense Self Scout and Defense Scout)', effect: 'See not just what a team tends to call in a given scenario, but how well it actually works for them — all in the same row.' },
+      { change: 'Fixed the reference gridlines disappearing on the By Opponent charts when scrolling sideways to see more opponents', effect: 'Every bar now has its reference gridlines behind it no matter how far you scroll, not just the ones visible before you started scrolling.' },
+      { change: 'Opponent Scouting\'s By Opponent tab now defaults to all 5 seasons selected, matching the other 4 tabs (it previously defaulted to just the most recent season)', effect: 'By Opponent opens showing every season\'s data by default, consistent with the rest of the page.' },
+      { change: 'Athleticism Score now only needs 5 of its 6 required tests instead of all 6', effect: 'Real scores now exist for seasons that were previously missing entirely (2021-22, 2022-23, 2024-25) because exactly one test wasn\'t run that year — Athleticism Score coverage went from 239 to 760 team-scope scores.' },
+    ],
+  },
+  {
+    version: '1.1.0',
+    date: 'August 4, 2026',
+    title: 'Opponent Scouting overhaul: real opponent names, self vs. opponent scouting, and combined views',
+    changes: [
+      { change: 'Merged duplicate opponent names caused by a naming change in the source data ("WashU"/"Washington (Mo.)" and "Wisconsin Lutheran"/"Wis. Lutheran" were the same schools, split into two entries)', effect: 'Opponent Scouting, and every Opponent filter site-wide, now shows one real opponent instead of two — picking "WashU" shows all 5 seasons of games against them instead of only 4.' },
+      { change: 'Renamed "Offense Report"/"Defense Report" to "Offense Self Scout"/"Offense Scout" (accurate names, same data), then added the 2 missing tabs — "Defense Self Scout" and "Defense Scout"', effect: 'Full coverage on both sides of the ball: what Carroll tends to call, and what each opponent tends to call, for both offense and defense — not just offense.' },
+      { change: 'Added an "All Opponents (Combined)" view (now the default) plus a Season checkbox filter to all 4 scouting tabs', effect: 'See tendencies across every opponent and year at once, or narrow to specific seasons, instead of only ever looking at one team at a time.' },
+      { change: 'Added "Play Type" (Run/Pass) and "Hash" (Left/Middle/Right) as 2 more scenario breakdowns and Custom Situation filters on the defensive scheme tabs', effect: 'Defense Self Scout and Defense Scout now cover 6 real scenario dimensions instead of 4, closing most of the gap with the offense-side tabs.' },
+      { change: 'Fixed a bug (found via thorough re-checking, not reported) where a handful of real snaps were silently missing from some scenario tables and Custom Situation results, plus print output and empty-result-set cleanup', effect: 'Every real snap now counts everywhere it should; downloaded PDFs and narrowed-to-nothing searches both look correct instead of broken.' },
+      { change: 'Removed the outdated homepage for now — the site root and every page\'s nav go straight to this Updates page instead', effect: 'No more landing on a stale, out-of-date homepage. A real new homepage is planned but not built yet.' },
+    ],
+  },
+  {
+    version: '1.0.0',
+    date: 'August 1, 2026',
+    title: 'Initial public launch',
+    changes: [
+      { change: 'Site published live on GitHub Pages', effect: 'The full site is reachable at a real public link for the first time, instead of only running locally during development.' },
+      { change: 'Team & Units: Special Teams Overview and Lifting & Strength', effect: 'Money Unit, Punt, Punt Return, Kickoff, Kickoff Return, and lifting leaderboards with athlete-vs-athlete comparison, all in one place.' },
+      { change: '5 Position pages: Placekicker, Kickoff Kicker, Punter, Short Snapper, Long Snapper', effect: 'Each has an Executive Scorecard, a head-to-head athlete comparison, and a Situational Deep Dive.' },
+      { change: 'Offense & Defense: Executive Scorecard, Play-Calling & Tendencies, Play Outcomes, and 8 position-group coach views', effect: 'A QB, RB, WR, OL, DL, LB, CB, or S coach each gets a schematic view built around what their own position group actually cares about.' },
+      { change: 'Opponent Scouting: by-opponent charts, plus a per-opponent Scouting Report and Custom Situation builder', effect: "Look up any past opponent's real tendencies (run/pass by down, distance, quarter, situation, score, and more), or build any exact combination on the fly and get the real percentages." },
+      { change: 'Rankings: CCIW and National standings across Offensive/Defensive/Special Teams/Additional Metrics', effect: "Carroll's conference and national standing is visible in one place without digging through either source report." },
+      { change: 'Glossary with searchable terms and inline hover hints', effect: 'A new coach unfamiliar with a stat (e.g. "explosive play") can look it up without ever leaving the page they\'re on.' },
+    ],
+  },
+];

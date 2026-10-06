@@ -1,3 +1,10 @@
+> **Historical build log.** This is the original README, kept intact as a dated record of how the site
+> was built and what was found along the way (bug hunts, data-quality findings, user decisions). The
+> *current* structure is documented in [`../README.md`](../README.md): on 2026-10-05 the site was
+> consolidated, so file and page names below (`placekicker.html`, `career-stats.html`, `records.html`,
+> `special-teams-overview.html`, per-page inline scripts, the "Positions" nav section, ...) describe the
+> layout *before* that change.
+
 # Carroll Football Analytics Site
 
 Static HTML/CSS/JS, no build step. Replaced `dashboards-site-poc` (an earlier

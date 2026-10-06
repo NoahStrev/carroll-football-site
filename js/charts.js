@@ -1,13 +1,23 @@
 /*
-  Shared chart-rendering helpers for the Carroll Football Site dashboards.
-  Vanilla JS, no dependencies. Renders into the CSS component classes defined in
-  css/theme.css (.barchart/.barcol/.bar, .stacked/.stackcol/.stackbar, .linewrap
-  svg, .kpi) so every dashboard page looks consistent without re-declaring styles.
+  Shared library for every dashboard: formatting and grouping helpers, the tooltip, the KPI
+  tile, the glossary, chart renderers, the checkbox filter panel, and the searchable combobox.
+  Vanilla JS, no dependencies; loaded before js/shell.js and the page's views.
+  Renders into the CSS classes in css/theme.css.
 
-  Per the dataviz skill: categorical color always comes from --cat-1..--cat-8 in
-  that fixed order (never cycled/reassigned), sequential magnitude uses --seq-*,
-  status states use --good/--warning/--serious/--critical, and every chart with
-  >=2 series ships a legend plus a hover tooltip.
+  Contents (search for the banner):
+    helpers          colors, mean/rate, fmt/pct, el(), printPage
+    domain           special-teams row helpers, FG/hash buckets, down/distance buckets
+    tooltip          showTooltip / hideTooltip
+    glossary         GLOSSARY definitions + the inline "?" hints, kpiHTML / setKPI
+    charts           renderBar, renderStacked, renderScatter, renderHeatmap, renderSparkline,
+                     renderGroupedBar, renderTrendCard
+    grouping         groupBy, uniqueByKey, topKeysByCount, gameTrend, bestByGroup
+    filter panel     buildFilterPanel / wireFilterPanel / readFilterState / applyFilters
+    combobox         makeSearchCombobox
+
+  Categorical color always comes from --cat-1..--cat-8 in that fixed order (never cycled or
+  reassigned), sequential magnitude uses --seq-*, status uses --good/--warning/--serious/--critical,
+  and every chart with >=2 series ships a legend plus a hover tooltip.
 */
 
 const CAT_COLORS = ['--cat-1', '--cat-2', '--cat-3', '--cat-4', '--cat-5', '--cat-6', '--cat-7', '--cat-8'];
@@ -43,41 +53,28 @@ function mean(nums) {
   return vals.reduce((a, b) => a + b, 0) / vals.length;
 }
 
-/** Share of `rows` matching `pred`, or null for an empty set (never a fake 0%).
- * Hoisted 2026-08-01 -- was duplicated (as a predicate-based 2-arg version) in
- * Punter and Long Snapper verbatim; Kickoff Kicker had its own narrower
- * field-truthiness-only 2-arg version with the same name, now standardized on
- * this one (a predicate can express a field-truthiness check trivially, but not
- * the reverse). */
+/** Share of `rows` matching `pred`, or null for an empty set (never a fake 0%). */
 function rate(rows, pred) { return rows.length ? rows.filter(pred).length / rows.length : null; }
 
-/* --------------------------------------------------------- money_unit rows -- */
-// Shared by Placekicker and Short Snapper (both read DATA.units.money_unit).
-// Hoisted 2026-08-01 -- was duplicated verbatim between the two pages.
+/* ------------------------------------------------------ domain: special teams -- */
+// money_unit (PAT/FG) rows -- used by the Money Unit tab and the Placekicker/Short Snapper views.
 
 function fgs(rows) { return rows.filter((r) => r.fg_exp === 'FG'); }
 function pats(rows) { return rows.filter((r) => r.fg_exp === 'EXP'); }
 function makes(rows) { return rows.filter((r) => r.make); }
 function makeRate(rows) { return rate(rows, (r) => r.make); }
 
-/* -------------------------------------------------------------- punt rows -- */
-// Shared by Punter and Long Snapper (both read DATA.units.punt). Hoisted
-// 2026-08-01 -- was duplicated verbatim between the two pages.
+// punt rows -- used by the Punt tab and the Punter/Long Snapper views.
 
 function netOf(r) { return r.total_distance !== null && r.return_length !== null ? r.total_distance - r.return_length : null; }
 function avgNet(rows) { return mean(rows.map(netOf)); }
 const PUNT_OUTCOMES = ['Downed', 'Fair Catch', 'Touchback', 'Out of Bounds', 'Return', 'Return Touchdown', 'Muff'];
 
-/** FG distance buckets, used by every FG-make%-by-distance chart. Hoisted
- * 2026-08-01 -- was duplicated (identical logic) in special-teams-overview.html
- * (function-scoped) and placekicker.html (top-level). */
+/** FG distance buckets, used by every FG-make%-by-distance chart. */
 const FG_DIST_BUCKETS = ['0-29', '30-39', '40-49', '50+'];
 function fgDistBucket(d) { return d < 30 ? '0-29' : d < 40 ? '30-39' : d < 50 ? '40-49' : '50+'; }
 
-/** Hash-mark-at-snap category order, used by every "make/touchback %% by hash"
- * chart. Hoisted 2026-07-30 (2026-07-30 optimization pass) -- was duplicated
- * verbatim in special-teams-overview.html, placekicker.html, kickoff-kicker.html,
- * and punter.html. */
+/** Hash-mark category order for kick-location charts (5 values; charted offense/defense plays only ever use L/M/R). */
 const HASH_ORDER = ['L', 'LM', 'M', 'RM', 'R'];
 
 function fmt(n, decimals = 1) {
@@ -90,13 +87,8 @@ function pct(n, decimals = 1) {
   return `${(n * 100).toFixed(decimals)}%`;
 }
 
-/** "50 real Carroll games, 2021–2025" computed from data/game-data.json's own
- * `games` array, instead of a hardcoded string -- offense.html/defense.html/
- * opponent-scouting.html's footer notes used to hardcode this and would have
- * silently gone stale the moment a 2026 game got charted and combined in.
- * Interpolate directly into each footer-note template literal (they're built
- * fresh per tab-render, not static markup, so a one-time post-load DOM patch
- * wouldn't reach a tab that hasn't rendered yet). */
+/** "50 real Carroll games, 2021–2025" computed from game-data.json's own `games` array, so
+ * footer notes never go stale when a new game is charted. */
 function gameCoverageText(games) {
   const seasons = games.map((g) => Number(g.season)).filter((s) => !Number.isNaN(s));
   if (!seasons.length) return '0 real Carroll games';
@@ -104,20 +96,56 @@ function gameCoverageText(games) {
   return `${games.length} real Carroll games, ${min}${min === max ? '' : `–${max}`}`;
 }
 
-/** Two-letter initials for an avatar circle, e.g. "Jacob Laurent" -> "JL".
- * Hoisted 2026-08-01 -- was duplicated verbatim in placekicker.html and
- * kickoff-kicker.html, will be needed again by the remaining position pages. */
+/** Two-letter initials for an avatar circle, e.g. "Jacob Laurent" -> "JL". */
 function initials(name) { return name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2); }
 
-/** Print the page with a specific document title (restored after printing)
- * so the browser's "Save as PDF" filename matches the content, not the
- * page's own <title>. Hoisted 2026-09-08 -- was duplicated verbatim in
- * records.html, rankings.html, and opponent-scouting.html. */
+/** Print the page with a specific document title (restored after printing) so the browser's
+ * "Save as PDF" filename matches the content, not the page's own <title>. */
 function printPage(filenameTitle) {
   const prevTitle = document.title;
   document.title = filenameTitle;
   window.print();
   document.title = prevTitle;
+}
+
+/** HTML-escapes data-derived text (also exposed as Site.esc). */
+function escapeHTML(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/** "#3 of 9" for a rank, tagged green in the top 3 and red in the bottom 3 (Rankings + Home). */
+function rankTag(rank, outOf) {
+  if (rank <= 3) return `<span class="tag good">#${rank} of ${outOf}</span>`;
+  if (outOf - rank < 3) return `<span class="tag crit">#${rank} of ${outOf}</span>`;
+  return `#${rank} of ${outOf}`;
+}
+
+/** Record Watch status for one entry (Players & Records + Home). `e.leaderboard` is the record
+ * book's list for the statistic; "close" (highlighted) means within 10% of the target rank's value.
+ * Someone ALREADY inside the list shows their distance to the next BETTER rank directly above
+ * them, by name, not a generic "already in the Top 5". */
+function recordWatchStatusHTML(e) {
+  const lb = e.leaderboard;
+  if (!lb.length) return '—';
+  const gapText = (g) => fmt(g, Number.isInteger(g) ? 0 : 1);
+  // Index of the best leaderboard entry the player already matches or beats.
+  const i = lb.findIndex((r) => e.current_value >= r.value_numeric);
+  if (i === -1) {
+    const target = lb[lb.length - 1];
+    const gap = target.value_numeric - e.current_value;
+    const close = gap <= target.value_numeric * 0.1;
+    return `<span class="${close ? 'watch-gap-crit' : ''}">${gapText(gap)} from the current #${target.rank}</span>`;
+  }
+  if (i === 0) {
+    return e.current_value > lb[0].value_numeric
+      ? '<span class="watch-gap-good">Ahead of the current #1</span>'
+      : `<span class="watch-gap-good">Tied with the current #1 (${escapeHTML(lb[0].player)})</span>`;
+  }
+  const target = lb[i - 1];
+  const gap = target.value_numeric - e.current_value;
+  return gap === 0
+    ? `<span class="watch-gap-good">Tied with #${target.rank} (${escapeHTML(target.player)})</span>`
+    : `<span class="watch-gap-good">${gapText(gap)} from #${target.rank} (${escapeHTML(target.player)})</span>`;
 }
 
 function el(tag, cls, html) {
@@ -128,13 +156,10 @@ function el(tag, cls, html) {
 }
 
 /* ---------------------------------------------------------------- tooltip ----
-   Enriched 2026-07-30 per the user ("tooltips need to be better, add more to
-   it"): a structured title/rows/divider layout instead of one plain line, plus
-   viewport-aware positioning so it never gets clipped off the right/bottom edge.
-   Call sites build HTML with .tt-title (bold header), .tt-row (a labeled line --
-   pass "<span>label</span><span>value</span>" for a two-column row), .tt-muted
-   (de-emphasized caption/sample-size line), and .tt-divider (hairline separator)
-   to get a consistent look without hand-rolling inline styles per chart. */
+   A structured title/rows/divider layout with viewport-aware positioning (never clipped off
+   the right/bottom edge). Call sites build HTML with .tt-title (bold header), .tt-row (a
+   labeled line -- "<span>label</span><span>value</span>" for two columns), .tt-muted (caption /
+   sample-size line), and .tt-divider (hairline). */
 
 let tooltipEl = null;
 let tooltipStyleInjected = false;
@@ -178,17 +203,10 @@ function hideTooltip() {
   if (tooltipEl) tooltipEl.style.display = 'none';
 }
 
-/* --------------------------------------------------------------- KPI tile --- */
-// Hoisted here 2026-08-01 from special-teams-overview.html (was duplicated
-// verbatim there) since every Phase 2 position page needs the same KPI-tile
-// markup -- reuse instead of re-copying per page.
-
-/* ------------------------------------------------------- glossary hints --- */
-// Shared term -> plain-language definition lookup (2026-07-31, per the user:
-// "a brand new coach might not know the definition for some of our terms").
-// This is the single source of truth for both dashboards/glossary.html's
-// full reference page and the inline "?" hover hints below -- add a term
-// here once and it's usable from either place.
+/* ------------------------------------------------------- glossary + KPI tile --- */
+// Term -> plain-language definition. The single source of truth for both the Glossary page
+// (js/views/glossary.js) and the inline "?" hover hints on KPI tiles -- add a term here once and
+// it's usable from either place.
 const GLOSSARY = {
   'Explosive Play': 'A run gaining 10+ yards or a pass gaining 15+ yards — the "big play" threshold used across every efficiency chart on this site.',
   'Success Rate': 'Share of plays that gained enough yardage relative to down and distance: at least 50% of yards-to-go on 1st down, 70% on 2nd down, or a full conversion on 3rd/4th down.',
@@ -223,10 +241,8 @@ const GLOSSARY = {
   'Pro Agility': 'A timed change-of-direction sprint (the 5-10-5 shuttle) — the one metric on the Lifting & Strength page where a *lower* time is better.',
 };
 
-/** Small "?" marker that shows a term's GLOSSARY definition on hover, via the
- * same showTooltip()/hideTooltip() used by every chart tooltip on the site --
- * one shared delegated listener (below) handles every marker on the page, so
- * a chart/table that re-renders doesn't need to re-wire anything. */
+/** Small "?" marker that shows a term's GLOSSARY definition on hover/focus, via the same tooltip as
+ * every chart. One delegated listener (below) handles every marker, so re-rendered content needs no re-wiring. */
 function glossaryMarker(term) {
   return `<span class="glossary-hint" data-glossary-term="${term}" tabindex="0">?</span>`;
 }
@@ -497,6 +513,7 @@ const SEQ_STEPS = ['--seq-100', '--seq-200', '--seq-300', '--seq-400', '--seq-50
  * for a distance bucket axis). */
 function renderHeatmap(container, { rowLabels, colLabels, cellFor, title = (r, c) => `${r} × ${c}` }) {
   container.innerHTML = '';
+  container.classList.add('heat-scroll');
   const grid = el('div', 'heat');
   // Real bug found 2026-07-31: 1fr stretched every data column to fill
   // whatever's left of the card's width -- fine for a 5-season heatmap on a
@@ -505,7 +522,7 @@ function renderHeatmap(container, { rowLabels, colLabels, cellFor, title = (r, c
   // 3-4 character value. minmax() sizes columns to their actual content
   // instead; .heat's justify-content:center (theme.css) keeps the now-
   // compact grid from sitting left-stuck with empty space to its right.
-  grid.style.gridTemplateColumns = `130px repeat(${colLabels.length}, minmax(60px, 100px))`;
+  grid.style.gridTemplateColumns = `minmax(70px, 130px) repeat(${colLabels.length}, minmax(46px, 100px))`;
   grid.appendChild(el('div', 'rowlabel', ''));
   colLabels.forEach((c) => grid.appendChild(el('div', 'collabel', c)));
   rowLabels.forEach((r) => {
@@ -731,17 +748,8 @@ function formatGameDateLabel(d) {
 }
 
 /** Groups rows by (season, date) chronologically, averages `field`, returns
- * {values, labels, seasons, opponents} for renderSparkline -- games/weeks.
- * Hoisted 2026-07-30 from special-teams-overview.html into here since
- * Offense/Defense need the identical thing. `seasons`/`opponents` added
- * 2026-07-31 per the user ("I want to know who we're playing") -- every
- * dataset renderTrendCard is called with already carries `opponent` on each
- * row even where it isn't exposed as a filter (money_unit, offense/defense
- * official), so there's no reason the trend tooltip couldn't show it. Also
- * fixes a latent ambiguity: the on-chart label is day/month only ("9/5"), so
- * a multi-season trend (e.g. "All seasons" selected) could show the same
- * label twice for two different years with no way to tell them apart --
- * `seasons` lets the tooltip disambiguate even though the axis label doesn't. */
+ * {values, labels, seasons, opponents} for renderSparkline. The on-chart label is day/month only
+ * ("9/5"), so `seasons` and `opponents` ride along for the tooltip to disambiguate games. */
 function gameTrend(rows, field) {
   const byGame = groupBy(rows.map((r) => ({ ...r, _gk: `${r.season}|${r.date}` })), '_gk');
   const games = [...byGame.keys()].sort((a, b) => parseGameDate(a.split('|')[1]) - parseGameDate(b.split('|')[1]));
@@ -752,11 +760,8 @@ function gameTrend(rows, field) {
   return { values, labels, seasons, opponents };
 }
 
-/** Card with a "Last Game" KPI + "Last vs Previous Game" delta + sparkline --
- * hoisted 2026-07-30 from special-teams-overview.html (was duplicated there
- * with the Offense/Defense build), same "Last Week vs Avg" semantics as the
- * original Tableau dashboards (comparing to the immediately-prior game, not
- * a season average). */
+/** Card with a "Last Game" KPI + "Last vs Previous Game" delta + sparkline (compares to the
+ * immediately-prior game, not a season average). `container` becomes the whole card. */
 function renderTrendCard(container, rows, field, unit, title) {
   const { values, labels, seasons, opponents } = gameTrend(rows, field);
   const lastVal = values.length ? values[values.length - 1] : null;
@@ -780,12 +785,8 @@ function renderTrendCard(container, rows, field, unit, title) {
   renderSparkline(container.querySelector('.trend-chart'), { values, labels, unit, seasons, opponents });
 }
 
-/** Best-scoring key in a groupBy() Map by a metric function, gated on a
- * minimum sample size -- hoisted 2026-07-30 (was a near-identical inline
- * `let best=null,bestVal=-1; map.forEach(...)` loop in each of Placekicker/
- * Kickoff Kicker/Punter/Short Snapper/Long Snapper's "Best Quarter" KPI).
- * Returns {key, value} (value is null if nothing meets minN) rather than
- * throwing on an empty map. */
+/** Best-scoring key in a groupBy() Map by a metric function, gated on a minimum sample size
+ * (powers the "Best Quarter" KPIs). Returns {key, value}; value is null if nothing meets minN. */
 function bestByGroup(byGroupMap, metricFn, minN = 3) {
   let bestKey = null, bestVal = -Infinity;
   byGroupMap.forEach((g, k) => {
@@ -795,8 +796,7 @@ function bestByGroup(byGroupMap, metricFn, minN = 3) {
   return { key: bestKey, value: bestKey !== null ? bestVal : null };
 }
 
-/* ---------------------------------------------------- Offense/Defense shared --
-   Hoisted 2026-07-30 -- was byte-identical in offense.html and defense.html. */
+/* ------------------------------------------ domain: offense/defense play data -- */
 
 function distanceBucket(d) {
   if (d === null || d === undefined) return null;
@@ -808,14 +808,9 @@ const SITUATIONS = ['Standard Down', 'Passing Down', 'Money Down'];
 const FIELD_ZONES = ['Backed Up', 'Own Territory', 'Midfield', 'Opponent Territory', 'Red Zone'];
 function isSuccess(eff) { return eff === 'Successful' || eff === 'Explosive'; }
 
-/** Turnover_type/play_outcome are both comma-space-joined tag strings on the
- * hand-charted Plays sheet (e.g. "Turnover, Turnover on Downs", "Fumble, Sack")
- * -- these check for one specific tag, not an exact-string match, the same way
- * schemeRealRows() etc. treat these fields as sets, not enums. Added 2026-09-08
- * for Defense Self Scout/Defense Scout's 2 new scenario-table columns -- unlike
- * "1st DN" (see schemeScenarioRowHTML's own comment for why that one's NOT
- * safely derivable here), both of these are clean, already-computed/tagged
- * fields with no compound-tagging inconsistency found on a fresh recheck. */
+/** turnover_type/play_outcome are comma-space-joined tag strings on the hand-charted Plays sheet
+ * (e.g. "Turnover, Turnover on Downs", "Fumble, Sack"); these test for one specific tag, not an
+ * exact-string match. */
 function isTakeaway(turnoverType) { return !!turnoverType && turnoverType.split(', ').includes('Turnover'); }
 function isSack(playOutcome) { return !!playOutcome && playOutcome.split(', ').includes('Sack'); }
 
@@ -829,17 +824,12 @@ function topKeysByCount(map, n = 10) {
 }
 
 /* ============================================================================
-   FILTER PANEL (rebuilt 2026-07-30, per the user: "filtering is not intuitive")
+   FILTER PANEL
    ============================================================================
-   Replaces the original native <select multiple> panels -- ctrl-click
-   multi-select has no visible "what's currently selected" affordance and most
-   people don't know the interaction exists at all. This is a checkbox-list
-   panel instead (the same .fp-chk pattern the ORIGINAL Special Teams Data
-   mockups already used, which this project's theme.css copied the CSS for but
-   the dashboards never actually built with) -- every option visible with a
-   real checkbox, All/None per group, a live count badge on the Filters button
-   so you can tell at a glance whether anything is narrowed without opening the
-   panel, and a search box on any group with more than 8 options.
+   A checkbox-list panel: every option is visible with a real checkbox (no hidden ctrl-click
+   multi-select), All/None per group, a live count badge on the Filters button showing how many
+   groups are narrowed, and a search box on any group with more than 8 options.
+   Filter state is a plain object {field: Set(selected values)}; applyFilters() applies it.
 */
 
 function buildFilterPanel(tabId, filterDefs, filterValues) {
@@ -936,30 +926,16 @@ function readFilterState(tabId, filterDefs) {
   return state;
 }
 
-/** Re-applies every filter in `state` except forces the Season group open to
- * the full `allSeasons` list -- the fix pattern behind every "X × season"
- * heatmap on the position pages, whose own insight text promises the Season
- * filter never narrows that one chart (only the other filters do). Hoisted
- * 2026-07-31 -- this exact block (including its own explanatory comment) was
- * independently copy-pasted, byte-for-byte, into short-snapper.html,
- * long-snapper.html, placekicker.html, punter.html, and kickoff-kicker.html
- * after the underlying bug (heatmap silently zeroing every other season's
- * column) was found and fixed on 2026-07-30 -- one shared place instead of
- * five re-derivations of the same fix. */
+/** Re-applies every filter in `state` except forces the Season group open to the full
+ * `allSeasons` list -- for "X x season" heatmaps whose columns always show every season (only the
+ * other filters narrow them). */
 function reopenSeasons(dataset, state, allSeasons) {
   return applyFilters(dataset, { ...state, season: new Set(allSeasons) });
 }
 
-/** Builds parallel {values, counts} arrays for a fixed season axis from
- * already-filtered rows -- groups by season and applies metricFn to each
- * season's rows (null for a season with zero matching rows), plus the raw
- * per-season row count so a caller (e.g. renderGroupedBar) can show a real n=
- * instead of just the rate/value. Hoisted 2026-07-31 -- every position page's
- * H2H tab had its own near-identical `season<Metric>(name)` closure doing
- * exactly this (short-snapper's seasonFgRate, long-snapper's seasonNet,
- * placekicker's seasonRates, punter's seasonNet, kickoff-kicker's seasonVals),
- * each re-deriving the group-by-season-then-map step and none of them
- * exposing counts for the tooltip. */
+/** Builds parallel {values, counts} arrays for a fixed season axis from already-filtered rows:
+ * groups by season and applies metricFn to each season's rows (null for a season with no rows),
+ * plus the raw per-season row count so a chart can show a real n= in its tooltip. */
 function seasonSeries(rows, seasons, metricFn) {
   const byS = groupBy(rows, 'season');
   const values = seasons.map((s) => { const g = byS.get(s); return g && g.length ? metricFn(g) : null; });
@@ -973,6 +949,9 @@ function applyFilters(rows, state) {
   // selection." (Real bug found and fixed 2026-07-29: the default, everything-
   // checked view must show every row, not silently drop the ones missing one field.)
   return rows.filter((r) => Object.entries(state).every(([field, set]) => {
+    // Only checkbox-filter entries are Sets; anything else in the state (e.g. a single-select
+    // control's value that Site.view mixes in) isn't a filter on this field.
+    if (!(set instanceof Set)) return true;
     // An empty set means the user explicitly hit "None" on this group -- unlike
     // a normal narrowed selection, that should exclude everything on this field
     // (including blank/null rows), not fall through to "no filter applied."

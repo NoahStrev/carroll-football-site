@@ -1,17 +1,20 @@
 /*
   Carroll Football Site — shared design system.
 
-  Extracted 2026-07-29 from the design language already established and repeated
-  identically across all five Special Teams Data/mockups/*.html dashboards
-  (placekicker, kickoff kicker, punter, short snapper, long snapper). Those files
-  are the confirmed-good reference for what this site's visual style should be
-  before any Tableau-specific layout work starts — every page here should link
-  this file rather than re-declare these tokens locally.
+  One stylesheet for every page. Sections, in order:
+    1. Design tokens (light / dark)         5. Components: KPI tiles, cards, tables, notes
+    2. Base                                  6. Charts (hand-drawn, no chart library)
+    3. Shell: nav, page header, tabs, panel  7. Page sections (lifting, players, scouting, ...)
+    4. Controls: filters, selects, buttons   8. Responsive, then print
 
-  Theme-aware: styled for both light and dark, matching the viewer's OS preference
-  via prefers-color-scheme, with a manual override available through
-  [data-theme="light"] / [data-theme="dark"] on the root element.
+  Theme-aware: follows the viewer's OS preference via prefers-color-scheme, with a manual
+  override via [data-theme="light"|"dark"] on the root element. Categorical chart colors are
+  --cat-1..--cat-8 in that fixed order (CVD-safe; never reorder); magnitude is --seq-*; status is
+  --good/--warning/--serious/--critical. Chart code (js/charts.js) references colors as var(--x),
+  never resolved literals, so a theme toggle repaints charts without re-rendering.
 */
+
+/* ============================================================ 1. Design tokens == */
 
 :root {
   color-scheme: light;
@@ -128,72 +131,86 @@
   --brand-navy-ink: #ffffff;
 }
 
-* { box-sizing: border-box; }
+/* ===================================================================== 2. Base == */
 
+* { box-sizing: border-box; }
 html, body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   color: var(--text-primary);
   background: var(--page);
 }
-
-/* ---- layout shell ---- */
 .page { padding: 24px 0 60px; }
-.intro { max-width: 1280px; margin: 0 auto 22px; padding: 0 4px; }
-.intro h1 { font-size: 24px; margin: 0 0 7px; font-weight: 800; letter-spacing: -.01em; }
-.intro p { font-size: 13.5px; color: var(--text-secondary); margin: 0 0 14px; line-height: 1.6; max-width: 900px; }
+[hidden] { display: none !important; }
 
-/* Precedes a .tabbar that navigates BETWEEN pages (the Special Teams position
-   sub-nav) rather than switching views within one page -- without it, two
-   .tabbar rows stacked directly on top of each other (page-nav, then in-page
-   unit/phase tabs) read as one confusing cluster of pills with no indication
-   they mean different things, especially where both rows' first pill is
-   named the same thing ("Team Overview"). */
-.subnav-label {
-  max-width: 1280px; margin: 0 auto 8px; padding: 0 4px;
-  font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em;
-  color: var(--muted); font-weight: 700;
+/* ================================================== 3. Shell: nav, header, tabs == */
+
+.sitenav {
+  position: sticky; top: 0; z-index: 40; margin: 0 0 22px; padding: 12px max(4px, calc((100% - 1280px) / 2));
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  background: color-mix(in srgb, var(--page) 92%, transparent); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
 }
+.sitenav .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 15px; letter-spacing: -.01em; color: inherit; text-decoration: none; }
+.sitenav .brand .mark {
+  width: 30px; height: 30px; border-radius: 8px; background: var(--brand-navy); color: var(--brand-navy-ink);
+  display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 800;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--brand-navy) 50%, transparent);
+}
+.sitenav .links { display: flex; gap: 4px; flex-wrap: wrap; }
+.sitenav .links a {
+  font-size: 13px; font-weight: 600; color: var(--text-secondary); text-decoration: none;
+  padding: 7px 12px; border-radius: 999px; transition: background-color .15s ease, color .15s ease;
+}
+.sitenav .links a:hover { background: var(--grid); color: var(--text-primary); }
+.sitenav .links a.active { background: var(--accent); color: #fff; }
+.sitenav .links.utility { margin-left: auto; }
+.sitenav .links.utility a { font-weight: 500; font-size: 12.5px; color: var(--muted); }
+.sitenav .links.utility a:hover { color: var(--text-primary); }
+.sitenav .links.utility a.active { background: var(--grid); color: var(--text-primary); }
+
+.pagehead { max-width: 1280px; margin: 0 auto 16px; padding: 0 4px; }
+.pagehead h1 { font-size: 24px; margin: 0; font-weight: 800; letter-spacing: -.01em; }
+.pagehead p { font-size: 13.5px; color: var(--text-secondary); margin: 6px 0 0; line-height: 1.55; max-width: 900px; }
+.h1-badge {
+  display: inline-flex; align-items: center; font-size: 11.5px; font-weight: 700; padding: 4px 10px;
+  border-radius: 999px; background: var(--accent); color: #fff; margin-left: 10px; vertical-align: middle;
+}
+.loading { max-width: 1280px; margin: 40px auto; text-align: center; color: var(--muted); font-size: 13px; }
+
+/* Top-level tabs (one per view) and in-tab pill pickers (role, group, week, ...) share a look. */
 .tabbar { display: flex; gap: 8px; max-width: 1280px; margin: 0 auto 20px; padding: 0 4px; flex-wrap: wrap; }
-.tabbtn {
-  font-family: inherit; font-size: 13px; font-weight: 600; padding: 9px 16px;
-  border-radius: 999px; border: 1px solid var(--border); background: var(--surface-1);
-  color: var(--text-secondary); cursor: pointer;
+.tabbtn, .pill {
+  font-family: inherit; font-weight: 600; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--surface-1); color: var(--text-secondary); cursor: pointer;
   transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
-  /* .tabbtn started as a <button>-only class (in-page view switching); the
-     Special Teams position-page sub-nav (2026-07-31) reuses it on <a> tags for
-     cross-page navigation instead, so it needs its own display/text-decoration
-     rather than inheriting the browser's default inline-link underline. */
-  display: inline-block; text-decoration: none;
 }
+.tabbtn { font-size: 13px; padding: 9px 16px; }
+.pill { font-size: 12.5px; padding: 6px 13px; }
+.pillbar.xs .pill { font-size: 11px; padding: 4px 9px; }
 .tabbtn:hover { border-color: var(--accent); color: var(--text-primary); }
+.pill:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
 .tabbtn.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 10px color-mix(in srgb, var(--accent) 40%, transparent); }
-.tabbtn .n { opacity: .7; font-weight: 500; }
+.pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.tabbtn:focus-visible, .pill:focus-visible, .sitenav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pill-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; margin-right: 8px; }
+.pillbar { display: inline-flex; gap: 6px; flex-wrap: wrap; vertical-align: middle; }
+.subbar { max-width: 1280px; margin: 0 auto 14px; padding: 0 4px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-.stage { overflow-x: auto; padding: 4px 4px 30px; }
-.frame-wrap { max-width: 1280px; margin: 0 auto; display: none; }
-.frame-wrap.active { display: block; }
-.frame-caption { font-size: 12px; color: var(--muted); margin: 0 0 10px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.frame-caption b { color: var(--text-secondary); font-weight: 600; }
-
-.slide {
-  width: 100%; max-width: 1280px; background: var(--surface-1); border: 1px solid var(--border);
-  border-radius: 12px; box-shadow: 0 10px 34px rgba(0, 0, 0, .12); overflow: visible;
+.stage { padding: 4px 4px 30px; }
+.panel {
+  width: 100%; max-width: 1280px; margin: 0 auto; background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 12px; box-shadow: 0 10px 34px rgba(0, 0, 0, .12); border-top: 3px solid var(--brand-navy);
 }
-.titlebar {
-  padding: 16px 24px 12px; border-bottom: 1px solid var(--grid);
-  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
-}
-.titlebar h2 { font-size: 17px; margin: 0; }
-.titlebar .sub { font-size: 12px; color: var(--muted); }
-.shelf {
-  display: flex; gap: 10px; align-items: center; padding: 10px 24px; border-bottom: 1px solid var(--grid);
-  flex-wrap: wrap; position: relative;
-}
+.shelf { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 24px; border-bottom: 1px solid var(--grid); flex-wrap: wrap; position: relative; }
+.shelf-filters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.shelf-right { display: flex; align-items: center; gap: 10px; }
+.shelf-source { font-size: 11px; color: var(--muted); }
 .body { padding: 18px 24px 24px; }
 .footer-note { font-size: 11px; color: var(--muted); padding: 10px 24px 16px; border-top: 1px solid var(--grid); }
 
-/* ---- filters ---- */
+/* ======================================== 4. Controls: filters, selects, buttons == */
+
 .filters-control { position: relative; }
 .filters-btn {
   font-family: inherit; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px;
@@ -207,47 +224,49 @@ html, body {
   box-shadow: 0 10px 32px rgba(0, 0, 0, .18); padding: 14px;
 }
 .filters-panel.open { display: block; }
+.filters-panel-wide { min-width: 320px; max-width: min(92vw, 720px); max-height: 70vh; overflow-y: auto; }
+.fp-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px 20px; }
 .fp-group { margin-bottom: 12px; }
 .fp-group:last-of-type { margin-bottom: 0; }
+.fp-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; gap: 8px; }
 .fp-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; margin-bottom: 7px; }
+.fp-label-row .fp-label { margin-bottom: 0; }
+.fp-quick { display: flex; gap: 6px; }
+.fp-quick-btn { font-family: inherit; font-size: 10px; font-weight: 700; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: .03em; }
+.fp-quick-btn:hover { text-decoration: underline; }
+.fp-search { width: 100%; font-size: 12px; padding: 5px 8px; margin-bottom: 6px; border-radius: 6px; border: 1px solid var(--border); background: var(--page); color: var(--text-primary); font-family: inherit; }
 .fp-chk { display: flex; align-items: center; gap: 8px; font-size: 12.5px; padding: 3px 0; cursor: pointer; user-select: none; }
 .fp-chk input { accent-color: var(--accent); width: 13px; height: 13px; cursor: pointer; }
-.fp-select {
-  width: 100%; font-size: 12.5px; padding: 7px 8px; border-radius: 6px; border: 1px solid var(--border);
-  background: var(--page); color: var(--text-primary); font-family: inherit;
-}
+.fp-chk-list-scroll { max-height: 150px; overflow-y: auto; padding-right: 2px; }
 .fp-actions { display: flex; justify-content: flex-end; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--grid); }
 .fp-reset { font-family: inherit; font-size: 11.5px; color: var(--accent); background: none; border: none; cursor: pointer; font-weight: 700; padding: 0; }
 .fp-reset:hover { text-decoration: underline; }
-
-/* ---- filter panel v2 (added 2026-07-30): checkbox lists, not multi-select ---- */
-.filters-panel-wide { min-width: 320px; max-width: min(92vw, 720px); max-height: 70vh; overflow-y: auto; }
-.fp-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px 20px; }
-.fp-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; gap: 8px; }
-.fp-label-row .fp-label { margin-bottom: 0; }
-.fp-quick { display: flex; gap: 6px; }
-.fp-quick-btn {
-  font-family: inherit; font-size: 10px; font-weight: 700; color: var(--accent); background: none;
-  border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: .03em;
-}
-.fp-quick-btn:hover { text-decoration: underline; }
-.fp-search {
-  width: 100%; font-size: 12px; padding: 5px 8px; margin-bottom: 6px; border-radius: 6px;
-  border: 1px solid var(--border); background: var(--page); color: var(--text-primary); font-family: inherit;
-}
-.fp-chk-list-scroll { max-height: 150px; overflow-y: auto; padding-right: 2px; }
 .filter-badge {
   display: inline-flex; align-items: center; justify-content: center; min-width: 16px; height: 16px;
   padding: 0 4px; border-radius: 999px; background: var(--cat-2); color: #fff; font-size: 10px;
   font-weight: 700; margin-left: 4px; vertical-align: 2px;
 }
 
-/* ---- searchable combobox (added 2026-07-30) ---- */
-.combobox { position: relative; }
-.combobox-input {
-  width: 100%; font-family: inherit; font-size: 13px; font-weight: 600; padding: 7px 10px;
-  border-radius: 7px; border: 1px solid var(--border); background: var(--page); color: var(--text-primary);
+.select-sm {
+  font-family: inherit; font-size: 12.5px; font-weight: 600; padding: 6px 10px; border-radius: 6px;
+  border: 1px solid var(--border); background: var(--page); color: var(--text-primary);
 }
+.name-search {
+  font-family: inherit; font-size: 12.5px; padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--page); color: var(--text-primary); width: 220px; max-width: 100%;
+}
+.download-btn {
+  font-family: inherit; font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 7px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.download-btn:hover { border-color: var(--accent); color: var(--accent); }
+.toolbar-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.push-right { margin-left: auto; }
+
+/* Searchable single-select (long lists: players, athletes). */
+.combobox { position: relative; }
+.combobox-input { width: 100%; font-family: inherit; font-size: 13px; font-weight: 600; padding: 7px 10px; border-radius: 7px; border: 1px solid var(--border); background: var(--page); color: var(--text-primary); }
 .combobox-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
 .combobox-list {
   position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 60; display: none;
@@ -257,248 +276,271 @@ html, body {
 .combobox-list.open { display: block; }
 .combobox-item { font-size: 12.5px; padding: 7px 10px; cursor: pointer; }
 .combobox-item:hover { background: var(--grid); }
+.combo-slot { max-width: 360px; margin-bottom: 14px; }
 
-/* ---- KPI tiles + cards ---- */
-.kpirow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
-.kpirow-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
-.kpirow-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 16px; }
+/* ======================================= 5. Components: KPIs, cards, tables, notes == */
+
+.kpirow, .kpirow-5, .kpirow-6 { display: grid; gap: 12px; margin-bottom: 16px; }
+.kpirow { grid-template-columns: repeat(4, 1fr); }
+.kpirow-5 { grid-template-columns: repeat(5, 1fr); }
+.kpirow-6 { grid-template-columns: repeat(6, 1fr); }
 .kpi {
   background: var(--page); border: 1px solid var(--border); border-radius: 10px;
   padding: 13px 15px; position: relative; overflow: hidden;
   transition: box-shadow .15s ease, transform .15s ease;
 }
 .kpi::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--kpi-accent, var(--accent)); opacity: .6; }
-/* Real bug found 2026-07-31: renderTrendCard's mini KPI tiles (Last Game Avg /
-   Last vs Previous Game) reuse .kpi but zero out its padding/border/background
-   inline to sit flush in the trend card -- they never zeroed out the ::before
-   accent strip above, which still rendered flush at the padding-less left
-   edge, sitting directly under the label/value text instead of beside it. */
-.kpi.kpi-plain::before { display: none; }
+.kpi.kpi-plain::before { display: none; } /* trend card's mini tiles sit flush, no accent strip */
 .kpi:hover { box-shadow: 0 4px 16px rgba(0, 0, 0, .08); transform: translateY(-1px); }
-.kpi .label { font-size: 11px; color: var(--text-secondary); margin-bottom: 7px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+.kpi .label { font-size: 11px; color: var(--text-secondary); margin-bottom: 7px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; position: relative; padding-right: 14px; }
 .kpi .value { font-size: 27px; font-weight: 800; line-height: 1.05; letter-spacing: -.01em; }
 .kpi .foot { font-size: 11px; color: var(--muted); margin-top: 6px; }
 .kpi.small .value { font-size: 20px; }
 .statusdot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; position: relative; top: -1px; }
 
-/* Inline glossary hover marker (js/charts.js glossaryMarker()/kpiHTML()) --
-   a small "?" a new coach can hover/focus on jargon (Explosive Play, Money
-   Down, Value/Score, ...) without leaving the page; dashboards/glossary.html
-   is the same GLOSSARY object's full reference page. */
+/* Inline "?" glossary hint (js/charts.js glossaryMarker). Pinned to the tile's corner so a long
+   label never wraps differently from its neighbours and misaligns the row. */
 .glossary-hint {
   display: inline-flex; align-items: center; justify-content: center;
   width: 13px; height: 13px; border-radius: 50%; margin-left: 5px;
   font-size: 9px; font-weight: 700; line-height: 1; flex-shrink: 0;
-  background: var(--grid); color: var(--muted); cursor: help;
-  vertical-align: 1px; user-select: none;
+  background: var(--grid); color: var(--muted); cursor: help; vertical-align: 1px; user-select: none;
 }
 .glossary-hint:hover, .glossary-hint:focus-visible { background: var(--accent); color: #fff; outline: none; }
-/* Real bug found 2026-07-31: inline (in the label's own text flow), the hint
-   competed with the label text for the KPI tile's ~160px width -- a longer
-   label (e.g. "Points / Drive (approx.)", or Defense's "...Allowed" labels)
-   plus the icon wrapped to 2 lines, and since every KPI in a kpirow shares
-   one CSS grid row (auto-sized to the tallest tile), that single wrapped
-   label either stretched the whole row (leaving short-label tiles like
-   "Yards / Play" with a large, misaligned gap above their value) or, once
-   several tiles wrapped, left each tile's value sitting at a different Y
-   depending on whether ITS OWN label happened to wrap. Pinning the hint to
-   the tile's corner instead removes it from the text-wrapping calculation
-   entirely, independent of label wording length. */
-.kpi .label { position: relative; padding-right: 14px; }
 .kpi .label .glossary-hint { position: absolute; top: 1px; right: 0; margin-left: 0; }
 
-.card {
-  background: var(--page); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
-  transition: box-shadow .15s ease;
-}
-.card-head {
-  padding: 10px 15px; border-bottom: 1px solid var(--grid); display: flex; align-items: center;
-  justify-content: space-between; background: color-mix(in srgb, var(--surface-1) 55%, transparent);
-}
+.card { background: var(--page); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: box-shadow .15s ease; }
+.card-head { padding: 10px 15px; border-bottom: 1px solid var(--grid); display: flex; align-items: center; justify-content: space-between; gap: 10px; background: color-mix(in srgb, var(--surface-1) 55%, transparent); }
 .card-head h3 { font-size: 12.5px; margin: 0; font-weight: 700; }
+.card-head.compact { padding: 0 0 6px; border: none; background: none; }
+.card-head .count { font-size: 10.5px; font-weight: 700; color: var(--muted); background: var(--grid); border-radius: 999px; padding: 2px 8px; flex-shrink: 0; }
 .card-body { padding: 15px 16px 13px; }
-.card.illus { border-style: dashed; border-color: var(--muted); }
+.card-body.flush { padding: 0; }
+.card-note { margin: 0 15px 13px; }
 
+/* Two-column grid of cards; .wide spans both; chart cards get a minimum height so a pair lines up. */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.cards > .wide { grid-column: 1 / -1; }
+.cards > .card:not(.table-card):not(.wide) > .card-body { min-height: 190px; }
+.cards > .cards-heading { grid-column: 1 / -1; font-size: 15px; font-weight: 800; margin: 14px 0 0; }
+.cards > .cards-heading:first-child { margin-top: 0; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.colcard-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
-/* ---- charts (hand-drawn, no chart library) ---- */
-/* .barplot/.stackplot are fixed-height plot areas, isolated from the label rows below
-   (and, for .stackcol, the .cap row above) via flex-shrink:0 on every sibling. Bar/
-   stackbar height:X% must resolve against a height that's immune to label content --
-   previously bar/xlab/xlab2 shared one flex column with default flex-shrink, so a
-   category name long enough to wrap .xlab2 to 2 lines (e.g. "COLORADO", "MICHIGAN")
-   silently shrank the bar itself, decoupling rendered height from the actual data
-   (found 2026-07-30: a 67.5%-value bar rendered TALLER than 75%/76.25%-value bars
-   purely because its label was short enough to fit on one line). Labels are also
-   forced to a single line (ellipsis) so every column's label-row height is identical
-   regardless of text length -- that's what keeps the plot heights comparable/aligned
-   with the gridlines at all, not just proportionally correct within one chart. */
+table.mini { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.mini th { text-align: left; font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; font-weight: 600; padding: 4px 8px; border-bottom: 1px solid var(--grid); }
+table.mini td { padding: 7px 8px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
+table.mini td.name { font-variant-numeric: normal; font-weight: 600; }
+table.mini td.empty { text-align: center; color: var(--muted); }
+table.mini tr:last-child td { border-bottom: none; }
+table.mini tbody tr { transition: background-color .1s ease; }
+table.mini tbody tr:hover { background: var(--grid); }
+table.mini tr.total-row td { font-weight: 700; border-top: 2px solid var(--border); }
+.tbl-scroll { max-height: 65vh; overflow: auto; }
+/* A card holding a table scrolls sideways when the table can't fit (phones), instead of squeezing every column. */
+.card-body:has(> table.mini) { overflow-x: auto; }
+table.mini th, table.mini td.nowrap, table.mini .tag { white-space: nowrap; }
+/* Sticky header rows: each of these tables sits in its own bounded-height scroll box, so the
+   box -- not the page -- is the sticky context. (An ancestor with overflow-x would otherwise
+   capture position:sticky and freeze the header in place.) */
+table.records-table thead th, table.rank-table thead th, table.lb-scroll thead th { position: sticky; top: 0; z-index: 1; background: var(--page); box-shadow: 0 1px 0 var(--grid); }
+
+.tag { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 999px; font-weight: 600; }
+.tag.good { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--good); }
+.tag.crit { background: color-mix(in srgb, var(--critical) 16%, transparent); color: var(--critical); }
+
+.insight { font-size: 11.5px; color: var(--text-secondary); background: var(--page); border: 1px dashed var(--border); border-radius: 6px; padding: 8px 10px; margin-top: 10px; }
+.insight b { color: var(--text-primary); }
+.view-intro { margin-bottom: 14px; }
+.data-note { font-size: 10.5px; color: var(--muted); margin-top: 6px; }
+
+.avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+.mini-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+.mini-kpi { background: var(--surface-1); border: 1px solid var(--border); border-radius: 6px; padding: 8px 9px; }
+.mini-kpi .l { font-size: 10px; color: var(--muted); }
+.mini-kpi .v { font-size: 17px; font-weight: 700; }
+.mini-sub { font-size: 9px; color: var(--muted); font-weight: 400; }
+
+/* Head-to-head picker columns (Special Teams athletes, Compare Players). */
+.h2h-pickers { margin-bottom: 14px; }
+.h2h-col { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--page); }
+.h2h-head { padding: 12px 14px; border-bottom: 1px solid var(--grid); display: flex; align-items: center; gap: 10px; }
+.h2h-head .yrs { font-size: 11px; color: var(--muted); }
+.h2h-sel { flex: 1; min-width: 0; }
+.h2h-body { padding: 12px 14px 14px; }
+
+/* ========================================= 6. Charts (hand-drawn, no library) == */
+
+/* .barplot/.stackplot are fixed-height plot areas isolated from the label rows (flex-shrink:0 on
+   every sibling), so a bar's height:X% always resolves against the same height regardless of how
+   many lines a category label wraps to. Labels are forced to one line (ellipsis) for the same reason. */
 .barchart { display: flex; align-items: flex-end; gap: 12px; height: 150px; padding-top: 20px; position: relative; }
 .barchart .gridlines { position: absolute; inset: 20px 0 34px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
-.barchart .gridlines div { border-top: 1px solid var(--grid); height: 0; }
+.barchart .gridlines div, .stacked .gridlines div { border-top: 1px solid var(--grid); height: 0; }
 .barcol { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; z-index: 1; }
 .barplot { flex-shrink: 0; height: 96px; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
 .bar { width: 22px; max-width: 24px; border-radius: 4px 4px 0 0; background: var(--accent); position: relative; transition: height .35s ease, filter .1s ease, transform .1s ease; cursor: pointer; flex-shrink: 0; }
 .bar:hover { filter: brightness(1.12); transform: scaleX(1.08); }
+.bar .cap { position: absolute; top: -17px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 600; white-space: nowrap; color: var(--text-primary); }
+.barcol .xlab, .stackcol .xlab { font-size: 10.5px; color: var(--muted); margin-top: 6px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.barcol .xlab2 { font-size: 9.5px; color: var(--muted); margin-top: 2px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 .seg { cursor: pointer; transition: filter .1s ease; }
 .seg:hover { filter: brightness(1.12); }
-.bar.crit { background: var(--critical); }
-.bar.good { background: var(--good); }
-.bar .cap { position: absolute; top: -17px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 600; white-space: nowrap; color: var(--text-primary); }
-.barcol .xlab { font-size: 10.5px; color: var(--muted); margin-top: 6px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.barcol .xlab2 { font-size: 9.5px; color: var(--muted); margin-top: 2px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
-/* justify-content:center added 2026-07-31 -- real bug found: .stackcol's own
-   max-width:90px means few-category charts (the H2H "op time build-up" chart
-   always has exactly 2 columns) never fill the row width the way .barcol's
-   flex:1-with-no-cap does, and with no justify-content the flex row defaulted
-   to flex-start, dumping all the leftover space on the right instead of
-   spreading it evenly around the (intentionally bar-width-capped) columns. */
 .stacked { display: flex; align-items: flex-end; justify-content: center; gap: 18px; height: 150px; padding-top: 20px; position: relative; }
 .stacked .gridlines { position: absolute; inset: 18px 0 20px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
-.stacked .gridlines div { border-top: 1px solid var(--grid); height: 0; }
 .stackcol { flex: 1; max-width: 90px; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; z-index: 1; }
 .stackplot { flex-shrink: 0; height: 92px; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
 .stackbar { width: 34px; display: flex; flex-direction: column-reverse; }
 .stackbar .seg { width: 100%; }
 .stackbar .seg:last-child { border-radius: 4px 4px 0 0; }
 .stackcol .cap { font-size: 11px; font-weight: 600; margin-bottom: 4px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.stackcol .xlab { font-size: 10.5px; color: var(--muted); margin-top: 6px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
 .linewrap { position: relative; }
 .linewrap svg { display: block; width: 100%; height: 150px; overflow: visible; }
 .axis-x { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--muted); margin-top: 4px; padding: 0 2px; }
-
-/* ---- game-trend card (renderTrendCard, js/charts.js) -- moved here
-   2026-07-30 from special-teams-overview.html's local <style> block since
-   Offense/Defense need the identical layout, not a re-declared copy. ---- */
-.trend-body { display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; }
-@media (max-width: 560px) {
-  .trend-body { grid-template-columns: 1fr; }
-}
-
+.trend-body { display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; } /* game-trend card (renderTrendCard) */
 .legend { display: flex; gap: 14px; font-size: 11px; color: var(--text-secondary); margin-bottom: 8px; flex-wrap: wrap; }
 .legend .sw { display: inline-flex; align-items: center; gap: 5px; }
 .legend .dot { width: 9px; height: 9px; border-radius: 2px; }
 
-/* justify-content:center added 2026-07-31 -- same real bug as .stacked
-   above: renderHeatmap's data columns used to be 1fr (js/charts.js), which
-   stretches each cell to fill whatever's left of the card's width -- on a
-   full-width card with only 4-5 columns that meant huge cells with mostly
-   blank padding around a 3-4 character value. Columns are now a fixed
-   minmax() size (js/charts.js) sized to their actual content, and
-   justify-content centers the now-compact grid instead of leaving it
-   left-stuck with a wall of empty space to its right. */
-.heat { display: grid; grid-template-columns: 130px repeat(5, 1fr); justify-content: center; gap: 3px; }
+/* Heatmap: column widths are set inline by renderHeatmap(); cells shrink first, then the grid scrolls
+   sideways inside its card rather than being clipped. */
+.heat-scroll { overflow-x: auto; }
+.heat { display: grid; justify-content: center; gap: 3px; }
 .heat .hcell { font-size: 11px; padding: 8px 4px; border-radius: 4px; text-align: center; }
-.heat .rowlabel { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; font-weight: 600; }
+.heat .rowlabel { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; font-weight: 600; overflow-wrap: anywhere; }
 .heat .collabel { font-size: 10.5px; color: var(--muted); text-align: center; padding-bottom: 2px; }
 .heat .n { font-size: 9px; opacity: .85; display: block; margin-top: 1px; }
 
-/* ---- tables ---- */
-table.mini { width: 100%; border-collapse: collapse; font-size: 12px; }
-table.mini th { text-align: left; font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; font-weight: 600; padding: 4px 8px; border-bottom: 1px solid var(--grid); }
-table.mini td { padding: 7px 8px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
-table.mini td.name { font-variant-numeric: normal; font-weight: 600; }
-table.mini tr:last-child td { border-bottom: none; }
-table.mini tbody tr { transition: background-color .1s ease; }
-table.mini tbody tr:hover { background: var(--grid); }
+/* ====================== 7. Page sections (only what a page needs beyond the above) == */
+
+/* Glossary */
+.glossary-wrap, .updates-wrap { max-width: 1280px; margin: 0 auto; padding: 0 4px; }
+.glossary-search {
+  width: 100%; max-width: 420px; font-family: inherit; font-size: 14px; font-weight: 600;
+  padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--surface-1); color: var(--text-primary); margin-bottom: 20px;
+}
+.glossary-search:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.glossary-section { margin-bottom: 20px; }
+.glossary-section-title { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; margin: 0 0 8px 4px; }
+.glossary-term-row { padding: 13px 16px; border-bottom: 1px solid var(--grid); }
+.glossary-term-row:last-child { border-bottom: none; }
+.glossary-term { font-size: 13.5px; font-weight: 700; margin-bottom: 3px; }
+.glossary-def { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; }
+.glossary-empty { padding: 20px; text-align: center; color: var(--muted); font-size: 13px; }
+
+/* Updates */
+.version-card { margin-bottom: 16px; }
+.version-date { font-weight: 400; color: var(--muted); font-size: 12.5px; }
+table.mini td.change { font-weight: 600; }
+
+/* Rankings */
+.rank-scroll { max-height: 480px; overflow-y: auto; padding: 0 15px 13px; }
+.print-only { display: none; }
+
+/* Players & Records */
+.record-section-title { font-size: 14px; font-weight: 800; margin: 20px 0 8px; }
+.record-section-title:first-child { margin-top: 0; }
+.watch-gap-good { color: var(--good); font-weight: 700; }
+.watch-gap-crit { color: var(--critical); font-weight: 700; }
+
+/* Lifting & Strength */
+.lbgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
+.lbgrid:last-of-type { margin-bottom: 0; }
+.lbgrid-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; margin-bottom: 7px; }
+.lb-rank { color: var(--muted); font-variant-numeric: tabular-nums; width: 18px; display: inline-block; }
 table.mini tbody tr:nth-child(1) .lb-rank { color: var(--cat-2); font-weight: 800; }
-.tag { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 999px; font-weight: 600; }
-.tag.good { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--good); }
-.tag.crit { background: color-mix(in srgb, var(--critical) 16%, transparent); color: var(--critical); }
+.lb-session { display: block; font-size: 10.5px; font-weight: 400; color: var(--muted); }
+.lb-value { text-align: right; font-weight: 700; white-space: nowrap; }
+.lb-empty { font-size: 11.5px; color: var(--muted); padding: 12px; }
+.lb-scroll-wrap { padding: 0 16px 13px; max-height: 360px; overflow-y: auto; }
+table.lb-scroll { margin: 0; }
+table.lb-scroll tbody tr:first-child td { padding-top: 7px; }
+.comparegrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.compare-legend { display: flex; gap: 18px; margin-bottom: 14px; font-size: 13px; flex-wrap: wrap; }
+.compare-legend .sw { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.compare-legend .dot { width: 10px; height: 10px; border-radius: 50%; }
+.compare-slots { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0; }
 
-/* ---- misc ---- */
-.insight { font-size: 11.5px; color: var(--text-secondary); background: var(--page); border: 1px dashed var(--border); border-radius: 6px; padding: 8px 10px; margin-top: 10px; }
-.insight b { color: var(--text-primary); }
-.illus-tag {
-  font-size: 9.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
-  color: var(--text-secondary); background: var(--grid); border-radius: 4px; padding: 2px 7px;
-}
-.kpi .illus-tag { margin-top: 5px; display: inline-block; }
+/* Opponent Scouting scenario tables */
+.custom-situation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.custom-situation-grid label { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+.custom-situation-grid .select-sm { width: 100%; }
+.modal-pct { color: var(--muted); font-size: 11px; font-weight: 400; }
+table.mini .tbl-section td { background: var(--page); font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 700; padding-top: 12px; }
+table.mini.scenario-table thead th { position: sticky; top: 0; z-index: 2; background: var(--page); box-shadow: 0 1px 0 var(--grid); }
+table.mini.scenario-table tbody tr:not(.tbl-section) td:first-child { position: sticky; left: 0; z-index: 1; background: var(--page); box-shadow: 1px 0 0 var(--grid); }
+table.mini.scenario-table thead th:first-child { left: 0; z-index: 3; box-shadow: 1px 0 0 var(--grid), 0 1px 0 var(--grid); }
 
-.avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; flex-shrink: 0; }
-.kicker-col { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--page); }
-.kicker-head { padding: 12px 14px; border-bottom: 1px solid var(--grid); display: flex; align-items: center; gap: 10px; }
-.kicker-head .yrs { font-size: 11px; color: var(--muted); }
-.kicker-select {
-  font-family: inherit; font-size: 14px; font-weight: 700; border: none; background: transparent;
-  color: var(--text-primary); padding: 0; margin: 0 0 2px; cursor: pointer; width: 100%;
+/* Home */
+.muted { color: var(--muted); }
+.delta { display: block; margin-top: 2px; font-weight: 600; color: var(--muted); }
+.delta.good { color: var(--delta-good); }
+.delta.crit { color: var(--critical); }
+.home-heading { font-size: 15px; font-weight: 800; margin: 22px 0 10px; }
+.explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.explore-card {
+  display: flex; flex-direction: column; gap: 4px; padding: 13px 15px; border-radius: 10px; text-decoration: none;
+  background: var(--page); border: 1px solid var(--border); color: var(--text-primary);
+  transition: border-color .15s ease, box-shadow .15s ease;
 }
-.kicker-body { padding: 12px 14px 14px; }
-.mini-kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-.mini-kpi { background: var(--surface-1); border: 1px solid var(--border); border-radius: 6px; padding: 8px 9px; }
-.mini-kpi .l { font-size: 10px; color: var(--muted); }
-.mini-kpi .v { font-size: 17px; font-weight: 700; }
+.explore-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(0, 0, 0, .08); }
+.explore-card b { font-size: 13.5px; }
+.explore-card span { font-size: 12px; color: var(--text-secondary); line-height: 1.45; }
+.card-note a, .footer-note a { color: var(--accent); font-weight: 600; text-decoration: none; }
 
-/* ---- site nav (new, not from the mockups -- for the landing page / cross-dashboard nav) ---- */
-.sitenav {
-  position: sticky; top: 0; z-index: 40; max-width: none; margin: 0 0 22px; padding: 12px max(4px, calc((100% - 1280px) / 2));
-  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-  background: color-mix(in srgb, var(--page) 92%, transparent); backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--border);
-}
-.sitenav .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 15px; letter-spacing: -.01em; }
-.sitenav .brand .mark {
-  width: 30px; height: 30px; border-radius: 8px; background: var(--brand-navy); color: var(--brand-navy-ink);
-  display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 800;
-  box-shadow: 0 2px 6px color-mix(in srgb, var(--brand-navy) 50%, transparent);
-}
-.sitenav .links { display: flex; gap: 4px; flex-wrap: wrap; }
-.sitenav .links a {
-  font-size: 13px; font-weight: 600; color: var(--text-secondary); text-decoration: none;
-  padding: 7px 12px; border-radius: 999px; transition: background-color .15s ease, color .15s ease;
-}
-.sitenav .links a:hover { background: var(--grid); color: var(--text-primary); }
-.sitenav .links a.active { background: var(--accent); color: #fff; }
+/* ================================================================ 8. Responsive == */
 
-/* ---- unit header (2026-07-30): moved here from lifting-strength.html and
-   special-teams-overview.html, where it was declared byte-identically in both
-   files' local <style> blocks -- a real dashboard-canvas header, shared across
-   every unit/tab, belongs in the shared design system per this file's own
-   stated rule, not copy-pasted per page. ---- */
-.unit-header {
-  background: linear-gradient(135deg, var(--brand-navy), color-mix(in srgb, var(--brand-navy) 80%, #000));
-  color: var(--brand-navy-ink); border-radius: 12px 12px 0 0; padding: 18px 26px;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-  border-bottom: 3px solid var(--cat-2);
+@media (max-width: 1100px) {
+  .lbgrid { grid-template-columns: repeat(2, 1fr); }
 }
-.unit-header .brandmark { display: flex; align-items: center; gap: 13px; }
-.unit-header .brandmark .crest {
-  width: 40px; height: 40px; border-radius: 50%; background: var(--cat-2); color: #fff;
-  display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
-}
-.unit-header h2 { font-size: 23px; margin: 0; font-weight: 800; letter-spacing: -.01em; }
-.unit-header .sub { font-size: 11.5px; opacity: .8; }
-
-/* ---- responsive (2026-07-29): the dashboard canvas (.slide, now fluid above)
-   used to be a fixed 1280px block panned via .stage's overflow-x -- per user
-   request this now reflows on tablet/mobile instead. Component classes that are
-   re-declared per-page (unit-header, kpirow-6, chartgrid, lbgrid, comparegrid)
-   get their own breakpoints alongside their base rule in each dashboard file,
-   since a later same-specificity rule here would lose to that file's
-   unconditional declaration -- only truly shared, never-overridden classes are
-   handled here. ---- */
 @media (max-width: 900px) {
-  .grid2, .colcard-2 { grid-template-columns: 1fr; }
+  .cards, .grid2 { grid-template-columns: 1fr; }
   .kpi .value { font-size: 23px; }
   .kpirow { grid-template-columns: repeat(2, 1fr); }
   .kpirow-5, .kpirow-6 { grid-template-columns: repeat(3, 1fr); }
+  .comparegrid { grid-template-columns: 1fr 1fr; }
 }
-
+@media (max-width: 720px) {
+  .sitenav { gap: 6px; position: static; } /* a two-row sticky header would eat a sixth of a phone screen */
+  .sitenav .links { flex-wrap: nowrap; overflow-x: auto; width: 100%; padding-bottom: 2px; scrollbar-width: none; }
+  .sitenav .links::-webkit-scrollbar, .tabbar::-webkit-scrollbar { display: none; }
+  .sitenav .links a, .tabbtn { white-space: nowrap; flex-shrink: 0; }
+  .sitenav .links.utility { margin-left: 0; }
+  .tabbar { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+}
 @media (max-width: 640px) {
   .page { padding: 16px 0 40px; }
-  .intro, .tabbar, .frame-wrap, .sitenav { padding-left: 12px; padding-right: 12px; }
-  .titlebar, .shelf, .body, .footer-note { padding-left: 14px; padding-right: 14px; }
+  .tabbar, .sitenav, .pagehead, .subbar { padding-left: 12px; padding-right: 12px; }
+  .shelf, .body, .footer-note { padding-left: 14px; padding-right: 14px; }
   .kpi .value { font-size: 20px; }
   .kpi.small .value { font-size: 16px; }
+  .kpirow { grid-template-columns: 1fr; }
+  .kpirow-5, .kpirow-6, .mini-kpi-row { grid-template-columns: repeat(2, 1fr); }
   table.mini { font-size: 11.5px; }
   table.mini th, table.mini td { padding: 6px; }
-  .unit-header { padding: 14px 16px; }
-  .unit-header h2 { font-size: 19px; }
-  .kpirow { grid-template-columns: 1fr; }
-  .kpirow-5, .kpirow-6 { grid-template-columns: repeat(2, 1fr); }
-  .mini-kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .lbgrid, .comparegrid { grid-template-columns: 1fr; }
+  .lb-scroll-wrap { padding-left: 12px; padding-right: 12px; }
+}
+@media (max-width: 560px) {
+  .trend-body { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+/* ===================================================================== Print == */
+
+@media print {
+  .sitenav, .pagehead, .tabbar, .subbar, .no-print, .filters-control, .filters-summary { display: none !important; }
+  .panel { box-shadow: none; border: none; }
+  .print-only { display: inline !important; }
+  /* Rankings: only the card whose PDF button was pressed (.print-target) prints. */
+  .cards:has(.print-target) .card:not(.print-target) { display: none !important; }
+  .cards { display: block !important; }
+  .rank-scroll, .tbl-scroll { max-height: none !important; overflow: visible !important; }
+  table.rank-table thead th, table.records-table thead th,
+  table.mini.scenario-table thead th, table.mini.scenario-table thead th:first-child,
+  table.mini.scenario-table tbody tr:not(.tbl-section) td:first-child { position: static; box-shadow: none; }
 }

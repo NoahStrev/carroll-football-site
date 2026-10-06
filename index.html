@@ -3,16 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Homepage removed 2026-08-04, per the user ("the overview page is super
-     out of date... remove it for now, but we'll make a backlog note to
-     make a new intro page"). Root now just redirects to the Updates page
-     (meta refresh + JS fallback, since GitHub Pages serves this file at
-     the bare site URL and every dashboard's own nav no longer has a
-     separate "Overview" link -- that would've just duplicated the
-     existing "Updates" nav item). Backlog: build a real intro/landing
-     page and replace this redirect -- see README's Plan section. -->
-<meta http-equiv="refresh" content="0; url=dashboards/updates.html">
-<script>location.replace('dashboards/updates.html');</script>
+<!-- The site root just forwards to the Home page (meta refresh + JS fallback: GitHub Pages serves this file at the bare site URL). -->
+  <meta http-equiv="refresh" content="0; url=dashboards/home.html">
+<script>location.replace('dashboards/home.html');</script>
 <title>Carroll Football Analytics</title>
 <link rel="stylesheet" href="css/theme.css">
 <style>
@@ -31,7 +24,7 @@
   <div class="redirect-note">
     <div class="crest">CU</div>
     <h2>Carroll Football Analytics</h2>
-    <p>Redirecting to <a href="dashboards/updates.html">Updates</a>&hellip;</p>
+    <p>Redirecting to <a href="dashboards/home.html">Home</a>&hellip;</p>
   </div>
 </body>
 </html>
