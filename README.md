@@ -108,6 +108,12 @@ fills that header (`.print-head`); a card that is only links can opt out with `n
 `game-data.json`'s `defense.official` is Carroll's defense — i.e. the OPPONENT's offense — but its `score_differential` is still Carroll's lead. Anything
 that buckets those rows by score ("Leading by 9+") as the opponent's own offense must use `opponentOffenseRows()` (js/lib/data.js), which flips the sign.
 
+`build_game_data.py` also drops "Penalty, No Play" snaps (nullified and replayed, so not plays) and re-labels a drive whose
+"Touchdown" was really an interception/fumble returned the other way. With both, per-game yardage matches the official box score exactly in
+39 of 54 games and within ~30 yards in nearly all of the rest. Known source-side exceptions: 2021-11-06 vs Carthage has about 82 yards of
+Carroll's offense sitting in the defense data, and a handful of games carry a 20-30 yard rushing gap. `validate_data.py` re-checks the current
+season on every refresh.
+
 ## Running locally
 
 ```bash

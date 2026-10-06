@@ -212,7 +212,8 @@ html, body {
   border-radius: 12px; box-shadow: 0 10px 34px rgba(0, 0, 0, .12); border-top: 3px solid var(--brand-navy);
 }
 .shelf { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 24px; border-bottom: 1px solid var(--grid); flex-wrap: wrap; position: relative; }
-.shelf-filters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.shelf-filters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; max-width: 100%; }
+.shelf-filters .select-sm { max-width: 100%; min-width: 0; text-overflow: ellipsis; } /* a long option (a game, an opponent) must not widen the page on a phone */
 .shelf-right { display: flex; align-items: center; gap: 10px; }
 .shelf-source { font-size: 11px; color: var(--muted); }
 .body { padding: 18px 24px 24px; }

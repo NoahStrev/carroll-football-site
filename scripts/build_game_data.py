@@ -171,10 +171,17 @@ def two_minute_drill(quarter, drive_clock):
     return int(m.group(1)) * 60 + int(m.group(2)) <= 120
 
 
+def is_defensive_touchdown(outcome):
+    """An interception or fumble returned for a touchdown is charted "Touchdown, Interception" (or "Touchdown,
+    Fumble, Turnover") on the play of the team that threw/fumbled -- but the touchdown belongs to the OTHER team."""
+    tags = set((outcome or "").split(", ")) if outcome else set()
+    return "Touchdown" in tags and ("Interception" in tags or "Turnover" in tags)
+
+
 def outcome_flags(outcome):
     tags = set((outcome or "").split(", ")) if outcome else set()
     return {
-        "is_touchdown": "Touchdown" in tags,
+        "is_touchdown": "Touchdown" in tags and not is_defensive_touchdown(outcome),
         "is_penalty": "Penalty" in tags,
         "is_first_down": "First Down" in tags,
     }
@@ -294,6 +301,7 @@ def main():
     # ------------------------------------------------- OfficialPlayByPlay ----
     offense_official, defense_official = [], []
     drives_by_key = {}  # (game_label, drive_num) -> {side, season, opponent, ...}
+    defensive_td_drives = set()  # drives that ended in an interception/fumble returned for a touchdown
 
     for r in opbp_all:
         if r["GAME_LABEL"] not in carroll_game_labels:
@@ -317,6 +325,12 @@ def main():
 
         if r["PLAY_TYPE"] not in SCRIMMAGE_PLAY_TYPES:
             continue
+        # "Penalty, No Play": the snap was nullified and replayed, so it is not a play -- the official box score
+        # leaves it out of plays and yards, and keeping it phantom-counted ~100 snaps per side (some "Explosive"
+        # with yardage that never happened). With these dropped, per-game yardage matches the box score for 39
+        # of 54 games (21 before). A penalty that was accepted but the play counted still stays in.
+        if "No Play" in (r["PLAY_OUTCOME"] or ""):
+            continue
         row = {
             "season": season, "opponent": r["OPPONENT"],
             "game_label": r["GAME_LABEL"], "date": r["GAME_DATE"], "quarter": r["QUARTER"],
@@ -335,6 +349,18 @@ def main():
             **outcome_flags(r["PLAY_OUTCOME"]),
         }
         (offense_official if side == "offense" else defense_official).append(row)
+        if is_defensive_touchdown(r["PLAY_OUTCOME"]) and r["DRIVE_NUM"] is not None:
+            defensive_td_drives.add((r["GAME_LABEL"], r["DRIVE_NUM"]))
+
+    # The source writes such a drive's result as "Touchdown" even though the drive ended in a turnover (the score
+    # went to the other side). Left alone, it counted a touchdown drive for the team that gave the ball away
+    # (14 drives across 54 games), inflating drive results and points per drive.
+    for row in (*offense_official, *defense_official):
+        if (row["game_label"], row["drive_num"]) in defensive_td_drives and row["drive_result"] == "Touchdown":
+            row["drive_result"] = "Turnover"
+    for key in defensive_td_drives:
+        if key in drives_by_key and drives_by_key[key]["result"] == "Touchdown":
+            drives_by_key[key]["result"] = "Turnover"
 
     offense_drives = [{"drive_num": k[1], "game_label": k[0], **v} for k, v in drives_by_key.items() if v["side"] == "offense"]
     defense_drives = [{"drive_num": k[1], "game_label": k[0], **v} for k, v in drives_by_key.items() if v["side"] == "defense"]

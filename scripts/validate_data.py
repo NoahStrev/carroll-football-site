@@ -11,7 +11,9 @@ Checks, by file:
   home.json / box scores   no duplicate dates, every box score parsed, scores in range, each season's
                            computed W-L matches the record the box score itself prints, <= 14 games a season
   game-data.json           every charted game has a box score, offense AND defense rows, few missing yards,
-                           known play types, opponent spellings match the box-score canon
+                           known play types, opponent spellings match the box-score canon, no "No Play" snaps,
+                           no touchdown drive that really ended in a turnover, and (current season) each side's
+                           yardage within reach of the official box score's total offense
   special-teams.json       every row's date is a real box-score game, every unit present for the latest season
   rankings.json            CCIW and national cover the same weeks
   team-stats.json          Carroll present with every category, snapshot not stale
@@ -23,7 +25,9 @@ Checks, by file:
 Run:   python validate_data.py        (exit 0 = no errors)
 """
 
+import glob
 import json
+import re
 import subprocess
 import sys
 from collections import Counter
@@ -104,9 +108,52 @@ def check_games(home, game):
         odd = kinds - {"Rush", "Pass", "Sack", "Kneel", "Two-Point Conversion", "Spike", "Penalty", None}
         if odd:
             err(f"game-data: unknown play types in {side}: {sorted(odd)}")
+        if any("No Play" in (r["play_outcome"] or "") for r in rows):
+            err(f"game-data: {side} still contains \"No Play\" snaps (build_game_data.py should drop them)")
+        by_drive = {}
+        for r in rows:
+            by_drive.setdefault((r["game_label"], r["drive_num"]), []).append(r)
+        for (label, num_), drive in by_drive.items():
+            if num_ is not None and drive[0]["drive_result"] == "Touchdown" and any(r["play_outcome"] and "Touchdown" in r["play_outcome"] and ("Interception" in r["play_outcome"] or "Turnover" in r["play_outcome"]) for r in drive):
+                err(f"game-data: {label} drive {num_} is a touchdown drive that really ended in a turnover (defensive TD)")
         opps = {r["opponent"] for r in rows}
         if opps - canon:
             err(f"game-data: opponent spelling(s) not in the box-score canon: {sorted(opps - canon)}")
+
+
+def check_pbp_vs_box(game, season):
+    """Each charted game's play-by-play yardage against the official box score's total offense. Nullified ("No Play")
+    snaps are excluded at build time, so the two should agree closely: 39 of 54 archive games match exactly, and the
+    rest are within ~30 yards (penalty/rushing edge cases in the source). A gap bigger than that in the CURRENT
+    season is a new load worth a look -- e.g. a drive tagged to the wrong side, which moves its yards from one side to
+    the other (2021-11-06 vs Carthage does exactly that and is a known, source-side issue)."""
+    raw = SITE.parent / "Special Teams Data" / "raw"
+    if not raw.exists():
+        warn(f"box scores not found at {raw}; skipping the play-by-play vs box-score yardage check")
+        return
+    by_date = {"offense": Counter(), "defense": Counter()}
+    for side in by_date:
+        for r in game[side]["official"]:
+            if r["season"] == season:
+                by_date[side][r["date"]] += r["yards"] or 0
+    num = lambda x: int(re.sub(r"[^0-9-]", "", x) or 0)
+    for path in sorted(glob.glob(str(raw / f"{season}_*.json"))):
+        d = json.loads(Path(path).read_text(encoding="utf-8"))
+        mo, dy = d["game_info"]["date"].split("/")[:2]
+        date = f"{season}-{mo.zfill(2)}-{dy.zfill(2)}"
+        if date not in by_date["offense"]:
+            continue
+        away, _, home = d["game_info"]["matchup"].partition("-VS-")
+        abbr = d["home_away"]
+        mine = abbr["home_abbr"] if "Carroll" in home else abbr["away_abbr"]
+        yards = d["team_stats"]["Total Offense"]["Yards"]
+        theirs = next(k for k in yards if k != mine)
+        for side, key in (("offense", mine), ("defense", theirs)):
+            gap = by_date[side][date] - num(yards[key])
+            if abs(gap) > 60:
+                err(f"game-data: {date} {side} yardage is {gap:+d} yards from the box score ({by_date[side][date]} vs {num(yards[key])}) -- plays on the wrong side?")
+            elif abs(gap) > 30:
+                warn(f"game-data: {date} {side} yardage is {gap:+d} yards from the box score ({by_date[side][date]} vs {num(yards[key])})")
 
 
 def check_special_teams(home, st):
@@ -169,7 +216,9 @@ def check_no_regressions(home, game, st):
     old_game = committed("game-data.json")
     if old_game:
         for side in ("offense", "defense"):
-            was, now = Counter(r["date"] for r in old_game[side]["official"]), Counter(r["date"] for r in game[side]["official"])
+            # "No Play" snaps are no longer part of the data (build_game_data.py), so don't count them as lost
+            was = Counter(r["date"] for r in old_game[side]["official"] if "No Play" not in (r["play_outcome"] or ""))
+            now = Counter(r["date"] for r in game[side]["official"])
             for d, n in was.items():
                 if now[d] < n * 0.95:
                     err(f"game-data: {side} plays on {d} dropped from {n} to {now[d]}")
@@ -183,6 +232,7 @@ def check_no_regressions(home, game, st):
 def main():
     home, game, st = load("home.json"), load("game-data.json"), load("special-teams.json")
     check_games(home, game)
+    check_pbp_vs_box(game, home["season"])
     check_special_teams(home, st)
     check_rankings(load("rankings.json"))
     check_team_stats(load("team-stats.json"))
