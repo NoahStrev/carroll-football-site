@@ -1,7 +1,7 @@
 """
-Runs this site's own 6 build scripts in sequence for routine updates:
+Runs this site's own 7 build scripts in sequence for routine updates:
 build_special_teams_data.py, build_career_stats.py, build_records_data.py,
-build_lifting_data.py, build_game_data.py, build_rankings_data.py.
+build_lifting_data.py, build_game_data.py, build_rankings_data.py, build_home_data.py.
 
 This only covers this site's own rebuild step. The upstream sibling projects
 each source data from (Special Teams Data, Lifting Data, Game Analysis, CCIW
@@ -18,9 +18,10 @@ workbooks, for Record Watch's "current players vs. the record book" section.
 Added 2026-09-08 -- these 2 scripts existed for a while before anyone
 noticed they'd never actually been wired into this list, so every weekly
 run was silently rebuilding Rankings/Special Teams/Lifting/Game Data while
-Career Stats and Record Watch quietly went stale. The remaining 3 scripts
+Career Stats and Record Watch quietly went stale. The next 3 scripts
 have no dependency on each other or on the first 3, so their relative order
-doesn't matter.
+doesn't matter. build_home_data.py runs LAST: it summarizes data/game-data.json and
+data/special-teams.json (plus the raw box scores' final scores), so it must see their fresh output.
 
 Continues past a failing script (so one bad workbook doesn't block the
 others) and reports a pass/fail summary at the end. Exits non-zero if any
@@ -43,6 +44,7 @@ BUILD_SCRIPTS = [
     "build_lifting_data.py",
     "build_game_data.py",
     "build_rankings_data.py",
+    "build_home_data.py",  # must stay last -- reads game-data.json and special-teams.json
 ]
 
 

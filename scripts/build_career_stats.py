@@ -285,6 +285,12 @@ def season_plausible(person, season):
     return lo <= season <= hi
 
 
+# Box scores credit some plays to the team itself (kneel-downs, a blocked kick with no individual
+# credited, ...), scraped as a "player" named TEAM / Team. They are not people and must never
+# become a career-stats entry.
+NON_PERSON_NAMES = {"team", "totals", "total", "opponent", "opponents"}
+
+
 def split_raw_name(raw_name):
     """Every raw "player" field value -> (last, first), handling the 3 real
     formats confirmed across this archive (2026-09-08) -- returns (None,
@@ -310,6 +316,8 @@ def split_raw_name(raw_name):
     """
     if not raw_name or raw_name.strip().isdigit():
         return None, None  # a real (rare) scrape artifact -- a bare jersey number instead of a name
+    if raw_name.strip().lower() in NON_PERSON_NAMES:
+        return None, None  # a team-credited line, not a player
     if "," not in raw_name:
         bits = raw_name.split()
         if len(bits) == 2:
@@ -743,8 +751,8 @@ def accumulate_special_teams(players, roster, last_name_to_keys, unmatched_displ
     # surnames. A snap "attempt" here just means "this row credits a
     # snapper at all" -- neither sheet tracks snap quality/grade as a
     # per-snapper aggregate stat, only the per-attempt charted fields
-    # (Snap Location, Snap to Catch) that dashboards/short-snapper.html
-    # and long-snapper.html already chart directly from the row-level data.
+    # (Snap Location, Snap to Catch) that Special Teams > Athletes (Short/Long
+    # Snapper) already charts directly from the row-level data.
     for unit_key, name_field, category in [("money_unit", "long_snapper", "ShortSnapping"), ("punt", "snapper", "LongSnapping")]:
         for row in st["units"].get(unit_key, []):
             raw_name = row.get(name_field)

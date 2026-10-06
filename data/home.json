@@ -1,0 +1,143 @@
+{
+  "generated_from": "game-data.json, special-teams.json, Special Teams Data box scores",
+  "season": 2026,
+  "prior_label": "2021–2025",
+  "record": "3-1",
+  "conference_record": "2-0",
+  "games": [
+    {
+      "date": "2026-09-05",
+      "opponent": "St. Norbert",
+      "home": false,
+      "carroll_pts": 40,
+      "opp_pts": 10,
+      "result": "W",
+      "charted": true,
+      "offense": {
+        "plays": 51,
+        "ypp": 9.7255,
+        "success": 0.3333,
+        "explosive": 0.1765,
+        "turnovers": 0
+      },
+      "defense": {
+        "plays": 75,
+        "ypp": 4.1486,
+        "success": 0.3784,
+        "explosive": 0.1351,
+        "turnovers": 1
+      },
+      "st_score": 42.0519
+    },
+    {
+      "date": "2026-09-12",
+      "opponent": "UW Eau Claire",
+      "home": true,
+      "carroll_pts": 17,
+      "opp_pts": 34,
+      "result": "L",
+      "charted": true,
+      "offense": {
+        "plays": 74,
+        "ypp": 5.5972,
+        "success": 0.4167,
+        "explosive": 0.1389,
+        "turnovers": 3
+      },
+      "defense": {
+        "plays": 66,
+        "ypp": 7.4531,
+        "success": 0.381,
+        "explosive": 0.2063,
+        "turnovers": 1
+      },
+      "st_score": 39.9583
+    },
+    {
+      "date": "2026-09-19",
+      "opponent": "Elmhurst",
+      "home": false,
+      "carroll_pts": 33,
+      "opp_pts": 0,
+      "result": "W",
+      "charted": true,
+      "offense": {
+        "plays": 81,
+        "ypp": 6.8861,
+        "success": 0.5316,
+        "explosive": 0.1899,
+        "turnovers": 3
+      },
+      "defense": {
+        "plays": 47,
+        "ypp": 3.7447,
+        "success": 0.2128,
+        "explosive": 0.0851,
+        "turnovers": 0
+      },
+      "st_score": 35.8208
+    },
+    {
+      "date": "2026-09-26",
+      "opponent": "Carthage",
+      "home": true,
+      "carroll_pts": 20,
+      "opp_pts": 0,
+      "result": "W",
+      "charted": true,
+      "offense": {
+        "plays": 70,
+        "ypp": 3.1714,
+        "success": 0.2687,
+        "explosive": 0.0896,
+        "turnovers": 0
+      },
+      "defense": {
+        "plays": 67,
+        "ypp": 2.5312,
+        "success": 0.1429,
+        "explosive": 0.1111,
+        "turnovers": 5
+      },
+      "st_score": 39.4333
+    }
+  ],
+  "season_stats": {
+    "offense": {
+      "plays": 276,
+      "ypp": 6.1213,
+      "success": 0.3978,
+      "explosive": 0.1487,
+      "turnovers": 6
+    },
+    "defense": {
+      "plays": 255,
+      "ypp": 4.506,
+      "success": 0.2874,
+      "explosive": 0.1377,
+      "turnovers": 7
+    },
+    "st_score": 39.4,
+    "pts_for_pg": 27.5,
+    "pts_against_pg": 11.0
+  },
+  "prior_stats": {
+    "offense": {
+      "plays": 3255,
+      "ypp": 5.2673,
+      "success": 0.3876,
+      "explosive": 0.1355,
+      "turnovers": 70
+    },
+    "defense": {
+      "plays": 3475,
+      "ypp": 5.676,
+      "success": 0.4195,
+      "explosive": 0.1554,
+      "turnovers": 83
+    },
+    "st_score": 44.1518,
+    "pts_for_pg": 27.28,
+    "pts_against_pg": 28.7
+  }
+}
