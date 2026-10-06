@@ -109,7 +109,7 @@ def parse_game_info(path):
 # where it has one, so the Next Opponent tab's opponent matches the rest of Opponent Scouting.
 TYPOS = {"millikan": "millikin", "lackeland": "lakeland", "univeristy": "university", "lacrosse": "la crosse"}
 DISPLAY_OVERRIDES = {"illinois": "Illinois College", "uw la crosse": "UW La Crosse", "cornell": "Cornell College"}
-KEY_ALIASES = {"washington": "wash u", "washu": "wash u", "wis lutheran": "wisconsin lutheran"}
+KEY_ALIASES = {"washington": "wash u", "washu": "wash u", "wis lutheran": "wisconsin lutheran", "ill wesleyan": "illinois wesleyan"}
 
 
 def team_key(name):
@@ -137,6 +137,14 @@ def display_names(box, canonical):
             best = re.sub(r"\s+(College|University|U\.)$", "", best, flags=re.I)
             names[key] = best.title() if best.isupper() else best
     return {key: DISPLAY_OVERRIDES.get(key, name) for key, name in names.items()}
+
+
+def load_names():
+    """key -> display name for every opponent in the box scores and play-by-play (what the other build
+    scripts need to spell a team the way the rest of the site does)."""
+    game_data = json.loads((DATA / "game-data.json").read_text(encoding="utf-8"))
+    box = [g for g in map(parse_game_info, glob.glob(RAW_GLOB)) if g]
+    return display_names(box, {g["opponent"] for g in game_data["games"]})
 
 
 def parse_schedule(names):

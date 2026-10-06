@@ -85,7 +85,7 @@
     const g = H.games[H.games.length - 1];
     if (!g) return '';
     const tags = takeaways(g, H.prior_stats, H.prior_label);
-    return `<div class="card">
+    return `<div class="card tight">
       <div class="card-head"><h2>Last game</h2><span class="data-note" style="margin:0;">${dayText(g.date, { month: 'short', day: 'numeric' })}</span></div>
       <div class="card-body">
         <div class="tw-score"><span class="tag ${g.result === 'W' ? 'good' : 'crit'}">${g.result}</span> <b>${g.carroll_pts}–${g.opp_pts}</b> ${g.home ? 'vs' : '@'} ${esc(g.opponent)}</div>
@@ -106,13 +106,13 @@
     const upcoming = meta.schedule.filter((x) => x.date >= today && !x.completed);
     const next = upcoming[0];
     if (!next) {
-      return `<div class="card"><div class="card-head"><h2>Next game</h2></div><div class="card-body"><div class="data-note">No more games on the schedule${meta.schedule.length ? ' — the regular season is complete.' : '.'}</div></div></div>`;
+      return `<div class="card tight"><div class="card-head"><h2>Next game</h2></div><div class="card-body"><div class="data-note">No more games on the schedule${meta.schedule.length ? ' — the regular season is complete.' : '.'}</div></div></div>`;
     }
     const hist = H.history[next.opponent] || [];
     const w = hist.filter((x) => x.result === 'W').length, l = hist.filter((x) => x.result === 'L').length;
     const last = hist[0];
     const rest = upcoming.slice(1, 5).map((x) => `${esc(x.opponent)} <span class="muted">${dayText(x.date, { month: 'short', day: 'numeric' })}</span>`).join(' · ');
-    return `<div class="card">
+    return `<div class="card tight">
       <div class="card-head"><h2>Next game</h2><span class="data-note" style="margin:0;">${dayText(next.date, { weekday: 'short', month: 'short', day: 'numeric' })}${next.time ? ` · ${esc(next.time)}` : ''}</span></div>
       <div class="card-body">
         <div class="tw-score"><b>${next.home ? 'Home vs' : 'At'} ${esc(next.opponent)}</b> ${next.conference ? '<span class="tag good">CCIW</span>' : '<span class="tag">Non-conference</span>'}</div>
@@ -186,7 +186,7 @@
       const res = `<span class="tag ${g.result === 'W' ? 'good' : 'crit'}">${g.result} ${g.carroll_pts}–${g.opp_pts}</span>`;
       const off = g.charted ? `${fmt(g.offense.ypp)} <span class="muted">· ${pct(g.offense.success, 0)}</span>` : '—';
       const def = g.charted ? `${fmt(g.defense.ypp)} <span class="muted">· ${pct(g.defense.success, 0)}</span>` : '—';
-      return `<tr><td>${g.date.slice(5).replace('-', '/')}</td><td class="name">${g.home ? 'vs' : '@'} ${esc(g.opponent)}</td><td>${res}</td><td>${off}</td><td>${def}</td><td>${fmt(g.st_score, 0)}</td></tr>`;
+      return `<tr><td>${g.date.slice(5).replace('-', '/')}</td><td class="name"><a href="opponent-scouting.html#review/${g.date}" title="Game review">${g.home ? 'vs' : '@'} ${esc(g.opponent)}</a></td><td>${res}</td><td>${off}</td><td>${def}</td><td>${fmt(g.st_score, 0)}</td></tr>`;
     }).join('');
 
     const rank = rankingsCard(R, String(H.season));

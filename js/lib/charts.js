@@ -350,7 +350,7 @@ function renderSparkline(container, { values, labels, unit = '', seasons, oppone
       `<div class="tt-title">${p.l}${p.season ? `, ${p.season}` : ''}</div>`,
       p.opponent ? `<div class="tt-row"><span>Opponent</span><span>${p.opponent}</span></div>` : '',
       `<div class="tt-row"><span>Value</span><span>${fmt(p.v)}${unit}</span></div>`,
-      delta !== null ? `<div class="tt-row"><span>Vs previous</span><span style="color:${delta >= 0 ? 'var(--delta-good)' : 'var(--critical)'}">${delta >= 0 ? '+' : ''}${fmt(delta)}${unit}</span></div>` : '',
+      delta !== null ? `<div class="tt-row"><span>Vs previous</span><span style="color:${delta >= 0 ? 'var(--delta-good)' : 'var(--critical-text)'}">${delta >= 0 ? '+' : ''}${fmt(delta)}${unit}</span></div>` : '',
       `<div class="tt-muted">${vsAvg >= 0 ? '+' : ''}${fmt(vsAvg)}${unit} vs average (${fmt(avg)}${unit})</div>`,
     ].join('');
     c.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html()));
@@ -437,7 +437,7 @@ function renderTrendCard(container, rows, field, unit, title) {
         </div>
         <div class="kpi small kpi-plain" style="border:none; padding:0; background:none; margin-top:10px;">
           <div class="label">Last vs Previous Game</div>
-          <div class="value" style="font-size:15px; color:${delta === null ? 'inherit' : (delta >= 0 ? 'var(--delta-good)' : 'var(--critical)')}">${delta === null ? '—' : (delta >= 0 ? '+' : '') + fmt(delta)}</div>
+          <div class="value" style="font-size:15px; color:${delta === null ? 'inherit' : (delta >= 0 ? 'var(--delta-good)' : 'var(--critical-text)')}">${delta === null ? '—' : (delta >= 0 ? '+' : '') + fmt(delta)}</div>
         </div>
       </div>
       <div class="trend-chart"></div>

@@ -95,6 +95,18 @@ async function checkPage(page, width) {
   for (const tab of list) {
     if (tab.id) { win.location.hash = tab.id; await settle(win); }
     record(page, tab.label, inspect(page, win, errors, width));
+    // Also try a few other choices in the shelf's first dropdown (an opponent, a game, ...): the second and
+    // the middle and last options, which is where an edge case (no data, a non-conference team) tends to be.
+    const select = win.document.querySelector('#site-stage .shelf select');
+    if (select && select.options.length > 2) {
+      const n = select.options.length;
+      for (const i of [...new Set([1, Math.floor(n / 2), n - 1])]) {
+        select.selectedIndex = i;
+        select.dispatchEvent(new win.Event('change', { bubbles: true }));
+        await settle(win);
+        record(page, `${tab.label} › ${select.options[i].text.slice(0, 40)}`, inspect(page, win, errors, width));
+      }
+    }
     const pills = [...win.document.querySelectorAll('#site-stage .pillbar')];
     for (let p = 0; p < pills.length; p++) {
       const labels = [...pills[p].querySelectorAll('.pill')].map((b) => b.textContent.trim());
@@ -109,6 +121,7 @@ async function checkPage(page, width) {
       }
     }
   }
+  frame.src = 'about:blank'; // let the page's data (several MB of JSON) be collected before the next one loads
   frame.remove();
 }
 

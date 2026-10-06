@@ -15,7 +15,7 @@ projects in `Football/`.
 | Offense | `offense.html` | Scorecard · Tendencies · Outcomes · Position Groups (QB / RB / WR / OL) | `game-data.json` |
 | Defense | `defense.html` | Scorecard · Tendencies · Outcomes · Position Groups (DL / LB / CB / S) | `game-data.json` |
 | Special Teams | `special-teams.html` | Overview · Money Unit · Punt · Punt Return · Kickoff · Kickoff Return · Athletes (role × Scorecard / Head-to-Head / Deep Dive) | `special-teams.json` |
-| Opponent Scouting | `opponent-scouting.html` | Next Opponent (a game-plan page; defaults to the next scheduled opponent, `#next/<opponent>`) · By Opponent · Offense · Defense (each: Carroll self-scout / opponent scout) | `game-data.json`, `home.json`, `meta.json` |
+| Opponent Scouting | `opponent-scouting.html` | Next Opponent (a game-plan page; defaults to the next scheduled opponent, `#next/<opponent>`) · Game Review (a recap of any one game, `#review/<yyyy-mm-dd>`) · By Opponent · Offense · Defense (each: Carroll self-scout / opponent scout) | `game-data.json`, `home.json`, `meta.json`, `special-teams.json`, `team-stats.json` |
 | Rankings | `rankings.html` | Offensive · Defensive · Special Teams · Additional Metrics (one season/week picker) | `rankings.json` |
 | Lifting & Strength | `lifting-strength.html` | Leaderboards (All Time / Last Session / each class) · Compare Athletes | `lifting.json` |
 | Players & Records | `players.html` | Career Stats · Compare Players · Record Book · Record Watch · Awards History | `career-stats.json`, `records.json` |
@@ -86,9 +86,10 @@ Upstream projects (sibling folders) → `scripts/build_*.py` → `data/*.json` �
 | `build_lifting_data.py` | `lifting.json` | `Lifting Data/output/Lifting_Consolidated_AllYears.xlsx` |
 | `build_game_data.py` | `game-data.json` | `Game Analysis/processed/combined_play_data.xlsx` |
 | `build_rankings_data.py` | `rankings.json` | CCIW and National Buddah Report workbooks |
+| `build_team_stats.py` | `team-stats.json` | National Buddah Report's latest weekly snapshot (`raw/<season>/<date>/team/*.csv`): every CCIW team's season totals and national rank |
 | `build_home_data.py` | `home.json`, `meta.json` | `game-data.json`, `special-teams.json`, `rankings.json`, `lifting.json`, box-score results back to 2010, `Schedule/schedule.json` |
 
-`python scripts/refresh_all.py` runs all seven in dependency order (the Home summary runs last) and prints a pass/fail
+`python scripts/refresh_all.py` runs all eight in dependency order (the Home summary runs last) and prints a pass/fail
 summary. It only covers this site's own rebuild — each upstream project has its own scrape/build step that runs first.
 New game data is added on request, not on a schedule.
 
@@ -111,7 +112,11 @@ http — `fetch()` of local JSON doesn't work from `file://`.
 at that width, opens every tab and sub-view pill, and fails a view for script errors, a near-empty view, stray
 `undefined`/`NaN` text, sideways page overflow, or content clipped inside a card. Run it after any change to the shell,
 the shared library, or the CSS. (Opponent front/coverage views are *expected* to show their "not charted" explanation for
-2026 — that passes; it is a data gap, not a bug.)
+2026 — that passes; it is a data gap, not a bug.) It also tries a few choices in each tab's first dropdown (other opponents, other games).
+
+`python tests/run_smoke.py` runs the same check headless (needs `pip install playwright`; set `SMOKE_BROWSER_CHANNEL=msedge` to use an installed
+browser instead of `playwright install chromium`). `.github/workflows/smoke.yml` runs it on every push to `master` and on pull requests;
+GitHub Pages publishes regardless, so a red check means fix soon, not blocked.
 
 ## Conventions worth knowing
 

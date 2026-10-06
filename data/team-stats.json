@@ -1,0 +1,908 @@
+{
+ "season": 2026,
+ "snapshot_date": "2026-10-01",
+ "categories": [
+  {
+   "category": "Scoring Offense",
+   "group": "offense",
+   "stat": "PPG"
+  },
+  {
+   "category": "Total Offense",
+   "group": "offense",
+   "stat": "YPG"
+  },
+  {
+   "category": "Passing Offense",
+   "group": "offense",
+   "stat": "YPG"
+  },
+  {
+   "category": "Rushing Offense",
+   "group": "offense",
+   "stat": "YPG"
+  },
+  {
+   "category": "3rd Down Conversion Pct",
+   "group": "offense",
+   "stat": "Pct"
+  },
+  {
+   "category": "Red Zone Offense",
+   "group": "offense",
+   "stat": "Pct"
+  },
+  {
+   "category": "Team Passing Efficiency",
+   "group": "offense",
+   "stat": "Pass Eff"
+  },
+  {
+   "category": "Scoring Defense",
+   "group": "defense",
+   "stat": "Avg"
+  },
+  {
+   "category": "Total Defense",
+   "group": "defense",
+   "stat": "YPG"
+  },
+  {
+   "category": "Passing Yards Allowed",
+   "group": "defense",
+   "stat": "YPG"
+  },
+  {
+   "category": "Rushing Defense",
+   "group": "defense",
+   "stat": "YPG"
+  },
+  {
+   "category": "3rd Down Conversion Pct Defense",
+   "group": "defense",
+   "stat": "Pct"
+  },
+  {
+   "category": "Red Zone Defense",
+   "group": "defense",
+   "stat": "Pct"
+  },
+  {
+   "category": "Team Sacks",
+   "group": "defense",
+   "stat": "Avg"
+  },
+  {
+   "category": "Turnover Margin",
+   "group": "other",
+   "stat": "Avg"
+  },
+  {
+   "category": "Net Punting",
+   "group": "other",
+   "stat": "Net Yds"
+  }
+ ],
+ "teams": {
+  "Augustana": {
+   "Scoring Offense": {
+    "games": 3,
+    "value": 28.7,
+    "rank": 93
+   },
+   "Total Offense": {
+    "games": 3,
+    "value": 404.3,
+    "rank": 70
+   },
+   "Passing Offense": {
+    "games": 3,
+    "value": 271.7,
+    "rank": 39
+   },
+   "Rushing Offense": {
+    "games": 3,
+    "value": 132.7,
+    "rank": 118
+   },
+   "3rd Down Conversion Pct": {
+    "games": 3,
+    "value": 0.385,
+    "rank": 120
+   },
+   "Red Zone Offense": {
+    "games": 3,
+    "value": 0.75,
+    "rank": 124
+   },
+   "Team Passing Efficiency": {
+    "games": 3,
+    "value": 132.63,
+    "rank": 104
+   },
+   "Scoring Defense": {
+    "games": 3,
+    "value": 22.67,
+    "rank": 106
+   },
+   "Total Defense": {
+    "games": 3,
+    "value": 345.3,
+    "rank": 128
+   },
+   "Passing Yards Allowed": {
+    "games": 3,
+    "value": 232.3,
+    "rank": 168
+   },
+   "Rushing Defense": {
+    "games": 3,
+    "value": 113.0,
+    "rank": 95
+   },
+   "3rd Down Conversion Pct Defense": {
+    "games": 3,
+    "value": 0.326,
+    "rank": 91
+   },
+   "Red Zone Defense": {
+    "games": 3,
+    "value": 0.667,
+    "rank": 59
+   },
+   "Team Sacks": {
+    "games": 3,
+    "value": 1.67,
+    "rank": 114
+   },
+   "Turnover Margin": {
+    "games": 3,
+    "value": -1.0,
+    "rank": 181
+   },
+   "Net Punting": {
+    "games": 3,
+    "value": 35.06,
+    "rank": 97
+   }
+  },
+  "Carroll": {
+   "Scoring Offense": {
+    "games": 3,
+    "value": 30.0,
+    "rank": 85
+   },
+   "Total Offense": {
+    "games": 3,
+    "value": 475.3,
+    "rank": 21
+   },
+   "Passing Offense": {
+    "games": 3,
+    "value": 296.0,
+    "rank": 24
+   },
+   "Rushing Offense": {
+    "games": 3,
+    "value": 179.3,
+    "rank": 60
+   },
+   "3rd Down Conversion Pct": {
+    "games": 3,
+    "value": 0.425,
+    "rank": 82
+   },
+   "Red Zone Offense": {
+    "games": 3,
+    "value": 0.7,
+    "rank": 157
+   },
+   "Team Passing Efficiency": {
+    "games": 3,
+    "value": 142.21,
+    "rank": 85
+   },
+   "Scoring Defense": {
+    "games": 3,
+    "value": 14.67,
+    "rank": 47
+   },
+   "Total Defense": {
+    "games": 3,
+    "value": 305.7,
+    "rank": 81
+   },
+   "Passing Yards Allowed": {
+    "games": 3,
+    "value": 123.3,
+    "rank": 20
+   },
+   "Rushing Defense": {
+    "games": 3,
+    "value": 182.3,
+    "rank": 186
+   },
+   "3rd Down Conversion Pct Defense": {
+    "games": 3,
+    "value": 0.275,
+    "rank": 42
+   },
+   "Red Zone Defense": {
+    "games": 3,
+    "value": 0.556,
+    "rank": 30
+   },
+   "Team Sacks": {
+    "games": 3,
+    "value": 2.0,
+    "rank": 81
+   },
+   "Turnover Margin": {
+    "games": 3,
+    "value": -2.33,
+    "rank": 233
+   },
+   "Net Punting": {
+    "games": 3,
+    "value": 29.3,
+    "rank": 190
+   }
+  },
+  "Carthage": {
+   "Scoring Offense": {
+    "games": 2,
+    "value": 11.5,
+    "rank": 210
+   },
+   "Total Offense": {
+    "games": 2,
+    "value": 174.5,
+    "rank": 233
+   },
+   "Passing Offense": {
+    "games": 2,
+    "value": 62.0,
+    "rank": 235
+   },
+   "Rushing Offense": {
+    "games": 2,
+    "value": 112.5,
+    "rank": 143
+   },
+   "3rd Down Conversion Pct": {
+    "games": 2,
+    "value": 0.217,
+    "rank": 224
+   },
+   "Red Zone Offense": {
+    "games": 2,
+    "value": 0.5,
+    "rank": 204
+   },
+   "Team Passing Efficiency": {
+    "games": 2,
+    "value": 109.05,
+    "rank": 172
+   },
+   "Scoring Defense": {
+    "games": 2,
+    "value": 27.0,
+    "rank": 139
+   },
+   "Total Defense": {
+    "games": 2,
+    "value": 415.0,
+    "rank": 192
+   },
+   "Passing Yards Allowed": {
+    "games": 2,
+    "value": 212.0,
+    "rank": 139
+   },
+   "Rushing Defense": {
+    "games": 2,
+    "value": 203.0,
+    "rank": 201
+   },
+   "3rd Down Conversion Pct Defense": {
+    "games": 2,
+    "value": 0.448,
+    "rank": 178
+   },
+   "Red Zone Defense": {
+    "games": 2,
+    "value": 0.667,
+    "rank": 59
+   },
+   "Team Sacks": {
+    "games": 2,
+    "value": 1.0,
+    "rank": 170
+   },
+   "Turnover Margin": {
+    "games": 2,
+    "value": 2.0,
+    "rank": 9
+   },
+   "Net Punting": {
+    "games": 2,
+    "value": 26.75,
+    "rank": 216
+   }
+  },
+  "Elmhurst": {
+   "Scoring Offense": {
+    "games": 3,
+    "value": 13.7,
+    "rank": 197
+   },
+   "Total Offense": {
+    "games": 3,
+    "value": 172.7,
+    "rank": 234
+   },
+   "Passing Offense": {
+    "games": 3,
+    "value": 92.7,
+    "rank": 229
+   },
+   "Rushing Offense": {
+    "games": 3,
+    "value": 80.0,
+    "rank": 186
+   },
+   "3rd Down Conversion Pct": {
+    "games": 3,
+    "value": 0.273,
+    "rank": 201
+   },
+   "Red Zone Offense": {
+    "games": 3,
+    "value": 0.429,
+    "rank": 223
+   },
+   "Team Passing Efficiency": {
+    "games": 3,
+    "value": 87.57,
+    "rank": 214
+   },
+   "Scoring Defense": {
+    "games": 3,
+    "value": 25.0,
+    "rank": 124
+   },
+   "Total Defense": {
+    "games": 3,
+    "value": 323.3,
+    "rank": 106
+   },
+   "Passing Yards Allowed": {
+    "games": 3,
+    "value": 173.3,
+    "rank": 71
+   },
+   "Rushing Defense": {
+    "games": 3,
+    "value": 150.0,
+    "rank": 144
+   },
+   "3rd Down Conversion Pct Defense": {
+    "games": 3,
+    "value": 0.425,
+    "rank": 162
+   },
+   "Red Zone Defense": {
+    "games": 3,
+    "value": 0.7,
+    "rank": 83
+   },
+   "Team Sacks": {
+    "games": 3,
+    "value": 2.67,
+    "rank": 47
+   },
+   "Turnover Margin": {
+    "games": 3,
+    "value": 1.33,
+    "rank": 29
+   },
+   "Net Punting": {
+    "games": 3,
+    "value": 28.52,
+    "rank": 195
+   }
+  },
+  "Illinois Wesleyan": {
+   "Scoring Offense": {
+    "games": 3,
+    "value": 28.7,
+    "rank": 93
+   },
+   "Total Offense": {
+    "games": 3,
+    "value": 378.3,
+    "rank": 93
+   },
+   "Passing Offense": {
+    "games": 3,
+    "value": 228.7,
+    "rank": 91
+   },
+   "Rushing Offense": {
+    "games": 3,
+    "value": 149.7,
+    "rank": 94
+   },
+   "3rd Down Conversion Pct": {
+    "games": 3,
+    "value": 0.395,
+    "rank": 110
+   },
+   "Red Zone Offense": {
+    "games": 3,
+    "value": 0.625,
+    "rank": 182
+   },
+   "Team Passing Efficiency": {
+    "games": 3,
+    "value": 141.6,
+    "rank": 86
+   },
+   "Scoring Defense": {
+    "games": 3,
+    "value": 18.33,
+    "rank": 71
+   },
+   "Total Defense": {
+    "games": 3,
+    "value": 356.7,
+    "rank": 139
+   },
+   "Passing Yards Allowed": {
+    "games": 3,
+    "value": 213.7,
+    "rank": 143
+   },
+   "Rushing Defense": {
+    "games": 3,
+    "value": 143.0,
+    "rank": 133
+   },
+   "3rd Down Conversion Pct Defense": {
+    "games": 3,
+    "value": 0.295,
+    "rank": 60
+   },
+   "Red Zone Defense": {
+    "games": 3,
+    "value": 0.7,
+    "rank": 83
+   },
+   "Team Sacks": {
+    "games": 3,
+    "value": 4.67,
+    "rank": 4
+   },
+   "Turnover Margin": {
+    "games": 3,
+    "value": 2.0,
+    "rank": 9
+   },
+   "Net Punting": {
+    "games": 3,
+    "value": 37.13,
+    "rank": 46
+   }
+  },
+  "Millikin": {
+   "Scoring Offense": {
+    "games": 3,
+    "value": 22.0,
+    "rank": 141
+   },
+   "Total Offense": {
+    "games": 3,
+    "value": 339.0,
+    "rank": 127
+   },
+   "Passing Offense": {
+    "games": 3,
+    "value": 144.0,
+    "rank": 197
+   },
+   "Rushing Offense": {
+    "games": 3,
+    "value": 195.0,
+    "rank": 47
+   },
+   "3rd Down Conversion Pct": {
+    "games": 3,
+    "value": 0.243,
+    "rank": 219
+   },
+   "Red Zone Offense": {
+    "games": 3,
+    "value": 0.769,
+    "rank": 120
+   },
+   "Team Passing Efficiency": {
+    "games": 3,
+    "value": 94.27,
+    "rank": 205
+   },
+   "Scoring Defense": {
+    "games": 3,
+    "value": 45.0,
+    "rank": 228
+   },
+   "Total Defense": {
+    "games": 3,
+    "value": 408.0,
+    "rank": 184
+   },
+   "Passing Yards Allowed": {
+    "games": 3,
+    "value": 250.3,
+    "rank": 188
+   },
+   "Rushing Defense": {
+    "games": 3,
+    "value": 157.7,
+    "rank": 158
+   },
+   "3rd Down Conversion Pct Defense": {
+    "games": 3,
+    "value": 0.405,
+    "rank": 144
+   },
+   "Red Zone Defense": {
+    "games": 3,
+    "value": 1.0,
+    "rank": 207
+   },
+   "Team Sacks": {
+    "games": 3,
+    "value": 0.33,
+    "rank": 221
+   },
+   "Turnover Margin": {
+    "games": 3,
+    "value": -0.33,
+    "rank": 136
+   },
+   "Net Punting": {
+    "games": 3,
+    "value": 25.0,
+    "rank": 225
+   }
+  },
+  "North Central": {
+   "Scoring Offense": {
+    "games": 3,
+    "value": 38.3,
+    "rank": 37
+   },
+   "Total Offense": {
+    "games": 3,
+    "value": 434.7,
+    "rank": 46
+   },
+   "Passing Offense": {
+    "games": 3,
+    "value": 282.0,
+    "rank": 30
+   },
+   "Rushing Offense": {
+    "games": 3,
+    "value": 152.7,
+    "rank": 90
+   },
+   "3rd Down Conversion Pct": {
+    "games": 3,
+    "value": 0.405,
+    "rank": 102
+   },
+   "Red Zone Offense": {
+    "games": 3,
+    "value": 1.0,
+    "rank": 2
+   },
+   "Team Passing Efficiency": {
+    "games": 3,
+    "value": 164.63,
+    "rank": 47
+   },
+   "Scoring Defense": {
+    "games": 3,
+    "value": 17.0,
+    "rank": 62
+   },
+   "Total Defense": {
+    "games": 3,
+    "value": 303.0,
+    "rank": 75
+   },
+   "Passing Yards Allowed": {
+    "games": 3,
+    "value": 189.7,
+    "rank": 97
+   },
+   "Rushing Defense": {
+    "games": 3,
+    "value": 113.3,
+    "rank": 96
+   },
+   "3rd Down Conversion Pct Defense": {
+    "games": 3,
+    "value": 0.289,
+    "rank": 54
+   },
+   "Red Zone Defense": {
+    "games": 3,
+    "value": 0.6,
+    "rank": 40
+   },
+   "Team Sacks": {
+    "games": 3,
+    "value": 2.33,
+    "rank": 64
+   },
+   "Turnover Margin": {
+    "games": 3,
+    "value": 1.0,
+    "rank": 42
+   },
+   "Net Punting": {
+    "games": 3,
+    "value": 36.93,
+    "rank": 52
+   }
+  },
+  "North Park": {
+   "Scoring Offense": {
+    "games": 3,
+    "value": 27.3,
+    "rank": 105
+   },
+   "Total Offense": {
+    "games": 3,
+    "value": 344.7,
+    "rank": 120
+   },
+   "Passing Offense": {
+    "games": 3,
+    "value": 191.7,
+    "rank": 143
+   },
+   "Rushing Offense": {
+    "games": 3,
+    "value": 153.0,
+    "rank": 89
+   },
+   "3rd Down Conversion Pct": {
+    "games": 3,
+    "value": 0.419,
+    "rank": 91
+   },
+   "Red Zone Offense": {
+    "games": 3,
+    "value": 0.909,
+    "rank": 47
+   },
+   "Team Passing Efficiency": {
+    "games": 3,
+    "value": 131.7,
+    "rank": 108
+   },
+   "Scoring Defense": {
+    "games": 3,
+    "value": 40.67,
+    "rank": 215
+   },
+   "Total Defense": {
+    "games": 3,
+    "value": 441.0,
+    "rank": 214
+   },
+   "Passing Yards Allowed": {
+    "games": 3,
+    "value": 284.3,
+    "rank": 222
+   },
+   "Rushing Defense": {
+    "games": 3,
+    "value": 156.7,
+    "rank": 155
+   },
+   "3rd Down Conversion Pct Defense": {
+    "games": 3,
+    "value": 0.387,
+    "rank": 130
+   },
+   "Red Zone Defense": {
+    "games": 3,
+    "value": 1.077,
+    "rank": 243
+   },
+   "Team Sacks": {
+    "games": 3,
+    "value": 0.33,
+    "rank": 221
+   },
+   "Turnover Margin": {
+    "games": 3,
+    "value": 0.33,
+    "rank": 89
+   },
+   "Net Punting": {
+    "games": 3,
+    "value": 40.17,
+    "rank": 19
+   }
+  },
+  "Wash U": {
+   "Scoring Offense": {
+    "games": 3,
+    "value": 47.0,
+    "rank": 15
+   },
+   "Total Offense": {
+    "games": 3,
+    "value": 473.0,
+    "rank": 23
+   },
+   "Passing Offense": {
+    "games": 3,
+    "value": 198.3,
+    "rank": 132
+   },
+   "Rushing Offense": {
+    "games": 3,
+    "value": 274.7,
+    "rank": 6
+   },
+   "3rd Down Conversion Pct": {
+    "games": 3,
+    "value": 0.559,
+    "rank": 21
+   },
+   "Red Zone Offense": {
+    "games": 3,
+    "value": 0.929,
+    "rank": 35
+   },
+   "Team Passing Efficiency": {
+    "games": 3,
+    "value": 177.05,
+    "rank": 29
+   },
+   "Scoring Defense": {
+    "games": 3,
+    "value": 17.0,
+    "rank": 62
+   },
+   "Total Defense": {
+    "games": 3,
+    "value": 329.3,
+    "rank": 111
+   },
+   "Passing Yards Allowed": {
+    "games": 3,
+    "value": 215.3,
+    "rank": 150
+   },
+   "Rushing Defense": {
+    "games": 3,
+    "value": 114.0,
+    "rank": 97
+   },
+   "3rd Down Conversion Pct Defense": {
+    "games": 3,
+    "value": 0.325,
+    "rank": 85
+   },
+   "Red Zone Defense": {
+    "games": 3,
+    "value": 0.714,
+    "rank": 93
+   },
+   "Team Sacks": {
+    "games": 3,
+    "value": 1.33,
+    "rank": 148
+   },
+   "Turnover Margin": {
+    "games": 3,
+    "value": 0.67,
+    "rank": 64
+   },
+   "Net Punting": {
+    "games": 3,
+    "value": 38.17,
+    "rank": 35
+   }
+  },
+  "Wheaton": {
+   "Scoring Offense": {
+    "games": 3,
+    "value": 50.3,
+    "rank": 10
+   },
+   "Total Offense": {
+    "games": 3,
+    "value": 441.7,
+    "rank": 37
+   },
+   "Passing Offense": {
+    "games": 3,
+    "value": 298.7,
+    "rank": 22
+   },
+   "Rushing Offense": {
+    "games": 3,
+    "value": 143.0,
+    "rank": 106
+   },
+   "3rd Down Conversion Pct": {
+    "games": 3,
+    "value": 0.419,
+    "rank": 90
+   },
+   "Red Zone Offense": {
+    "games": 3,
+    "value": 0.864,
+    "rank": 73
+   },
+   "Team Passing Efficiency": {
+    "games": 3,
+    "value": 154.62,
+    "rank": 59
+   },
+   "Scoring Defense": {
+    "games": 3,
+    "value": 12.0,
+    "rank": 32
+   },
+   "Total Defense": {
+    "games": 3,
+    "value": 217.3,
+    "rank": 20
+   },
+   "Passing Yards Allowed": {
+    "games": 3,
+    "value": 145.7,
+    "rank": 38
+   },
+   "Rushing Defense": {
+    "games": 3,
+    "value": 71.7,
+    "rank": 44
+   },
+   "3rd Down Conversion Pct Defense": {
+    "games": 3,
+    "value": 0.225,
+    "rank": 18
+   },
+   "Red Zone Defense": {
+    "games": 3,
+    "value": 1.0,
+    "rank": 207
+   },
+   "Team Sacks": {
+    "games": 3,
+    "value": 2.0,
+    "rank": 81
+   },
+   "Turnover Margin": {
+    "games": 3,
+    "value": 1.0,
+    "rank": 42
+   },
+   "Net Punting": {
+    "games": 3,
+    "value": 41.75,
+    "rank": 12
+   }
+  }
+ }
+}

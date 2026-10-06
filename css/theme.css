@@ -29,6 +29,7 @@
   --accent: #2a78d6;
   --good: #0ca30c;
   --critical: #d03b3b;
+  --critical-text: #b52a2a; /* red for TEXT: 6:1 on the page, 4.8:1 on a red tint (--critical itself is for bars and fills) */
   --warning: #fab219;
   --serious: #ec835a;
   --delta-good: #006300;
@@ -75,6 +76,7 @@
     --accent: #3987e5;
     --good: #0ca30c;
     --critical: #d03b3b;
+    --critical-text: #ec6a67;
     --warning: #fab219;
     --serious: #ec835a;
     --delta-good: #0ca30c;
@@ -110,6 +112,7 @@
   --accent: #3987e5;
   --good: #0ca30c;
   --critical: #d03b3b;
+  --critical-text: #ec6a67;
   --warning: #fab219;
   --serious: #ec835a;
   --delta-good: #0ca30c;
@@ -324,7 +327,7 @@ html, body {
 /* Two-column grid of cards; .wide spans both; chart cards get a minimum height so a pair lines up. */
 .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
 .cards > .wide { grid-column: 1 / -1; }
-.cards > .card:not(.table-card):not(.wide) > .card-body { min-height: 190px; }
+.cards > .card:not(.table-card):not(.wide):not(.tight) > .card-body { min-height: 190px; } /* .tight: a card of text, not a chart */
 .cards > .cards-heading { grid-column: 1 / -1; font-size: 15px; font-weight: 800; margin: 14px 0 0; }
 .cards > .cards-heading:first-child { margin-top: 0; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -349,7 +352,7 @@ table.records-table thead th, table.rank-table thead th, table.lb-scroll thead t
 
 .tag { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 999px; font-weight: 600; }
 .tag.good { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--delta-good); }
-.tag.crit { background: color-mix(in srgb, var(--critical) 16%, transparent); color: var(--critical); }
+.tag.crit { background: color-mix(in srgb, var(--critical) 16%, transparent); color: var(--critical-text); }
 
 .insight { font-size: 11.5px; color: var(--text-secondary); background: var(--page); border: 1px dashed var(--border); border-radius: 6px; padding: 8px 10px; margin-top: 10px; }
 .insight b { color: var(--text-primary); }
@@ -447,7 +450,7 @@ table.mini td.change { font-weight: 600; }
 .record-section-title { font-size: 14px; font-weight: 800; margin: 20px 0 8px; }
 .record-section-title:first-child { margin-top: 0; }
 .watch-gap-good { color: var(--good); font-weight: 700; }
-.watch-gap-crit { color: var(--critical); font-weight: 700; }
+.watch-gap-crit { color: var(--critical-text); font-weight: 700; }
 
 /* Lifting & Strength */
 .lbgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
@@ -481,15 +484,15 @@ table.mini.scenario-table thead th:first-child { left: 0; z-index: 3; box-shadow
 .muted { color: var(--muted); }
 .rk-move { font-size: 10.5px; font-weight: 700; margin-left: 3px; white-space: nowrap; }
 .rk-move.good { color: var(--delta-good); }
-.rk-move.crit { color: var(--critical); }
+.rk-move.crit { color: var(--critical-text); }
 .tw-score { font-size: 15px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .tw-list { margin: 6px 0 0; padding-left: 18px; font-size: 12.5px; line-height: 1.6; color: var(--text-secondary); }
 .tw-list li.good::marker { color: var(--good); }
-.tw-list li.crit::marker { color: var(--critical); }
+.tw-list li.crit::marker { color: var(--critical-text); }
 .tw-list b { color: var(--text-primary); }
 .delta { display: block; margin-top: 2px; font-weight: 600; color: var(--muted); }
 .delta.good { color: var(--delta-good); }
-.delta.crit { color: var(--critical); }
+.delta.crit { color: var(--critical-text); }
 .home-heading { font-size: 15px; font-weight: 800; margin: 22px 0 10px; }
 .explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
 .explore-card {

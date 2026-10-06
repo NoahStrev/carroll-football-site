@@ -1,0 +1,23 @@
+name: Smoke test
+
+# Opens every page, tab and sub-view at phone, tablet and desktop width (tests/smoke.html) and fails
+# on script errors, empty views, stray "undefined"/"NaN" text, or clipped content. GitHub Pages
+# publishes from the branch regardless, so a red check means "fix this soon", not "blocked".
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright
+      - run: playwright install --with-deps chromium
+      - run: python tests/run_smoke.py

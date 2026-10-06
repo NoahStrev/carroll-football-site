@@ -2,7 +2,7 @@
    we are on v1.0.0 and I want to update with any patches and effects."
    Each entry should be a real patch, described as change -> effect (what
    shipped, what it actually changes for a coach using the site) -- not a
-   dev-log dump of every internal fix (that's what README.md's dated
+   dev-log dump of every internal fix (that\'s what README.md\'s dated
    history is for). Newest version first.
 
    Changed 2026-08-04, per the user ("lets also make each version on the
@@ -11,8 +11,8 @@
    session (v1.0.1 through v1.0.5 were all separate entries from the same
    day). Going forward, one version = one day of shipped work -- write a
    single entry summarizing everything real that landed that day, once,
-   at the end of the day's work, instead of bumping per fix as you go.
-   Small same-day follow-up fixes get folded into that day's one entry
+   at the end of the day\'s work, instead of bumping per fix as you go.
+   Small same-day follow-up fixes get folded into that day\'s one entry
    rather than becoming their own version. */
 const UPDATES = [
   {
@@ -29,8 +29,10 @@ const UPDATES = [
       { change: 'Fixed along the way: Career Stats listed two non-players ("TEAM" and "Team" — plays the box score credits to the team itself, like kneel-downs) as if they were players; Linebackers\' "Most Common Blitz Call" and the Defensive Line\'s movement chart were counting the "no call" placeholder as a real call; Deep Dive detail tables listed athletes with no data in view as "undefined–undefined"; Lifting class leaderboards could show one athlete in several spots (now best result per athlete); footnotes now show true row counts instead of stale hard-coded numbers; 6-season heatmaps no longer get clipped on tablets; a stray empty orange dot appeared on filter buttons; the Cornerbacks and Safeties trend cards had a duplicated title', effect: 'Numbers and labels now match what the underlying data actually says. Career Stats and the Compare tools also open on current players instead of whoever sorts first alphabetically.' },
       { change: 'Home now leads with the week: the last game\'s three biggest takeaways against the 2021-2025 average, the next game (date, site, series record and streak against that opponent) with a link to its scouting report, and rank movement since last week next to each ranking', effect: 'Open the site on Monday and know what happened and what is next without clicking anything.' },
       { change: 'New Next Opponent tab, first in Opponent Scouting: pick any opponent (it opens on the next scheduled one, and Home links straight to it) for the date and site, past meetings, how Carroll\'s offense and defense did against them next to their usual numbers, how they attack Carroll\'s defense by down, distance, field zone, and score, and the fronts and coverages they showed', effect: 'A game-plan page for the week\'s opponent built from data that was already on the site, with links to the full scenario tables when you want more.' },
+      { change: 'New Game Review tab in Opponent Scouting (and every game on Home\'s game log links to it): pick any game since 2021 for the result, offense and defense next to their usual numbers, yards per play by quarter, how every drive ended, run/pass by down, the biggest plays, every turnover, and special teams', effect: 'A one-page post-game recap built from data already on the site, so Monday film review starts with the numbers.' },
+      { change: 'The Next Opponent tab now shows the opponent\'s season so far next to Carroll\'s — scoring, total, passing, and rushing offense and defense, third down, red zone, sacks, turnover margin, and net punting — each with its national rank, from the weekly NCAA snapshot', effect: 'You can see where an opponent is strong or weak nationally, not just how they played Carroll in past years.' },
       { change: 'Every page now says what its data runs through (for example "Charted through Carthage, Sep 26"), and shows a warning when the schedule says a game has been played that has not been loaded yet', effect: 'You can tell at a glance whether a page is current instead of assuming it is.' },
-      { change: 'Phones: bar and stacked charts with many categories used to run off the right edge of their card with the last bars cut off — they now scroll sideways inside the card; the page menu and tab rows fade at the right edge to show they scroll and open scrolled to the page you are on. A new in-browser smoke test (tests/smoke.html) opens every page, tab, and sub-view at phone, tablet, and desktop width and checks for errors, empty views, stray "undefined" text, and clipped content', effect: 'Charts are fully readable on a phone, and future changes get checked against every view in about a minute.' },
+      { change: 'Phones: bar and stacked charts with many categories used to run off the right edge of their card with the last bars cut off — they now scroll sideways inside the card; the page menu and tab rows fade at the right edge to show they scroll and open scrolled to the page you are on. A new smoke test (tests/smoke.html) opens every page, tab, sub-view, and a few dropdown choices at phone, tablet, and desktop width and checks for errors, empty views, stray "undefined" text, and clipped content, and a GitHub Action runs it on every push; text and red/green colors were also made easier to read (higher contrast), and card titles are now proper headings for screen readers', effect: 'Charts are fully readable on a phone, and a broken page gets flagged within minutes of a push instead of being noticed by a user.' },
       { change: 'Behind the scenes: the repeated page chrome, tab wiring, and per-page scripts were replaced by one shared page shell and one declarative view engine, and the single 1,000-line shared script was split into four focused files; the stylesheet was reorganized into one ordered file with its unused and duplicated rules removed; every restructured view was checked against the old version number-for-number', effect: 'No change to any statistic — it just makes the site easier to keep accurate and faster to extend.' },
     ],
   },
@@ -96,8 +98,8 @@ const UPDATES = [
       { change: 'Team & Units: Special Teams Overview and Lifting & Strength', effect: 'Money Unit, Punt, Punt Return, Kickoff, Kickoff Return, and lifting leaderboards with athlete-vs-athlete comparison, all in one place.' },
       { change: '5 Position pages: Placekicker, Kickoff Kicker, Punter, Short Snapper, Long Snapper', effect: 'Each has an Executive Scorecard, a head-to-head athlete comparison, and a Situational Deep Dive.' },
       { change: 'Offense & Defense: Executive Scorecard, Play-Calling & Tendencies, Play Outcomes, and 8 position-group coach views', effect: 'A QB, RB, WR, OL, DL, LB, CB, or S coach each gets a schematic view built around what their own position group actually cares about.' },
-      { change: 'Opponent Scouting: by-opponent charts, plus a per-opponent Scouting Report and Custom Situation builder', effect: "Look up any past opponent's real tendencies (run/pass by down, distance, quarter, situation, score, and more), or build any exact combination on the fly and get the real percentages." },
-      { change: 'Rankings: CCIW and National standings across Offensive/Defensive/Special Teams/Additional Metrics', effect: "Carroll's conference and national standing is visible in one place without digging through either source report." },
+      { change: 'Opponent Scouting: by-opponent charts, plus a per-opponent Scouting Report and Custom Situation builder', effect: "Look up any past opponent\'s real tendencies (run/pass by down, distance, quarter, situation, score, and more), or build any exact combination on the fly and get the real percentages." },
+      { change: 'Rankings: CCIW and National standings across Offensive/Defensive/Special Teams/Additional Metrics', effect: "Carroll\'s conference and national standing is visible in one place without digging through either source report." },
       { change: 'Glossary with searchable terms and inline hover hints', effect: 'A new coach unfamiliar with a stat (e.g. "explosive play") can look it up without ever leaving the page they\'re on.' },
     ],
   },

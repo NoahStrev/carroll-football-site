@@ -1,7 +1,7 @@
 /* Opponent Scouting: how every opponent has been attacked / has attacked Carroll.
 
    Tabs: Next Opponent (a game-plan page for one opponent, defaulting to the next game on the
-   schedule), By Opponent (per-opponent efficiency charts), Offense and Defense (scouting
+   schedule), Game Review (a recap of one past game; js/views/game-review.js), By Opponent (per-opponent efficiency charts), Offense and Defense (scouting
    reports). Each report tab covers two views of the same table, switched with a pill:
    Carroll's own tendencies (self scout) and the selected opponent(s)' tendencies (scout).
 
@@ -608,6 +608,27 @@
           },
         },
         {
+          title: 'Their season so far (national rank)', wide: true,
+          render(el, { opp }) {
+            const T = Site.data.teams, theirs = T.teams[opp], mine = T.teams.Carroll;
+            if (!theirs) {
+              el.innerHTML = `<div class="data-note">${esc(opp)} is not in the CCIW national-ranking tables (a non-conference team), so there are no season totals to show.</div>`;
+              return;
+            }
+            const show = (row, stat) => (row ? `${stat === 'Pct' ? pct(row.value, 1) : fmt(row.value, stat === 'Avg' ? 2 : 1)} <span class="muted">· #${row.rank}</span>` : '—');
+            const sections = { offense: 'Offense', defense: 'Defense', other: 'Turnovers and punting' };
+            let body = '';
+            Object.entries(sections).forEach(([group, title]) => {
+              body += sectionRowHTML(title, 3);
+              T.categories.filter((c) => c.group === group).forEach((c) => {
+                body += `<tr><td class="name">${esc(c.category)}${c.stat === 'Pct' ? '' : ` <span class="muted">(${esc(c.stat)})</span>`}</td><td>${show(theirs[c.category], c.stat)}</td><td>${show(mine && mine[c.category], c.stat)}</td></tr>`;
+              });
+            });
+            const games = (team) => { const g = Object.values(team || {})[0]; return g ? g.games : 0; };
+            el.innerHTML = `${scenarioTableWrap(`<tr><th>Category</th><th>${esc(opp)}</th><th>Carroll</th></tr>`, body)}<div class="data-note">National rank among all Division III teams (#1 is best, for defense too) from the ${esc(T.snapshot_date)} NCAA snapshot. It counts ${games(theirs)} game${games(theirs) === 1 ? '' : 's'} for ${esc(opp)} and ${games(mine)} for Carroll. The NCAA posts the latest results a few days late, so the two can differ by a game.</div>`;
+          },
+        },
+        {
           title: 'How they attack (their offense vs Carroll\'s defense)', wide: true,
           render(el, { flagged }) {
             const wanted = buildScenarios(flagged).filter((sec) => NEXT_SECTIONS.includes(sec.title));
@@ -678,9 +699,10 @@
     nav: 'scouting',
     title: 'Opponent Scouting',
     lead: "What every opponent has done against Carroll and what Carroll tends to call, as real percentages by down, distance, field position, and more — plus a Custom Situation builder for any exact combination.",
-    data: { game: '../data/game-data.json', home: '../data/home.json' },
+    data: { game: '../data/game-data.json', home: '../data/home.json', st: '../data/special-teams.json', teams: '../data/team-stats.json' },
     tabs: [
       { id: 'next', label: 'Next Opponent', render: nextOpponentTab },
+      { id: 'review', label: 'Game Review', render: GameReview.render },
       { id: 'by-opponent', label: 'By Opponent', render: byOpponentTab },
       { id: 'offense', label: 'Offense', render: reportTab(offenseReportView) },
       { id: 'defense', label: 'Defense', render: reportTab(defenseReportView) },
