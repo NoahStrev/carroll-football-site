@@ -33,11 +33,15 @@
     { label: 'Turnover Margin', phase: 'overall', category: 'Turnover Margin', cciw: null, national: 'Avg', unit: ' per game' },
   ];
 
+  // A finished season's ranking table has no week number (null, read as -1); a season in progress has weeks 1..n.
+  const weekOf = (r) => (r.week === null ? -1 : r.week);
+  const latestWeek = (rows) => Math.max(...rows.map(weekOf));
+
   function rankingsCard(R, season) {
     const latest = (scope) => {
       const rows = R[scope].rows.filter((r) => r.season === season);
-      const week = Math.max(...rows.map((r) => (r.week === null ? -1 : r.week)));
-      const at = (w) => rows.filter((r) => (r.week === null ? -1 : r.week) === w);
+      const week = latestWeek(rows);
+      const at = (w) => rows.filter((r) => weekOf(r) === w);
       return { rows: at(week), prev: week > 1 ? at(week - 1) : [], week };
     };
     const cc = latest('cciw'), nat = latest('national');
@@ -130,10 +134,8 @@
     </div>`;
   }
 
-  function streakText(list) {
-    let n = 0;
-    while (n < list.length && list[n].result === list[0].result) n++;
-    return `${list[0].result === 'W' ? 'Won' : list[0].result === 'L' ? 'Lost' : 'Tied'} the last ${n === 1 ? 'meeting' : `${n} meetings`}`;
+  function streakText(s) {
+    return `${s.word} the last ${s.streak === 1 ? 'meeting' : `${s.streak} meetings`}`;
   }
 
   function nextGameCard(H, meta) {
@@ -143,18 +145,16 @@
     if (!next) {
       return `<div class="card tight"><div class="card-head"><h2>Next game</h2></div><div class="card-body"><div class="data-note">No more games on the schedule${meta.schedule.length ? ' — the regular season is complete.' : '.'}</div></div></div>`;
     }
-    const hist = H.history[next.opponent] || [];
-    const w = hist.filter((x) => x.result === 'W').length, l = hist.filter((x) => x.result === 'L').length;
-    const last = hist[0];
+    const series = seriesRecord(H.history[next.opponent]);
     const rest = upcoming.slice(1, 5).map((x) => `${esc(x.opponent)} <span class="muted">${dayText(x.date, { month: 'short', day: 'numeric' })}</span>`).join(' · ');
     return `<div class="card tight">
       <div class="card-head"><h2>Next game</h2><span class="data-note">${dayText(next.date, { weekday: 'short', month: 'short', day: 'numeric' })}${next.time ? ` · ${esc(next.time)}` : ''}</span></div>
       <div class="card-body">
         <div class="tw-score"><b>${next.home ? 'Home vs' : 'At'} ${esc(next.opponent)}</b> ${next.conference ? '<span class="tag good">CCIW</span>' : '<span class="tag">Non-conference</span>'}</div>
         <div class="data-note" style="margin:2px 0 8px;">${esc(next.venue || '')}${next.city ? `, ${esc(next.city)}` : ''}</div>
-        ${hist.length ? `<ul class="tw-list">
-          <li>Carroll is <b>${w}–${l}</b> against ${esc(next.opponent)} since ${hist[hist.length - 1].season}.</li>
-          <li>${streakText(hist)}${last ? `, ${last.carroll_pts}–${last.opp_pts} (${last.season})` : ''}.</li></ul>` : '<div class="data-note">No earlier meetings in the box-score archive.</div>'}
+        ${series ? `<ul class="tw-list">
+          <li>Carroll is <b>${series.w}–${series.l}</b> against ${esc(next.opponent)} since ${series.since}.</li>
+          <li>${streakText(series)}, ${series.last.carroll_pts}–${series.last.opp_pts} (${series.last.season}).</li></ul>` : '<div class="data-note">No earlier meetings in the box-score archive.</div>'}
       </div>
       <div class="insight card-note"><a href="opponent-scouting.html#next/${encodeURIComponent(next.opponent)}">Scouting report: ${esc(next.opponent)} →</a>${rest ? `<br><span class="muted">Then: ${rest}</span>` : ''}</div>
     </div>`;
@@ -200,8 +200,8 @@
     if (!h.cciw) return null;
     const rows = R.cciw.rows.filter((r) => r.season === String(season) && r.phase === h.phase && r.category === h.category && (r.metric ?? r.stat) === h.cciw);
     if (!rows.length) return null;
-    const week = Math.max(...rows.map((r) => (r.week === null ? -1 : r.week)));
-    return rows.find((r) => (r.week === null ? -1 : r.week) === week) || null;
+    const week = latestWeek(rows);
+    return rows.find((r) => weekOf(r) === week) || null;
   }
 
   function compareTab(root) {
@@ -291,7 +291,7 @@
     { href: 'opponent-scouting.html', title: 'Opponent Scouting', blurb: 'A game plan for the next opponent, a recap of any game, and real percentages by down, distance, and field position.' },
     { href: 'rankings.html', title: 'Rankings', blurb: 'CCIW and national rank in every published category, week by week.' },
     { href: 'lifting-strength.html', title: 'Lifting & Strength', blurb: 'Strength and testing leaderboards by class, and athlete comparison.' },
-    { href: 'players.html', title: 'Players & Records', blurb: 'Career stats back to 2010, the record book, and who is closing in on it.' },
+    { href: 'players.html', title: 'Players & Records', blurb: 'Career stats back to 2010 with game-by-game logs, season leaders, the record book, and who is closing in on it.' },
   ];
 
   function render(root, { sub }) {

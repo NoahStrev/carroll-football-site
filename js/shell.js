@@ -118,7 +118,7 @@ const Site = (() => {
 
   /** meta.json never blocks a page: if it is missing, views get an empty one and the label is skipped. */
   function loadMeta() {
-    return fetch('../data/meta.json').then((r) => (r.ok ? r.json() : EMPTY_META)).catch(() => EMPTY_META);
+    return fetch('../data/meta.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : EMPTY_META)).catch(() => EMPTY_META);
   }
 
   function showFreshness(navKey, meta) {
@@ -220,7 +220,7 @@ const Site = (() => {
     if (activeLink) activeLink.scrollIntoView({ inline: 'center', block: 'nearest' }); // narrow screens scroll the nav row
 
     const names = Object.keys(cfg.data || {});
-    Promise.all([loadMeta(), ...names.map((n) => fetch(cfg.data[n]).then((r) => { if (!r.ok) throw new Error(`${cfg.data[n]}: HTTP ${r.status}`); return r.json(); }))])
+    Promise.all([loadMeta(), ...names.map((n) => fetch(cfg.data[n], { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(`${cfg.data[n]}: HTTP ${r.status}`); return r.json(); }))])
       .then(([meta, ...results]) => {
         state.data.meta = meta; // every page gets Site.data.meta (the schedule, per-page "data through" text)
         names.forEach((n, i) => { state.data[n] = results[i]; });
@@ -267,7 +267,8 @@ const Site = (() => {
    *
    * spec: {
    *   filters:  { defs: [...filter defs], values: {field: [options]} }  (optional)
-   *   linkSelects: false -- keep the selects out of the address (views that store their pick as #tab/<name> themselves)
+   *   pathSelect: the id of the one select that is the view's route (#tab/<opponent>, #tab/<date>): its value is kept in the
+   *             address as the sub-path instead of the ?query, so the page can be bookmarked and Home's links can open it
    *   selects:  [{ id, label, options: [{value, label, group?}], value }]   single-select controls in the
    *             shelf; their values arrive in prepare()'s state under `id`
    *   actions:  [{ label, onClick(state) }]    buttons at the right of the shelf (e.g. PDF)
@@ -292,9 +293,11 @@ const Site = (() => {
     const selects = spec.selects || [];
     const actions = spec.actions || [];
     const hasShelf = spec.filters || spec.source || selects.length || actions.length;
-    // Views that keep their own selection in the address (the opponent / game pickers use #tab/<name>) opt out.
-    const linkSelects = spec.linkSelects !== false;
-    const linkable = !!spec.filters || (linkSelects && selects.length > 0);
+    // pathSelect: the id of a select whose value IS the route (#tab/<opponent>, #tab/<date>); it is mirrored into the
+    // address as the sub-path, so it stays out of the ?query.
+    const pathSelect = spec.pathSelect || null;
+    const linked = selects.filter((sel) => sel.id !== pathSelect);
+    const linkable = !!spec.filters || linked.length > 0;
 
     root.innerHTML = `
       <section class="panel">
@@ -337,7 +340,7 @@ const Site = (() => {
     function snapshot() {
       const st = readState(), snap = {};
       (spec.filters ? spec.filters.defs : []).forEach(({ field }) => { snap[`f.${field}`] = [...st[field]].sort().join('~'); });
-      if (linkSelects) selects.forEach((sel) => { snap[`s.${sel.id}`] = st[sel.id]; });
+      linked.forEach((sel) => { snap[`s.${sel.id}`] = st[sel.id]; });
       return snap;
     }
     const defaults = snapshot();
@@ -348,11 +351,14 @@ const Site = (() => {
       const keep = new Set(want ? want.split('~') : []);
       document.querySelectorAll(`#${uid}-filters-panel input[data-field="${field}"]`).forEach((cb) => { cb.checked = keep.has(cb.value); });
     });
-    if (linkSelects) {
-      selects.forEach((sel) => {
-        const want = incoming[`s.${sel.id}`], el = document.getElementById(`${uid}-sel-${sel.id}`);
-        if (want !== undefined && [...el.options].some((o) => o.value === want)) el.value = want;
-      });
+    linked.forEach((sel) => {
+      const want = incoming[`s.${sel.id}`], el = document.getElementById(`${uid}-sel-${sel.id}`);
+      if (want !== undefined && [...el.options].some((o) => o.value === want)) el.value = want;
+    });
+    if (pathSelect) {
+      const el = document.getElementById(`${uid}-sel-${pathSelect}`);
+      setSub(el.value);
+      el.addEventListener('change', () => setSub(el.value));
     }
     if (spec.filters) wireFilterPanel(uid, spec.filters.defs, refresh);
     selects.forEach((sel) => document.getElementById(`${uid}-sel-${sel.id}`).addEventListener('change', refresh));

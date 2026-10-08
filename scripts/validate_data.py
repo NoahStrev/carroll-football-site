@@ -12,7 +12,7 @@ Checks, by file:
                            computed W-L matches the record the box score itself prints, <= 14 games a season
   game-data.json           every charted game has a box score, offense AND defense rows, few missing yards,
                            known play types, opponent spellings match the box-score canon, no "No Play" snaps,
-                           no touchdown drive that really ended in a turnover, and (current season) each side's
+                           no touchdown drive that really ended in a turnover, and (every season) each side's
                            yardage within reach of the official box score's total offense
   special-teams.json       every row's date is a real box-score game, every unit present for the latest season
   rankings.json            CCIW and national cover the same weeks
@@ -121,12 +121,20 @@ def check_games(home, game):
             err(f"game-data: opponent spelling(s) not in the box-score canon: {sorted(opps - canon)}")
 
 
-def check_pbp_vs_box(game, season):
+# Gaps the official box score itself contains (its drive chart, team stats, and play text disagree), reviewed by hand
+# and not worth a warning on every refresh. Anything new is reported.
+KNOWN_BOX_GAPS = {
+    ("2024-10-12", "offense"): "-32: the box score's team-stats total is 32 yards over its own play text",
+}
+
+
+def check_pbp_vs_box(game):
     """Each charted game's play-by-play yardage against the official box score's total offense. Nullified ("No Play")
-    snaps are excluded at build time, so the two should agree closely: 39 of 54 archive games match exactly, and the
-    rest are within ~30 yards (penalty/rushing edge cases in the source). A gap bigger than that in the CURRENT
-    season is a new load worth a look -- e.g. a drive tagged to the wrong side, which moves its yards from one side to
-    the other (2021-11-06 vs Carthage does exactly that and is a known, source-side issue)."""
+    snaps are excluded at build time, so the two should agree closely: 30 of 55 archive games match exactly on both
+    sides, 79 of 110 sides match, and every side is within 30 yards except one reviewed case (KNOWN_BOX_GAPS) -- the
+    rest are inconsistencies inside the box scores. A bigger gap in any season is worth a look, e.g. a drive tagged to
+    the wrong side, which moves its yards from one side to the other (2021-11-06 vs Carthage did exactly that and is
+    fixed by MANUAL_DRIVE_SIDE_OVERRIDES in build_game_data.py)."""
     raw = SITE.parent / "Special Teams Data" / "raw"
     if not raw.exists():
         warn(f"box scores not found at {raw}; skipping the play-by-play vs box-score yardage check")
@@ -134,15 +142,14 @@ def check_pbp_vs_box(game, season):
     by_date = {"offense": Counter(), "defense": Counter()}
     for side in by_date:
         for r in game[side]["official"]:
-            if r["season"] == season:
-                by_date[side][r["date"]] += r["yards"] or 0
+            by_date[side][r["date"]] += r["yards"] or 0
     num = lambda x: int(re.sub(r"[^0-9-]", "", x) or 0)
-    for path in sorted(glob.glob(str(raw / f"{season}_*.json"))):
+    for path in sorted(glob.glob(str(raw / "*_*.json"))):
         d = json.loads(Path(path).read_text(encoding="utf-8"))
         mo, dy = d["game_info"]["date"].split("/")[:2]
-        date = f"{season}-{mo.zfill(2)}-{dy.zfill(2)}"
+        date = f"{Path(path).name.split('_')[0]}-{mo.zfill(2)}-{dy.zfill(2)}"
         if date not in by_date["offense"]:
-            continue
+            continue  # a box score with no play-by-play charting
         away, _, home = d["game_info"]["matchup"].partition("-VS-")
         abbr = d["home_away"]
         mine = abbr["home_abbr"] if "Carroll" in home else abbr["away_abbr"]
@@ -150,10 +157,14 @@ def check_pbp_vs_box(game, season):
         theirs = next(k for k in yards if k != mine)
         for side, key in (("offense", mine), ("defense", theirs)):
             gap = by_date[side][date] - num(yards[key])
+            known = KNOWN_BOX_GAPS.get((date, side))
+            note = f"{date} {side} yardage is {gap:+d} yards from the box score ({by_date[side][date]} vs {num(yards[key])})"
+            if known and str(gap) in known:
+                continue
             if abs(gap) > 60:
-                err(f"game-data: {date} {side} yardage is {gap:+d} yards from the box score ({by_date[side][date]} vs {num(yards[key])}) -- plays on the wrong side?")
+                err(f"game-data: {note} -- plays on the wrong side?")
             elif abs(gap) > 30:
-                warn(f"game-data: {date} {side} yardage is {gap:+d} yards from the box score ({by_date[side][date]} vs {num(yards[key])})")
+                warn(f"game-data: {note}")
 
 
 def check_special_teams(home, st):
@@ -256,7 +267,7 @@ def check_no_regressions(home, game, st):
 def main():
     home, game, st = load("home.json"), load("game-data.json"), load("special-teams.json")
     check_games(home, game)
-    check_pbp_vs_box(game, home["season"])
+    check_pbp_vs_box(game)
     check_special_teams(home, st)
     check_rankings(load("rankings.json"))
     check_team_stats(load("team-stats.json"))

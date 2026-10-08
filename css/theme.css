@@ -27,6 +27,8 @@
   --baseline: #c3c2b7;
   --border: rgba(11, 11, 11, 0.10);
   --accent: #2a78d6;
+  --accent-text: #1f63b8; /* the accent for small TEXT (links): 5.6:1 on the page, where --accent itself is 4.2:1 */
+  --accent-solid: #2866c2; /* the accent as a FILL behind white text (active tab / pill): 5.6:1 where --accent is 4.4:1 (3.6:1 in dark) */
   --good: #0ca30c;
   --critical: #d03b3b;
   --critical-text: #b52a2a; /* red for TEXT: 6:1 on the page, 4.8:1 on a red tint (--critical itself is for bars and fills) */
@@ -74,6 +76,8 @@
     --baseline: #383835;
     --border: rgba(255, 255, 255, 0.10);
     --accent: #3987e5;
+    --accent-text: #3987e5;
+    --accent-solid: #2866c2;
     --good: #0ca30c;
     --critical: #d03b3b;
     --critical-text: #ec6a67;
@@ -110,6 +114,8 @@
   --baseline: #383835;
   --border: rgba(255, 255, 255, 0.10);
   --accent: #3987e5;
+  --accent-text: #3987e5;
+  --accent-solid: #2866c2;
   --good: #0ca30c;
   --critical: #d03b3b;
   --critical-text: #ec6a67;
@@ -148,7 +154,7 @@ html, body {
 
 /* ================================================== 3. Shell: nav, header, tabs == */
 
-.skip-link { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--accent); color: #fff; padding: 8px 14px; border-radius: 6px; font-weight: 700; text-decoration: none; }
+.skip-link { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--accent-solid); color: #fff; padding: 8px 14px; border-radius: 6px; font-weight: 700; text-decoration: none; }
 .skip-link:focus { left: 8px; }
 #site-stage:focus { outline: none; }
 .sitenav {
@@ -169,7 +175,7 @@ html, body {
   padding: 7px 12px; border-radius: 999px; transition: background-color .15s ease, color .15s ease;
 }
 .sitenav .links a:hover { background: var(--grid); color: var(--text-primary); }
-.sitenav .links a.active { background: var(--accent); color: #fff; }
+.sitenav .links a.active { background: var(--accent-solid); color: #fff; }
 .sitenav .links.utility { margin-left: auto; }
 .sitenav .links.utility a { font-weight: 500; font-size: 12.5px; color: var(--muted); }
 .sitenav .links.utility a:hover { color: var(--text-primary); }
@@ -183,7 +189,7 @@ html, body {
 .pagehead p { font-size: 13.5px; color: var(--text-secondary); margin: 6px 0 0; line-height: 1.55; max-width: 900px; }
 .h1-badge {
   display: inline-flex; align-items: center; font-size: 11.5px; font-weight: 700; padding: 4px 10px;
-  border-radius: 999px; background: var(--accent); color: #fff; margin-left: 10px; vertical-align: middle;
+  border-radius: 999px; background: var(--accent-solid); color: #fff; margin-left: 10px; vertical-align: middle;
 }
 .loading { max-width: 1280px; margin: 40px auto; text-align: center; color: var(--muted); font-size: 13px; }
 
@@ -198,9 +204,9 @@ html, body {
 .pill { font-size: 12.5px; padding: 6px 13px; }
 .pillbar.xs .pill { font-size: 11px; padding: 4px 9px; }
 .tabbtn:hover { border-color: var(--accent); color: var(--text-primary); }
-.pill:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
-.tabbtn.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 10px color-mix(in srgb, var(--accent) 40%, transparent); }
-.pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.pill:hover:not(.active) { border-color: var(--accent); color: var(--accent-text); }
+.tabbtn.active { background: var(--accent-solid); color: #fff; border-color: var(--accent-solid); box-shadow: 0 2px 10px color-mix(in srgb, var(--accent) 40%, transparent); }
+.pill.active { background: var(--accent-solid); color: #fff; border-color: var(--accent-solid); }
 .tabbtn:focus-visible, .pill:focus-visible, .sitenav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .pill-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; margin-right: 8px; }
 .pillbar { display: inline-flex; gap: 6px; flex-wrap: wrap; vertical-align: middle; }
@@ -242,14 +248,14 @@ html, body {
 .fp-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; margin-bottom: 7px; }
 .fp-label-row .fp-label { margin-bottom: 0; }
 .fp-quick { display: flex; gap: 6px; }
-.fp-quick-btn { font-family: inherit; font-size: 10px; font-weight: 700; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: .03em; }
+.fp-quick-btn { font-family: inherit; font-size: 10px; font-weight: 700; color: var(--accent-text); background: none; border: none; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: .03em; }
 .fp-quick-btn:hover { text-decoration: underline; }
 .fp-search { width: 100%; font-size: 12px; padding: 5px 8px; margin-bottom: 6px; border-radius: 6px; border: 1px solid var(--border); background: var(--page); color: var(--text-primary); font-family: inherit; }
 .fp-chk { display: flex; align-items: center; gap: 8px; font-size: 12.5px; padding: 3px 0; cursor: pointer; user-select: none; }
 .fp-chk input { accent-color: var(--accent); width: 13px; height: 13px; cursor: pointer; }
 .fp-chk-list-scroll { max-height: 150px; overflow-y: auto; padding-right: 2px; }
 .fp-actions { display: flex; justify-content: flex-end; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--grid); }
-.fp-reset { font-family: inherit; font-size: 11.5px; color: var(--accent); background: none; border: none; cursor: pointer; font-weight: 700; padding: 0; }
+.fp-reset { font-family: inherit; font-size: 11.5px; color: var(--accent-text); background: none; border: none; cursor: pointer; font-weight: 700; padding: 0; }
 .fp-reset:hover { text-decoration: underline; }
 .filter-badge {
   display: inline-flex; align-items: center; justify-content: center; min-width: 16px; height: 16px;
@@ -270,7 +276,7 @@ html, body {
   border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
   display: inline-flex; align-items: center; gap: 6px;
 }
-.download-btn:hover { border-color: var(--accent); color: var(--accent); }
+.download-btn:hover { border-color: var(--accent); color: var(--accent-text); }
 .toolbar-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
 .push-right { margin-left: auto; }
 
@@ -316,7 +322,7 @@ html, body {
   font-size: 9px; font-weight: 700; line-height: 1; flex-shrink: 0;
   background: var(--grid); color: var(--muted); cursor: help; vertical-align: 1px; user-select: none;
 }
-.glossary-hint:hover, .glossary-hint:focus-visible { background: var(--accent); color: #fff; outline: none; }
+.glossary-hint:hover, .glossary-hint:focus-visible { background: var(--accent-solid); color: #fff; outline: none; }
 .kpi .label .glossary-hint { position: absolute; top: 1px; right: 0; margin-left: 0; }
 
 .card { background: var(--page); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: box-shadow .15s ease; }
@@ -453,7 +459,7 @@ table.mini td.change { font-weight: 600; }
 /* Players & Records */
 .record-section-title { font-size: 14px; font-weight: 800; margin: 20px 0 8px; }
 .record-section-title:first-child { margin-top: 0; }
-.watch-gap-good { color: var(--good); font-weight: 700; }
+.watch-gap-good { color: var(--delta-good); font-weight: 700; }
 .watch-gap-crit { color: var(--critical-text); font-weight: 700; }
 
 /* Lifting & Strength */
@@ -499,7 +505,7 @@ table.mini.scenario-table thead th:first-child { left: 0; z-index: 3; box-shadow
 .sub-label { display: block; font-size: 10px; font-weight: 500; color: var(--muted); }
 .card-head .data-note { margin: 0; }
 table.mini td a { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--muted); }
-table.mini td a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+table.mini td a:hover { color: var(--accent-text); border-bottom-color: var(--accent-text); }
 .tw-score { font-size: 15px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .tw-list { margin: 6px 0 0; padding-left: 18px; font-size: 12.5px; line-height: 1.6; color: var(--text-secondary); }
 .tw-list li.good::marker { color: var(--good); }
@@ -524,7 +530,7 @@ table.game-log td, table.game-log th { white-space: nowrap; }
 .explore-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(0, 0, 0, .08); }
 .explore-card b { font-size: 13.5px; }
 .explore-card span { font-size: 12px; color: var(--text-secondary); line-height: 1.45; }
-.card-note a, .footer-note a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.card-note a, .footer-note a { color: var(--accent-text); font-weight: 600; text-decoration: none; }
 
 /* ================================================================ 8. Responsive == */
 

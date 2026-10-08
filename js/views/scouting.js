@@ -499,7 +499,7 @@
     const start = wanted || (upcoming[0] ? upcoming[0].opponent : options[0].value);
 
     const view = Site.view(root, {
-      linkSelects: false,
+      pathSelect: 'opponent',
       selects: [{ id: 'opponent', label: 'Opponent', options, value: start }],
       source: 'Official play-by-play, box scores',
       actions: [{ label: '&#8595; PDF', onClick: (st) => printPage(`Opponent Scouting - Next Opponent - ${st.opponent} - Carroll Football`) }],
@@ -517,7 +517,7 @@
       },
       kpis: [
         { label: 'Next game', value: ({ game }) => (game ? [shortDay(game.date), `${game.home ? 'Home' : 'Away'}${game.time ? ` · ${game.time}` : ''}${game.conference ? ' · CCIW' : ''}`] : ['—', 'Not on the remaining schedule']) },
-        { label: 'Series record', value: ({ hist }) => { const w = hist.filter((g) => g.result === 'W').length, l = hist.filter((g) => g.result === 'L').length; return hist.length ? [`${w}–${l}`, `since ${hist[hist.length - 1].season}`] : ['—', 'No meetings on record']; } },
+        { label: 'Series record', value: ({ hist }) => { const s = seriesRecord(hist); return s ? [`${s.w}–${s.l}`, `since ${s.since}`] : ['—', 'No meetings on record']; } },
         { label: 'Their yards / play', value: ({ theirs, otherTheirs }) => (theirs.length ? [fmt(mean(theirs.map((r) => r.yards))), `others: ${fmt(mean(otherTheirs.map((r) => r.yards)))}`] : ['—', 'not charted']) },
         { label: 'Their run %', value: ({ theirs, otherTheirs }) => { const a = runPassRows(theirs), b = runPassRows(otherTheirs); return a.length ? [pct(rate(a, isRunPlay)), `others: ${pct(rate(b, isRunPlay))}`] : ['—', 'not charted']; } },
         { label: 'Charted games', value: ({ charted, seasons }) => [String(charted.size), seasons.length ? `${seasons[0]}${seasons.length > 1 ? `–${seasons[seasons.length - 1]}` : ''}` : 'none yet'] },
@@ -618,12 +618,6 @@
       footer: () => `Source: Game Analysis's OfficialPlayByPlay sheet (${gameCoverageText(D.games)}), Special Teams Data box scores, Schedule. Run/Pass excludes kneel-downs and two-point tries; a sack counts as a pass call.`,
     });
 
-    // Keep the picked opponent in the address so the page can be shared/bookmarked.
-    const sel = root.querySelector('select.select-sm');
-    if (sel) {
-      Site.setSub(sel.value);
-      sel.addEventListener('change', () => Site.setSub(sel.value));
-    }
     return view;
   }
 

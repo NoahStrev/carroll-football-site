@@ -215,3 +215,15 @@ function versusRow(label, a, b, format, higherBetter) {
   const arrow = diff === 0 ? '' : ` <span class="rk-move ${cls}">${diff > 0 ? '▲' : '▼'}</span>`;
   return [label, `${a === null || a === undefined ? '—' : format(a)}${arrow}`, b === null || b === undefined ? '—' : format(b)];
 }
+
+/** The series with one opponent, from a home.json history list (newest game first): wins, losses, the first season on
+ * record, the latest meeting (with `word`: "Won"/"Lost"/"Tied"), and how many of the most recent meetings share its
+ * result. null with no meetings. */
+function seriesRecord(hist) {
+  if (!hist || !hist.length) return null;
+  const count = (res) => hist.filter((g) => g.result === res).length;
+  let streak = 0;
+  while (streak < hist.length && hist[streak].result === hist[0].result) streak++;
+  const word = { W: 'Won', L: 'Lost' }[hist[0].result] || 'Tied';
+  return { w: count('W'), l: count('L'), n: hist.length, since: hist[hist.length - 1].season, last: hist[0], word, streak };
+}

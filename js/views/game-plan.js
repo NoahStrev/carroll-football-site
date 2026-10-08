@@ -29,7 +29,7 @@ const GamePlan = (function () {
     const start = wanted || (upcoming[0] ? upcoming[0].opponent : options[0].value);
 
     const view = Site.view(root, {
-      linkSelects: false,
+      pathSelect: 'opponent',
       selects: [{ id: 'opponent', label: 'Opponent', options, value: start }],
       source: 'Official play-by-play, box scores, NCAA team stats',
       actions: [{ label: '&#8595; PDF', onClick: (st) => printPage(`Game Plan - ${st.opponent} - Carroll Football`) }],
@@ -45,7 +45,7 @@ const GamePlan = (function () {
       },
       kpis: [
         { label: 'Game', value: ({ game }) => (game ? [Site.dayLabel(game.date, { weekday: 'short', month: 'short', day: 'numeric' }), `${game.home ? 'Home' : 'Away'}${game.time ? ` · ${game.time}` : ''}${game.conference ? ' · CCIW' : ''}`] : ['—', 'not on the remaining schedule']) },
-        { label: 'Series record', value: ({ hist }) => { const w = hist.filter((g) => g.result === 'W').length, l = hist.filter((g) => g.result === 'L').length; return hist.length ? [`${w}–${l}`, `since ${hist[hist.length - 1].season}`] : ['—', 'no meetings on record']; } },
+        { label: 'Series record', value: ({ hist }) => { const s = seriesRecord(hist); return s ? [`${s.w}–${s.l}`, `since ${s.since}`] : ['—', 'no meetings on record']; } },
         { label: 'Their scoring offense', value: ({ them }) => { const r = them && them['Scoring Offense']; return r ? [`${fmt(r.value)} ppg`, `#${r.rank} nationally`] : ['—', 'not in the CCIW tables']; } },
         { label: 'Their scoring defense', value: ({ them }) => { const r = them && them['Scoring Defense']; return r ? [`${fmt(r.value)} ppg`, `#${r.rank} nationally`] : ['—', 'not in the CCIW tables']; } },
       ],
@@ -103,11 +103,6 @@ const GamePlan = (function () {
       footer: () => `Sources: Game Analysis's OfficialPlayByPlay and Plays sheets (${gameCoverageText(D.games)}), Special Teams Data box scores, NCAA team stats, Schedule. A tell needs 20+ snaps and a gap beyond chance.`,
     });
 
-    const sel = root.querySelector('select.select-sm');
-    if (sel) {
-      Site.setSub(sel.value);
-      sel.addEventListener('change', () => Site.setSub(sel.value));
-    }
     return view;
   }
 

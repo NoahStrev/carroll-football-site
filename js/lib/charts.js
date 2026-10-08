@@ -192,6 +192,8 @@ function renderScatter(container, { points, xLabel, yLabel, colorMap, xDomain, y
   const svgns = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(svgns, 'svg');
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', `Scatter chart of ${yLabel || 'value'} against ${xLabel || 'position'}, ${xs.length} points`);
   svg.style.width = '100%';
   svg.style.height = `${H}px`;
 
@@ -311,6 +313,8 @@ function renderSparkline(container, { values, labels, unit = '', seasons, oppone
   const svgns = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(svgns, 'svg');
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', `Game-by-game trend, ${pts.length} games: ${fmt(pts[0].v)}${unit} in the first, ${fmt(pts[pts.length - 1].v)}${unit} in the latest, ${fmt(avg)}${unit} on average`);
   svg.style.width = '100%';
   svg.style.height = `${H}px`;
 

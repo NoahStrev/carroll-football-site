@@ -45,7 +45,7 @@ const GameReview = (function () {
     const count = (v) => (Number.isInteger(v) ? String(v) : fmt(v, 1)); // a real score or play count reads as a whole number
 
     const view = Site.view(root, {
-      linkSelects: false,
+      pathSelect: 'game',
       selects: [{
         id: 'game', label: 'Game', value: start,
         options: games.map((g) => ({ group: `${g.season} season`, value: g.date, label: `${Site.dayLabel(g.date, { month: 'short', day: 'numeric', year: 'numeric' })} · ${g.home ? 'vs' : '@'} ${g.opponent} (${g.result} ${g.carroll_pts}–${g.opp_pts})${g.charted ? '' : ' — result only'}` })),
@@ -142,7 +142,7 @@ const GameReview = (function () {
           render(el, { game, off, def }) {
             if (!gated(el, game)) return;
             const top = (rows) => rows.filter((r) => r.yards !== null && !r.is_penalty).sort((a, b) => b.yards - a.yards).slice(0, 5);
-            const line = (side) => (r) => [side, r.quarter, downDist(r), `${r.play_type}${r.direction ? ` ${r.direction}` : ''}`, `${r.yards}${r.is_touchdown ? ' TD' : ''}`];
+            const line = (side) => (r) => [side, r.quarter, downDist(r), esc(`${r.play_type}${r.direction ? ` ${r.direction}` : ''}`), `${r.yards}${r.is_touchdown ? ' TD' : ''}`];
             el.innerHTML = Site.tableHTML({ head: ['', 'Qtr', 'Down & dist', 'Play', 'Yds'], rows: [...top(off).map(line('Carroll')), ...top(def).map(line('Opponent'))] });
           },
         },
@@ -174,11 +174,6 @@ const GameReview = (function () {
       footer: () => `Source: Game Analysis's OfficialPlayByPlay sheet (${gameCoverageText(D.games)}), Special Teams Data box scores and Value/Score. Turnover margin is takeaways minus giveaways.`,
     });
 
-    const sel = root.querySelector('select.select-sm');
-    if (sel) {
-      Site.setSub(sel.value);
-      sel.addEventListener('change', () => Site.setSub(sel.value));
-    }
     return view;
   }
 

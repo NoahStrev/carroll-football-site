@@ -185,7 +185,7 @@
 
   // lifting.json is 3 MB, so it is fetched only when a player with a roster-confirmed athlete_key is opened.
   let liftingPromise = null;
-  const loadLifting = () => (liftingPromise = liftingPromise || fetch('../data/lifting.json').then((r) => (r.ok ? r.json() : null)).catch(() => null));
+  const loadLifting = () => (liftingPromise = liftingPromise || fetch('../data/lifting.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).catch(() => null));
 
   const LIFT_METRICS = [['Bench', 'lb', true], ['Squat', 'lb', true], ['Clean', 'lb', true], ['Combined Total', 'lb', true], ['Vertical', 'in', true], ['Broad Jump', 'in', true], ['Pro Agility', 'sec', false], ['Weight', 'lb', null]];
 

@@ -18,7 +18,7 @@ projects in `Football/`.
 | Opponent Scouting | `opponent-scouting.html` | Next Opponent (what to expect, a national-rank matchup card, and season totals; defaults to the next scheduled opponent, `#next/<opponent>`) · Game Plan (the same week as a two-page printable sheet, `#plan/<opponent>`) · Game Review (a recap of any one game, `#review/<yyyy-mm-dd>`) · By Opponent · Offense · Defense (each: Carroll self-scout / opponent scout) | `game-data.json`, `home.json`, `meta.json`, `special-teams.json`, `team-stats.json` |
 | Rankings | `rankings.html` | Offensive · Defensive · Special Teams · Additional Metrics (one season/week picker) | `rankings.json` |
 | Lifting & Strength | `lifting-strength.html` | Leaderboards (All Time / Last Session / each class) · Compare Athletes | `lifting.json` |
-| Players & Records | `players.html` | Career Stats (also a player profile: honors, record book, record watch, strength testing, and a game-by-game log per category; `#career/<name>`) · Season Leaders (top 15 per stat for any season) · Compare Players · Record Book · Record Watch · Awards History | `career-stats.json`, `records.json` |
+| Players & Records | `players.html` | Career Stats (also a player profile: honors, record book, record watch, strength testing, and a game-by-game log per category; `#career/<name>`) · Season Leaders (top 15 per stat for any season) · Compare Players · Record Book · Record Watch · Awards History | `career-stats.json`, `records.json`, `home.json` (game logs need each game's opponent); `lifting.json` is fetched only when a profile's player has strength testing |
 | Glossary · Updates | `glossary.html`, `updates.html` | Utility pages (right side of the nav) | — |
 
 Views are addressable: `offense.html#positions/qb`, `special-teams.html#athletes/punter/head-to-head`,
@@ -39,7 +39,9 @@ js/lib/filters.js     checkbox filter panel, searchable combobox
 js/shell.js           Site.mount (nav, page header, tabs with hash routing, data loading),
                       Site.view (declarative filters + KPIs + cards), Site.pills, Site.tableHTML
 js/views/*.js         one file per page's content (game.js is shared by Offense and Defense;
-                      st-units.js + st-athletes.js + special-teams.js make up Special Teams)
+                      st-units.js + st-athletes.js + special-teams.js make up Special Teams; scouting.js mounts
+                      Opponent Scouting from game-intel.js (matchups + "what to expect"), game-plan.js, game-review.js;
+                      tells.js is the Tells tab on Offense and Defense)
 dashboards/*.html     thin pages: a <head>, the script tags (js/lib/*, shell.js, one view), nothing else
 data/*.json           generated, committed (the site reads these; it never touches the Excel sources)
 scripts/              build_*.py (one per JSON), refresh_all.py, serve.py (local no-cache server)
@@ -101,8 +103,9 @@ schedule — a "game X not loaded yet" warning whenever the schedule shows a gam
 
 A view's filters and dropdowns travel in the address, so a coach can be sent one link to an exact view: `offense.html#scorecard?f.season=2025~2024&f.opponent=Wheaton`
 (`f.<field>` is the checked values joined by `~`; `s.<id>` is a dropdown's value). Only what differs from the view's defaults is written, the **Copy link**
-button in each view's shelf copies the address, and views that keep their own selection in the path (`#next/<opponent>`, `#plan/<opponent>`, `#review/<date>`,
-`#career/<player>`) opt out with `linkSelects: false`.
+button in each view's shelf copies the address. Views whose dropdown IS the route (`#next/<opponent>`, `#plan/<opponent>`, `#review/<date>`) name it with
+`pathSelect: '<select id>'`, which keeps that value in the path instead of the query (`#career/<player>` does the same from its own combobox).
+Data files are fetched with `cache: 'no-cache'`, so a pushed update shows on the next load instead of after GitHub Pages' 10-minute cache.
 
 ## Printing
 
@@ -116,13 +119,12 @@ fills that header (`.print-head`); a card that is only links can opt out with `n
 that buckets those rows by score ("Leading by 9+") as the opponent's own offense must use `opponentOffenseRows()` (js/lib/data.js), which flips the sign.
 
 `build_game_data.py` also drops "Penalty, No Play" snaps (nullified and replayed, so not plays) and re-labels a drive whose
-"Touchdown" was really an interception/fumble returned the other way. With both, per-game yardage matches the official box score exactly in
-39 of 54 games and within ~30 yards in nearly all of the rest. One drive the source tagged to the wrong side (2021-11-06 vs Carthage, Carroll's final field-goal drive) is moved back by
+"Touchdown" was really an interception/fumble returned the other way. With both, per-game yardage matches the official box score exactly on both sides in
+30 of 55 games (79 of 110 sides), and every side is within 30 yards except 2024-10-12's offense (-32). One drive the source tagged to the wrong side (2021-11-06 vs Carthage, Carroll's final field-goal drive) is moved back by
 `MANUAL_DRIVE_SIDE_OVERRIDES` in build_game_data.py, which makes that game match its box score exactly. A handful of other games carry a 20-30 yard rushing gap. Those gaps are inside the official box
 scores themselves, not our parsing: the parsed yards equal the play text in every play, and for 2023-10-07 vs North Central the same page
 reports 670 yards (drive chart), 695 (team stats) and 725 (play-by-play text). Treating accepted offensive penalties as nullified plays was
-tried and made the match worse, so it is not done. `validate_data.py` re-checks the current
-season on every refresh.
+tried and made the match worse, so it is not done. `validate_data.py` re-checks every season on every refresh (the reviewed 2024-10-12 gap is listed in `KNOWN_BOX_GAPS`).
 
 ## Weekly update
 
@@ -147,7 +149,7 @@ http — `fetch()` of local JSON doesn't work from `file://`.
 at that width, opens every tab and sub-view pill, and fails a view for script errors, a near-empty view, stray
 `undefined`/`NaN` text, sideways page overflow, or content clipped inside a card. Run it after any change to the shell,
 the shared library, or the CSS. (Opponent front/coverage views are *expected* to show their "not charted" explanation for
-2026 — that passes; it is a data gap, not a bug.) It also tries a few choices in each tab's first dropdown (other opponents, other games).
+2026 — that passes; it is a data gap, not a bug.) It also tries a few choices in each tab's first dropdown (other opponents, other games), and finishes with a shareable-link check (a changed filter or dropdown lands in the address, and opening that address restores it).
 
 `python tests/run_smoke.py` runs the same check headless (needs `pip install playwright`; set `SMOKE_BROWSER_CHANNEL=msedge` to use an installed
 browser instead of `playwright install chromium`). `.github/workflows/smoke.yml` runs it on every push to `master` and on pull requests;

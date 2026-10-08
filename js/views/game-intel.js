@@ -77,10 +77,10 @@ const GameIntel = (function () {
     const out = [];
     const game = meta.schedule.find((g) => g.opponent === opp && g.date >= Site.today() && !g.completed);
     const hist = H.history[opp] || [];
-    if (hist.length) {
-      const w = hist.filter((g) => g.result === 'W').length, l = hist.filter((g) => g.result === 'L').length;
-      const last = hist[0];
-      out.push({ tone: '', html: `Series: Carroll is <b>${w}–${l}</b> since ${hist[hist.length - 1].season}${game ? ` and ${game.home ? 'hosts' : 'travels to'} them ${Site.dayLabel(game.date, { weekday: 'long', month: 'short', day: 'numeric' })}` : ''}. ${last.result === 'W' ? 'Won' : last.result === 'L' ? 'Lost' : 'Tied'} the last meeting ${last.carroll_pts}–${last.opp_pts} (${last.season}).` });
+    const series = seriesRecord(hist);
+    if (series) {
+      const { w, l, last } = series;
+      out.push({ tone: '', html: `Series: Carroll is <b>${w}–${l}</b> since ${series.since}${game ? ` and ${game.home ? 'hosts' : 'travels to'} them ${Site.dayLabel(game.date, { weekday: 'long', month: 'short', day: 'numeric' })}` : ''}. ${series.word} the last meeting ${last.carroll_pts}–${last.opp_pts} (${last.season}).` });
     }
     const M = matchups(opp);
     if (M) {

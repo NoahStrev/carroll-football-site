@@ -25,7 +25,6 @@
   };
   const hangtime = (rows) => { const h = rows.filter((r) => r.hangtime !== null); return h.length ? `${fmt(mean(h.map((r) => r.hangtime)), 2)}s` : '—'; };
   const snapTime = (rows) => { const t = rows.filter((r) => r.snap_to_catch !== null); return t.length ? `${fmt(mean(t.map((r) => r.snap_to_catch)), 2)}s` : '—'; };
-  const opTime = (rows) => { const t = rows.filter((r) => r.snap_to_kick !== null); return t.length ? `${fmt(mean(t.map((r) => r.snap_to_kick)), 2)}s` : '—'; };
   const longFg = (rows) => { const m = makes(fgs(rows)); return m.length ? `${Math.max(...m.map((r) => r.distance))} yds` : '—'; };
   const isBlocked = (r) => r.miss_location === 'Blocked';
   const deepKick = (rows) => rows.filter((r) => r.kick_type === 'Deep');

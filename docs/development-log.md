@@ -2689,9 +2689,8 @@ chasing down rather than just noting.
 ## Running locally
 
 No build step — serve the folder and open any page under `dashboards/` directly
-(e.g. `dashboards/updates.html`). `index.html` is currently just a redirect stub
-to `dashboards/updates.html` (see the dated entry below on the homepage removal),
-not a real page to open on its own. A launch config already exists at the
+(e.g. `dashboards/home.html`; `index.html` is only a redirect to it). See the README's
+"Running locally" for the current instructions. A launch config already exists at the
 `Football/` root (`.claude/launch.json`, name "carroll-site", port 8731);
 otherwise:
 

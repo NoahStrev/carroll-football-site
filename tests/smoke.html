@@ -125,12 +125,81 @@ async function checkPage(page, width) {
   frame.remove();
 }
 
+// Shareable links: a changed filter or dropdown lands in the address, and opening that address brings it back.
+async function openPage(page, hash, width) {
+  const frame = document.createElement('iframe');
+  frame.style.cssText = `width:${width}px;height:900px;border:0;position:absolute;left:-99999px;top:0`;
+  document.body.appendChild(frame);
+  await new Promise((res) => { frame.onload = res; frame.src = `../dashboards/${page}.html${hash}`; });
+  await settle(frame.contentWindow);
+  return frame;
+}
+
+async function checkLinks(width) {
+  const done = (frame) => { frame.src = 'about:blank'; frame.remove(); };
+  const run = async (name, fn) => {
+    let problems = [];
+    try { problems = await fn(); } catch (e) { problems = [`threw: ${e.message}`]; }
+    record('links', name, problems);
+  };
+
+  await run('filter checkbox round trip (Offense)', async () => {
+    const f = await openPage('offense', '#scorecard', width), w = f.contentWindow;
+    const boxes = [...w.document.querySelectorAll('#site-stage input[data-field="season"]')];
+    const before = boxes.map((b) => b.checked).join();
+    const target = boxes.find((b) => !b.checked);
+    if (!target) { done(f); return ['no unchecked season to toggle']; }
+    target.click();
+    await settle(w);
+    const hash = w.location.hash;
+    const copyBtn = w.document.querySelector('#site-stage button[id$="-copy"]');
+    done(f);
+    const problems = [];
+    if (!/\?f\.season=/.test(hash)) problems.push(`changing a season filter left the address at "${hash}"`);
+    if (!copyBtn) problems.push('no Copy link button in the shelf');
+    const g = await openPage('offense', hash, width), gw = g.contentWindow;
+    const after = [...gw.document.querySelectorAll('#site-stage input[data-field="season"]')].map((b) => b.checked).join();
+    done(g);
+    if (after === before) problems.push(`opening "${hash}" did not restore the filter (still ${after})`);
+    return problems;
+  });
+
+  await run('dropdown round trip (Season Leaders)', async () => {
+    const f = await openPage('players', '#leaders', width), w = f.contentWindow;
+    const sel = w.document.querySelector('#site-stage select[id$="-sel-stat"]');
+    sel.value = '2';
+    sel.dispatchEvent(new w.Event('change', { bubbles: true }));
+    await settle(w);
+    const hash = w.location.hash;
+    done(f);
+    const problems = [];
+    if (!/s\.stat=2/.test(hash)) problems.push(`changing the stat left the address at "${hash}"`);
+    const g = await openPage('players', hash, width);
+    const got = g.contentWindow.document.querySelector('#site-stage select[id$="-sel-stat"]').value;
+    done(g);
+    if (got !== '2') problems.push(`opening "${hash}" gave stat ${got}, not 2`);
+    return problems;
+  });
+
+  await run('picked opponent stays a path, not a query (Next Opponent)', async () => {
+    const f = await openPage('opponent-scouting', '#next', width), w = f.contentWindow;
+    const sel = w.document.querySelector('#site-stage select[id$="-sel-opponent"]');
+    sel.selectedIndex = sel.options.length - 1;
+    sel.dispatchEvent(new w.Event('change', { bubbles: true }));
+    await settle(w);
+    const hash = w.location.hash, expect = `#next/${encodeURIComponent(sel.value)}`;
+    done(f);
+    return hash === expect ? [] : [`address is "${hash}", expected "${expect}"`];
+  });
+}
+
 async function run() {
   const width = Number(document.getElementById('width').value);
   rows.innerHTML = ''; failures = 0; checks = 0;
   window.__smoke = { done: false };
   document.getElementById('summary').textContent = 'Running…';
   for (const page of PAGES) await checkPage(page, width);
+  await checkLinks(width);
   document.getElementById('summary').innerHTML = `<span class="${failures ? 'bad' : 'ok'}">${failures ? `${failures} of ${checks} views failed` : `All ${checks} views passed`}</span> at ${width}px`;
   window.__smoke = { done: true, checks, failures, failed: [...rows.querySelectorAll('tr')].filter((r) => r.querySelector('.bad')).map((r) => r.innerText.replace(/\s+/g, ' ')) };
 }
