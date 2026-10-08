@@ -62,6 +62,21 @@ def run(cmd, cwd, capture=True, check=False):
     return proc.returncode, out
 
 
+def ensure_excel_closed(args):
+    """An Excel window with a workbook open blocks the write, but force-killing Excel would throw away someone's unsaved
+    work, so by default this stops and asks. --kill-excel opts in to the force-close."""
+    if os.name != "nt":
+        return
+    _, out = run(["tasklist", "/FI", "IMAGENAME eq EXCEL.EXE", "/NH"], SITE)
+    if "EXCEL.EXE" not in out.upper():
+        return
+    if args.kill_excel:
+        run(["taskkill", "/IM", "EXCEL.EXE", "/F"], SITE)
+        say("Excel was open; closed it (--kill-excel).")
+        return
+    raise SystemExit("Excel is open, and an open workbook blocks the write. Save and close Excel, then re-run (or pass --kill-excel to force-close it and lose anything unsaved).")
+
+
 def step_header(name, text):
     say(f"\n=== {name}: {text} ===")
 
@@ -105,8 +120,7 @@ def step_box(args, year):
         say(out.strip().splitlines()[-1] if out.strip() else "(no output)")
         if code != 0:
             raise SystemExit(f"fetch_raw.py failed for {url}:\n{out[-1500:]}")
-    if os.name == "nt":
-        run(["taskkill", "/IM", "EXCEL.EXE", "/F"], ST_DIR)  # a workbook left open in Excel blocks the write
+    ensure_excel_closed(args)  # a workbook left open in Excel blocks the write
     names = []
     for slug, gid in new:
         raw = json.loads((ST_DIR / "raw" / f"{year}_{slug}_{gid}.json").read_text(encoding="utf-8"))
@@ -169,8 +183,7 @@ def step_ncaa(args, year):
         say(f"(dry run: would scrape ~415 pages into {folder} and rebuild the weekly trend workbooks)")
         return
     folder.mkdir(parents=True, exist_ok=True)
-    if os.name == "nt":
-        run(["taskkill", "/IM", "EXCEL.EXE", "/F"], NCAA_DIR)
+    ensure_excel_closed(args)
     scrape = NCAA_DIR / "scrape_conference.ps1"
     log = folder / "log.txt"
     # Direct "&" invocation inside -Command: the form this project's notes say works here (not -File / -ExecutionPolicy).
@@ -290,8 +303,8 @@ def step_site(args):
         if any(d.startswith("site: ERROR") for d in decisions):
             return  # the validator found something; it is listed under NEEDS YOUR DECISION
         raise SystemExit("refresh_all.py failed -- do NOT publish. See the output above.")
-    code, out = run(["git", "status", "--short", "data"], SITE)
-    say("\nChanged data files:\n" + (out.strip() or "(none)"))
+    code, out = run(["git", "status", "--short", "data", "dashboards", "index.html"], SITE)
+    say("\nChanged data and page files:\n" + (out.strip() or "(none)"))
 
 
 # ------------------------------------------------------------------------------------------------- main
@@ -302,6 +315,7 @@ def main():
     ap.add_argument("--dry-run", action="store_true", help="show what would happen; change nothing")
     ap.add_argument("--hudl", help="a specific Hudl PlaylistData xlsx (default: the one in Downloads)")
     ap.add_argument("--force", action="store_true", help="redo the NCAA snapshot even if today's exists")
+    ap.add_argument("--kill-excel", action="store_true", help="force-close Excel if it is open (unsaved work is lost); by default the update stops and asks")
     args = ap.parse_args()
     wanted = [s.strip() for s in args.only.split(",")] if args.only else STEPS
     bad = [s for s in wanted if s not in STEPS]

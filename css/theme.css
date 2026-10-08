@@ -87,7 +87,7 @@
     --seq-100: #12233a;
     --seq-200: #163a5c;
     --seq-300: #1a4d7c;
-    --seq-400: #2a78d6;
+    --seq-400: #2468bd;
     --seq-500: #3987e5;
     --seq-600: #5598e7;
     --cat-1: #3987e5;
@@ -125,7 +125,7 @@
   --seq-100: #12233a;
   --seq-200: #163a5c;
   --seq-300: #1a4d7c;
-  --seq-400: #2a78d6;
+  --seq-400: #2468bd;
   --seq-500: #3987e5;
   --seq-600: #5598e7;
   --cat-1: #3987e5;
@@ -194,6 +194,9 @@ html, body {
 .loading { max-width: 1280px; margin: 40px auto; text-align: center; color: var(--muted); font-size: 13px; }
 
 /* Top-level tabs (one per view) and in-tab pill pickers (role, group, week, ...) share a look. */
+.sr-only { position: absolute; left: 0; top: 0; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.tabnav { display: contents; }
+.tbl-scroll:focus-visible, .rank-scroll:focus-visible, .lb-scroll-wrap:focus-visible, .heat-scroll:focus-visible, .barchart:focus-visible, .stacked:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .tabbar { display: flex; gap: 8px; max-width: 1280px; margin: 0 auto 20px; padding: 0 4px; flex-wrap: wrap; }
 .tabbtn, .pill {
   font-family: inherit; font-weight: 600; border-radius: 999px; border: 1px solid var(--border);
@@ -331,7 +334,7 @@ html, body {
 .card-head { padding: 10px 15px; border-bottom: 1px solid var(--grid); display: flex; align-items: center; justify-content: space-between; gap: 10px; background: color-mix(in srgb, var(--surface-1) 55%, transparent); }
 .card-head h2 { font-size: 12.5px; margin: 0; font-weight: 700; }
 .card-head.compact { padding: 0 0 6px; border: none; background: none; }
-.card-head .count { font-size: 10.5px; font-weight: 700; color: var(--muted); background: var(--grid); border-radius: 999px; padding: 2px 8px; flex-shrink: 0; }
+.card-head .count { font-size: 10.5px; font-weight: 700; color: var(--text-secondary); background: var(--grid); border-radius: 999px; padding: 2px 8px; flex-shrink: 0; }
 .card-body { padding: 15px 16px 13px; }
 .card-body.flush { padding: 0; }
 .card-note { margin: 0 15px 13px; }
@@ -371,6 +374,7 @@ table.records-table thead th, table.rank-table thead th, table.lb-scroll thead t
 .view-intro { margin-bottom: 14px; }
 .data-note { font-size: 10.5px; color: var(--muted); margin-top: 6px; }
 
+.avatar[style*="--cat-2"], .avatar[style*="--cat-3"], .avatar[style*="--cat-4"], .avatar[style*="--cat-5"] { color: #0b0b0b; } /* white initials on the lighter palette colours miss contrast */
 .avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; flex-shrink: 0; }
 .mini-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
 .mini-kpi { background: var(--surface-1); border: 1px solid var(--border); border-radius: 6px; padding: 8px 9px; }
@@ -433,7 +437,7 @@ table.records-table thead th, table.rank-table thead th, table.lb-scroll thead t
 .heat .hcell { font-size: 11px; padding: 8px 4px; border-radius: 4px; text-align: center; }
 .heat .rowlabel { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; font-weight: 600; overflow-wrap: anywhere; }
 .heat .collabel { font-size: 10.5px; color: var(--muted); text-align: center; padding-bottom: 2px; }
-.heat .n { font-size: 9px; opacity: .85; display: block; margin-top: 1px; }
+.heat .n { font-size: 9px; display: block; margin-top: 1px; }
 .heat-legend { display: flex; align-items: center; justify-content: center; gap: 4px; flex-wrap: wrap; margin-top: 10px; font-size: 10.5px; color: var(--muted); }
 .heat-legend i { width: 22px; height: 9px; border-radius: 2px; display: inline-block; }
 .heat-legend-fade { margin-left: 12px; }
@@ -480,6 +484,7 @@ table.mini tbody tr:nth-child(1) .lb-rank { color: var(--cat-2); font-weight: 80
 .lb-session { display: block; font-size: 10.5px; font-weight: 400; color: var(--muted); }
 .lb-value { text-align: right; font-weight: 700; white-space: nowrap; }
 .lb-empty { font-size: 11.5px; color: var(--muted); padding: 12px; }
+.lb-more { display: block; width: 100%; margin: 6px 0 2px; padding: 7px; font-family: inherit; font-size: 11.5px; font-weight: 700; color: var(--accent-text); background: none; border: 1px dashed var(--border); border-radius: 8px; cursor: pointer; }
 .lb-scroll-wrap { padding: 0 16px 13px; max-height: 360px; overflow-y: auto; }
 table.lb-scroll { margin: 0; }
 table.lb-scroll tbody tr:first-child td { padding-top: 7px; }
@@ -561,7 +566,7 @@ table.game-log td, table.game-log th { white-space: nowrap; }
   .lbgrid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 900px) {
-  .cards, .grid2 { grid-template-columns: 1fr; }
+  .cards, .grid2 { grid-template-columns: minmax(0, 1fr); } /* minmax(0, ...) lets a wide table scroll inside its card instead of stretching the whole grid */
   .kpi .value { font-size: 23px; }
   .kpirow { grid-template-columns: repeat(2, 1fr); }
   .kpirow-5, .kpirow-6 { grid-template-columns: repeat(3, 1fr); }
@@ -596,6 +601,12 @@ table.game-log td, table.game-log th { white-space: nowrap; }
 }
 @media (max-width: 560px) {
   .trend-body { grid-template-columns: 1fr; }
+  .card-body { overflow-x: auto; } /* a table too wide for a phone scrolls inside its card instead of widening the page */
+}
+@media (max-width: 380px) {
+  .kpi .value { font-size: 17px; }
+  .kpi, .profile-head > div { min-width: 0; overflow-wrap: anywhere; }
+  .kpirow, .kpirow-3, .kpirow-5, .kpirow-6, .mini-kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }

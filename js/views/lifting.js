@@ -27,6 +27,11 @@
   // Rank is assigned from the FULL sorted list before any name-search filtering, so a
   // search match still shows their real standing rather than "1" because they were the
   // only row left. Every qualifying athlete is listed (scrolled, not truncated to a top-N).
+  // Each board lists its top rows and keeps the rest behind a "Show all" button: drawing every athlete in every board put
+  // over 11,000 elements on the page, which a phone takes seconds to build. A name search always looks at everyone.
+  const BOARD_ROWS = 25;
+  const expanded = new Set();
+
   function leaderboardCard(title, rows, query) {
     const lowerBetter = LOWER_IS_BETTER.has(title);
     const ranked = [...rows].sort((a, b) => (lowerBetter ? a.value - b.value : b.value - a.value)).map((r, i) => ({ ...r, rank: i + 1 }));
@@ -37,7 +42,8 @@
       // as an empty card -- a wall of empty cards isn't the answer someone's looking for.
       return q ? '' : `<div class="card"><div class="card-head"><h2>${title}</h2></div><div class="lb-empty">No qualifying sessions.</div></div>`;
     }
-    const body = shown.map((r) => `
+    const visible = q || expanded.has(title) ? shown : shown.slice(0, BOARD_ROWS);
+    const body = visible.map((r) => `
       <tr><td><span class="lb-rank">${r.rank}</span></td>
       <td class="name">${esc(r.first_name)} ${esc(r.last_name)}<span class="lb-session">${esc(r.session_label)}</span></td>
       <td class="lb-value">${metricLabel(title, r.value)}</td></tr>`).join('');
@@ -45,9 +51,9 @@
       <div class="card">
         <div class="card-head"><h2>${title}</h2><span class="count">${shown.length}${q && shown.length !== ranked.length ? ` of ${ranked.length}` : ''}</span></div>
         <div class="card-body lb-scroll-wrap"><table class="mini lb-scroll">
-          <thead><tr><th></th><th>Athlete · session</th><th style="text-align:right;">Value</th></tr></thead>
+          <thead><tr><th><span class="sr-only">Rank</span></th><th>Athlete · session</th><th style="text-align:right;">Value</th></tr></thead>
           <tbody>${body}</tbody>
-        </table></div>
+        </table>${visible.length < shown.length ? `<button type="button" class="lb-more" data-board="${esc(title)}">Show all ${shown.length}</button>` : ''}</div>
       </div>`;
   }
 
@@ -101,6 +107,12 @@
     root.querySelector('#lb-shelf').innerHTML = `${buildFilterPanel('lb', defs, { position: positions })}<input type="text" class="name-search" id="lb-namesearch" placeholder="Search player name…" autocomplete="off" spellcheck="false" aria-label="Search player name">`;
     wireFilterPanel('lb', defs, draw);
     root.querySelector('#lb-namesearch').addEventListener('input', draw);
+    root.querySelector('#lb-body').addEventListener('click', (e) => {
+      const b = e.target.closest('.lb-more');
+      if (!b) return;
+      expanded.add(b.dataset.board);
+      draw();
+    });
     Site.pills(root.querySelector('#lb-groups'), { options: all, value: state.group, onChange: (id) => { state.group = id; Site.setSub(id); draw(); } });
 
     function section(label, metrics, group, pos, q) {

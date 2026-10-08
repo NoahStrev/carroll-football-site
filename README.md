@@ -45,7 +45,8 @@ js/views/*.js         one file per page's content (game.js is shared by Offense 
                       game-review.js; tells.js and fourth-down.js are tabs on Offense and Defense)
 dashboards/*.html     thin pages: a <head>, the script tags (js/lib/*, shell.js, one view), nothing else
 data/*.json           generated, committed (the site reads these; it never touches the Excel sources)
-scripts/              build_*.py (one per JSON), refresh_all.py, serve.py (local no-cache server)
+scripts/              build_*.py (one per JSON; build_lib.py holds the few helpers they share), refresh_all.py, stamp_assets.py
+                      (asset versions), validate_data.py, weekly_update.py, serve.py (local no-cache server)
 docs/                 development-log.md (historical)
 tests/smoke.html      in-browser smoke test (see Testing)
 ```
@@ -165,9 +166,11 @@ the shared library, or the CSS. (Opponent front/coverage views are *expected* to
 
 `python tests/simulate_new_season.py` rehearses the day a new season's opener is in the box-score archive but not yet charted (a copy of the site with a synthetic next-year opener and schedule, then the smoke test on it). It needs the sibling projects and `pip install openpyxl playwright`, so it is a by-hand check. It exists because the "current season" used to come from the play-by-play, which would have left Home and Players on the old season (warning "not loaded yet") until the first game was charted; it now comes from the box scores, and Home says "not charted yet" for a season with no play-by-play.
 
+`python tests/run_axe.py` runs the axe accessibility engine (the rules Lighthouse uses) on every page and tab in the light and dark theme (`pip install playwright axe-playwright-python`); the smoke test also runs at 320px (a small phone) and in dark with `SMOKE_SCHEME=dark`.
+
 `python tests/run_smoke.py` runs the same check headless (needs `pip install playwright`; set `SMOKE_BROWSER_CHANNEL=msedge` to use an installed
 browser instead of `playwright install chromium`). `.github/workflows/smoke.yml` runs it on every push to `master` and on pull requests;
-The workflow also runs `scripts/validate_data.py` on the committed data first (its box-score reconciliation needs the sibling projects, so it skips that part with a warning). GitHub Pages publishes regardless, so a red check means fix soon, not blocked.
+The workflow also runs `scripts/validate_data.py` on the committed data first (its box-score reconciliation needs the sibling projects, so it skips that part with a warning). It also runs `tests/run_axe.py`. GitHub Pages publishes regardless, so a red check means fix soon, not blocked.
 
 ## Conventions worth knowing
 

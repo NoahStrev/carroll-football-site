@@ -164,13 +164,16 @@ const Site = (() => {
       <a class="skip-link" href="#site-stage">Skip to content</a>
       <div class="page">
         ${navHTML(cfg.nav)}
-        <header class="pagehead"><h1>${esc(cfg.title)}${cfg.badge ? `<span class="h1-badge">${esc(cfg.badge)}</span>` : ''}</h1>${cfg.lead ? `<p>${cfg.lead}</p>` : ''}<div class="asof" id="site-asof" hidden></div></header>
-        <div class="tabbar" id="site-tabs" role="tablist" aria-label="${esc(cfg.title)} views"></div>
-        <main class="stage" id="site-stage" role="tabpanel" tabindex="-1"><div class="loading">Loading data…</div></main>
+        <header class="pagehead" role="banner"><h1>${esc(cfg.title)}${cfg.badge ? `<span class="h1-badge">${esc(cfg.badge)}</span>` : ''}</h1>${cfg.lead ? `<p>${cfg.lead}</p>` : ''}<div class="asof" id="site-asof" hidden></div></header>
+        <nav class="tabnav" aria-label="${esc(cfg.title)} sections"><div class="tabbar" id="site-tabs" role="tablist" aria-label="${esc(cfg.title)} views"></div></nav>
+        <main class="stage" id="site-stage" tabindex="-1"><div class="loading">Loading data…</div></main>
       </div>`;
 
     const tabbar = document.getElementById('site-tabs');
     const stage = document.getElementById('site-stage');
+    // "Skip to content" must only move focus: left as a plain #site-stage link it changes the address, which the router
+    // would read as a tab name and throw the visitor back to the first tab.
+    document.querySelector('.skip-link').addEventListener('click', (e) => { e.preventDefault(); stage.focus(); stage.scrollIntoView(); });
     if (cfg.tabs.length < 2) tabbar.hidden = true;
     tabbar.innerHTML = cfg.tabs.map((t) => `<button type="button" class="tabbtn" role="tab" id="tab-${esc(t.id)}" data-tab="${esc(t.id)}">${esc(t.label)}</button>`).join('');
 
@@ -189,12 +192,14 @@ const Site = (() => {
       if (activeBtn && tabbar.scrollWidth > tabbar.clientWidth) activeBtn.scrollIntoView({ inline: 'center', block: 'nearest' });
       // Bookmarks, history, and a printout's file name should say which tab this is.
       document.title = `${cfg.tabs.length > 1 ? `${tab.label} · ` : ''}${cfg.title} — Carroll Football Analytics`;
-      stage.setAttribute('aria-labelledby', `tab-${tab.id}`);
       stage.innerHTML = '';
       const root = document.createElement('div');
+      root.setAttribute('role', 'tabpanel');
+      root.setAttribute('aria-labelledby', `tab-${tab.id}`);
       stage.appendChild(root);
       try {
         tab.render(root, { sub: sub || null });
+        focusableScrollers(root);
         // Tabs built by hand rather than with Site.view (player profiles, rankings, the record book) have no printout
         // header of their own: give them the same one, saying which page and tab this is and the date.
         if (!root.querySelector('.print-head')) {
@@ -249,7 +254,7 @@ const Site = (() => {
    * column gets the bold .name style. */
   function tableHTML({ head, rows, empty = 'No data in the current filter.', extraClass = '' }) {
     const cols = head.map((h) => (typeof h === 'string' ? { label: h } : h));
-    const th = cols.map((c) => `<th${c.align ? ` style="text-align:${c.align}"` : ''}>${c.label}</th>`).join('');
+    const th = cols.map((c) => `<th${c.align ? ` style="text-align:${c.align}"` : ''}>${c.label === '' ? '<span class="sr-only">Item</span>' : c.label}</th>`).join('');
     const body = rows.length
       ? rows.map((r) => `<tr>${r.map((cell, i) => `<td${i === 0 ? ' class="name"' : ''}${cols[i] && cols[i].align ? ` style="text-align:${cols[i].align}"` : ''}>${cell}</td>`).join('')}</tr>`).join('')
       : `<tr><td colspan="${cols.length}" class="empty">${esc(empty)}</td></tr>`;
@@ -259,6 +264,24 @@ const Site = (() => {
   /* ---------------------------------------------------------- view engine --- */
 
   let viewSeq = 0;
+
+  /** A region that scrolls (a wide table, a long list) has to be reachable from the keyboard, or its hidden part is
+   * out of reach. Call after drawing; only boxes that actually overflow become a tab stop. */
+  function focusableScrollers(scope) {
+    (scope || document).querySelectorAll('.tbl-scroll, .rank-scroll, .lb-scroll-wrap, .heat-scroll, .barchart, .stacked, .card-body').forEach((el) => {
+      if (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1) {
+        el.setAttribute('tabindex', '0');
+        if (!el.getAttribute('role')) {
+          // named after the card it sits in, so a screen reader can tell the regions apart
+          const title = (el.closest('.card') || {}).querySelector ? ((el.closest('.card').querySelector('h2') || {}).textContent || '').trim() : '';
+          const same = [...document.querySelectorAll('[data-scroll-name]')].filter((n) => n.dataset.scrollName === title).length;
+          el.dataset.scrollName = title;
+          el.setAttribute('role', 'region');
+          el.setAttribute('aria-label', `${title || 'Scrollable content'}${same ? ` (${same + 1})` : ''}, scrollable`);
+        }
+      }
+    });
+  }
 
   /** <option>s for a spec.selects entry; options with the same `group` (consecutive) share an <optgroup>. */
   function selectOptionsHTML(sel) {
@@ -424,13 +447,14 @@ const Site = (() => {
       }
       fillPrintHead();
       writeLink();
+      focusableScrollers(root);
     }
     refresh();
     return { refresh };
   }
 
   return {
-    mount, view, pills, tableHTML, esc, setSub, setQuery, today, dayLabel,
+    mount, view, pills, tableHTML, esc, setSub, setQuery, today, dayLabel, focusableScrollers,
     get data() { return state.data; },
   };
 })();

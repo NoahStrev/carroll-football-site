@@ -252,6 +252,16 @@ function renderScatter(container, { points, xLabel, yLabel, colorMap, xDomain, y
 
 /* ------------------------------------------------------------- heatmap ------ */
 
+/** Dark or white text, whichever reads better on a theme colour token (a hex custom property, resolved for the current
+ * light/dark theme). The heatmap's ramp runs from dark to light in dark mode, so a fixed rule picks unreadable text there. */
+function readableOn(token) {
+  const hex = getComputedStyle(document.documentElement).getPropertyValue(token).trim().replace('#', '');
+  if (hex.length !== 6) return cssVar('--text-primary');
+  const lin = (i) => { const c = parseInt(hex.slice(i, i + 2), 16) / 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+  const lum = 0.2126 * lin(0) + 0.7152 * lin(2) + 0.0722 * lin(4);
+  return 1.05 / (lum + 0.05) >= (lum + 0.05) / 0.0555 ? '#fff' : '#0b0b0b'; // contrast with white vs with near-black
+}
+
 const SEQ_STEPS = ['--seq-100', '--seq-200', '--seq-300', '--seq-400', '--seq-500', '--seq-600'];
 
 /** rowLabels/colLabels: [string...]. cellFor(row, col): {pct: 0..1, n, made} or
@@ -284,9 +294,11 @@ function renderHeatmap(container, { rowLabels, colLabels, cellFor, title = (r, c
         div.textContent = '—';
       } else {
         const step = Math.min(SEQ_STEPS.length - 1, Math.floor(cell.pct * SEQ_STEPS.length));
-        div.style.background = cssVar(SEQ_STEPS[step]);
-        div.style.color = step >= 4 ? '#fff' : cssVar('--text-primary');
-        if (cell.n < SMALL_SAMPLE) { div.style.opacity = '.5'; div.title = `Only ${cell.n} snap${cell.n === 1 ? '' : 's'}: read with care`; }
+        const small = cell.n < SMALL_SAMPLE;
+        // a small sample keeps its hue but is washed toward the card colour, with ordinary dark text so it stays legible
+        div.style.background = small ? `color-mix(in srgb, ${cssVar(SEQ_STEPS[step])} 38%, var(--surface-1))` : cssVar(SEQ_STEPS[step]);
+        div.style.color = small ? cssVar('--text-primary') : readableOn(SEQ_STEPS[step]);
+        if (small) div.title = `Only ${cell.n} snap${cell.n === 1 ? '' : 's'}: read with care`;
         div.innerHTML = `${pct(cell.pct, 0)}<span class="n">${cell.made}/${cell.n}</span>`;
         const html = `<div class="tt-title">${title(r, c)}</div><div class="tt-row"><span>${pct(cell.pct, 0)}</span><span>${cell.made}/${cell.n}</span></div>`;
         attachTooltip(div, html);

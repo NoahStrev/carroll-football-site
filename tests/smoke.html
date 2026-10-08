@@ -19,7 +19,7 @@
 <h1>Site smoke test</h1>
 <p>Loads every dashboard page in a frame at the chosen width, opens every tab and every sub-view pill, and checks for script errors, empty views, stray "undefined"/"NaN" text, and sideways page overflow. Serve the site first
 (<code>python scripts/serve.py</code>) and open <code>/tests/smoke.html</code>. Add <code>?width=390&amp;autorun=1</code> to run on load.</p>
-<label>Viewport width <select id="width"><option>1280</option><option>820</option><option>390</option></select></label>
+<label>Viewport width <select id="width"><option>1280</option><option>820</option><option>390</option><option>320</option></select></label>
 <button id="run">Run</button>
 <div id="summary"></div>
 <table id="results"><thead><tr><th>Page</th><th>View</th><th>Result</th><th>Notes</th></tr></thead><tbody></tbody></table>
@@ -75,6 +75,7 @@ function inspect(page, win, errors, width) {
   const clipped = [...doc.querySelectorAll('#site-stage *')].filter((el) => {
     if (el.scrollWidth <= el.clientWidth + 1 || el.clientWidth === 0) return false;
     const cs = win.getComputedStyle(el);
+    if (el.classList.contains('sr-only')) return false; // visually hidden on purpose
     if (cs.textOverflow === 'ellipsis') return false; // deliberately truncated axis labels (full text is in the tooltip)
     return cs.overflowX === 'hidden' || cs.overflowX === 'clip';
   });
@@ -152,6 +153,14 @@ async function checkPage(page, width) {
         record(page, `${tab.label} › ${labels[i]}`, inspect(page, win, errors, width));
       }
     }
+  }
+  // "Skip to content" must move focus without leaving the tab the visitor is on (it once reset to the first tab).
+  const skip = win.document.querySelector('.skip-link');
+  if (skip && list.length > 1) {
+    const before = win.location.hash;
+    skip.click();
+    await sleep(200);
+    record(page, 'skip link keeps the view', win.location.hash === before ? [] : [`address went from "${before}" to "${win.location.hash}"`]);
   }
   if (page === 'players') await checkPlayerProfile(win, errors, width);
   frame.src = 'about:blank'; // let the page's data (several MB of JSON) be collected before the next one loads
