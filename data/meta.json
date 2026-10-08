@@ -1,32 +1,32 @@
 {
   "pages": {
     "home": {
-      "through": "2026-09-26",
-      "text": "Games through Carthage, Sep 26"
+      "through": "2026-10-03",
+      "text": "Games through Millikin, Oct 3"
     },
     "offense": {
-      "through": "2026-09-26",
-      "text": "Charted through Carthage, Sep 26"
+      "through": "2026-10-03",
+      "text": "Charted through Millikin, Oct 3"
     },
     "defense": {
-      "through": "2026-09-26",
-      "text": "Charted through Carthage, Sep 26"
+      "through": "2026-10-03",
+      "text": "Charted through Millikin, Oct 3"
     },
     "scouting": {
-      "through": "2026-09-26",
-      "text": "Charted through Carthage, Sep 26"
+      "through": "2026-10-03",
+      "text": "Charted through Millikin, Oct 3"
     },
     "special-teams": {
-      "through": "2026-09-26",
-      "text": "Box scores through Sep 26"
+      "through": "2026-10-03",
+      "text": "Box scores through Oct 3"
     },
     "players": {
-      "through": "2026-09-26",
-      "text": "Career stats through Carthage, Sep 26"
+      "through": "2026-10-03",
+      "text": "Career stats through Millikin, Oct 3"
     },
     "rankings": {
-      "through": "2026-10-01",
-      "text": "Rankings through Week 4 (Oct 1)"
+      "through": "2026-10-06",
+      "text": "Rankings through Week 5 (Oct 6)"
     },
     "lifting": {
       "through": null,
@@ -34,8 +34,8 @@
     }
   },
   "latest_game": {
-    "date": "2026-09-26",
-    "opponent": "Carthage"
+    "date": "2026-10-03",
+    "opponent": "Millikin"
   },
   "schedule": [
     {
@@ -87,11 +87,11 @@
       "opponent": "Millikin",
       "home": false,
       "conference": true,
-      "time": "1 p.m.",
+      "time": null,
       "venue": "Frank M. Lindsay Field",
       "city": "Decatur, IL",
-      "completed": false,
-      "result": null
+      "completed": true,
+      "result": "W, 31-28"
     },
     {
       "date": "2026-10-10",

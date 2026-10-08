@@ -720,6 +720,14 @@
     ],
     "Millikin": [
       {
+        "date": "2026-10-03",
+        "season": 2026,
+        "home": false,
+        "carroll_pts": 31,
+        "opp_pts": 28,
+        "result": "W"
+      },
+      {
         "date": "2025-10-04",
         "season": 2025,
         "home": false,
@@ -1290,8 +1298,8 @@
   "seasons": {
     "2026": {
       "prior_label": "2021–2025",
-      "record": "3-1",
-      "conference_record": "2-0",
+      "record": "4-1",
+      "conference_record": "3-0",
       "games": [
         {
           "date": "2026-09-05",
@@ -1388,26 +1396,50 @@
             "turnovers": 4
           },
           "st_score": 39.4333
+        },
+        {
+          "date": "2026-10-03",
+          "opponent": "Millikin",
+          "home": false,
+          "carroll_pts": 31,
+          "opp_pts": 28,
+          "result": "W",
+          "charted": true,
+          "offense": {
+            "plays": 58,
+            "ypp": 6.5536,
+            "success": 0.5,
+            "explosive": 0.1296,
+            "turnovers": 2
+          },
+          "defense": {
+            "plays": 65,
+            "ypp": 5.7538,
+            "success": 0.5231,
+            "explosive": 0.2,
+            "turnovers": 1
+          },
+          "st_score": 43.7043
         }
       ],
       "season_stats": {
         "offense": {
-          "plays": 267,
-          "ypp": 6.2738,
-          "success": 0.4,
-          "explosive": 0.1538,
-          "turnovers": 6
+          "plays": 325,
+          "ypp": 6.3229,
+          "success": 0.4172,
+          "explosive": 0.1497,
+          "turnovers": 8
         },
         "defense": {
-          "plays": 246,
-          "ypp": 4.3833,
-          "success": 0.2899,
-          "explosive": 0.1345,
-          "turnovers": 6
+          "plays": 311,
+          "ypp": 4.6754,
+          "success": 0.3399,
+          "explosive": 0.1485,
+          "turnovers": 7
         },
-        "st_score": 39.4,
-        "pts_for_pg": 27.5,
-        "pts_against_pg": 11.0
+        "st_score": 40.192,
+        "pts_for_pg": 28.2,
+        "pts_against_pg": 14.4
       },
       "prior_stats": {
         "offense": {

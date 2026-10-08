@@ -8517,7 +8517,7 @@
      "statistic": "Total Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 126,
+     "current_value": 130,
      "top_value": 291,
      "fifth_value": 243,
      "leaderboard": [
@@ -8565,7 +8565,7 @@
      "statistic": "Solo Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 80,
+     "current_value": 83,
      "top_value": 170,
      "fifth_value": 143,
      "leaderboard": [
@@ -8602,12 +8602,60 @@
      ]
     }
    ],
+   "Sacks": [
+    {
+     "statistic": "Sacks",
+     "player": "August Johansen",
+     "position": "BOB",
+     "current_value": 10.5,
+     "top_value": 26,
+     "fifth_value": 18,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Josh Zank",
+       "value": "26",
+       "value_numeric": 26
+      },
+      {
+       "rank": 2,
+       "player": "Jimmy Johnson",
+       "value": "24.5",
+       "value_numeric": 24.5
+      },
+      {
+       "rank": 3,
+       "player": "Dan Guyette",
+       "value": "24",
+       "value_numeric": 24
+      },
+      {
+       "rank": 4,
+       "player": "Bill Rather",
+       "value": "18",
+       "value_numeric": 18
+      },
+      {
+       "rank": 4,
+       "player": "Kyle Bonin",
+       "value": "18",
+       "value_numeric": 18
+      },
+      {
+       "rank": 4,
+       "player": "Jeremy Winter",
+       "value": "18",
+       "value_numeric": 18
+      }
+     ]
+    }
+   ],
    "Field Goals Made": [
     {
      "statistic": "Field Goals Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 23,
+     "current_value": 24,
      "top_value": 28,
      "fifth_value": 14,
      "leaderboard": [
@@ -8655,7 +8703,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 32,
+     "current_value": 33,
      "top_value": 43,
      "fifth_value": 24,
      "leaderboard": [
@@ -8697,7 +8745,7 @@
      "statistic": "PATs Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 67,
+     "current_value": 70,
      "top_value": 138,
      "fifth_value": 56,
      "leaderboard": [
@@ -8739,7 +8787,7 @@
      "statistic": "PATs Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 70,
+     "current_value": 73,
      "top_value": 156,
      "fifth_value": 68,
      "leaderboard": [
@@ -8778,12 +8826,138 @@
    ]
   },
   "season": {
+   "Passing Yards": [
+    {
+     "statistic": "Passing Yards",
+     "player": "Elisha Nieves",
+     "position": "QB",
+     "current_value": 1252,
+     "top_value": 2697,
+     "fifth_value": 2213,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Joshua Raby",
+       "value": "2,697",
+       "value_numeric": 2697
+      },
+      {
+       "rank": 2,
+       "player": "Brad Dement",
+       "value": "2,495",
+       "value_numeric": 2495
+      },
+      {
+       "rank": 3,
+       "player": "Dave Anschuetz",
+       "value": "2,321",
+       "value_numeric": 2321
+      },
+      {
+       "rank": 4,
+       "player": "Kyle Burlingame",
+       "value": "2,283",
+       "value_numeric": 2283
+      },
+      {
+       "rank": 5,
+       "player": "Dave Weber",
+       "value": "2,213",
+       "value_numeric": 2213
+      }
+     ]
+    }
+   ],
+   "Passing Completions": [
+    {
+     "statistic": "Passing Completions",
+     "player": "Elisha Nieves",
+     "position": "QB",
+     "current_value": 102,
+     "top_value": 200,
+     "fifth_value": 182,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Joshua Raby",
+       "value": "200",
+       "value_numeric": 200
+      },
+      {
+       "rank": 2,
+       "player": "Brad Dement",
+       "value": "198",
+       "value_numeric": 198
+      },
+      {
+       "rank": 3,
+       "player": "Michael Johnson",
+       "value": "190",
+       "value_numeric": 190
+      },
+      {
+       "rank": 4,
+       "player": "Kyle Burlingame",
+       "value": "185",
+       "value_numeric": 185
+      },
+      {
+       "rank": 5,
+       "player": "Chris Casper",
+       "value": "182",
+       "value_numeric": 182
+      }
+     ]
+    }
+   ],
+   "Passing Attempts": [
+    {
+     "statistic": "Passing Attempts",
+     "player": "Elisha Nieves",
+     "position": "QB",
+     "current_value": 168,
+     "top_value": 399,
+     "fifth_value": 318,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Eric Block",
+       "value": "399",
+       "value_numeric": 399
+      },
+      {
+       "rank": 2,
+       "player": "Brad Dement",
+       "value": "356",
+       "value_numeric": 356
+      },
+      {
+       "rank": 3,
+       "player": "Brad Dement",
+       "value": "341",
+       "value_numeric": 341
+      },
+      {
+       "rank": 4,
+       "player": "Joshua Raby",
+       "value": "337",
+       "value_numeric": 337
+      },
+      {
+       "rank": 5,
+       "player": "Kyle Burlingame",
+       "value": "318",
+       "value_numeric": 318
+      }
+     ]
+    }
+   ],
    "Sacks": [
     {
      "statistic": "Sacks",
      "player": "August Johansen",
      "position": "BOB",
-     "current_value": 6.0,
+     "current_value": 8.0,
      "top_value": 13.5,
      "fifth_value": 11,
      "leaderboard": [
@@ -8825,7 +8999,7 @@
      "statistic": "Field Goals Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 5,
+     "current_value": 6,
      "top_value": 13,
      "fifth_value": 8,
      "leaderboard": [
@@ -8885,7 +9059,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 9,
+     "current_value": 10,
      "top_value": 17,
      "fifth_value": 12,
      "leaderboard": [

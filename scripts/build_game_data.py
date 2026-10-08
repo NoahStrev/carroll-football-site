@@ -53,7 +53,10 @@ CARROLL = "Carroll (WI)"
 # to match CARROLL exactly) -- found 2026-09-08 while adding that game, same
 # category of bug as OPPONENT_ALIASES above, just on Carroll's own name this
 # time rather than an opponent's.
-CARROLL_ALIASES = {"Carroll"}
+# Third spelling, first seen in the 2026-10-03 Millikin game (same box-score vendor change that spelled "Millikin
+# University" out): POSSESSION_TEAM reads "Carroll University (WI)". Same silent failure without it -- every Carroll snap
+# of that game was dropped from offense.official (found 2026-10-08 by validate_data.py's "no official offense plays").
+CARROLL_ALIASES = {"Carroll", "Carroll University (WI)"}
 
 # The official box-score scrape used a different OPPONENT string for the same
 # school in different seasons -- confirmed by cross-referencing GAME_LABEL
@@ -92,6 +95,7 @@ OPPONENT_ALIASES = {
     "Ill. Wesleyan": "Illinois Wesleyan",
     "North Central (IL)": "North Central",
     "Wheaton (IL)": "Wheaton",
+    "Millikin University": "Millikin",  # the 2026 box score spells the school out; official name, same opponent
     "Wis.-Eau Claire": "UW Eau Claire",
     "Wis.-Stout": "UW Stout",
 }

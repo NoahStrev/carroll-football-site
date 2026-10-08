@@ -91,6 +91,7 @@ const Site = (() => {
   // pages quietly run a game behind otherwise. Never blocks the page: no meta.json, no label.
 
   const GAME_PAGES = new Set(['home', 'offense', 'defense', 'scouting', 'special-teams', 'players']);
+  const CHARTED_PAGES = new Set(['offense', 'defense', 'scouting']); // fed by the hand-charted Hudl exports, which arrive after the box score
 
   // Local calendar date as YYYY-MM-DD. (toISOString() is UTC, which is already "tomorrow" on a
   // Saturday evening in the US, so it would call a game played tonight a finished one.)
@@ -110,10 +111,13 @@ const Site = (() => {
     const page = meta.pages[navKey];
     if (!el || !page) return;
     let html = `<span class="asof-through">${esc(page.text)}</span>`;
-    if (GAME_PAGES.has(navKey) && meta.latest_game) {
-      const missing = meta.schedule.filter((g) => g.date < today() && g.date > meta.latest_game.date);
+    if (GAME_PAGES.has(navKey)) {
+      // Measured against THIS page's own data: the box score can be in while the hand-charted play-by-play is not.
+      const through = page.through || (meta.latest_game && meta.latest_game.date);
+      const missing = through ? meta.schedule.filter((g) => g.date < today() && g.date > through) : [];
       if (missing.length) {
-        html += ` <span class="asof-warn" title="The schedule shows this game has been played; its box score and charting haven't been loaded yet.">${missing.map((g) => `${esc(g.opponent)} (${dayLabel(g.date)})`).join(', ')} not loaded yet</span>`;
+        const charted = CHARTED_PAGES.has(navKey);
+        html += ` <span class="asof-warn" title="The schedule shows this game has been played; ${charted ? 'its Hudl charting has' : 'its box score has'} not been loaded yet.">${missing.map((g) => `${esc(g.opponent)} (${dayLabel(g.date)})`).join(', ')} ${charted ? 'not charted yet' : 'not loaded yet'}</span>`;
       }
     }
     el.innerHTML = html;

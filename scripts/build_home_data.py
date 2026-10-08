@@ -43,7 +43,7 @@ META_OUT = DATA / "meta.json"
 
 SUCCESS = {"Successful", "Explosive"}
 SCORE_RE = re.compile(r"^(.+?)\s+(\d+)-(\d+)\s+(.+)$")
-RECORD_RE = re.compile(r"Carroll(?: \(WI\))?\s*\((\d+-\d+)\s*,\s*(\d+-\d+)\)")
+RECORD_RE = re.compile(r"Carroll(?: University)?(?: \(WI\))?\s*\((\d+-\d+)\s*,\s*(\d+-\d+)\)")  # "Carroll (WI) (3-1 , 2-0)" or, in the Millikin game, "Carroll University (WI) (4-1 , 3-0)"
 
 
 def mean(values):
