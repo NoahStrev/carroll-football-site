@@ -139,6 +139,22 @@ MANUAL_DRIVE_SIDE_OVERRIDES = {
 }
 
 
+# Turnover flags and drive results the source gets wrong, each checked against the box score's own play text
+# (2026-10-08). validate_data.py reports any NEW row flagged as a turnover on a drive that ended some other way, so
+# this list is the reviewed set.
+#   * The offense recovered its own fumble, so the flag is wrong (2024-10-12 vs North Park: "fumble by Pendleton
+#     recovered by CARR Coleman"). The drive went on to a field goal.
+MANUAL_NOT_A_TURNOVER = {
+    ("Carroll vs North Park 10_12_24", 20),
+}
+#   * A real takeaway (Carroll recovered the fumble / intercepted the pass) on a drive the source labels "Punt".
+MANUAL_DRIVE_RESULT_OVERRIDES = {
+    ("Carroll vs Augustana 10_19_24", 6): "Turnover",
+    ("Carroll vs Elmhurst 11_13_21", 19): "Turnover",
+    ("Carroll vs Wash U 10_30_21", 9): "Turnover",
+}
+
+
 def classify_side(possession_team, opponent):
     """'offense' if Carroll has the ball, 'defense' if the known opponent
     does, else None (administrative rows like 'Halftime'/'Game Start'/
@@ -376,6 +392,15 @@ def main():
     for key in defensive_td_drives:
         if key in drives_by_key and drives_by_key[key]["result"] == "Touchdown":
             drives_by_key[key]["result"] = "Turnover"
+    for row in (*offense_official, *defense_official):
+        key = (row["game_label"], row["drive_num"])
+        if key in MANUAL_DRIVE_RESULT_OVERRIDES:
+            row["drive_result"] = MANUAL_DRIVE_RESULT_OVERRIDES[key]
+        if key in MANUAL_NOT_A_TURNOVER and row["is_turnover"] and "Fumble" in (row["play_outcome"] or ""):
+            row["is_turnover"] = False
+    for key, result in MANUAL_DRIVE_RESULT_OVERRIDES.items():
+        if key in drives_by_key:
+            drives_by_key[key]["result"] = result
 
     offense_drives = [{"drive_num": k[1], "game_label": k[0], **v} for k, v in drives_by_key.items() if v["side"] == "offense"]
     defense_drives = [{"drive_num": k[1], "game_label": k[0], **v} for k, v in drives_by_key.items() if v["side"] == "defense"]

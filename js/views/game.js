@@ -742,6 +742,7 @@
         { id: 'tendencies', label: 'Tendencies', render: side === 'offense' ? offenseTendencies : defenseTendencies },
         { id: 'outcomes', label: 'Outcomes', render: outcomesTab(side) },
         { id: 'tells', label: 'Tells', render: Tells.tab(side) },
+        { id: 'fourth', label: 'Fourth Down', render: FourthDown.tab(side) },
         { id: 'positions', label: 'Position Groups', render: positionGroupsTab(side, side === 'offense' ? OFFENSE_GROUPS : DEFENSE_GROUPS) },
       ],
     });

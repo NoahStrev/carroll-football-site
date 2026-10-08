@@ -11,6 +11,7 @@ Checks, by file:
   home.json / box scores   no duplicate dates, every box score parsed, scores in range, each season's
                            computed W-L matches the record the box score itself prints, <= 14 games a season
   game-data.json           every charted game has a box score, offense AND defense rows, few missing yards,
+                           no turnover flagged on a drive that went on to score or punt (WARNING),
                            known play types, opponent spellings match the box-score canon, no "No Play" snaps,
                            no touchdown drive that really ended in a turnover, and (every season) each side's
                            yardage within reach of the official box score's total offense
@@ -116,6 +117,13 @@ def check_games(home, game):
         for (label, num_), drive in by_drive.items():
             if num_ is not None and drive[0]["drive_result"] == "Touchdown" and any(r["play_outcome"] and "Touchdown" in r["play_outcome"] and ("Interception" in r["play_outcome"] or "Turnover" in r["play_outcome"]) for r in drive):
                 err(f"game-data: {label} drive {num_} is a touchdown drive that really ended in a turnover (defensive TD)")
+        # A lost ball ends the drive, so a turnover flag on a drive that went on to punt, kick, or score is a source
+        # mistake (a fumble the offense recovered, or a wrong drive label). The reviewed ones are overrides in
+        # build_game_data.py; a new one needs a look at the box score's play text.
+        for (label, num_), drive in by_drive.items():
+            result = drive[0]["drive_result"]
+            if num_ is not None and result not in ("Turnover", "End of Game", None) and any(r["is_turnover"] for r in drive):
+                warn(f"game-data: {label} drive {num_} ({side}) has a turnover flagged but its result is {result!r} -- check the box score's play text")
         opps = {r["opponent"] for r in rows}
         if opps - canon:
             err(f"game-data: opponent spelling(s) not in the box-score canon: {sorted(opps - canon)}")

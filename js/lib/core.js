@@ -172,6 +172,48 @@ function showTooltip(x, y, html) {
   t.style.left = `${Math.max(4, left)}px`;
   t.style.top = `${Math.max(4, top)}px`;
 }
+/* ------------------------------------------------ chart marks: mouse, keyboard, screen reader -- */
+
+const tooltipText = (html) => String(html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
+/** Gives one chart mark (a bar, segment, point, cell) its tooltip on hover AND on keyboard focus, and the tooltip's
+ * text as its accessible label. `html` is a string or a function returning one. Marks start out unfocusable;
+ * enableChartKeys(container) makes the chart one tab stop and arrow keys walk its marks. */
+function attachTooltip(mark, html) {
+  const get = () => (typeof html === 'function' ? html() : html);
+  mark.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, get()));
+  mark.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, get()));
+  mark.addEventListener('mouseleave', hideTooltip);
+  mark.addEventListener('focus', () => { const r = mark.getBoundingClientRect(); showTooltip(r.left + r.width / 2, r.top, get()); });
+  mark.addEventListener('blur', hideTooltip);
+  mark.classList.add('chart-mark');
+  mark.setAttribute('tabindex', '-1');
+  mark.setAttribute('role', 'img');
+  mark.setAttribute('aria-label', tooltipText(get()));
+}
+
+/** Call once a chart is built: its first mark becomes the tab stop, and the arrow keys, Home and End move between
+ * marks (a scatter with hundreds of points is one tab stop, not hundreds). The key handler is added once per
+ * container, since a view re-renders into the same element. */
+function enableChartKeys(container) {
+  const first = container.querySelector('.chart-mark');
+  if (first) first.setAttribute('tabindex', '0');
+  if (container._chartKeys) return;
+  container._chartKeys = true;
+  container.addEventListener('keydown', (e) => {
+    const marks = [...container.querySelectorAll('.chart-mark')];
+    const i = marks.indexOf(document.activeElement);
+    if (i < 0) return;
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    const j = step !== undefined ? Math.max(0, Math.min(marks.length - 1, i + step)) : e.key === 'Home' ? 0 : e.key === 'End' ? marks.length - 1 : null;
+    if (j === null) return;
+    e.preventDefault();
+    marks[i].setAttribute('tabindex', '-1');
+    marks[j].setAttribute('tabindex', '0');
+    marks[j].focus();
+  });
+}
+
 function hideTooltip() {
   if (tooltipEl) tooltipEl.style.display = 'none';
 }
@@ -181,6 +223,7 @@ function hideTooltip() {
 // (js/views/glossary.js) and the inline "?" hover hints on KPI tiles -- add a term here once and
 // it's usable from either place.
 const GLOSSARY = {
+  'Go-for-it rate': "How often a team goes for it on 4th down instead of punting or kicking a field goal: tries divided by tries plus punts plus field-goal tries. The punts and field goals are counted from how drives ended, so it is a close estimate rather than an exact count.",
   'Tell': "A situation where a team's call is predictable enough, or different enough from how everyone else calls it, that an opponent can key on it. The Tells tabs only flag a spot with 20+ snaps and a gap big enough that it is probably real rather than chance (about 90% confidence).",
   'Lean': "A situation where one call (run or pass, or one front) is made at least 65% of the time on 25+ snaps. A lean is a habit; a tell is a habit that stands out from what opponents do in the same spot.",
   'Explosive Play': 'A run gaining 10+ yards or a pass gaining 15+ yards — the "big play" threshold used across every efficiency chart on this site.',

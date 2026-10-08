@@ -41,6 +41,19 @@
   }
   const driveOk = (r) => r.drive_success;
 
+  /** An "Avg X" KPI tile: the mean of one field over the view's rows (`of`: another row set in the view's context),
+   * with the unit after it and, when `charted`, how many rows actually had the field underneath. */
+  const avgKpi = (label, field, { digits = 1, unit = '', charted = false, of = 'rows' } = {}) => ({
+    label,
+    value: (ctx) => {
+      const rows = ctx[of];
+      const v = `${fmt(mean(rows.map((r) => r[field])), digits)}${unit}`;
+      return charted ? [v, `${rows.filter((r) => r[field] !== null).length} charted`] : [v];
+    },
+  });
+  /** A "# of X" KPI tile: how many rows are in view. */
+  const countKpi = (label) => ({ label, value: ({ rows }) => [String(rows.length)] });
+
   /* ================================================================== Overview == */
 
   const UNIT_KEYS = ['money_unit', 'punt', 'punt_return', 'kickoff', 'kickoff_return'];
@@ -132,8 +145,8 @@
         { label: 'Kicks Attempted', value: ({ rows }) => [`${makes(rows).length}/${rows.length}`, 'made / attempted'] },
         { label: 'FG %', dot: '--good', value: ({ fgRows }) => [pct(fgRows.length ? makes(fgRows).length / fgRows.length : null), `${makes(fgRows).length}/${fgRows.length} field goals`] },
         { label: 'PAT %', dot: '--good', value: ({ patRows }) => [pct(patRows.length ? makes(patRows).length / patRows.length : null), `${makes(patRows).length}/${patRows.length} PATs`] },
-        { label: 'Avg Snap to Kick', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.snap_to_kick)), 2)}s`, `${rows.filter((r) => r.snap_to_kick !== null).length} charted`] },
-        { label: 'Avg FG Distance', value: ({ fgRows }) => [`${fmt(mean(fgRows.map((r) => r.distance)), 1)} yds`] },
+        avgKpi('Avg Snap to Kick', 'snap_to_kick', { digits: 2, unit: 's', charted: true }),
+        avgKpi('Avg FG Distance', 'distance', { unit: ' yds', of: 'fgRows' }),
         { label: 'Kicks Blocked', dot: '--critical', value: ({ rows }) => [String(rows.filter((r) => r.miss_location === 'Blocked').length)] },
       ],
       cards: [
@@ -196,12 +209,12 @@
       prepare(st) { return { rows: applyFilters(D.units.punt, st) }; },
       summary: ({ rows }) => `${rows.length} punts in view`,
       kpis: [
-        { label: '# of Punts', value: ({ rows }) => [String(rows.length)] },
-        { label: 'Avg Hangtime', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.hangtime)), 2)}s`, `${rows.filter((r) => r.hangtime !== null).length} charted`] },
-        { label: 'Avg Distance', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.total_distance)))} yds`] },
-        { label: 'Avg Snap to Kick', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.snap_to_kick)), 2)}s`, `${rows.filter((r) => r.snap_to_kick !== null).length} charted`] },
-        { label: 'Avg Field Position', value: ({ rows }) => [fmt(mean(rows.map((r) => r.converted_los)))] },
-        { label: 'Avg Points Scored', value: ({ rows }) => [fmt(mean(rows.map((r) => r.next_drive_points)), 2)] },
+        countKpi('# of Punts'),
+        avgKpi('Avg Hangtime', 'hangtime', { digits: 2, unit: 's', charted: true }),
+        avgKpi('Avg Distance', 'total_distance', { unit: ' yds' }),
+        avgKpi('Avg Snap to Kick', 'snap_to_kick', { digits: 2, unit: 's', charted: true }),
+        avgKpi('Avg Field Position', 'converted_los'),
+        avgKpi('Avg Points Scored', 'next_drive_points', { digits: 2 }),
       ],
       cards: [
         {
@@ -251,12 +264,12 @@
       prepare(st) { return { rows: applyFilters(D.units.punt_return, st) }; },
       summary: ({ rows }) => `${rows.length} punts in view`,
       kpis: [
-        { label: '# of Punts', value: ({ rows }) => [String(rows.length)] },
-        { label: 'Avg Carry Distance', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.carry_distance)))} yds`] },
-        { label: 'Avg Return Length', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.return_length)))} yds`] },
-        { label: 'Avg Snap to Kick', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.snap_to_kick)), 2)}s`, `${rows.filter((r) => r.snap_to_kick !== null).length} charted`] },
-        { label: 'Avg Field Position', value: ({ rows }) => [fmt(mean(rows.map((r) => r.converted_los)))] },
-        { label: 'Avg Points Scored', value: ({ rows }) => [fmt(mean(rows.map((r) => r.next_drive_points)), 2)] },
+        countKpi('# of Punts'),
+        avgKpi('Avg Carry Distance', 'carry_distance', { unit: ' yds' }),
+        avgKpi('Avg Return Length', 'return_length', { unit: ' yds' }),
+        avgKpi('Avg Snap to Kick', 'snap_to_kick', { digits: 2, unit: 's', charted: true }),
+        avgKpi('Avg Field Position', 'converted_los'),
+        avgKpi('Avg Points Scored', 'next_drive_points', { digits: 2 }),
       ],
       cards: [
         {
@@ -313,12 +326,12 @@
       prepare(st) { const rows = applyFilters(D.units.kickoff, st); const types = ['Deep', 'Onside'].filter((t) => rows.some((r) => r.kick_type === t)); return { rows, types, typeColors: categoricalColorMap(types), byType: groupBy(rows, 'kick_type') }; },
       summary: ({ rows }) => `${rows.length} kicks in view`,
       kpis: [
-        { label: '# of Kicks', value: ({ rows }) => [String(rows.length)] },
-        { label: 'Avg Hangtime', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.hangtime)), 2)}s`, `${rows.filter((r) => r.hangtime !== null).length} charted`] },
-        { label: 'Avg Distance', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.total_distance)))} yds`] },
-        { label: 'Avg Return Length', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.return_length)))} yds`] },
-        { label: 'Avg Field Position', value: ({ rows }) => [fmt(mean(rows.map((r) => r.converted_los)))] },
-        { label: 'Avg Points Scored', value: ({ rows }) => [fmt(mean(rows.map((r) => r.next_drive_points)), 2)] },
+        countKpi('# of Kicks'),
+        avgKpi('Avg Hangtime', 'hangtime', { digits: 2, unit: 's', charted: true }),
+        avgKpi('Avg Distance', 'total_distance', { unit: ' yds' }),
+        avgKpi('Avg Return Length', 'return_length', { unit: ' yds' }),
+        avgKpi('Avg Field Position', 'converted_los'),
+        avgKpi('Avg Points Scored', 'next_drive_points', { digits: 2 }),
       ],
       cards: [
         {
@@ -363,12 +376,12 @@
       prepare(st) { return { rows: applyFilters(D.units.kickoff_return, st) }; },
       summary: ({ rows }) => `${rows.length} returns in view`,
       kpis: [
-        { label: '# of Returns', value: ({ rows }) => [String(rows.length)] },
-        { label: 'Avg Hangtime', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.hangtime)), 2)}s`, `${rows.filter((r) => r.hangtime !== null).length} charted`] },
-        { label: 'Avg Distance', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.total_distance)))} yds`] },
-        { label: 'Avg Return Length', value: ({ rows }) => [`${fmt(mean(rows.map((r) => r.return_length)))} yds`] },
-        { label: 'Avg Field Position', value: ({ rows }) => [fmt(mean(rows.map((r) => r.converted_los)))] },
-        { label: 'Avg Points Scored', value: ({ rows }) => [fmt(mean(rows.map((r) => r.next_drive_points)), 2)] },
+        countKpi('# of Returns'),
+        avgKpi('Avg Hangtime', 'hangtime', { digits: 2, unit: 's', charted: true }),
+        avgKpi('Avg Distance', 'total_distance', { unit: ' yds' }),
+        avgKpi('Avg Return Length', 'return_length', { unit: ' yds' }),
+        avgKpi('Avg Field Position', 'converted_los'),
+        avgKpi('Avg Points Scored', 'next_drive_points', { digits: 2 }),
       ],
       cards: [
         {

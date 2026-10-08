@@ -253,7 +253,7 @@
               rankRow('CCIW rank: total defense', HEADLINES[3]),
             ];
             el.innerHTML = Site.tableHTML({ head: ['', a, b], rows })
-              + '<div class="data-note">Arrows are green when the left season was better. Efficiency numbers come from the official play-by-play (2021 onward); per-game figures use the games charted that season. A season in progress is still settling, so early-season ranks swing.</div>';
+              + '<div class="data-note">Arrows are green when the left season was better. Efficiency numbers come from the official play-by-play (2021 onward); per-game figures use the games charted that season. Turnovers count offensive and defensive snaps only (a fumble lost on a return is not in the play-by-play). A season in progress is still settling, so early-season ranks swing.</div>';
           },
         },
         ...[['offense', 'Offense: yards per play, game by game'], ['defense', 'Defense: yards allowed per play, game by game']].map(([side, title]) => ({

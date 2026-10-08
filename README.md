@@ -12,8 +12,8 @@ projects in `Football/`.
 | Nav item | File | Views (tabs) | Data |
 |---|---|---|---|
 | (brand) Home | `dashboards/home.html` | This week (last game's takeaways, next game + series history), a season picker (any season since 2021 — past seasons show highlights instead of next game), Compare Seasons (any two seasons side by side, with game-by-game charts), season at a glance, game log, rankings with week-over-week movement, record watch, site map | `home.json`, `meta.json`, `rankings.json`, `records.json` |
-| Offense | `offense.html` | Scorecard · Tendencies · Outcomes · Tells (where Carroll's run/pass calls are predictable or differ from opponents) · Position Groups (QB / RB / WR / OL) | `game-data.json` |
-| Defense | `defense.html` | Scorecard · Tendencies · Outcomes · Tells (blitz and front tendencies by situation) · Position Groups (DL / LB / CB / S) | `game-data.json` |
+| Offense | `offense.html` | Scorecard · Tendencies · Outcomes · Tells (where Carroll's run/pass calls are predictable or differ from opponents) · Fourth Down (go-for-it rate and conversion by distance, zone, run/pass, score) · Position Groups (QB / RB / WR / OL) | `game-data.json` |
+| Defense | `defense.html` | Scorecard · Tendencies · Outcomes · Tells (blitz and front tendencies by situation) · Fourth Down (opponents' tries against Carroll's defense) · Position Groups (DL / LB / CB / S) | `game-data.json` |
 | Special Teams | `special-teams.html` | Overview · Money Unit · Punt · Punt Return · Kickoff · Kickoff Return · Athletes (role × Scorecard / Head-to-Head / Deep Dive) | `special-teams.json` |
 | Opponent Scouting | `opponent-scouting.html` | Next Opponent (what to expect, a national-rank matchup card, and season totals; defaults to the next scheduled opponent, `#next/<opponent>`) · Game Plan (the same week as a two-page printable sheet, `#plan/<opponent>`) · Game Review (a recap of any one game, `#review/<yyyy-mm-dd>`) · By Opponent · Offense · Defense (each: Carroll self-scout / opponent scout) | `game-data.json`, `home.json`, `meta.json`, `special-teams.json`, `team-stats.json` |
 | Rankings | `rankings.html` | Offensive · Defensive · Special Teams · Additional Metrics (one season/week picker) | `rankings.json` |
@@ -40,8 +40,8 @@ js/shell.js           Site.mount (nav, page header, tabs with hash routing, data
                       Site.view (declarative filters + KPIs + cards), Site.pills, Site.tableHTML
 js/views/*.js         one file per page's content (game.js is shared by Offense and Defense;
                       st-units.js + st-athletes.js + special-teams.js make up Special Teams; scouting.js mounts
-                      Opponent Scouting from game-intel.js (matchups + "what to expect"), game-plan.js, game-review.js;
-                      tells.js is the Tells tab on Offense and Defense)
+                      Opponent Scouting from next-opponent.js, game-intel.js (matchups + "what to expect"), game-plan.js,
+                      game-review.js; tells.js and fourth-down.js are tabs on Offense and Defense)
 dashboards/*.html     thin pages: a <head>, the script tags (js/lib/*, shell.js, one view), nothing else
 data/*.json           generated, committed (the site reads these; it never touches the Excel sources)
 scripts/              build_*.py (one per JSON), refresh_all.py, serve.py (local no-cache server)
@@ -125,6 +125,13 @@ that buckets those rows by score ("Leading by 9+") as the opponent's own offense
 scores themselves, not our parsing: the parsed yards equal the play text in every play, and for 2023-10-07 vs North Central the same page
 reports 670 yards (drive chart), 695 (team stats) and 725 (play-by-play text). Treating accepted offensive penalties as nullified plays was
 tried and made the match worse, so it is not done. `validate_data.py` re-checks every season on every refresh (the reviewed 2024-10-12 gap is listed in `KNOWN_BOX_GAPS`).
+
+Turnovers: the play-by-play holds offensive and defensive snaps only, so a fumble lost on a punt or kickoff return is in the box score's turnover
+count but not in ours (a handful of games differ this way, always by one or two). Four rows the source mislabelled — a fumble Carroll recovered itself
+flagged as a turnover, and three real takeaways on drives labelled "Punt" — are corrected in `MANUAL_NOT_A_TURNOVER` / `MANUAL_DRIVE_RESULT_OVERRIDES`
+(build_game_data.py); the validator warns about any new turnover flagged on a drive that went on to score or punt. Special teams counts: the
+kickoff sheet logs onside kicks that the box score's kickoff total leaves out (8 of the 10 games that differ); the punt-return and kickoff-return
+sheets log every kick received, while the box counts only kicks actually returned, so those two are not comparable counts.
 
 ## Weekly update
 

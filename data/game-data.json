@@ -169625,7 +169625,7 @@
 "yards": -14,
 "play_efficiency": "Stuffed",
 "play_outcome": "Fumble, Turnover",
-"is_turnover": true,
+"is_turnover": false,
 "score_differential": -4,
 "is_two_minute_drill": false,
 "drive_num": 20,
@@ -181719,7 +181719,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -181745,7 +181745,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": true
@@ -181771,7 +181771,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -181797,7 +181797,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -181823,7 +181823,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -206789,7 +206789,7 @@
 "start_field_pos": 63,
 "play_count": 13,
 "yards": 42,
-"result": "Punt"
+"result": "Turnover"
 },
 {
 "drive_num": 10,
@@ -294702,7 +294702,7 @@
 "score_differential": 0,
 "is_two_minute_drill": false,
 "drive_num": 6,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -294728,7 +294728,7 @@
 "score_differential": 0,
 "is_two_minute_drill": false,
 "drive_num": 6,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -294754,7 +294754,7 @@
 "score_differential": 0,
 "is_two_minute_drill": false,
 "drive_num": 6,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": true
@@ -294780,7 +294780,7 @@
 "score_differential": 0,
 "is_two_minute_drill": false,
 "drive_num": 6,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -294806,7 +294806,7 @@
 "score_differential": 0,
 "is_two_minute_drill": false,
 "drive_num": 6,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -294832,7 +294832,7 @@
 "score_differential": 0,
 "is_two_minute_drill": false,
 "drive_num": 6,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -294858,7 +294858,7 @@
 "score_differential": 0,
 "is_two_minute_drill": false,
 "drive_num": 6,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -294884,7 +294884,7 @@
 "score_differential": 0,
 "is_two_minute_drill": false,
 "drive_num": 6,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -294910,7 +294910,7 @@
 "score_differential": 0,
 "is_two_minute_drill": false,
 "drive_num": 6,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -321638,7 +321638,7 @@
 "score_differential": 11,
 "is_two_minute_drill": false,
 "drive_num": 19,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -321664,7 +321664,7 @@
 "score_differential": 11,
 "is_two_minute_drill": false,
 "drive_num": 19,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -321690,7 +321690,7 @@
 "score_differential": 11,
 "is_two_minute_drill": false,
 "drive_num": 19,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -321716,7 +321716,7 @@
 "score_differential": 11,
 "is_two_minute_drill": false,
 "drive_num": 19,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -321742,7 +321742,7 @@
 "score_differential": 11,
 "is_two_minute_drill": false,
 "drive_num": 19,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -321768,7 +321768,7 @@
 "score_differential": 11,
 "is_two_minute_drill": false,
 "drive_num": 19,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -368620,7 +368620,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": true
@@ -368646,7 +368646,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -368672,7 +368672,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -368698,7 +368698,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": true
@@ -368724,7 +368724,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -368750,7 +368750,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": true
@@ -368776,7 +368776,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -368802,7 +368802,7 @@
 "score_differential": -14,
 "is_two_minute_drill": false,
 "drive_num": 9,
-"drive_result": "Punt",
+"drive_result": "Turnover",
 "is_touchdown": false,
 "is_penalty": false,
 "is_first_down": false
@@ -388190,7 +388190,7 @@
 "start_field_pos": 77,
 "play_count": 9,
 "yards": 14,
-"result": "Punt"
+"result": "Turnover"
 },
 {
 "drive_num": 8,
@@ -390423,7 +390423,7 @@
 "start_field_pos": 79,
 "play_count": 6,
 "yards": 7,
-"result": "Punt"
+"result": "Turnover"
 },
 {
 "drive_num": 21,

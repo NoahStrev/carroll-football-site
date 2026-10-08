@@ -77,9 +77,7 @@ function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1),
     if (colorFn) bar.style.background = colorFn(cat, v, i);
     if (v !== null && !Number.isNaN(v)) bar.appendChild(el('span', 'cap', labelFmt(v)));
     const tt = () => (tooltipFmt ? tooltipFmt(cat, v, i) : defaultTooltip(cat, v, i));
-    bar.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, tt()));
-    bar.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, tt()));
-    bar.addEventListener('mouseleave', hideTooltip);
+    attachTooltip(bar, tt);
     plot.appendChild(bar);
     col.appendChild(plot);
     const xlabEl = el('div', 'xlab', cat);
@@ -94,6 +92,7 @@ function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1),
     wrap.appendChild(col);
   });
   container.appendChild(wrap);
+  enableChartKeys(container);
   // Real bug found 2026-08-05, per the user ("when i scroll to the right on
   // some of the vizes in the by opponent section the lines disappear"):
   // .gridlines is `position: absolute; inset: 20px 0 34px 0` (theme.css) --
@@ -156,9 +155,7 @@ function renderStacked(container, { categories, series, order, colors, legend = 
         `<div class="tt-row"><span>${name}</span><span>${v}</span></div>`,
         `<div class="tt-muted">${pct(share, 0)} of ${total} in this group</div>`,
       ].join('');
-      seg.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, tt()));
-      seg.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, tt()));
-      seg.addEventListener('mouseleave', hideTooltip);
+      attachTooltip(seg, tt);
       bar.appendChild(seg);
     });
     plot.appendChild(bar);
@@ -169,6 +166,7 @@ function renderStacked(container, { categories, series, order, colors, legend = 
     wrap.appendChild(col);
   });
   container.appendChild(wrap);
+  enableChartKeys(container);
   fitChartToCard(wrap, gridlines);
 }
 
@@ -227,9 +225,7 @@ function renderScatter(container, { points, xLabel, yLabel, colorMap, xDomain, y
       `<div class="tt-row"><span>${yLabel}</span><span>${fmt(p.y)}</span></div>`,
     ].join('');
     const tt = () => p.label || defaultTt();
-    c.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, tt()));
-    c.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, tt()));
-    c.addEventListener('mouseleave', hideTooltip);
+    attachTooltip(c, tt);
     svg.appendChild(c);
   });
 
@@ -240,6 +236,7 @@ function renderScatter(container, { points, xLabel, yLabel, colorMap, xDomain, y
   axis.appendChild(el('span', null, yLabel));
   container.appendChild(wrap);
   container.appendChild(axis);
+  enableChartKeys(container);
 }
 
 /* ------------------------------------------------------------- heatmap ------ */
@@ -280,15 +277,14 @@ function renderHeatmap(container, { rowLabels, colLabels, cellFor, title = (r, c
         div.style.color = step >= 4 ? '#fff' : cssVar('--text-primary');
         div.innerHTML = `${pct(cell.pct, 0)}<span class="n">${cell.made}/${cell.n}</span>`;
         const html = `<div class="tt-title">${title(r, c)}</div><div class="tt-row"><span>${pct(cell.pct, 0)}</span><span>${cell.made}/${cell.n}</span></div>`;
-        div.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html));
-        div.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html));
-        div.addEventListener('mouseleave', hideTooltip);
+        attachTooltip(div, html);
         div.style.cursor = 'pointer';
       }
       grid.appendChild(div);
     });
   });
   container.appendChild(grid);
+  enableChartKeys(container);
 }
 
 /* ------------------------------------------------------------ sparkline ----- */
@@ -357,9 +353,7 @@ function renderSparkline(container, { values, labels, unit = '', seasons, oppone
       delta !== null ? `<div class="tt-row"><span>Vs previous</span><span style="color:${delta >= 0 ? 'var(--delta-good)' : 'var(--critical-text)'}">${delta >= 0 ? '+' : ''}${fmt(delta)}${unit}</span></div>` : '',
       `<div class="tt-muted">${vsAvg >= 0 ? '+' : ''}${fmt(vsAvg)}${unit} vs average (${fmt(avg)}${unit})</div>`,
     ].join('');
-    c.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html()));
-    c.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html()));
-    c.addEventListener('mouseleave', hideTooltip);
+    attachTooltip(c, html);
     svg.appendChild(c);
   });
 
@@ -370,6 +364,7 @@ function renderSparkline(container, { values, labels, unit = '', seasons, oppone
   axis.appendChild(el('span', null, pts[0].l));
   axis.appendChild(el('span', null, pts[pts.length - 1].l));
   container.appendChild(axis);
+  enableChartKeys(container);
 }
 
 /* ------------------------------------------------------------ grouped bar -- */
@@ -409,9 +404,7 @@ function renderGroupedBar(container, { categories, valuesA, valuesB, colorA, col
       bar.style.background = color;
       if (v !== null && v !== undefined && !Number.isNaN(v)) bar.appendChild(el('span', 'cap', labelFmt(v)));
       const html = tooltip(name, v, counts ? counts[i] : undefined);
-      bar.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html));
-      bar.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html));
-      bar.addEventListener('mouseleave', hideTooltip);
+      attachTooltip(bar, html);
       plot.appendChild(bar);
     });
     col.appendChild(plot);
@@ -421,6 +414,7 @@ function renderGroupedBar(container, { categories, valuesA, valuesB, colorA, col
     wrap.appendChild(col);
   });
   container.appendChild(wrap);
+  enableChartKeys(container);
   fitChartToCard(wrap, gridlines);
 }
 

@@ -206,6 +206,20 @@ function playMetrics(rows) {
   };
 }
 
+/** Fourth-down tries: a 4th-down run, pass, or sack. Punts and field goals are not snaps in the official
+ * play-by-play, so every 4th-down row IS a go-for-it; a pre-snap penalty is not a try. A try converts on a first
+ * down or a touchdown. */
+const isFourthTry = (r) => r.down === 4 && (isRunPlay(r) || isPassPlay(r)) && !r.is_penalty;
+const convertedTry = (r) => !!(r.is_first_down || r.is_touchdown);
+const fourthTries = (rows) => rows.filter(isFourthTry);
+/** Headline numbers for the 4th-down tries among a set of snaps (null rates when there are none). */
+function fourthStats(rows) {
+  const tries = fourthTries(rows);
+  const games = new Set(rows.map((r) => r.game_label)).size;
+  const made = tries.filter(convertedTry).length;
+  return { tries: tries.length, made, rate: tries.length ? made / tries.length : null, games, perGame: games ? tries.length / games : null };
+}
+
 /** One "this vs usual" table row: [label, this (with an arrow), usual]. The arrow is green when the gap favors
  * Carroll (`higherBetter` says which direction that is), plain when null (a number with no good or bad
  * direction). No arrow when both read the same after formatting. */

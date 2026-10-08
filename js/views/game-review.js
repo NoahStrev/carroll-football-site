@@ -171,7 +171,7 @@ const GameReview = (function () {
           },
         },
       ],
-      footer: () => `Source: Game Analysis's OfficialPlayByPlay sheet (${gameCoverageText(D.games)}), Special Teams Data box scores and Value/Score. Turnover margin is takeaways minus giveaways.`,
+      footer: () => `Source: Game Analysis's OfficialPlayByPlay sheet (${gameCoverageText(D.games)}), Special Teams Data box scores and Value/Score. Turnover margin is takeaways minus giveaways on offensive and defensive snaps; a fumble lost on a punt or kickoff return is a special teams play, so the official box score can show one more.`,
     });
 
     return view;

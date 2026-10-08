@@ -100,6 +100,12 @@ const GameIntel = (function () {
       const lean = T.predictable.find((s) => !T.differs.slice(0, 2).includes(s));
       if (lean) out.push({ tone: '', html: `${esc(lean.label)}: they ${lean.run >= 0.5 ? 'run' : 'pass'} <b>${Math.round(Math.max(lean.run, 1 - lean.run) * 100)}%</b> of the time (${lean.n} snaps).` });
     }
+    const all = opponentOffenseRows();
+    const f4 = fourthStats(all.filter((r) => r.opponent === opp)), f4others = fourthStats(all.filter((r) => r.opponent !== opp));
+    // only worth a line when they go for it noticeably more or less than other opponents, or convert at a different clip
+    if (f4.tries >= 4 && (Math.abs(f4.perGame - f4others.perGame) >= 0.6 || (f4.tries >= 6 && Math.abs(f4.rate - f4others.rate) >= 0.15))) {
+      out.push({ tone: '', html: `On 4th down they have gone for it <b>${f4.tries}</b> time${f4.tries === 1 ? '' : 's'} against Carroll in ${f4.games} charted game${f4.games === 1 ? '' : 's'} (${fmt(f4.perGame, 1)} a game; other opponents ${fmt(f4others.perGame, 1)}) and converted <b>${pctText(f4.rate)}</b> (others ${pctText(f4others.rate)}).` });
+    }
     const ours = D.offense.official.filter((r) => r.opponent === opp), usual = D.offense.official.filter((r) => r.opponent !== opp);
     if (ours.length) {
       const a = playMetrics(ours), b = playMetrics(usual), games = new Set(ours.map((r) => r.game_label)).size;
