@@ -46,17 +46,32 @@ const Site = (() => {
   // Hash format: #tab or #tab/sub (sub may itself contain slashes). `sub` is owned by
   // whichever tab sets it (e.g. a role picker) via Site.setSub().
 
+  // A link can also carry the view's filters: #tab/sub?f.season=2025~2024&s.stat=3  (f.<field> = the checked values
+  // joined by "~"; s.<id> = a dropdown's value). Only what differs from the view's defaults is written, so an
+  // unfiltered view keeps its plain #tab/sub address.
+  const safeDecode = (v) => { try { return decodeURIComponent(v); } catch (e) { return v; } };
+
   function parseHash() {
     let raw = location.hash.replace(/^#/, '');
-    try { raw = decodeURIComponent(raw); } catch (e) { /* a stray % in a hand-typed link: use it as typed */ }
-    const [tab, ...rest] = raw.split('/');
-    return { tab: tab || null, sub: rest.join('/') || null };
+    const qi = raw.indexOf('?');
+    const qs = qi >= 0 ? raw.slice(qi + 1) : '';
+    if (qi >= 0) raw = raw.slice(0, qi);
+    const [tab, ...rest] = safeDecode(raw).split('/');
+    const query = {};
+    qs.split('&').filter(Boolean).forEach((kv) => { const i = kv.indexOf('='); if (i > 0) query[safeDecode(kv.slice(0, i))] = safeDecode(kv.slice(i + 1)); });
+    return { tab: tab || null, sub: rest.join('/') || null, query };
   }
 
-  let currentTab = null;
+  let currentTab = null, currentSub = null;
   function setSub(sub) {
+    currentSub = sub || null;
     if (!currentTab) return;
-    history.replaceState(null, '', `#${currentTab}${sub ? `/${sub}` : ''}`);
+    history.replaceState(null, '', `#${currentTab}${sub ? `/${sub}` : ''}`); // a new sub is a new view: its filters start fresh
+  }
+  function setQuery(obj) {
+    if (!currentTab) return;
+    const parts = Object.entries(obj).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
+    history.replaceState(null, '', `#${currentTab}${currentSub ? `/${currentSub}` : ''}${parts.length ? `?${parts.join('&')}` : ''}`);
   }
 
   /* --------------------------------------------------------------- pills --- */
@@ -162,6 +177,7 @@ const Site = (() => {
     function show(id, sub) {
       const tab = cfg.tabs.find((t) => t.id === id) || cfg.tabs[0];
       currentTab = tab.id;
+      currentSub = sub || null;
       tabbar.querySelectorAll('.tabbtn').forEach((b) => {
         const on = b.dataset.tab === tab.id;
         b.classList.toggle('active', on);
@@ -251,6 +267,7 @@ const Site = (() => {
    *
    * spec: {
    *   filters:  { defs: [...filter defs], values: {field: [options]} }  (optional)
+   *   linkSelects: false -- keep the selects out of the address (views that store their pick as #tab/<name> themselves)
    *   selects:  [{ id, label, options: [{value, label, group?}], value }]   single-select controls in the
    *             shelf; their values arrive in prepare()'s state under `id`
    *   actions:  [{ label, onClick(state) }]    buttons at the right of the shelf (e.g. PDF)
@@ -275,6 +292,9 @@ const Site = (() => {
     const selects = spec.selects || [];
     const actions = spec.actions || [];
     const hasShelf = spec.filters || spec.source || selects.length || actions.length;
+    // Views that keep their own selection in the address (the opponent / game pickers use #tab/<name>) opt out.
+    const linkSelects = spec.linkSelects !== false;
+    const linkable = !!spec.filters || (linkSelects && selects.length > 0);
 
     root.innerHTML = `
       <section class="panel">
@@ -284,7 +304,7 @@ const Site = (() => {
             ${selects.map((sel) => `<label class="pill-label" for="${uid}-sel-${sel.id}">${esc(sel.label)}</label><select class="select-sm" id="${uid}-sel-${sel.id}">${selectOptionsHTML(sel)}</select>`).join('')}
             <span id="${uid}-shelf" class="shelf-filters"></span>
           </span>
-          <span class="shelf-right">${spec.source ? `<span class="shelf-source">${esc(spec.source)}</span>` : ''}${actions.map((a, i) => `<button type="button" class="download-btn no-print" id="${uid}-act-${i}">${a.label}</button>`).join('')}</span>
+          <span class="shelf-right">${spec.source ? `<span class="shelf-source">${esc(spec.source)}</span>` : ''}${actions.map((a, i) => `<button type="button" class="download-btn no-print" id="${uid}-act-${i}">${a.label}</button>`).join('')}${linkable ? `<button type="button" class="download-btn no-print" id="${uid}-copy" title="Copy a link to this exact view, filters included">Copy link</button>` : ''}</span>
         </div>` : ''}
         <div class="body">
           ${kpis.length ? `<div class="${kpiCls[kpis.length] || 'kpirow'}">${kpis.map((k, i) => kpiHTML(`${uid}-k${i}`, k.label, k.dot, k.glossary)).join('')}</div>` : ''}
@@ -304,15 +324,53 @@ const Site = (() => {
     let summaryEl = null;
     if (spec.filters) {
       document.getElementById(`${uid}-shelf`).innerHTML = buildFilterPanel(uid, spec.filters.defs, spec.filters.values);
-      wireFilterPanel(uid, spec.filters.defs, refresh);
       summaryEl = document.getElementById(`${uid}-summary`);
     }
-    selects.forEach((sel) => document.getElementById(`${uid}-sel-${sel.id}`).addEventListener('change', refresh));
 
     function readState() {
       const st = spec.filters ? readFilterState(uid, spec.filters.defs) : {};
       selects.forEach((sel) => { st[sel.id] = document.getElementById(`${uid}-sel-${sel.id}`).value; });
       return st;
+    }
+
+    // The view's state as link keys; its defaults are captured before a link's filters are applied.
+    function snapshot() {
+      const st = readState(), snap = {};
+      (spec.filters ? spec.filters.defs : []).forEach(({ field }) => { snap[`f.${field}`] = [...st[field]].sort().join('~'); });
+      if (linkSelects) selects.forEach((sel) => { snap[`s.${sel.id}`] = st[sel.id]; });
+      return snap;
+    }
+    const defaults = snapshot();
+    const incoming = parseHash().query;
+    (spec.filters ? spec.filters.defs : []).forEach(({ field }) => {
+      const want = incoming[`f.${field}`];
+      if (want === undefined) return;
+      const keep = new Set(want ? want.split('~') : []);
+      document.querySelectorAll(`#${uid}-filters-panel input[data-field="${field}"]`).forEach((cb) => { cb.checked = keep.has(cb.value); });
+    });
+    if (linkSelects) {
+      selects.forEach((sel) => {
+        const want = incoming[`s.${sel.id}`], el = document.getElementById(`${uid}-sel-${sel.id}`);
+        if (want !== undefined && [...el.options].some((o) => o.value === want)) el.value = want;
+      });
+    }
+    if (spec.filters) wireFilterPanel(uid, spec.filters.defs, refresh);
+    selects.forEach((sel) => document.getElementById(`${uid}-sel-${sel.id}`).addEventListener('change', refresh));
+
+    function writeLink() {
+      if (!linkable) return;
+      const now = snapshot(), diff = {};
+      Object.keys(now).forEach((k) => { if (now[k] !== defaults[k]) diff[k] = now[k]; });
+      setQuery(diff);
+    }
+    const copyBtn = document.getElementById(`${uid}-copy`);
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const href = location.href;
+        const done = () => { copyBtn.textContent = 'Copied'; setTimeout(() => { copyBtn.textContent = 'Copy link'; }, 1500); };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(href).then(done, () => window.prompt('Copy this link', href));
+        else window.prompt('Copy this link', href);
+      });
     }
     actions.forEach((a, i) => document.getElementById(`${uid}-act-${i}`).addEventListener('click', () => a.onClick(readState())));
 
@@ -351,13 +409,14 @@ const Site = (() => {
         document.getElementById(`${uid}-footer`).textContent = typeof spec.footer === 'function' ? spec.footer(ctx) : spec.footer;
       }
       fillPrintHead();
+      writeLink();
     }
     refresh();
     return { refresh };
   }
 
   return {
-    mount, view, pills, tableHTML, esc, setSub, today, dayLabel,
+    mount, view, pills, tableHTML, esc, setSub, setQuery, today, dayLabel,
     get data() { return state.data; },
   };
 })();

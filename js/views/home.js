@@ -188,6 +188,100 @@
     };
   }
 
+
+  /* ============================================================== compare == */
+  // Any two seasons side by side: the record and per-game numbers, offense and defense efficiency, special teams, where
+  // Carroll finished in the CCIW, and game-by-game yards per play. The arrow on the left season's number is green when
+  // that season was better than the other one.
+
+  // Carroll's CCIW rank for a headline category in a season (the final table for a finished season, the latest week
+  // for the current one).
+  function cciwRank(R, season, h) {
+    if (!h.cciw) return null;
+    const rows = R.cciw.rows.filter((r) => r.season === String(season) && r.phase === h.phase && r.category === h.category && (r.metric ?? r.stat) === h.cciw);
+    if (!rows.length) return null;
+    const week = Math.max(...rows.map((r) => (r.week === null ? -1 : r.week)));
+    return rows.find((r) => (r.week === null ? -1 : r.week) === week) || null;
+  }
+
+  function compareTab(root) {
+    const { home: H, rankings: R } = Site.data;
+    const keys = Object.keys(H.seasons).sort().reverse(); // newest first
+    const a0 = keys[0], b0 = keys[1] || keys[0];
+    const f1 = (v) => fmt(v, 1), f2 = (v) => fmt(v, 2), p0 = (v) => pct(v, 0), p1 = (v) => pct(v, 1);
+    const charted = (B) => B.games.filter((g) => g.charted).length || 1;
+
+    Site.view(root, {
+      selects: [
+        { id: 'a', label: 'Season', options: keys.map((k) => ({ value: k, label: k })), value: a0 },
+        { id: 'b', label: 'vs', options: keys.map((k) => ({ value: k, label: k })), value: b0 },
+      ],
+      source: 'Box scores, official play-by-play, rankings',
+      actions: [{ label: '&#8595; PDF', onClick: (st) => printPage(`Compare Seasons - ${st.a} vs ${st.b} - Carroll Football`) }],
+      prepare(st) { return { A: H.seasons[st.a], B: H.seasons[st.b], a: st.a, b: st.b }; },
+      kpis: [
+        { label: 'Record', value: ({ A, B, a, b }) => [`${A.record || '—'} vs ${B.record || '—'}`, `${a} vs ${b}`] },
+        { label: 'Points per game', value: ({ A, B, a, b }) => [`${fmt(A.season_stats.pts_for_pg)} – ${fmt(A.season_stats.pts_against_pg)}`, `${a} vs ${b}: ${fmt(B.season_stats.pts_for_pg)} – ${fmt(B.season_stats.pts_against_pg)}`] },
+        { label: 'Yards per play (off / def)', value: ({ A, B, a, b }) => [`${fmt(A.season_stats.offense.ypp)} / ${fmt(A.season_stats.defense.ypp)}`, `${a} vs ${b}: ${fmt(B.season_stats.offense.ypp)} / ${fmt(B.season_stats.defense.ypp)}`] },
+      ],
+      cards: [
+        {
+          title: 'Side by side', wide: true,
+          render(el, { A, B, a, b }) {
+            const sa = A.season_stats, sb = B.season_stats;
+            const perGame = (v, Bk) => (v === null || v === undefined ? null : v / charted(Bk));
+            const rankRow = (label, h) => {
+              const ra = cciwRank(R, a, h), rb = cciwRank(R, b, h);
+              // a lower rank number is better, so flip the sign for the arrow
+              return versusRow(label, ra ? -ra.rank : null, rb ? -rb.rank : null, (v) => `#${-v}`, true);
+            };
+            const rows = [
+              versusRow('Points scored per game', sa.pts_for_pg, sb.pts_for_pg, f1, true),
+              versusRow('Points allowed per game', sa.pts_against_pg, sb.pts_against_pg, f1, false),
+              versusRow('Offense: yards / play', sa.offense.ypp, sb.offense.ypp, f2, true),
+              versusRow('Offense: success rate', sa.offense.success, sb.offense.success, p1, true),
+              versusRow('Offense: explosive rate', sa.offense.explosive, sb.offense.explosive, p1, true),
+              versusRow('Offense: turnovers per game', perGame(sa.offense.turnovers, A), perGame(sb.offense.turnovers, B), f1, false),
+              versusRow('Defense: yards / play allowed', sa.defense.ypp, sb.defense.ypp, f2, false),
+              versusRow('Defense: success rate allowed', sa.defense.success, sb.defense.success, p1, false),
+              versusRow('Defense: explosive rate allowed', sa.defense.explosive, sb.defense.explosive, p1, false),
+              versusRow('Defense: takeaways per game', perGame(sa.defense.turnovers, A), perGame(sb.defense.turnovers, B), f1, true),
+              versusRow('Special teams: average score', sa.st_score, sb.st_score, f1, true),
+              rankRow('CCIW rank: scoring offense', HEADLINES[0]),
+              rankRow('CCIW rank: scoring defense', HEADLINES[1]),
+              rankRow('CCIW rank: total offense', HEADLINES[2]),
+              rankRow('CCIW rank: total defense', HEADLINES[3]),
+            ];
+            el.innerHTML = Site.tableHTML({ head: ['', a, b], rows })
+              + '<div class="data-note">Arrows are green when the left season was better. Efficiency numbers come from the official play-by-play (2021 onward); per-game figures use the games charted that season. A season in progress is still settling, so early-season ranks swing.</div>';
+          },
+        },
+        ...[['offense', 'Offense: yards per play, game by game'], ['defense', 'Defense: yards allowed per play, game by game']].map(([side, title]) => ({
+          title,
+          render(el, { A, B, a, b }) {
+            const n = Math.max(A.games.length, B.games.length);
+            const val = (Bk, i) => { const g = Bk.games[i]; return g && g.charted ? g[side].ypp : null; };
+            el.innerHTML = `<div class="legend"><span class="sw"><span class="dot" style="background:var(--cat-1)"></span>${esc(a)}</span><span class="sw"><span class="dot" style="background:var(--cat-2)"></span>${esc(b)}</span></div><div class="gr-slot"></div>`;
+            renderGroupedBar(el.querySelector('.gr-slot'), {
+              categories: Array.from({ length: n }, (_, i) => `G${i + 1}`),
+              valuesA: Array.from({ length: n }, (_, i) => val(A, i)), valuesB: Array.from({ length: n }, (_, i) => val(B, i)),
+              colorA: cssVar('--cat-1'), colorB: cssVar('--cat-2'), nameA: a, nameB: b, labelFmt: (v) => fmt(v, 1),
+            });
+          },
+        })),
+        {
+          title: 'Game by game', wide: true,
+          render(el, { A, B, a, b }) {
+            const n = Math.max(A.games.length, B.games.length);
+            const cell = (g) => (g ? `${g.home ? 'vs' : '@'} ${esc(g.opponent)} <span class="tag ${g.result === 'W' ? 'good' : 'crit'}">${g.result} ${g.carroll_pts}–${g.opp_pts}</span>` : '—');
+            el.innerHTML = Site.tableHTML({ head: ['Game', a, b], rows: Array.from({ length: n }, (_, i) => [String(i + 1), cell(A.games[i]), cell(B.games[i])]) });
+          },
+        },
+      ],
+      footer: () => 'Season numbers are summaries of the same official play-by-play, special teams, and box-score data the dashboards use.',
+    });
+  }
+
   /* --------------------------------------------------------------------- page == */
 
   const EXPLORE = [
@@ -229,7 +323,7 @@
 
     const rank = rankingsCard(R, seasonKey);
     const sideCards = [rank, ...(isCurrent ? [recordWatchCard(REC.record_watch)] : [])];
-    const seasons = Object.keys(H.seasons); // newest first
+    const seasons = Object.keys(H.seasons).sort().reverse(); // newest first (a JS object lists numeric-looking keys ascending)
 
     root.innerHTML = `
       <section class="panel">
@@ -265,6 +359,6 @@
     title: 'Home',
     lead: 'The current season at a glance — and the way into every dashboard.',
     data: { home: '../data/home.json', rankings: '../data/rankings.json', records: '../data/records.json' },
-    tabs: [{ id: 'overview', label: 'Overview', render }],
+    tabs: [{ id: 'overview', label: 'Overview', render }, { id: 'compare', label: 'Compare Seasons', render: compareTab }],
   });
 })();

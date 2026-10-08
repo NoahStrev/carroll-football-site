@@ -1443,17 +1443,17 @@
       },
       "prior_stats": {
         "offense": {
-          "plays": 3169,
-          "ypp": 5.3284,
-          "success": 0.3929,
-          "explosive": 0.1361,
+          "plays": 3178,
+          "ypp": 5.3393,
+          "success": 0.3933,
+          "explosive": 0.1364,
           "turnovers": 64
         },
         "defense": {
-          "plays": 3370,
-          "ypp": 5.7446,
-          "success": 0.4235,
-          "explosive": 0.1581,
+          "plays": 3361,
+          "ypp": 5.7355,
+          "success": 0.4232,
+          "explosive": 0.1579,
           "turnovers": 81
         },
         "st_score": 44.1518,
@@ -1728,17 +1728,17 @@
       },
       "prior_stats": {
         "offense": {
-          "plays": 2588,
-          "ypp": 5.3921,
-          "success": 0.4021,
-          "explosive": 0.1364,
+          "plays": 2597,
+          "ypp": 5.4052,
+          "success": 0.4027,
+          "explosive": 0.1367,
           "turnovers": 52
         },
         "defense": {
-          "plays": 2693,
-          "ypp": 5.7961,
-          "success": 0.4207,
-          "explosive": 0.1633,
+          "plays": 2684,
+          "ypp": 5.7848,
+          "success": 0.4202,
+          "explosive": 0.1631,
           "turnovers": 63
         },
         "st_score": 44.1916,
@@ -2013,17 +2013,17 @@
       },
       "prior_stats": {
         "offense": {
-          "plays": 2022,
-          "ypp": 5.4692,
-          "success": 0.4125,
-          "explosive": 0.1394,
+          "plays": 2031,
+          "ypp": 5.4855,
+          "success": 0.4131,
+          "explosive": 0.1397,
           "turnovers": 37
         },
         "defense": {
-          "plays": 2030,
-          "ypp": 5.9338,
-          "success": 0.426,
-          "explosive": 0.1754,
+          "plays": 2021,
+          "ypp": 5.9194,
+          "success": 0.4254,
+          "explosive": 0.1752,
           "turnovers": 48
         },
         "st_score": 43.5584,
@@ -2298,17 +2298,17 @@
       },
       "prior_stats": {
         "offense": {
-          "plays": 1350,
-          "ypp": 5.185,
-          "success": 0.3961,
-          "explosive": 0.129,
+          "plays": 1359,
+          "ypp": 5.2114,
+          "success": 0.3972,
+          "explosive": 0.1296,
           "turnovers": 27
         },
         "defense": {
-          "plays": 1387,
-          "ypp": 6.0797,
-          "success": 0.4363,
-          "explosive": 0.1787,
+          "plays": 1378,
+          "ypp": 6.0596,
+          "success": 0.4355,
+          "explosive": 0.1784,
           "turnovers": 30
         },
         "st_score": 42.9479,
@@ -2583,17 +2583,17 @@
       },
       "prior_stats": {
         "offense": {
-          "plays": 672,
-          "ypp": 5.2308,
-          "success": 0.3988,
-          "explosive": 0.1199,
+          "plays": 681,
+          "ypp": 5.2827,
+          "success": 0.4009,
+          "explosive": 0.1214,
           "turnovers": 13
         },
         "defense": {
-          "plays": 710,
-          "ypp": 6.3837,
-          "success": 0.4773,
-          "explosive": 0.1874,
+          "plays": 701,
+          "ypp": 6.3483,
+          "success": 0.4763,
+          "explosive": 0.1869,
           "turnovers": 15
         },
         "st_score": 42.9415,
@@ -2807,17 +2807,17 @@
           "result": "W",
           "charted": true,
           "offense": {
-            "plays": 43,
-            "ypp": 6.1395,
-            "success": 0.359,
-            "explosive": 0.1795,
+            "plays": 52,
+            "ypp": 6.6538,
+            "success": 0.3958,
+            "explosive": 0.1875,
             "turnovers": 0
           },
           "defense": {
-            "plays": 82,
-            "ypp": 6.0854,
-            "success": 0.3846,
-            "explosive": 0.141,
+            "plays": 73,
+            "ypp": 5.7123,
+            "success": 0.3623,
+            "explosive": 0.1304,
             "turnovers": 0
           },
           "st_score": 49.0591
@@ -2849,17 +2849,17 @@
       ],
       "season_stats": {
         "offense": {
-          "plays": 672,
-          "ypp": 5.2308,
-          "success": 0.3988,
-          "explosive": 0.1199,
+          "plays": 681,
+          "ypp": 5.2827,
+          "success": 0.4009,
+          "explosive": 0.1214,
           "turnovers": 13
         },
         "defense": {
-          "plays": 710,
-          "ypp": 6.3837,
-          "success": 0.4773,
-          "explosive": 0.1874,
+          "plays": 701,
+          "ypp": 6.3483,
+          "success": 0.4763,
+          "explosive": 0.1869,
           "turnovers": 15
         },
         "st_score": 42.9415,

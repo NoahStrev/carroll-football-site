@@ -11,14 +11,14 @@ projects in `Football/`.
 
 | Nav item | File | Views (tabs) | Data |
 |---|---|---|---|
-| (brand) Home | `dashboards/home.html` | This week (last game's takeaways, next game + series history), a season picker (any season since 2021 — past seasons show highlights instead of next game), season at a glance, game log, rankings with week-over-week movement, record watch, site map | `home.json`, `meta.json`, `rankings.json`, `records.json` |
+| (brand) Home | `dashboards/home.html` | This week (last game's takeaways, next game + series history), a season picker (any season since 2021 — past seasons show highlights instead of next game), Compare Seasons (any two seasons side by side, with game-by-game charts), season at a glance, game log, rankings with week-over-week movement, record watch, site map | `home.json`, `meta.json`, `rankings.json`, `records.json` |
 | Offense | `offense.html` | Scorecard · Tendencies · Outcomes · Tells (where Carroll's run/pass calls are predictable or differ from opponents) · Position Groups (QB / RB / WR / OL) | `game-data.json` |
 | Defense | `defense.html` | Scorecard · Tendencies · Outcomes · Tells (blitz and front tendencies by situation) · Position Groups (DL / LB / CB / S) | `game-data.json` |
 | Special Teams | `special-teams.html` | Overview · Money Unit · Punt · Punt Return · Kickoff · Kickoff Return · Athletes (role × Scorecard / Head-to-Head / Deep Dive) | `special-teams.json` |
 | Opponent Scouting | `opponent-scouting.html` | Next Opponent (what to expect, a national-rank matchup card, and season totals; defaults to the next scheduled opponent, `#next/<opponent>`) · Game Plan (the same week as a two-page printable sheet, `#plan/<opponent>`) · Game Review (a recap of any one game, `#review/<yyyy-mm-dd>`) · By Opponent · Offense · Defense (each: Carroll self-scout / opponent scout) | `game-data.json`, `home.json`, `meta.json`, `special-teams.json`, `team-stats.json` |
 | Rankings | `rankings.html` | Offensive · Defensive · Special Teams · Additional Metrics (one season/week picker) | `rankings.json` |
 | Lifting & Strength | `lifting-strength.html` | Leaderboards (All Time / Last Session / each class) · Compare Athletes | `lifting.json` |
-| Players & Records | `players.html` | Career Stats (also a player profile: honors, record book, record watch, strength testing) · Compare Players · Record Book · Record Watch · Awards History | `career-stats.json`, `records.json` |
+| Players & Records | `players.html` | Career Stats (also a player profile: honors, record book, record watch, strength testing, and a game-by-game log per category; `#career/<name>`) · Season Leaders (top 15 per stat for any season) · Compare Players · Record Book · Record Watch · Awards History | `career-stats.json`, `records.json` |
 | Glossary · Updates | `glossary.html`, `updates.html` | Utility pages (right side of the nav) | — |
 
 Views are addressable: `offense.html#positions/qb`, `special-teams.html#athletes/punter/head-to-head`,
@@ -97,6 +97,13 @@ New game data is added on request, not on a schedule.
 `meta.json` is loaded by every page: it drives the "Data through …" label under each title, and — because it carries the
 schedule — a "game X not loaded yet" warning whenever the schedule shows a game played after the latest one in the data.
 
+## Shareable links
+
+A view's filters and dropdowns travel in the address, so a coach can be sent one link to an exact view: `offense.html#scorecard?f.season=2025~2024&f.opponent=Wheaton`
+(`f.<field>` is the checked values joined by `~`; `s.<id>` is a dropdown's value). Only what differs from the view's defaults is written, the **Copy link**
+button in each view's shelf copies the address, and views that keep their own selection in the path (`#next/<opponent>`, `#plan/<opponent>`, `#review/<date>`,
+`#career/<player>`) opt out with `linkSelects: false`.
+
 ## Printing
 
 The PDF buttons (and the browser's Print) produce a clean letter-size page: always the light theme, no site chrome or controls, a header line saying
@@ -110,8 +117,8 @@ that buckets those rows by score ("Leading by 9+") as the opponent's own offense
 
 `build_game_data.py` also drops "Penalty, No Play" snaps (nullified and replayed, so not plays) and re-labels a drive whose
 "Touchdown" was really an interception/fumble returned the other way. With both, per-game yardage matches the official box score exactly in
-39 of 54 games and within ~30 yards in nearly all of the rest. Known source-side exceptions: 2021-11-06 vs Carthage has about 82 yards of
-Carroll's offense sitting in the defense data, and a handful of games carry a 20-30 yard rushing gap. Those gaps are inside the official box
+39 of 54 games and within ~30 yards in nearly all of the rest. One drive the source tagged to the wrong side (2021-11-06 vs Carthage, Carroll's final field-goal drive) is moved back by
+`MANUAL_DRIVE_SIDE_OVERRIDES` in build_game_data.py, which makes that game match its box score exactly. A handful of other games carry a 20-30 yard rushing gap. Those gaps are inside the official box
 scores themselves, not our parsing: the parsed yards equal the play text in every play, and for 2023-10-07 vs North Central the same page
 reports 670 yards (drive chart), 695 (team stats) and 725 (play-by-play text). Treating accepted offensive penalties as nullified plays was
 tried and made the match worse, so it is not done. `validate_data.py` re-checks the current

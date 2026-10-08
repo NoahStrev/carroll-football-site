@@ -17,7 +17,7 @@ Checks, by file:
   special-teams.json       every row's date is a real box-score game, every unit present for the latest season
   rankings.json            CCIW and national cover the same weeks
   team-stats.json          Carroll present with every category, snapshot not stale
-  career-stats.json        no team pseudo-players, no duplicate display names
+  career-stats.json        no team pseudo-players, no duplicate display names, game logs add up to season totals
   meta.json                schedule present; games the schedule says are played but not loaded (WARNING)
   vs. the last commit      no game, charted play, or special-teams row count may drop (a re-export that
                            silently lost data would otherwise ship)
@@ -195,6 +195,23 @@ def check_career(cs):
             err(f"career-stats: pseudo-player {n!r} (should have been filtered)")
 
 
+def check_game_logs(cs):
+    """Each season's per-game lines must add back up to that season's totals (they come from the same box-score rows)."""
+    bad = 0
+    for p in cs["players"]:
+        for cat, v in p["categories"].items():
+            for s in v["seasons"]:
+                for key in ("att", "net", "yds", "rec", "tot", "cmp", "td", "solo", "ast"):
+                    if "log" in s and key in s and isinstance(s[key], (int, float)):
+                        total = sum(g.get(key, 0) or 0 for g in s["log"])
+                        if abs(total - s[key]) > 1e-6:
+                            bad += 1
+                            if bad <= 5:
+                                err(f"career-stats: {p['display_name']} {cat} {s['season']} game log sums to {total} {key} but the season says {s[key]}")
+    if bad > 5:
+        err(f"career-stats: ...and {bad - 5} more game-log mismatches")
+
+
 def check_meta(meta, home):
     if not meta["schedule"]:
         warn("meta: the schedule is empty (is Schedule/schedule.json present?)")
@@ -215,13 +232,20 @@ def check_no_regressions(home, game, st):
             err(f"home.json: games disappeared since the last commit: {sorted(was - now)}")
     old_game = committed("game-data.json")
     if old_game:
-        for side in ("offense", "defense"):
-            # "No Play" snaps are no longer part of the data (build_game_data.py), so don't count them as lost
-            was = Counter(r["date"] for r in old_game[side]["official"] if "No Play" not in (r["play_outcome"] or ""))
-            now = Counter(r["date"] for r in game[side]["official"])
-            for d, n in was.items():
-                if now[d] < n * 0.95:
-                    err(f"game-data: {side} plays on {d} dropped from {n} to {now[d]}")
+        # Per date, both sides together: a drive moved from one side to the other (MANUAL_DRIVE_SIDE_OVERRIDES in
+        # build_game_data.py) changes each side's count but not the game's total. "No Play" snaps are no longer part
+        # of the data, so the baseline does not count them as lost either.
+        def per_date(d):
+            c = Counter()
+            for side in ("offense", "defense"):
+                for r in d[side]["official"]:
+                    if "No Play" not in (r["play_outcome"] or ""):
+                        c[r["date"]] += 1
+            return c
+        was, now = per_date(old_game), per_date(game)
+        for d, n in was.items():
+            if now[d] < n * 0.95:
+                err(f"game-data: plays on {d} dropped from {n} to {now[d]}")
     old_st = committed("special-teams.json")
     if old_st:
         for unit, rows in old_st["units"].items():
@@ -237,6 +261,7 @@ def main():
     check_rankings(load("rankings.json"))
     check_team_stats(load("team-stats.json"))
     check_career(load("career-stats.json"))
+    check_game_logs(load("career-stats.json"))
     check_meta(load("meta.json"), home)
     check_no_regressions(home, game, st)
 

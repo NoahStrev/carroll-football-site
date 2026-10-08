@@ -508,6 +508,9 @@ table.mini td a:hover { color: var(--accent); border-bottom-color: var(--accent)
 .delta { display: block; margin-top: 2px; font-weight: 600; color: var(--muted); }
 .delta.good { color: var(--delta-good); }
 .delta.crit { color: var(--critical-text); }
+.gamelog-head { display: flex; align-items: center; gap: 10px; padding: 10px 16px 4px; font-size: 12px; }
+.gamelog-body { padding-bottom: 6px; }
+table.game-log td, table.game-log th { white-space: nowrap; }
 .profile-head { display: flex; align-items: center; gap: 14px; }
 .profile-name { font-size: 18px; font-weight: 800; }
 .home-season { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; }

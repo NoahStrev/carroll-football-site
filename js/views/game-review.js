@@ -45,6 +45,7 @@ const GameReview = (function () {
     const count = (v) => (Number.isInteger(v) ? String(v) : fmt(v, 1)); // a real score or play count reads as a whole number
 
     const view = Site.view(root, {
+      linkSelects: false,
       selects: [{
         id: 'game', label: 'Game', value: start,
         options: games.map((g) => ({ group: `${g.season} season`, value: g.date, label: `${Site.dayLabel(g.date, { month: 'short', day: 'numeric', year: 'numeric' })} · ${g.home ? 'vs' : '@'} ${g.opponent} (${g.result} ${g.carroll_pts}–${g.opp_pts})${g.charted ? '' : ' — result only'}` })),

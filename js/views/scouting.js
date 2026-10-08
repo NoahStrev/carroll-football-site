@@ -499,6 +499,7 @@
     const start = wanted || (upcoming[0] ? upcoming[0].opponent : options[0].value);
 
     const view = Site.view(root, {
+      linkSelects: false,
       selects: [{ id: 'opponent', label: 'Opponent', options, value: start }],
       source: 'Official play-by-play, box scores',
       actions: [{ label: '&#8595; PDF', onClick: (st) => printPage(`Opponent Scouting - Next Opponent - ${st.opponent} - Carroll Football`) }],

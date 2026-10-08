@@ -805,6 +805,20 @@ def check_near_duplicate_names(out_players):
             print(f"  {a!r} <-> {b!r}")
 
 
+# Per-game stat lines are kept for these seasons onward (the play-by-play era): enough for a player's game log without
+# tripling the file size with every game back to 2010. Box-score categories only (the special-teams categories are
+# built from data/special-teams.json by accumulate_special_teams, which has no per-game step).
+GAME_LOG_FROM = 2021
+
+
+def iso_game_date(date_str, year):
+    """'MM/DD/YYYY' (or a bare 'M/D') from a box score -> 'YYYY-MM-DD', using the season year already resolved."""
+    parts = (date_str or "").split("/")
+    if len(parts) < 2 or year is None:
+        return None
+    return f"{year}-{int(parts[0]):02d}-{int(parts[1]):02d}"
+
+
 def main():
     roster, last_name_to_keys = load_roster()
     files = glob.glob(RAW_GLOB)
@@ -909,13 +923,16 @@ def main():
                 if athlete_key is None:
                     unmatched_names.add(raw_name)
                 player = players.setdefault(display, {"athlete_key": athlete_key, "categories": {}})
-                cat_bucket = player["categories"].setdefault(category, {"career": {}, "seasons": {}, "career_games": set(), "season_games": {}})
+                cat_bucket = player["categories"].setdefault(category, {"career": {}, "seasons": {}, "career_games": set(), "season_games": {}, "game_log": {}})
                 accumulate(cat_bucket["career"], spec, row)
                 cat_bucket["career_games"].add(game_label)
                 if year is not None:
                     season_bucket = cat_bucket["seasons"].setdefault(year, {})
                     accumulate(season_bucket, spec, row)
                     cat_bucket["season_games"].setdefault(year, set()).add(game_label)
+                    if year >= GAME_LOG_FROM:
+                        line = cat_bucket["game_log"].setdefault(year, {}).setdefault(game_label, {"date": iso_game_date(data.get("game_info", {}).get("date"), year)})
+                        accumulate(line, spec, row)
 
     accumulate_special_teams(players, roster, last_name_to_keys, unmatched_display)
 
@@ -943,11 +960,15 @@ def main():
             add_derived(cat, cat_bucket["career"])
             for yr_bucket in cat_bucket["seasons"].values():
                 add_derived(cat, yr_bucket)
+            for lines in cat_bucket.get("game_log", {}).values():
+                for line in lines.values():
+                    add_derived(cat, line)
             entry["categories"][cat] = {
                 "career": cat_bucket["career"],
                 "career_games": len(cat_bucket["career_games"]),
                 "seasons": [
-                    {"season": yr, **stats, "games": len(cat_bucket["season_games"].get(yr, []))}
+                    {"season": yr, **stats, "games": len(cat_bucket["season_games"].get(yr, [])),
+                     **({"log": sorted(cat_bucket["game_log"][yr].values(), key=lambda g: g["date"] or "")} if yr in cat_bucket.get("game_log", {}) else {})}
                     for yr, stats in sorted(cat_bucket["seasons"].items())
                 ],
             }

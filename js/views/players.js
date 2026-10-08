@@ -57,14 +57,37 @@
     return real.filter((c) => allowed.has(c));
   }
 
+  // opponent name for a game date, from the box-score history (the game log only stores the date)
+  let opponentByDate = null;
+  function opponentOn(date) {
+    if (!opponentByDate) {
+      opponentByDate = {};
+      Object.entries(Site.data.home.history).forEach(([opp, games]) => games.forEach((g) => { opponentByDate[g.date] = { opp, home: g.home, result: g.result, us: g.carroll_pts, them: g.opp_pts }; }));
+    }
+    return opponentByDate[date] || null;
+  }
+
+  // One season's game-by-game lines for a category (a stat that is zero is simply absent from the line).
+  function gameLogHTML(catId, season) {
+    const cat = CAREER_CATEGORIES[catId];
+    const rows = (season.log || []).map((g) => {
+      const o = opponentOn(g.date);
+      const who = o ? `${o.home ? 'vs' : '@'} ${esc(o.opp)} <span class="muted">${o.result} ${o.us}–${o.them}</span>` : '—';
+      return `<tr><td>${g.date.slice(5).replace('-', '/')}</td><td class="name">${who}</td>${cat.cols.map(([key]) => `<td>${g[key] ?? (key.includes('pct') || key.startsWith('yards_per') || key === 'avg' ? '—' : 0)}</td>`).join('')}</tr>`;
+    }).join('');
+    return `<div class="tbl-scroll"><table class="mini game-log"><thead><tr><th>Date</th><th>Opponent</th>${cat.cols.map(([, label]) => `<th>${label}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+
   function categoryCardHTML(catId, player) {
     const cat = CAREER_CATEGORIES[catId];
     const catData = player.categories[catId];
+    const logged = catData.seasons.filter((x) => x.log && x.log.length);
+    const latestLogged = logged.length ? logged[logged.length - 1] : null;
     const seasonRows = catData.seasons.map((s) => `<tr><td>${s.season}</td><td>${s.games}</td>${cat.cols.map(([key]) => `<td>${s[key] ?? '—'}</td>`).join('')}</tr>`).join('');
     return `
       <div class="card wide table-card">
         <div class="card-head"><h2>${cat.label}</h2><span class="data-note">${catData.career_games} games</span></div>
-        <div class="card-body flush">
+        <div class="card-body flush" data-cat="${esc(catId)}">
           <div class="tbl-scroll"><table class="mini">
             <thead><tr><th>Season</th><th>Games</th>${cat.cols.map(([, label]) => `<th>${label}</th>`).join('')}</tr></thead>
             <tbody>
@@ -72,8 +95,23 @@
               <tr class="total-row"><td>Career</td><td>${catData.career_games}</td>${cat.cols.map(([key]) => `<td>${catData.career[key] ?? '—'}</td>`).join('')}</tr>
             </tbody>
           </table></div>
+          ${latestLogged ? `<div class="gamelog-head"><b>Game by game</b>
+            <select class="select-sm gl-season" aria-label="Season for the ${esc(cat.label)} game log">${logged.slice().reverse().map((x) => `<option value="${x.season}">${x.season}</option>`).join('')}</select></div>
+            <div class="gamelog-body">${gameLogHTML(catId, latestLogged)}</div>` : ''}
         </div>
       </div>`;
+  }
+
+  // The season picker above each game log swaps its table in place.
+  function wireGameLogs(contentEl, player) {
+    contentEl.querySelectorAll('.gl-season').forEach((sel) => {
+      sel.addEventListener('change', () => {
+        const body = sel.closest('.card-body');
+        const catId = body.dataset.cat;
+        const season = player.categories[catId].seasons.find((x) => String(x.season) === sel.value);
+        body.querySelector('.gamelog-body').innerHTML = gameLogHTML(catId, season);
+      });
+    });
   }
 
 
@@ -188,7 +226,7 @@
     return Site.data.career.players.slice().sort((a, b) => { const [a1, a2] = score(a), [b1, b2] = score(b); return b1 - a1 || b2 - a2; }).map((p) => p.display_name);
   }
 
-  function lookupTab(root) {
+  function lookupTab(root, { sub }) {
     root.innerHTML = `
       <section class="panel">
         <div class="body">
@@ -217,8 +255,10 @@
         });
       }
       contentEl.dataset.player = name;
+      wireGameLogs(contentEl, player);
+      Site.setSub(name);
     }
-    const start = defaultPlayers()[0];
+    const start = findPlayer(sub) ? sub : defaultPlayers()[0]; // #career/<name> opens that player
     makeSearchCombobox(root.querySelector('#cs-combobox'), { options, value: start, onChange: render, placeholder: 'Search player name…' });
     render(start);
   }
@@ -276,6 +316,56 @@
     makeSearchCombobox(root.querySelector('#cmp-A-sel'), { options, value: state.a, onChange: (v) => { state.a = v; render(); }, placeholder: 'Search player name…' });
     makeSearchCombobox(root.querySelector('#cmp-B-sel'), { options, value: state.b, onChange: (v) => { state.b = v; render(); }, placeholder: 'Search player name…' });
     render();
+  }
+
+
+  /* ============================================================ Leaders == */
+  // Who is producing in any one season: a top-15 table per stat, and the leader of each headline stat up top.
+  // Ranked on the counting stat (yards, tackles, ...), not a rate, so a player with 2 carries can't top a table.
+  const LEADER_STATS = [
+    ['Rushing', 'net', 'Rushing yards'], ['Passing', 'yds', 'Passing yards'], ['Receiving', 'yds', 'Receiving yards'],
+    ['Receiving', 'rec', 'Receptions'], ['Individual Defensive Statistics', 'tot', 'Tackles'], ['Individual Defensive Statistics', 'sacks', 'Sacks'],
+    ['Individual Defensive Statistics', 'tfl', 'Tackles for loss'], ['Individual Defensive Statistics', 'int', 'Interceptions'],
+    ['KickoffReturn', 'yds', 'Kickoff return yards'], ['PuntReturn', 'yds', 'Punt return yards'], ['PATFG', 'fg_made', 'Field goals made'],
+    ['Punting', 'gross_yds', 'Punting yards'], ['Kickoffs', 'att', 'Kickoffs'],
+  ];
+
+  function leaderRows(catId, key, season, n) {
+    return Site.data.career.players
+      .map((p) => { const c = p.categories[catId]; const s = c && c.seasons.find((x) => String(x.season) === String(season)); return s && s[key] > 0 ? { p, s } : null; })
+      .filter(Boolean)
+      .sort((a, b) => b.s[key] - a.s[key] || (b.s.games || 0) - (a.s.games || 0))
+      .slice(0, n);
+  }
+
+  function leadersTab(root) {
+    const seasons = [...new Set(Site.data.career.players.flatMap((p) => Object.values(p.categories).flatMap((c) => c.seasons.map((x) => String(x.season)))))].sort().reverse();
+    const kpi = (catId, key, label) => ({ label, value: ({ season }) => { const [top] = leaderRows(catId, key, season, 1); return top ? [esc(top.p.display_name), `${fmt(top.s[key], Number.isInteger(top.s[key]) ? 0 : 1)} ${key === 'tot' ? 'tackles' : key === 'net' || key === 'yds' ? 'yards' : key}`] : ['—', 'no one this season']; } });
+    Site.view(root, {
+      selects: [
+        { id: 'season', label: 'Season', options: seasons.map((x, i) => ({ value: x, label: i === 0 ? `${x} (latest)` : x })), value: seasons[0] },
+        { id: 'stat', label: 'Stat', options: LEADER_STATS.map(([c, k, l], i) => ({ value: String(i), label: l })), value: '0' },
+      ],
+      source: 'Box scores (2010-present)',
+      prepare(st) { return { season: st.season, stat: LEADER_STATS[Number(st.stat)] }; },
+      kpis: [kpi('Rushing', 'net', 'Rushing leader'), kpi('Passing', 'yds', 'Passing leader'), kpi('Receiving', 'yds', 'Receiving leader'), kpi('Individual Defensive Statistics', 'tot', 'Tackles leader')],
+      intro: ({ season }) => `Season leaders for ${season}. Pick a stat to see the top 15; click a name for that player's full profile.`,
+      cards: [{
+        title: 'Top 15', wide: true,
+        render(el, { season, stat }) {
+          const [catId, key, label] = stat;
+          const cat = CAREER_CATEGORIES[catId];
+          const rows = leaderRows(catId, key, season, 15);
+          el.innerHTML = rows.length
+            ? Site.tableHTML({
+              head: ['#', 'Player', 'Pos', 'G', ...cat.cols.map(([, l]) => l)],
+              rows: rows.map(({ p, s }, i) => [String(i + 1), `<a href="#career/${encodeURIComponent(p.display_name)}">${esc(p.display_name)}</a>`, esc(p.position || '—'), String(s.games ?? '—'), ...cat.cols.map(([k]) => (k === key ? `<b>${s[k]}</b>` : String(s[k] ?? '—')))]),
+            }) + `<div class="data-note">${esc(label)}, ${esc(season)} — ranked on the counting stat; rate columns (average, percentage) come from the same season's totals.</div>`
+            : `<div class="data-note">No one has recorded ${esc(label.toLowerCase())} in ${esc(season)}.</div>`;
+        },
+      }],
+      footer: () => 'Source: Special Teams Data box scores, aggregated by build_career_stats.py (special-teams categories from data/special-teams.json).',
+    });
   }
 
   /* ========================================================= Record Book == */
@@ -454,9 +544,10 @@
     nav: 'players',
     title: 'Players & Records',
     lead: "Real per-player career totals from Carroll's box-score archive (2010–present), the program's all-time record book, current players closing in on it, and the full award history.",
-    data: { career: '../data/career-stats.json', records: '../data/records.json' },
+    data: { career: '../data/career-stats.json', records: '../data/records.json', home: '../data/home.json' },
     tabs: [
       { id: 'career', label: 'Career Stats', render: lookupTab },
+      { id: 'leaders', label: 'Season Leaders', render: leadersTab },
       { id: 'compare', label: 'Compare Players', render: compareTab },
       { id: 'record-book', label: 'Record Book', render: recordBookTab },
       { id: 'record-watch', label: 'Record Watch', render: recordWatchTab },

@@ -129,6 +129,16 @@ def normalize_team(name):
     return name.strip()
 
 
+# Drives the source's possession label puts on the wrong side, confirmed against the official box score's own drive
+# chart. 2021-11-06 vs Carthage: this 9-play, 82-yard field-goal drive (Q4) is Carroll's -- the drive chart has Carroll's
+# final drive as a 20-play, 82-yard field goal -- but the source tags it as Carthage's. Moving it makes the play-by-play
+# match the box score exactly (Carroll 346 yards on 52 plays, Carthage 417 on 74 within a play) instead of 82 yards off
+# on each side. Found 2026-10-08 by reconciling every game's yardage with its box score.
+MANUAL_DRIVE_SIDE_OVERRIDES = {
+    ("Carroll vs Carthage 11_6_21", 20): "offense",
+}
+
+
 def classify_side(possession_team, opponent):
     """'offense' if Carroll has the ball, 'defense' if the known opponent
     does, else None (administrative rows like 'Halftime'/'Game Start'/
@@ -315,6 +325,7 @@ def main():
             side = drive_sides.get((r["GAME_LABEL"], r["DRIVE_NUM"]))
         if side is None:
             continue
+        side = MANUAL_DRIVE_SIDE_OVERRIDES.get((r["GAME_LABEL"], r["DRIVE_NUM"]), side)
         season = parse_label_date(r["GAME_LABEL"])
 
         if r["DRIVE_NUM"] is not None:
