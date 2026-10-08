@@ -17,7 +17,10 @@
   // Pro Agility is a timed sprint -- lower is faster/better, the one metric here that
   // isn't "bigger number wins" (matches Lifting Data's own z-score convention).
   const LOWER_IS_BETTER = new Set(['Pro Agility']);
-  const metricLabel = (metric, v) => `${fmt(v, metric === 'Pro Agility' ? 2 : 1)}${METRIC_UNITS[metric] || ''}`;
+  const metricLabel = (metric, v) => {
+    const dec = metric === 'Pro Agility' ? 2 : Number.isInteger(v) ? 0 : 1, unit = METRIC_UNITS[metric];
+    return `${v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec })}${unit ? ` ${unit}` : ''}`;
+  };
 
   /* ------------------------------------------------------------ leaderboards --- */
 

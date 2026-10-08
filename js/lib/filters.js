@@ -34,7 +34,7 @@ function buildFilterPanel(tabId, filterDefs, filterValues) {
     // Sorted fresh rather than trusting incoming order, since it only needs
     // to hold for 4-digit year strings, which sort correctly as plain strings.
     const latestValue = defaultLatestOnly && values.length ? [...values].sort().at(-1) : null;
-    const rows = values.map((v) => `<label class="fp-chk"><input type="checkbox" data-field="${field}" value="${v}"${defaultLatestOnly ? (v === latestValue ? ' checked' : '') : ' checked'}>${v}</label>`).join('');
+    const rows = values.map((v) => `<label class="fp-chk"><input type="checkbox" data-field="${field}" value="${escapeHTML(String(v))}"${defaultLatestOnly ? (v === latestValue ? ' checked' : '') : ' checked'}>${escapeHTML(String(v))}</label>`).join('');
     return `
       <div class="fp-group" data-group="${field}">
         <div class="fp-label-row">
@@ -44,7 +44,7 @@ function buildFilterPanel(tabId, filterDefs, filterValues) {
             <button type="button" class="fp-quick-btn" data-none="${field}">None</button>
           </div>
         </div>
-        ${searchable ? `<input type="text" class="fp-search" placeholder="Search…" data-search="${field}">` : ''}
+        ${searchable ? `<input type="text" class="fp-search" placeholder="Search…" aria-label="Search ${label}" data-search="${field}">` : ''}
         <div class="fp-chk-list${searchable ? ' fp-chk-list-scroll' : ''}" data-list="${field}">${rows}</div>
       </div>`;
   }).join('');
@@ -165,6 +165,7 @@ function makeSearchCombobox(container, { options, value, onChange, placeholder =
   const input = el('input', 'combobox-input');
   input.type = 'text';
   input.placeholder = placeholder;
+  input.setAttribute('aria-label', placeholder.replace(/…$/, ''));
   // Real bug found 2026-07-31: with no spellcheck/autocomplete attributes, a
   // name the browser's dictionary doesn't recognize (most athlete names) gets
   // underlined and can pop the browser's native spellcheck/autocorrect UI on a
@@ -194,7 +195,7 @@ function makeSearchCombobox(container, { options, value, onChange, placeholder =
     // scroll through any number of rendered rows, the cap was the only thing
     // actually preventing you from reaching the rest by scrolling or typing).
     const matches = options.filter((o) => o.label.toLowerCase().includes(q));
-    list.innerHTML = matches.map((o) => `<div class="combobox-item" data-value="${o.value}">${o.label}</div>`).join('');
+    list.innerHTML = matches.map((o) => `<div class="combobox-item" data-value="${escapeHTML(String(o.value))}">${escapeHTML(String(o.label))}</div>`).join('');
     list.querySelectorAll('.combobox-item').forEach((item) => {
       item.addEventListener('mousedown', (e) => {
         e.preventDefault();

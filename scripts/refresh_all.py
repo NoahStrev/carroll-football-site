@@ -2,7 +2,8 @@
 Runs this site's own 8 build scripts plus the data validation in sequence for routine updates:
 build_special_teams_data.py, build_career_stats.py, build_records_data.py,
 build_lifting_data.py, build_game_data.py, build_rankings_data.py, build_team_stats.py, build_home_data.py, then validate_data.py (sanity checks on the
-finished JSON; an ERROR makes this exit non-zero so nothing broken gets published).
+finished JSON; an ERROR makes this exit non-zero so nothing broken gets published). stamp_assets.py also runs, putting
+a content-hash version on every script and stylesheet address so browsers never mix an old script with a new page.
 
 This only covers this site's own rebuild step. The upstream sibling projects
 each source data from (Special Teams Data, Lifting Data, Game Analysis, CCIW
@@ -48,6 +49,7 @@ BUILD_SCRIPTS = [
     "build_rankings_data.py",
     "build_team_stats.py",   # every CCIW team's national ranks (Next Opponent)
     "build_home_data.py",  # reads game-data.json and special-teams.json, so it runs after them
+    "stamp_assets.py",     # version every script/stylesheet address in the pages (see its docstring)
     "validate_data.py",    # must stay last -- checks everything the scripts above just wrote
 ]
 

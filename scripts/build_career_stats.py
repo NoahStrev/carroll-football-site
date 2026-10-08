@@ -819,55 +819,59 @@ def iso_game_date(date_str, year):
     return f"{year}-{int(parts[0]):02d}-{int(parts[1]):02d}"
 
 
-def main():
-    roster, last_name_to_keys = load_roster()
-    files = glob.glob(RAW_GLOB)
+# ---------------------------------------------------------------- main, in steps --
 
-    # First pass: collect every raw (last, first) variant seen for players
-    # that DON'T match the roster, purely to resolve a canonical display
-    # name per last name before any stats are actually accumulated (see
-    # resolve_unmatched_identities -- needs the full picture across every
-    # file before deciding anything, so this has to be a separate pass,
-    # not folded into the main accumulation loop below). Scans BOTH the
-    # box-score archive and data/special-teams.json's own name fields --
-    # a specialist with no offensive/defensive box-score line at all still
-    # needs their special-teams-only name variants merged the same way
-    # (found 2026-09-08: special-teams.json's punter/kicker/returner/
-    # snapper fields mix all 3 raw-name formats too, not just a bare
-    # surname as first assumed -- see SPECIAL_TEAMS_UNITS' own comment).
-    def collect_unmatched_variant(raw_name, season, unmatched_variants):
-        last, first = split_raw_name(raw_name)
-        if last is None:
-            return
-        key, _ = match_player(raw_name, roster, last_name_to_keys, {}, season)
-        if key is not None:
-            return
-        # Apply the same NAME_ALIASES correction match_player() applies
-        # internally -- otherwise a last-name-typo alias whose TARGET
-        # isn't a roster name (found 2026-09-08: several confirmed
-        # scrape-typo pairs like "Piekrski"/"Piekarski" where neither
-        # spelling is on the roster) never reaches match_player's own
-        # alias lookup here, so the two spellings would still fragment
-        # into separate raw_groups buckets by last name and never get a
-        # chance to merge in resolve_unmatched_identities.
-        last, first = NAME_ALIASES.get((last, first), (last, first))
-        lk = merge_key_for_unmatched(last, first)
-        # A Counter, not a set -- norm() strips ALL non-letters, so 2
-        # genuinely different literal last-name spellings (e.g.
-        # "O'Donoghue" vs "O' Donoghue", both stripping to "odonoghue")
-        # can land in the same group despite the comment below claiming
-        # they're "identical by construction." Found 2026-09-08: a plain
-        # set here made `next(iter(pairs))[1]`'s canonical-spelling choice
-        # depend on Python's per-process hash-seed randomization -- the
-        # SAME input could rebuild to "Connor O'Donoghue" one run and
-        # "Connor O' Donoghue" the next, a real reproducibility bug that
-        # would show up as a spurious weekly-automation diff with nothing
-        # in the source data actually having changed. Counting occurrences
-        # lets resolve_unmatched_identities() deterministically pick
-        # whichever spelling is actually most common, the same principle
-        # already used to pick every manual NAME_ALIASES entry.
-        unmatched_variants.setdefault(lk, collections.Counter())[(first, last)] += 1
 
+# First pass: collect every raw (last, first) variant seen for players
+# that DON'T match the roster, purely to resolve a canonical display
+# name per last name before any stats are actually accumulated (see
+# resolve_unmatched_identities -- needs the full picture across every
+# file before deciding anything, so this has to be a separate pass,
+# not folded into the main accumulation loop below). Scans BOTH the
+# box-score archive and data/special-teams.json's own name fields --
+# a specialist with no offensive/defensive box-score line at all still
+# needs their special-teams-only name variants merged the same way
+# (found 2026-09-08: special-teams.json's punter/kicker/returner/
+# snapper fields mix all 3 raw-name formats too, not just a bare
+# surname as first assumed -- see SPECIAL_TEAMS_UNITS' own comment).
+
+
+def collect_unmatched_variant(raw_name, season, unmatched_variants, roster, last_name_to_keys):
+    last, first = split_raw_name(raw_name)
+    if last is None:
+        return
+    key, _ = match_player(raw_name, roster, last_name_to_keys, {}, season)
+    if key is not None:
+        return
+    # Apply the same NAME_ALIASES correction match_player() applies
+    # internally -- otherwise a last-name-typo alias whose TARGET
+    # isn't a roster name (found 2026-09-08: several confirmed
+    # scrape-typo pairs like "Piekrski"/"Piekarski" where neither
+    # spelling is on the roster) never reaches match_player's own
+    # alias lookup here, so the two spellings would still fragment
+    # into separate raw_groups buckets by last name and never get a
+    # chance to merge in resolve_unmatched_identities.
+    last, first = NAME_ALIASES.get((last, first), (last, first))
+    lk = merge_key_for_unmatched(last, first)
+    # A Counter, not a set -- norm() strips ALL non-letters, so 2
+    # genuinely different literal last-name spellings (e.g.
+    # "O'Donoghue" vs "O' Donoghue", both stripping to "odonoghue")
+    # can land in the same group despite the comment below claiming
+    # they're "identical by construction." Found 2026-09-08: a plain
+    # set here made `next(iter(pairs))[1]`'s canonical-spelling choice
+    # depend on Python's per-process hash-seed randomization -- the
+    # SAME input could rebuild to "Connor O'Donoghue" one run and
+    # "Connor O' Donoghue" the next, a real reproducibility bug that
+    # would show up as a spurious weekly-automation diff with nothing
+    # in the source data actually having changed. Counting occurrences
+    # lets resolve_unmatched_identities() deterministically pick
+    # whichever spelling is actually most common, the same principle
+    # already used to pick every manual NAME_ALIASES entry.
+    unmatched_variants.setdefault(lk, collections.Counter())[(first, last)] += 1
+
+
+def scan_unmatched_names(files, roster, last_name_to_keys):
+    """The first pass: one canonical display name per unmatched last name, from every box score and special-teams row."""
     unmatched_variants = {}
     for fn in files:
         with open(fn, encoding="utf-8") as f:
@@ -882,7 +886,7 @@ def main():
             if car_key is None:
                 continue
             for row in teams[car_key]:
-                collect_unmatched_variant(row.get("player", ""), year, unmatched_variants)
+                collect_unmatched_variant(row.get("player", ""), year, unmatched_variants, roster, last_name_to_keys)
     if SPECIAL_TEAMS_SRC.exists():
         with open(SPECIAL_TEAMS_SRC, encoding="utf-8") as f:
             st = json.load(f)
@@ -890,14 +894,18 @@ def main():
             for row in st["units"].get(unit_key, []):
                 if row.get(name_field):
                     season = int(row["season"]) if row.get("season") else None
-                    collect_unmatched_variant(row[name_field], season, unmatched_variants)
+                    collect_unmatched_variant(row[name_field], season, unmatched_variants, roster, last_name_to_keys)
         for unit_key, name_field in [("money_unit", "long_snapper"), ("punt", "snapper")]:
             for row in st["units"].get(unit_key, []):
                 if row.get(name_field):
                     season = int(row["season"]) if row.get("season") else None
-                    collect_unmatched_variant(row[name_field], season, unmatched_variants)
+                    collect_unmatched_variant(row[name_field], season, unmatched_variants, roster, last_name_to_keys)
     unmatched_display = resolve_unmatched_identities(unmatched_variants)
+    return unmatched_display
 
+
+def accumulate_players(files, roster, last_name_to_keys, unmatched_display):
+    """The second pass: every Carroll box-score line (and special-teams row) added into one record per player."""
     # players[display_name] -> {athlete_key, categories: {...}}
     players = {}
     unmatched_names = set()
@@ -935,20 +943,25 @@ def main():
                         accumulate(line, spec, row)
 
     accumulate_special_teams(players, roster, last_name_to_keys, unmatched_display)
+    return players, unmatched_names
 
-    # Derived rate stats -- never a naive average of per-game rates, always
-    # recomputed from the summed counting stats (this project's established
-    # rule, e.g. makeRate() elsewhere on this site).
-    def add_derived(cat, bucket):
-        if cat == "Passing" and bucket.get("att"):
-            bucket["completion_pct"] = round(100 * bucket["cmp"] / bucket["att"], 1)
-            bucket["yards_per_att"] = round(bucket["yds"] / bucket["att"], 1)
-        if cat == "Rushing" and bucket.get("att"):
-            bucket["yards_per_carry"] = round(bucket["net"] / bucket["att"], 2)
-        if cat == "Receiving" and bucket.get("rec"):
-            bucket["yards_per_rec"] = round(bucket["yds"] / bucket["rec"], 1)
-        add_special_teams_derived(cat, bucket)
 
+# Derived rate stats -- never a naive average of per-game rates, always
+# recomputed from the summed counting stats (this project's established
+# rule, e.g. makeRate() elsewhere on this site).
+def add_derived(cat, bucket):
+    if cat == "Passing" and bucket.get("att"):
+        bucket["completion_pct"] = round(100 * bucket["cmp"] / bucket["att"], 1)
+        bucket["yards_per_att"] = round(bucket["yds"] / bucket["att"], 1)
+    if cat == "Rushing" and bucket.get("att"):
+        bucket["yards_per_carry"] = round(bucket["net"] / bucket["att"], 2)
+    if cat == "Receiving" and bucket.get("rec"):
+        bucket["yards_per_rec"] = round(bucket["yds"] / bucket["rec"], 1)
+    add_special_teams_derived(cat, bucket)
+
+
+def format_players(players, roster):
+    """Players as the JSON the site reads: derived rate stats added, seasons and game logs in order."""
     out_players = []
     for display, pdata in players.items():
         entry = {
@@ -974,6 +987,15 @@ def main():
             }
         out_players.append(entry)
     out_players.sort(key=lambda p: p["display_name"])
+    return out_players
+
+
+def main():
+    roster, last_name_to_keys = load_roster()
+    files = glob.glob(RAW_GLOB)
+    unmatched_display = scan_unmatched_names(files, roster, last_name_to_keys)
+    players, unmatched_names = accumulate_players(files, roster, last_name_to_keys, unmatched_display)
+    out_players = format_players(players, roster)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:

@@ -36,7 +36,7 @@
     const buckets = order ? order.filter((b) => by.has(b)) : sortBuckets([...new Set(rows.map((r) => r[field]).filter(Boolean))]);
     renderBar(el, {
       categories: buckets, values: buckets.map((b) => rate(by.get(b), pred)), labelFmt: (v) => pct(v, 0),
-      colorFn: () => cssVar(color), tooltipExtra: (b) => `${by.get(b).length} ${noun}`,
+      colorFn: () => cssVar(color), tooltipExtra: (b) => `${by.get(b).length} ${noun}`, counts: buckets.map((b) => by.get(b).length),
     });
   }
   const driveOk = (r) => r.drive_success;
@@ -80,6 +80,7 @@
       cards: [
         {
           title: 'Avg Score by Unit',
+          note: 'Green is 50 or higher (better than an average Carroll attempt at that unit); red is below 50.',
           render(el, { byUnit }) {
             renderBar(el, {
               categories: UNIT_KEYS.map((u) => UNIT_LABELS[u]), values: UNIT_KEYS.map((u) => mean(byUnit[u].map((r) => r.score))),
@@ -90,8 +91,9 @@
         },
         {
           title: 'Avg Score by Season (all units combined)',
-          render(el, { all }) {
-            const by = groupBy(all, 'season');
+          note: 'Every season, whatever the Season filter says, so the current one has something to compare with.',
+          render(el) {
+            const by = groupBy(UNIT_KEYS.flatMap((u) => D.units[u]), 'season');
             const seasons = allSeasons.filter((s) => by.has(s));
             renderBar(el, { categories: seasons, values: seasons.map((s) => mean(by.get(s).map((r) => r.score))), labelFmt: (v) => fmt(v, 0), colorFn: () => cssVar('--cat-1'), tooltipExtra: (s) => `${by.get(s).length} plays` });
           },
@@ -235,7 +237,7 @@
           render(el, { rows }) {
             const outcomes = ['Downed', 'Fair Catch', 'Out of Bounds', 'Touchback', 'Muff', 'Return', 'Return Touchdown'].filter((o) => rows.some((r) => r.kick_outcome === o));
             const colors = categoricalColorMap(outcomes);
-            renderBar(el, { categories: outcomes, values: outcomes.map((o) => rows.filter((r) => r.kick_outcome === o).length), labelFmt: (v) => String(v), colorFn: (name) => colors[name], tooltipExtra: (o) => `${pct(rows.length ? rows.filter((r) => r.kick_outcome === o).length / rows.length : null, 0)} of punts in view` });
+            renderBar(el, { categories: outcomes, values: outcomes.map((o) => rows.filter((r) => r.kick_outcome === o).length), labelFmt: (v) => String(v), colorFn: (name) => colors[name], axisLabel: (o) => o.replace('Touchdown', 'TD'), tooltipExtra: (o) => `${pct(rows.length ? rows.filter((r) => r.kick_outcome === o).length / rows.length : null, 0)} of punts in view` });
           },
         },
         { title: 'Drive Success by Field Position', render: (el, { rows }) => bucketRate(el, rows, 'field_bucket', driveOk, '--cat-1', 'punts') },
@@ -289,7 +291,7 @@
           render(el, { rows }) {
             const outcomes = ['Downed', 'Fair Catch', 'Out of Bounds', 'Touchback', 'Muff', 'Blocked', 'Return', 'Return Touchdown', 'Safety'].filter((o) => rows.some((r) => r.kick_outcome === o));
             const colors = categoricalColorMap(outcomes);
-            renderBar(el, { categories: outcomes, values: outcomes.map((o) => rows.filter((r) => r.kick_outcome === o).length), labelFmt: (v) => String(v), colorFn: (name) => colors[name], tooltipExtra: (o) => `${pct(rows.length ? rows.filter((r) => r.kick_outcome === o).length / rows.length : null, 0)} of punts in view` });
+            renderBar(el, { categories: outcomes, values: outcomes.map((o) => rows.filter((r) => r.kick_outcome === o).length), labelFmt: (v) => String(v), colorFn: (name) => colors[name], axisLabel: (o) => o.replace('Touchdown', 'TD'), tooltipExtra: (o) => `${pct(rows.length ? rows.filter((r) => r.kick_outcome === o).length / rows.length : null, 0)} of punts in view` });
           },
         },
         { title: 'Drive Success by Field Position', render: (el, { rows }) => bucketRate(el, rows, 'field_bucket', driveOk, '--cat-1', 'punts') },

@@ -33,7 +33,7 @@ const FourthDown = (function () {
         renderBar(el, {
           categories: g.map(([k]) => k), values: g.map(([, rows]) => rate(rows, convertedTry)), labelFmt: (v) => p0(v),
           colorFn: () => cssVar(color), tooltipExtra: (k) => `${size(k).length} tries`,
-          xlab2: (k) => `${size(k).filter(convertedTry).length} of ${size(k).length}`,
+          xlab2: (k) => `${size(k).filter(convertedTry).length} of ${size(k).length}`, counts: g.map(([, rows]) => rows.length),
         });
       },
     };

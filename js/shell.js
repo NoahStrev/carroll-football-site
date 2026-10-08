@@ -166,7 +166,7 @@ const Site = (() => {
         ${navHTML(cfg.nav)}
         <header class="pagehead"><h1>${esc(cfg.title)}${cfg.badge ? `<span class="h1-badge">${esc(cfg.badge)}</span>` : ''}</h1>${cfg.lead ? `<p>${cfg.lead}</p>` : ''}<div class="asof" id="site-asof" hidden></div></header>
         <div class="tabbar" id="site-tabs" role="tablist" aria-label="${esc(cfg.title)} views"></div>
-        <main class="stage" id="site-stage" tabindex="-1"><div class="loading">Loading data…</div></main>
+        <main class="stage" id="site-stage" role="tabpanel" tabindex="-1"><div class="loading">Loading data…</div></main>
       </div>`;
 
     const tabbar = document.getElementById('site-tabs');
@@ -189,6 +189,7 @@ const Site = (() => {
       if (activeBtn && tabbar.scrollWidth > tabbar.clientWidth) activeBtn.scrollIntoView({ inline: 'center', block: 'nearest' });
       // Bookmarks, history, and a printout's file name should say which tab this is.
       document.title = `${cfg.tabs.length > 1 ? `${tab.label} · ` : ''}${cfg.title} — Carroll Football Analytics`;
+      stage.setAttribute('aria-labelledby', `tab-${tab.id}`);
       stage.innerHTML = '';
       const root = document.createElement('div');
       stage.appendChild(root);
@@ -230,7 +231,7 @@ const Site = (() => {
         render();
       })
       .catch((err) => {
-        stage.innerHTML = `<div class="card"><div class="card-body">Couldn't load this page's data — ${esc(err.message || err)}. Run scripts/refresh_all.py, and serve the site over http:// rather than file://.</div></div>`;
+        stage.innerHTML = `<div class="card"><div class="card-body">Couldn't load this page's data (${esc(err.message || err)}). Check your connection and reload the page. If you are running the site locally, serve it over http:// (python scripts/serve.py) rather than opening the file.</div></div>`;
       });
   }
 

@@ -64,6 +64,13 @@ function inspect(page, win, errors, width) {
     const culprit = [...doc.body.querySelectorAll('*')].find((el) => el.getBoundingClientRect().right > win.innerWidth + 1 && !el.closest('.tbl-scroll, .tabbar, .links, .pillbar, .subbar'));
     problems.push(`page is ${over}px wider than the ${width}px viewport${culprit ? ` (${culprit.tagName.toLowerCase()}.${(culprit.className || '').toString().split(' ')[0]})` : ''}`);
   }
+  // Accessibility basics: no id used twice, and every button, link, and form control has a name a screen reader can say.
+  const ids = [...doc.querySelectorAll('[id]')].map((e) => e.id), dup = [...new Set(ids.filter((x, i) => ids.indexOf(x) !== i))];
+  if (dup.length) problems.push(`duplicate id${dup.length > 1 ? 's' : ''}: ${dup.slice(0, 3).join(', ')}`);
+  const nameOf = (el) => (el.getAttribute('aria-label') || el.getAttribute('title') || el.textContent || '').trim()
+    || (el.labels && el.labels.length ? [...el.labels].map((l) => l.textContent).join('').trim() : '') || (el.getAttribute('aria-labelledby') ? 'ref' : '');
+  const unnamed = [...doc.querySelectorAll('#site-stage button, #site-stage a[href], #site-stage select, #site-stage input:not([type=hidden]), .sitenav a')].filter((el) => !nameOf(el));
+  if (unnamed.length) problems.push(`${unnamed.length} control(s) with no accessible name, e.g. <${unnamed[0].tagName.toLowerCase()} class="${(unnamed[0].className || '').toString().split(' ')[0]}">`);
   // Content cut off by an overflow:hidden box (a wide chart or table inside a card) never shows up as page overflow.
   const clipped = [...doc.querySelectorAll('#site-stage *')].filter((el) => {
     if (el.scrollWidth <= el.clientWidth + 1 || el.clientWidth === 0) return false;

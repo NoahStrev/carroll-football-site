@@ -390,22 +390,25 @@ table.records-table thead th, table.rank-table thead th, table.lb-scroll thead t
 /* .barplot/.stackplot are fixed-height plot areas isolated from the label rows (flex-shrink:0 on
    every sibling), so a bar's height:X% always resolves against the same height regardless of how
    many lines a category label wraps to. Labels are forced to one line (ellipsis) for the same reason. */
-.barchart { display: flex; align-items: flex-end; gap: 12px; height: 150px; padding-top: 20px; position: relative; }
-.barchart .gridlines { position: absolute; inset: 20px 0 34px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
+.barchart { display: flex; align-items: flex-end; gap: 12px; height: 164px; padding-top: 20px; position: relative; }
+.barchart .gridlines { position: absolute; inset: 20px 0 48px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
 .barchart .gridlines div, .stacked .gridlines div { border-top: 1px solid var(--grid); height: 0; }
 .barchart, .stacked { overflow-x: auto; scrollbar-width: thin; } /* see fitChartToCard() in charts.js */
 .barcol { flex: 1; min-width: 34px; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; z-index: 1; }
 .barplot { flex-shrink: 0; height: 96px; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
-.bar { width: 22px; max-width: 24px; border-radius: 4px 4px 0 0; background: var(--accent); position: relative; transition: height .35s ease, filter .1s ease, transform .1s ease; cursor: pointer; flex-shrink: 0; }
+.bar { width: clamp(22px, 44%, 52px); border-radius: 4px 4px 0 0; background: var(--accent); position: relative; transition: height .35s ease, filter .1s ease, transform .1s ease; cursor: pointer; flex-shrink: 0; }
 .bar:hover { filter: brightness(1.12); transform: scaleX(1.08); }
+.bar.low-n { opacity: .45; }
 .bar .cap { position: absolute; top: -17px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 600; white-space: nowrap; color: var(--text-primary); }
-.barcol .xlab, .stackcol .xlab { font-size: 10.5px; color: var(--muted); margin-top: 6px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.stackcol .xlab { font-size: 10.5px; color: var(--muted); margin-top: 6px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+/* a long category name wraps to a second line instead of being cut off (the full name is also in the tooltip) */
+.barcol .xlab { font-size: 10.5px; line-height: 1.15; color: var(--muted); margin-top: 6px; flex-shrink: 0; max-width: 100%; text-align: center; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: break-word; }
 .barcol .xlab2 { font-size: 9.5px; color: var(--muted); margin-top: 2px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 .seg { cursor: pointer; transition: filter .1s ease; }
 .seg:hover { filter: brightness(1.12); }
 
-.stacked { display: flex; align-items: flex-end; justify-content: center; justify-content: safe center; gap: 18px; height: 150px; padding-top: 20px; position: relative; }
-.stacked .gridlines { position: absolute; inset: 18px 0 20px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
+.stacked { display: flex; align-items: flex-end; justify-content: center; justify-content: safe center; gap: 18px; height: 158px; overflow-y: hidden; padding-top: 20px; position: relative; }
+.stacked .gridlines { position: absolute; inset: 18px 0 28px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
 .stackcol { flex: 1; min-width: 40px; max-width: 90px; display: flex; flex-direction: column; align-items: center; height: 100%; position: relative; z-index: 1; }
 .stackplot { flex-shrink: 0; height: 92px; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
 .stackbar { width: 34px; display: flex; flex-direction: column-reverse; }
@@ -429,6 +432,9 @@ table.records-table thead th, table.rank-table thead th, table.lb-scroll thead t
 .heat .rowlabel { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; font-weight: 600; overflow-wrap: anywhere; }
 .heat .collabel { font-size: 10.5px; color: var(--muted); text-align: center; padding-bottom: 2px; }
 .heat .n { font-size: 9px; opacity: .85; display: block; margin-top: 1px; }
+.heat-legend { display: flex; align-items: center; justify-content: center; gap: 4px; flex-wrap: wrap; margin-top: 10px; font-size: 10.5px; color: var(--muted); }
+.heat-legend i { width: 22px; height: 9px; border-radius: 2px; display: inline-block; }
+.heat-legend-fade { margin-left: 12px; }
 
 /* ====================== 7. Page sections (only what a page needs beyond the above) == */
 
@@ -518,11 +524,25 @@ table.mini td a:hover { color: var(--accent-text); border-bottom-color: var(--ac
 .gamelog-head { display: flex; align-items: center; gap: 10px; padding: 10px 16px 4px; font-size: 12px; }
 .gamelog-body { padding-bottom: 6px; }
 table.game-log td, table.game-log th { white-space: nowrap; }
+.honor-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 6px 22px; }
+.honor-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--text-secondary); margin-bottom: 4px; }
+.honor-group .tw-list { margin-top: 0; }
+.honor-extra { display: none; }
+.honor-group.expanded .honor-extra { display: list-item; }
+.honor-toggle { font-family: inherit; font-size: 11.5px; font-weight: 700; color: var(--accent-text); background: none; border: none; padding: 2px 0 8px; cursor: pointer; }
+.rankstrip { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 28px; margin-bottom: 8px; }
+.rs-row { display: grid; grid-template-columns: minmax(110px, 190px) 1fr 44px; align-items: center; gap: 10px; font-size: 12px; }
+.rs-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-secondary); font-weight: 600; }
+.rs-track { height: 9px; border-radius: 5px; background: var(--grid); overflow: hidden; }
+.rs-track i { display: block; height: 100%; border-radius: 5px; }
+.rs-rank { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+@media (max-width: 900px) { .rankstrip { grid-template-columns: 1fr; } }
 .profile-head { display: flex; align-items: center; gap: 14px; }
 .profile-name { font-size: 18px; font-weight: 800; }
 .home-season { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; }
+.home-tiles .kpi .label { min-height: 2.8em; } /* a two-line label (Defense · yards allowed / play) must not push its value out of line with the others */
 .home-heading { font-size: 15px; font-weight: 800; margin: 22px 0 10px; }
-.explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
 .explore-card {
   display: flex; flex-direction: column; gap: 4px; padding: 13px 15px; border-radius: 10px; text-decoration: none;
   background: var(--page); border: 1px solid var(--border); color: var(--text-primary);
@@ -565,8 +585,8 @@ table.game-log td, table.game-log th { white-space: nowrap; }
   .shelf, .body, .footer-note { padding-left: 14px; padding-right: 14px; }
   .kpi .value { font-size: 20px; }
   .kpi.small .value { font-size: 16px; }
-  .kpirow { grid-template-columns: 1fr; }
-  .kpirow-5, .kpirow-6, .mini-kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .kpirow, .kpirow-5, .kpirow-6, .mini-kpi-row { grid-template-columns: repeat(2, 1fr); gap: 8px; } /* tiles stay two across: a single column of four tiles is most of a phone screen */
+  .pagehead p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } /* the one-line page description is boilerplate; keep the data near the top */
   table.mini { font-size: 11.5px; }
   table.mini th, table.mini td { padding: 6px; }
   .lbgrid, .comparegrid { grid-template-columns: 1fr; }
@@ -587,6 +607,7 @@ table.game-log td, table.game-log th { white-space: nowrap; }
 @page { size: letter; margin: 0.5in; }
 .print-head { display: none; }
 @media print {
+  .honor-extra { display: list-item !important; }
   :root:root:root {
     color-scheme: light;
     --surface-1: #fcfcfb; --page: #ffffff; --text-primary: #0b0b0b; --text-secondary: #52514e; --muted: #6b6a66;

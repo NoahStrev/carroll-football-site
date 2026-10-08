@@ -16,6 +16,9 @@
 
 /* ------------------------------------------------------------- bar chart ---- */
 
+/** A rate over fewer than this many snaps/plays is drawn faded (renderBar's `counts`, the heatmap's cells). */
+const SMALL_SAMPLE = 5;
+
 /** categories: [name...]; values: [number...]; labelFmt(v): string for the cap.
  * colorFn(name, value, i): css color string. tooltipFmt(cat, value, i): full custom
  * tooltip HTML, overrides the default entirely if given. xlab2(cat, i): a sample-size
@@ -45,7 +48,7 @@ function fitChartToCard(wrap, gridlines) {
  * Opponent Scouting's "by opponent" charts across 10-15 real opponents) --
  * each .barcol gets a fixed colWidth instead, and the chart scrolls
  * horizontally within its own card once the columns overflow it. */
-function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1), colorFn, tooltipFmt, xlab2, tooltipExtra, seriesName, compact = false, scroll = false, colWidth = 78 }) {
+function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1), colorFn, tooltipFmt, xlab2, tooltipExtra, seriesName, counts, minN = SMALL_SAMPLE, axisLabel = (c) => c, compact = false, scroll = false, colWidth = 78 }) {
   container.innerHTML = '';
   const wrap = el('div', 'barchart');
   if (compact) { wrap.style.height = '110px'; wrap.style.paddingTop = '14px'; }
@@ -63,6 +66,7 @@ function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1),
       `<div class="tt-row"><span>${labelFmt(v)}</span></div>`];
     if (xlab2) rows.push(`<div class="tt-row tt-muted">${xlab2(cat, i)}</div>`);
     if (tooltipExtra) rows.push(`<div class="tt-row tt-muted">${tooltipExtra(cat, i)}</div>`);
+    if (counts && counts[i] < minN) rows.push(`<div class="tt-row tt-muted">Small sample (${counts[i]}), read with care</div>`);
     return rows.join('');
   }
 
@@ -74,13 +78,14 @@ function renderBar(container, { categories, values, labelFmt = (v) => fmt(v, 1),
     const barH = v === null || Number.isNaN(v) ? 0 : Math.max(2, (v / max) * 100);
     const bar = el('div', 'bar');
     bar.style.height = `${barH}%`;
+    if (counts && counts[i] < minN) bar.classList.add('low-n'); // a rate over a handful of snaps shouldn't look as solid as one over hundreds
     if (colorFn) bar.style.background = colorFn(cat, v, i);
     if (v !== null && !Number.isNaN(v)) bar.appendChild(el('span', 'cap', labelFmt(v)));
     const tt = () => (tooltipFmt ? tooltipFmt(cat, v, i) : defaultTooltip(cat, v, i));
     attachTooltip(bar, tt);
     plot.appendChild(bar);
     col.appendChild(plot);
-    const xlabEl = el('div', 'xlab', cat);
+    const xlabEl = el('div', 'xlab', axisLabel(cat)); // axisLabel: a shorter name for the axis; the tooltip keeps the full one
     xlabEl.title = cat;
     col.appendChild(xlabEl);
     if (xlab2) {
@@ -172,6 +177,8 @@ function renderStacked(container, { categories, series, order, colors, legend = 
 
 /* ------------------------------------------------------------- scatter ------ */
 
+const MIN_SCATTER_POINTS = 4;
+
 /** points: [{x, y, group, label}]. colorMap: {group: cssColor}. */
 function renderScatter(container, { points, xLabel, yLabel, colorMap, xDomain, yDomain }) {
   container.innerHTML = '';
@@ -180,6 +187,10 @@ function renderScatter(container, { points, xLabel, yLabel, colorMap, xDomain, y
   const ys = points.map((p) => p.y).filter((v) => v !== null && v !== undefined);
   if (!xs.length || !ys.length) {
     container.appendChild(el('div', 'foot', 'No data in current filters.'));
+    return;
+  }
+  if (points.length < MIN_SCATTER_POINTS) { // two dots at the corners of an empty plot say nothing
+    container.appendChild(el('div', 'foot', `Only ${points.length} point${points.length === 1 ? '' : 's'} in this view have both values charted, too few to show a pattern.`));
     return;
   }
   const [xMin, xMax] = xDomain || [Math.min(...xs), Math.max(...xs)];
@@ -275,6 +286,7 @@ function renderHeatmap(container, { rowLabels, colLabels, cellFor, title = (r, c
         const step = Math.min(SEQ_STEPS.length - 1, Math.floor(cell.pct * SEQ_STEPS.length));
         div.style.background = cssVar(SEQ_STEPS[step]);
         div.style.color = step >= 4 ? '#fff' : cssVar('--text-primary');
+        if (cell.n < SMALL_SAMPLE) { div.style.opacity = '.5'; div.title = `Only ${cell.n} snap${cell.n === 1 ? '' : 's'}: read with care`; }
         div.innerHTML = `${pct(cell.pct, 0)}<span class="n">${cell.made}/${cell.n}</span>`;
         const html = `<div class="tt-title">${title(r, c)}</div><div class="tt-row"><span>${pct(cell.pct, 0)}</span><span>${cell.made}/${cell.n}</span></div>`;
         attachTooltip(div, html);
@@ -284,6 +296,10 @@ function renderHeatmap(container, { rowLabels, colLabels, cellFor, title = (r, c
     });
   });
   container.appendChild(grid);
+  // A colour key: the ramp from the lowest rate to the highest, and what a faded cell means.
+  const legend = el('div', 'heat-legend');
+  legend.innerHTML = `<span>Lower</span>${SEQ_STEPS.map((s) => `<i style="background:var(${s})"></i>`).join('')}<span>Higher</span><span class="heat-legend-fade">Faded = fewer than ${SMALL_SAMPLE} plays</span>`;
+  container.appendChild(legend);
   enableChartKeys(container);
 }
 
@@ -422,9 +438,14 @@ function renderGroupedBar(container, { categories, valuesA, valuesB, colorA, col
  * immediately-prior game, not a season average). `container` becomes the whole card. */
 function renderTrendCard(container, rows, field, unit, title) {
   const { values, labels, seasons, opponents } = gameTrend(rows, field);
-  const lastVal = values.length ? values[values.length - 1] : null;
-  const prevVal = values.length > 1 ? values[values.length - 2] : null;
+  const known = values.filter((v) => v !== null && v !== undefined && !Number.isNaN(v)); // a game with nothing charted for this field is not "the last game"
+  const lastVal = known.length ? known[known.length - 1] : null;
+  const prevVal = known.length > 1 ? known[known.length - 2] : null;
   const delta = lastVal !== null && prevVal !== null ? lastVal - prevVal : null;
+  if (known.length < 2) {
+    container.innerHTML = `<div class="card-head"><h2>${title}</h2></div><div class="card-body"><div class="data-note">${known.length ? 'Only one game in this view has a value' : 'No game in this view has a value'} for this, and a trend needs at least two.</div></div>`;
+    return;
+  }
   container.innerHTML = `
     <div class="card-head"><h2>${title}</h2></div>
     <div class="card-body trend-body">

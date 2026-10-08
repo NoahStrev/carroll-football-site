@@ -217,9 +217,8 @@ def outcome_flags(outcome):
     }
 
 
-def main():
-    wb = openpyxl.load_workbook(SRC, data_only=True, read_only=True)
-
+def load_source(wb):
+    """The game list and the official play-by-play rows, with opponent names canonical."""
     gml = sheet_rows(wb["GameMatchLog"])
     carroll_game_labels = {r["GAME_LABEL"] for r in gml if r["HAS_OFFICIAL_PBP"]}
 
@@ -234,7 +233,11 @@ def main():
         for gl, opp in opponent_by_game.items()
     ]
     games.sort(key=lambda g: (g["season"], g["date"] or ""))
+    return carroll_game_labels, opbp_all, opponent_by_game, date_by_game, games
 
+
+def build_charted_plays(wb, carroll_game_labels, opponent_by_game, date_by_game):
+    """The hand-charted Plays sheet, split into offense and defense rows."""
     # ---------------------------------------------------------- Plays sheet --
     # Real, confirmed gap (2026-09-24, site-wide data quality audit): some
     # raw Hudl exports have trailing rows at the very end of the sheet with
@@ -294,7 +297,11 @@ def main():
                 "front_d": r["FRONT (D)"], "tag_d": r["TAG (D)"], "movement": r["MOVEMENT"],
                 "blitz_d": r["BLITZ (D)"], "num_d": r["#(D)"],
             })
+    return offense_plays, defense_plays
 
+
+def resolve_drive_sides(opbp_all, carroll_game_labels):
+    """Which side each drive belongs to, for rows whose own possession label cannot say."""
     # Real bug found 2026-08-05 (thorough data-quality audit): the source
     # scrape's own POSSESSION_TEAM sometimes reads a period-boundary label
     # ("Start of Quarter #2" / "Start of Quarter #4") instead of a real team
@@ -327,7 +334,11 @@ def main():
             drive_sides[key] = s
     for key in ambiguous_drives:
         del drive_sides[key]
+    return drive_sides
 
+
+def build_official(opbp_all, carroll_game_labels, drive_sides):
+    """OfficialPlayByPlay snaps for each side, plus the drive summaries."""
     # ------------------------------------------------- OfficialPlayByPlay ----
     offense_official, defense_official = [], []
     drives_by_key = {}  # (game_label, drive_num) -> {side, season, opponent, ...}
@@ -382,7 +393,11 @@ def main():
         (offense_official if side == "offense" else defense_official).append(row)
         if is_defensive_touchdown(r["PLAY_OUTCOME"]) and r["DRIVE_NUM"] is not None:
             defensive_td_drives.add((r["GAME_LABEL"], r["DRIVE_NUM"]))
+    return offense_official, defense_official, drives_by_key, defensive_td_drives
 
+
+def apply_corrections(offense_official, defense_official, drives_by_key, defensive_td_drives):
+    """Fix drive results and turnover flags the source gets wrong (in place)."""
     # The source writes such a drive's result as "Touchdown" even though the drive ended in a turnover (the score
     # went to the other side). Left alone, it counted a touchdown drive for the team that gave the ball away
     # (14 drives across 54 games), inflating drive results and points per drive.
@@ -401,6 +416,15 @@ def main():
     for key, result in MANUAL_DRIVE_RESULT_OVERRIDES.items():
         if key in drives_by_key:
             drives_by_key[key]["result"] = result
+
+
+def main():
+    wb = openpyxl.load_workbook(SRC, data_only=True, read_only=True)
+    carroll_game_labels, opbp_all, opponent_by_game, date_by_game, games = load_source(wb)
+    offense_plays, defense_plays = build_charted_plays(wb, carroll_game_labels, opponent_by_game, date_by_game)
+    drive_sides = resolve_drive_sides(opbp_all, carroll_game_labels)
+    offense_official, defense_official, drives_by_key, defensive_td_drives = build_official(opbp_all, carroll_game_labels, drive_sides)
+    apply_corrections(offense_official, defense_official, drives_by_key, defensive_td_drives)
 
     offense_drives = [{"drive_num": k[1], "game_label": k[0], **v} for k, v in drives_by_key.items() if v["side"] == "offense"]
     defense_drives = [{"drive_num": k[1], "game_label": k[0], **v} for k, v in drives_by_key.items() if v["side"] == "defense"]

@@ -38,8 +38,9 @@ js/lib/charts.js      chart renderers (bar, stacked, scatter, heatmap, sparkline
 js/lib/filters.js     checkbox filter panel, searchable combobox
 js/shell.js           Site.mount (nav, page header, tabs with hash routing, data loading),
                       Site.view (declarative filters + KPIs + cards), Site.pills, Site.tableHTML
-js/views/*.js         one file per page's content (game.js is shared by Offense and Defense;
-                      st-units.js + st-athletes.js + special-teams.js make up Special Teams; scouting.js mounts
+js/views/*.js         one file per page's content (game.js is shared by Offense and Defense, with position-groups.js
+                      as its last tab; st-units.js + st-roles.js + st-athletes.js + special-teams.js make up Special
+                      Teams; players.js holds the stats tabs and records-tabs.js the record book; scouting.js mounts
                       Opponent Scouting from next-opponent.js, game-intel.js (matchups + "what to expect"), game-plan.js,
                       game-review.js; tells.js and fourth-down.js are tabs on Offense and Defense)
 dashboards/*.html     thin pages: a <head>, the script tags (js/lib/*, shell.js, one view), nothing else
@@ -92,7 +93,7 @@ Upstream projects (sibling folders) → `scripts/build_*.py` → `data/*.json` �
 | `validate_data.py` | — | Sanity-checks every JSON above (duplicate or vanished games, scores vs records, unknown opponent spellings, missing plays); exits non-zero on an ERROR |
 | `build_home_data.py` | `home.json`, `meta.json` | `game-data.json`, `special-teams.json`, `rankings.json`, `lifting.json`, box-score results back to 2010, `Schedule/schedule.json` |
 
-`python scripts/refresh_all.py` runs all eight in dependency order, then `validate_data.py` (a failed check makes the refresh exit non-zero) and prints a pass/fail
+`python scripts/refresh_all.py` runs all eight in dependency order, then `stamp_assets.py` and `validate_data.py` (a failed check makes the refresh exit non-zero) and prints a pass/fail
 summary. It only covers this site's own rebuild — each upstream project has its own scrape/build step that runs first.
 New game data is added on request, not on a schedule.
 
@@ -156,11 +157,11 @@ http — `fetch()` of local JSON doesn't work from `file://`.
 at that width, opens every tab and sub-view pill, and fails a view for script errors, a near-empty view, stray
 `undefined`/`NaN` text, sideways page overflow, or content clipped inside a card. Run it after any change to the shell,
 the shared library, or the CSS. (Opponent front/coverage views are *expected* to show their "not charted" explanation for
-2026 — that passes; it is a data gap, not a bug.) It also tries a few choices in each tab's first dropdown (other opponents, other games), and finishes with a shareable-link check (a changed filter or dropdown lands in the address, and opening that address restores it).
+2026 — that passes; it is a data gap, not a bug.) It also checks for a duplicated id and for any button, link, or form control without an accessible name, tries a few choices in each tab's first dropdown (other opponents, other games), and finishes with a shareable-link check (a changed filter or dropdown lands in the address, and opening that address restores it).
 
 `python tests/run_smoke.py` runs the same check headless (needs `pip install playwright`; set `SMOKE_BROWSER_CHANNEL=msedge` to use an installed
 browser instead of `playwright install chromium`). `.github/workflows/smoke.yml` runs it on every push to `master` and on pull requests;
-GitHub Pages publishes regardless, so a red check means fix soon, not blocked.
+The workflow also runs `scripts/validate_data.py` on the committed data first (its box-score reconciliation needs the sibling projects, so it skips that part with a warning). GitHub Pages publishes regardless, so a red check means fix soon, not blocked.
 
 ## Conventions worth knowing
 
@@ -171,6 +172,10 @@ GitHub Pages publishes regardless, so a red check means fix soon, not blocked.
 - **Don't duplicate helpers.** If two views need the same thing it belongs in `js/lib/` (data/formatting/charts), `js/shell.js`
   (page structure), or `theme.css` (look). Card factories (`countCard`, `rateCard`, `detailTable` in `views/game.js`;
   `athleteTable`, `quarterBars`, ... in `views/st-athletes.js`) are the pattern for chart families.
+- **Asset versions.** Every `<script src>` and stylesheet address in the pages ends in `?v=<hash of that file>` (`scripts/stamp_assets.py`), so a browser
+  never pairs a new page with an old cached script. `refresh_all.py` runs it; after editing any file in `js/` or `css/` run `python scripts/stamp_assets.py`
+  yourself (the GitHub Action fails with `--check` if you forget).
+- **Small samples look small.** A rate over fewer than 5 snaps is drawn faded (`renderBar`'s `counts`, the heatmap's cells; `SMALL_SAMPLE` in `js/lib/charts.js`) and its tooltip says so; `axisLabel` gives a long category a shorter axis name while the tooltip keeps the full one.
 - **Empty views explain themselves.** When a chart has nothing to show, say why (e.g. opponent front/coverage were only
   charted 2021–2024) instead of drawing blank axes.
 - **Verify before shipping.** Load each changed page at desktop, tablet (~820px) and phone (~390px) widths, in light and dark,

@@ -54,6 +54,24 @@
     return seasonRows.filter((r) => r.week === w);
   }
 
+  // The national table as bars: every category's rank on one scale, best first, so strengths and weaknesses show
+  // without reading numbers. The NCAA tables carry no team count, so the scale assumes about 250 Division III
+  // teams (or the worst rank published, if that is larger).
+  const D3_TEAMS = 250;
+  function rankStrip(rows) {
+    const worst = Math.max(D3_TEAMS, ...rows.map((r) => r.rank));
+    const body = rows.slice().sort((a, b) => a.rank - b.rank).map((r) => {
+      const share = 1 - (r.rank - 1) / (worst - 1);
+      const tone = r.rank <= worst / 4 ? '--good' : r.rank > worst * 0.75 ? '--critical' : '--cat-1';
+      return `<div class="rs-row" role="img" aria-label="${Site.esc(r.category)}, national rank ${r.rank}">
+        <span class="rs-label">${Site.esc(r.category)}</span>
+        <span class="rs-track"><i style="width:${(share * 100).toFixed(1)}%; background:var(${tone})"></i></span>
+        <span class="rs-rank">#${r.rank}</span></div>`;
+    }).join('');
+    return `<div class="rankstrip">${body}</div>
+      <div class="data-note">Bar length shows how far up the national list: #1 fills the bar, #${worst} is empty (the scale assumes about ${D3_TEAMS} Division III teams). Green is the top quarter, red the bottom quarter.</div>`;
+  }
+
   function printCard(cardEl, filenameTitle) {
     document.querySelectorAll('.print-target').forEach((el) => el.classList.remove('print-target'));
     cardEl.classList.add('print-target');
@@ -81,6 +99,10 @@
       <section class="panel">
         <div class="body">
           ${phase.id === 'overall' ? '<div class="insight" style="margin-bottom:14px;">CCIW-scope has no Additional Metrics category (Turnover Margin, Winning %, Penalties) — cciw.org doesn\'t publish these as their own ranked category the way NCAA.com does. Only National Rankings apply to this tab.</div>' : ''}
+          <div class="card" id="rk-glance-card" style="margin-bottom:16px;" hidden>
+            <div class="card-head"><h2>National rank at a glance <span class="print-only" id="rk-glance-printlabel"></span></h2><span class="data-note">longer bar = better rank</span></div>
+            <div class="card-body" id="rk-glance"></div>
+          </div>
           <div class="cards">
             ${SCOPES.map((s) => `
               <div class="card table-card" id="rk-${s.id}-card">
@@ -115,9 +137,20 @@
       SCOPES.forEach((scope) => {
         const own = weeksFor(scope, sel.season);
         const week = own.some((w) => w.week === sel.week) ? sel.week : null;
-        const rows = prepareRows(rowsFor(scope), sel.season, week);
-        root.querySelector(`#rk-${scope.id}-table`).innerHTML = rankTable(scope, rows, !!sel.season);
+        const all = prepareRows(rowsFor(scope), sel.season, week);
+        // "G" (games played) is published as a ranked column, but every team has played the same number of games,
+        // so it is a wall of ties at #1 that buries the real categories. Left out of the one-season, ranked view.
+        const games = sel.season ? all.filter((r) => r[scope.statField] === 'G') : [];
+        const rows = games.length ? all.filter((r) => r[scope.statField] !== 'G') : all;
+        root.querySelector(`#rk-${scope.id}-table`).innerHTML = rankTable(scope, rows, !!sel.season)
+          + (games.length ? `<div class="data-note" style="padding:8px 12px;">${games.length} games-played (G) rows are hidden: every team has played the same number of games.</div>` : '');
         root.querySelector(`#rk-${scope.id}-summary`).textContent = `${rows.length} rows`;
+        if (scope.id === 'national') {
+          const card = root.querySelector('#rk-glance-card'), strip = rows.filter((r) => r.rank !== null && r.rank !== undefined);
+          card.hidden = !(sel.season && strip.length);
+          if (!card.hidden) root.querySelector('#rk-glance').innerHTML = rankStrip(strip);
+          root.querySelector('#rk-glance-printlabel').textContent = sel.season ? `— ${sel.season}` : '';
+        }
         const shownWeek = week !== null ? week : (own.length ? own[own.length - 1].week : null);
         root.querySelector(`#rk-${scope.id}-printlabel`).textContent = sel.season
           ? `— ${sel.season}${shownWeek !== null ? ` · Wk${shownWeek}` : ''}`

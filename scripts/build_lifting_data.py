@@ -86,16 +86,17 @@ def class_name(years_with_program):
     return CLASS_NAMES.get(yrs, f"{yrs}th Year" if yrs >= 5 else None)
 
 
-def main():
+def load_rows():
+    """Every row of the consolidated lifting workbook's Data sheet, as dicts."""
     wb = openpyxl.load_workbook(SRC)
     ws = wb["Data"]
     headers = [c.value for c in ws[1]]
     rows = [dict(zip(headers, r)) for r in ws.iter_rows(min_row=2, values_only=True)]
+    return rows
 
-    sessions = sorted({(r["football_year"], r["testing_period"]) for r in rows if r["testing_period"]},
-                       key=lambda s: session_key(*s))
-    last_session = sessions[-1] if sessions else None
 
+def build_meta(rows):
+    """Name, position and class for each (athlete, football year)."""
     # best value per (athlete_key, football_year, testing_period, metric) --
     # Combined Total is already one row; Bench/Squat/Clean take the max of
     # whatever attempts exist that session (same "best" logic the Lifting Data
@@ -118,7 +119,11 @@ def main():
                 "position": r["position"], "years_with_program": r["years_with_program"],
                 "class": class_name(r["years_with_program"]),
             }
+    return meta
 
+
+def build_leaderboard(rows, meta, last_session):
+    """One row per (athlete, session, metric): the best value of that session."""
     best = {}
     for r in rows:
         metric = r["metric"]
@@ -143,7 +148,11 @@ def main():
             "session_label": session_label(fy, period), "is_last_session": (fy, period) == last_session,
             "metric": metric, "value": round(value, 1),
         })
+    return leaderboard_rows
 
+
+def build_athlete_series(rows, meta):
+    """Each athlete's points over time (Height, Weight and every leaderboard metric), oldest session first."""
     # per-athlete time series (Height/Weight + best value per session for every
     # leaderboard metric), sorted chronologically, for the Class Comparison tab's
     # line charts.
@@ -211,6 +220,17 @@ def main():
         })
     for a in athletes.values():
         a["points"].sort(key=lambda p: session_key(p["football_year"], p["testing_period"] if p["testing_period"] != "—" else "December"))
+    return athletes
+
+
+def main():
+    rows = load_rows()
+    sessions = sorted({(r["football_year"], r["testing_period"]) for r in rows if r["testing_period"]},
+                       key=lambda s: session_key(*s))
+    last_session = sessions[-1] if sessions else None
+    meta = build_meta(rows)
+    leaderboard_rows = build_leaderboard(rows, meta, last_session)
+    athletes = build_athlete_series(rows, meta)
 
     payload = {
         "generated_from": SRC.name,

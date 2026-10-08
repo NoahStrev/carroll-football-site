@@ -18,6 +18,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      # The committed data files have to pass the same checks the weekly refresh runs (the box-score
+      # reconciliation needs the sibling projects, so it is skipped here with a warning).
+      - run: python scripts/validate_data.py
+      # every script and stylesheet address in the pages must carry the hash of its current content
+      - run: python scripts/stamp_assets.py --check
       - run: pip install playwright
       - run: playwright install --with-deps chromium
       - run: python tests/run_smoke.py
