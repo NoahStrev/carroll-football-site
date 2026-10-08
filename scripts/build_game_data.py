@@ -212,7 +212,9 @@ def outcome_flags(outcome):
     tags = set((outcome or "").split(", ")) if outcome else set()
     return {
         "is_touchdown": "Touchdown" in tags and not is_defensive_touchdown(outcome),
-        "is_penalty": "Penalty" in tags,
+        # An ACCEPTED penalty. A "Penalty Declined" tag means the play stood, so it is a normal snap (37 rows carry it;
+        # counting them as penalties dropped real 4th-down tries and 20-yard gains from the views that skip penalties).
+        "is_penalty": "Penalty" in tags and "Penalty Declined" not in tags,
         "is_first_down": "First Down" in tags,
     }
 

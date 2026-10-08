@@ -297,8 +297,9 @@ html, body {
 
 /* ======================================= 5. Components: KPIs, cards, tables, notes == */
 
-.kpirow, .kpirow-5, .kpirow-6 { display: grid; gap: 12px; margin-bottom: 16px; }
+.kpirow, .kpirow-3, .kpirow-5, .kpirow-6 { display: grid; gap: 12px; margin-bottom: 16px; }
 .kpirow { grid-template-columns: repeat(4, 1fr); }
+.kpirow-3 { grid-template-columns: repeat(3, 1fr); }
 .kpirow-5 { grid-template-columns: repeat(5, 1fr); }
 .kpirow-6 { grid-template-columns: repeat(6, 1fr); }
 .kpi {
@@ -390,7 +391,7 @@ table.records-table thead th, table.rank-table thead th, table.lb-scroll thead t
 /* .barplot/.stackplot are fixed-height plot areas isolated from the label rows (flex-shrink:0 on
    every sibling), so a bar's height:X% always resolves against the same height regardless of how
    many lines a category label wraps to. Labels are forced to one line (ellipsis) for the same reason. */
-.barchart { display: flex; align-items: flex-end; gap: 12px; height: 164px; padding-top: 20px; position: relative; }
+.barchart { display: flex; align-items: flex-end; gap: 12px; height: 164px; padding: 20px 8px 0; position: relative; }
 .barchart .gridlines { position: absolute; inset: 20px 0 48px 0; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
 .barchart .gridlines div, .stacked .gridlines div { border-top: 1px solid var(--grid); height: 0; }
 .barchart, .stacked { overflow-x: auto; scrollbar-width: thin; } /* see fitChartToCard() in charts.js */
@@ -399,6 +400,7 @@ table.records-table thead th, table.rank-table thead th, table.lb-scroll thead t
 .bar { width: clamp(22px, 44%, 52px); border-radius: 4px 4px 0 0; background: var(--accent); position: relative; transition: height .35s ease, filter .1s ease, transform .1s ease; cursor: pointer; flex-shrink: 0; }
 .bar:hover { filter: brightness(1.12); transform: scaleX(1.08); }
 .bar.low-n { opacity: .45; }
+.barplot.grouped .bar { width: clamp(12px, 40%, 36px); } /* two bars share a column */
 .bar .cap { position: absolute; top: -17px; left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 600; white-space: nowrap; color: var(--text-primary); }
 .stackcol .xlab { font-size: 10.5px; color: var(--muted); margin-top: 6px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 /* a long category name wraps to a second line instead of being cut off (the full name is also in the tooltip) */
@@ -585,7 +587,7 @@ table.game-log td, table.game-log th { white-space: nowrap; }
   .shelf, .body, .footer-note { padding-left: 14px; padding-right: 14px; }
   .kpi .value { font-size: 20px; }
   .kpi.small .value { font-size: 16px; }
-  .kpirow, .kpirow-5, .kpirow-6, .mini-kpi-row { grid-template-columns: repeat(2, 1fr); gap: 8px; } /* tiles stay two across: a single column of four tiles is most of a phone screen */
+  .kpirow, .kpirow-3, .kpirow-5, .kpirow-6, .mini-kpi-row { grid-template-columns: repeat(2, 1fr); gap: 8px; } /* tiles stay two across: a single column of four tiles is most of a phone screen */
   .pagehead p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } /* the one-line page description is boilerplate; keep the data near the top */
   table.mini { font-size: 11.5px; }
   table.mini th, table.mini td { padding: 6px; }
@@ -608,6 +610,7 @@ table.game-log td, table.game-log th { white-space: nowrap; }
 .print-head { display: none; }
 @media print {
   .honor-extra { display: list-item !important; }
+  .combo-slot, .gamelog-head select { display: none !important; } /* the player picker and the season dropdown do not print (the name is in the profile, the season in the log's heading) */
   :root:root:root {
     color-scheme: light;
     --surface-1: #fcfcfb; --page: #ffffff; --text-primary: #0b0b0b; --text-secondary: #52514e; --muted: #6b6a66;
@@ -636,7 +639,7 @@ table.game-log td, table.game-log th { white-space: nowrap; }
   .cards > .cards-heading { break-after: avoid; }
   .cards > .card > .card-body { min-height: 0 !important; }
   /* the printable width (7.5in) trips the phone breakpoints; a page is not a phone, so keep the desktop grids */
-  .kpirow, .kpirow-5, .kpirow-6 { break-inside: avoid; gap: 6px; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)) !important; }
+  .kpirow, .kpirow-3, .kpirow-5, .kpirow-6 { break-inside: avoid; gap: 6px; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)) !important; }
   .matchup-grid { grid-template-columns: 1fr 1fr !important; }
   .rank-scroll, .tbl-scroll { max-height: none !important; overflow: visible !important; }
   .barchart, .stacked, .heat-scroll, .card-body:has(> table.mini) { overflow: visible !important; }

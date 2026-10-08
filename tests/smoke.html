@@ -85,6 +85,27 @@ function inspect(page, win, errors, width) {
   return problems;
 }
 
+// A player profile with game logs: the default profile is a kicker (no game log), so open one who has them, flip through
+// each season in the log's picker, and open a "show all" button if the honors have one.
+async function checkPlayerProfile(win, errors, width) {
+  const name = win.eval(`(Site.data.career.players.find((p) => Object.values(p.categories).some((c) => c.seasons.some((s) => s.log && s.log.length > 3))) || {}).display_name`);
+  if (!name) { record('players', 'Career Stats › game log', ['no player with a game log found']); return; }
+  win.location.hash = `career/${encodeURIComponent(name)}`;
+  await settle(win);
+  record('players', `Career Stats › ${name} (game log)`, [...inspect('players', win, errors, width), ...(win.document.querySelector('.gamelog-body tbody tr') ? [] : ['no game-log rows'])]);
+  const sel = win.document.querySelector('.gl-season');
+  if (sel) {
+    for (let i = 1; i < sel.options.length; i++) {
+      sel.selectedIndex = i;
+      sel.dispatchEvent(new win.Event('change', { bubbles: true }));
+      await sleep(80);
+      record('players', `Career Stats › ${name} › game log ${sel.options[i].text}`, [...inspect('players', win, errors, width), ...(win.document.querySelector('.gamelog-body tbody tr') ? [] : ['no game-log rows'])]);
+    }
+  }
+  const more = win.document.querySelector('.honor-toggle');
+  if (more) { more.click(); await sleep(50); record('players', `Career Stats › ${name} › show all honors`, inspect('players', win, errors, width)); }
+}
+
 async function checkPage(page, width) {
   const frame = document.createElement('iframe');
   frame.style.cssText = `width:${width}px;height:900px;border:0;position:absolute;left:-99999px;top:0`;
@@ -100,7 +121,11 @@ async function checkPage(page, width) {
   const tabs = [...win.document.querySelectorAll('#site-tabs .tabbtn')].map((b) => ({ id: b.dataset.tab, label: b.textContent.trim() }));
   const list = tabs.length ? tabs : [{ id: null, label: '(single view)' }];
   for (const tab of list) {
-    if (tab.id) { win.location.hash = tab.id; await settle(win); }
+    if (tab.id) { // click the tab like a visitor would (this runs the tab bar's own handler, then the hash change)
+      const btn = win.document.getElementById(`tab-${tab.id}`);
+      if (btn) btn.click(); else win.location.hash = tab.id;
+      await settle(win);
+    }
     record(page, tab.label, inspect(page, win, errors, width));
     // Also try a few other choices in the shelf's first dropdown (an opponent, a game, ...): the second and
     // the middle and last options, which is where an edge case (no data, a non-conference team) tends to be.
@@ -128,6 +153,7 @@ async function checkPage(page, width) {
       }
     }
   }
+  if (page === 'players') await checkPlayerProfile(win, errors, width);
   frame.src = 'about:blank'; // let the page's data (several MB of JSON) be collected before the next one loads
   frame.remove();
 }

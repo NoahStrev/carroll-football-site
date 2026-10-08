@@ -28,7 +28,9 @@
     Site.view(root, {
       filters: { defs: [SEASON_LATEST, { field: S.filterField, label: S.filterLabel }], values: D.filters[R.unit] },
       source: `${R.label} scorecard`,
-      prepare(st) { return { rows: applyFilters(D.units[R.unit], st) }; },
+      // seasonRows: the same rows across every season, for the "by season" charts (the Season filter opens on the latest
+      // year, which would leave each of them with one lonely bar).
+      prepare(st) { return { rows: applyFilters(D.units[R.unit], st), seasonRows: applyFilters(D.units[R.unit], { ...st, season: new Set(D.filters[R.unit].season) }) }; },
       summary: ({ rows }) => R.summary(rows.length),
       kpis: S.kpis.map((k) => ({ ...k, value: ({ rows }) => k.value(rows) })),
       cards: S.cards(R),
@@ -123,7 +125,8 @@
       source: `${R.label} deep dive`,
       prepare(st) {
         const rows = credit(R, applyFilters(D.units[R.unit], st));
-        return { rows, ...built.prepare(rows, st) };
+        const seasonRows = credit(R, applyFilters(D.units[R.unit], { ...st, season: new Set(D.filters[R.unit].season) }));
+        return { rows, seasonRows, ...built.prepare(rows, st) };
       },
       summary: ({ rows }) => (R.credited ? R.creditedSummary : R.summary)(rows.length),
       kpis: Dp.kpis,

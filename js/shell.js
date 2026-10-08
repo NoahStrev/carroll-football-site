@@ -195,6 +195,13 @@ const Site = (() => {
       stage.appendChild(root);
       try {
         tab.render(root, { sub: sub || null });
+        // Tabs built by hand rather than with Site.view (player profiles, rankings, the record book) have no printout
+        // header of their own: give them the same one, saying which page and tab this is and the date.
+        if (!root.querySelector('.print-head')) {
+          const asof = document.getElementById('site-asof');
+          const meta = [asof && !asof.hidden ? asof.firstElementChild.textContent : '', `Printed ${dayLabel(today(), { month: 'long', day: 'numeric', year: 'numeric' })}`].filter(Boolean).map(esc).join(' · ');
+          root.insertAdjacentHTML('afterbegin', `<div class="print-head"><div class="ph-title">Carroll Football — ${esc(cfg.title)}${cfg.tabs.length > 1 ? ` · ${esc(tab.label)}` : ''}</div><div class="ph-meta">${meta}</div></div>`);
+        }
       } catch (err) {
         // One broken view must not leave a blank page with the only clue in the console.
         console.error(err);
@@ -288,7 +295,7 @@ const Site = (() => {
    */
   function view(root, spec) {
     const uid = `v${++viewSeq}`;
-    const kpiCls = { 4: 'kpirow', 5: 'kpirow-5', 6: 'kpirow-6' };
+    const kpiCls = { 3: 'kpirow-3', 4: 'kpirow', 5: 'kpirow-5', 6: 'kpirow-6' };
     const kpis = spec.kpis || [];
     const cards = spec.cards || [];
     const selects = spec.selects || [];

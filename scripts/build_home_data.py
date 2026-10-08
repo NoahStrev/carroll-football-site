@@ -188,7 +188,7 @@ def write_meta(game_data, st, latest, names):
     season = max(weeks, key=int)
     wk = weeks[season][-1]
     lift = json.loads((DATA / "lifting.json").read_text(encoding="utf-8"))["last_session"]["label"]
-    box_through = f"{latest['opponent']}, {fmt_day(latest['date'])}" if latest else "(no 2026 games yet)"
+    box_through = f"{latest['opponent']}, {fmt_day(latest['date'])}" if latest else "(no games yet this season)"
     charted = {"through": pbp["date"], "text": f"Charted through {pbp['opponent']}, {fmt_day(pbp['date'])}"}
     meta = {
         "pages": {
@@ -212,8 +212,11 @@ def main():
     game_data = json.loads((DATA / "game-data.json").read_text(encoding="utf-8"))
     st = json.loads((DATA / "special-teams.json").read_text(encoding="utf-8"))
 
-    season = max(g["season"] for g in game_data["games"])
     box = sorted((g for g in map(parse_game_info, glob.glob(RAW_GLOB)) if g), key=lambda g: g["date"])
+    # The current season is the latest box score's, charted or not: a new season's opener has its box score days
+    # before the Hudl charting arrives, and Home must show that game (and the "data through" labels must count it)
+    # rather than keep presenting the finished season as current.
+    season = max(g["season"] for g in box)
     names = display_names(box, {g["opponent"] for g in game_data["games"]})
     for g in box:
         g["opponent"] = names[team_key(g["opponent"])]
@@ -282,8 +285,8 @@ def main():
             "prior_stats": ({**pooled(lambda x: first_season <= x < s), "pts_for_pg": per_game(before, "carroll_pts"), "pts_against_pg": per_game(before, "opp_pts")} if before else None),
         }
 
-    charted_seasons = sorted({g["season"] for g in game_data["games"]}, reverse=True)
-    seasons = {str(s): season_block(s) for s in charted_seasons}
+    shown_seasons = sorted({g["season"] for g in game_data["games"]} | {season}, reverse=True)
+    seasons = {str(s): season_block(s) for s in shown_seasons}
     latest = next((g for g in reversed(box) if g["season"] == season), None)
     out = {
         "generated_from": "game-data.json, special-teams.json, Special Teams Data box scores",

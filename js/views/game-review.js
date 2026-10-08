@@ -131,7 +131,7 @@ const GameReview = (function () {
           render(el, { game, off, def, otherOff, otherDef }) {
             if (!gated(el, game)) return;
             const runPct = (rows, d) => playMetrics(rows.filter((r) => r.down === d)).runPct;
-            const cell = (rows, other, d) => { const a = runPct(rows, d), b = runPct(other, d); return `${a === null ? '—' : p0(a)} <span class="muted">(usual ${b === null ? '—' : p0(b)})</span>`; };
+            const cell = (rows, other, d) => { const a = runPct(rows, d), b = runPct(other, d), n = runPassRows(rows.filter((r) => r.down === d)).length; return `${a === null ? '—' : p0(a)} <span class="muted">${n} snap${n === 1 ? '' : 's'} · usual ${b === null ? '—' : p0(b)}</span>`; };
             const rows = DOWNS.map((d) => [`${ordinalDown(d)} down`, cell(off, otherOff, d), cell(def, otherDef, d)]);
             el.innerHTML = Site.tableHTML({ head: ['', 'Carroll run %', 'Opponent run %'], rows })
               + '<div class="data-note">Run share of run, pass, and sack snaps (sacks count as passes).</div>';

@@ -112,7 +112,7 @@ Data files are fetched with `cache: 'no-cache'`, so a pushed update shows on the
 
 The PDF buttons (and the browser's Print) produce a clean letter-size page: always the light theme, no site chrome or controls, a header line saying
 which page/tab/game/opponent it is plus how current the data is, cards in two columns that don't split across pages, and compact tables. `Site.view`
-fills that header (`.print-head`); a card that is only links can opt out with `noPrint: true`.
+fills that header (`.print-head`) and `Site.mount` adds the same header to any tab built by hand (player profiles, rankings), so no printout is missing its page title and date; a card that is only links can opt out with `noPrint: true`.
 
 ## Data gotchas
 
@@ -126,6 +126,10 @@ that buckets those rows by score ("Leading by 9+") as the opponent's own offense
 scores themselves, not our parsing: the parsed yards equal the play text in every play, and for 2023-10-07 vs North Central the same page
 reports 670 yards (drive chart), 695 (team stats) and 725 (play-by-play text). Treating accepted offensive penalties as nullified plays was
 tried and made the match worse, so it is not done. `validate_data.py` re-checks every season on every refresh (the reviewed 2024-10-12 gap is listed in `KNOWN_BOX_GAPS`).
+
+Fourth downs: the play-by-play's tries and conversions match the box score's "4th Down Conversions" line exactly for Carroll in all 55 games and for opponents in 52 (the other three are one try off:
+an uncharted snap, or a penalty first down the box counts as a conversion; `KNOWN_FOURTH_GAPS` in validate_data.py). A snap that carries a *declined* penalty is a normal snap, so
+`is_penalty` means an accepted penalty only.
 
 Turnovers: the play-by-play holds offensive and defensive snaps only, so a fumble lost on a punt or kickoff return is in the box score's turnover
 count but not in ours (a handful of games differ this way, always by one or two). Four rows the source mislabelled — a fumble Carroll recovered itself
@@ -158,6 +162,8 @@ at that width, opens every tab and sub-view pill, and fails a view for script er
 `undefined`/`NaN` text, sideways page overflow, or content clipped inside a card. Run it after any change to the shell,
 the shared library, or the CSS. (Opponent front/coverage views are *expected* to show their "not charted" explanation for
 2026 — that passes; it is a data gap, not a bug.) It also checks for a duplicated id and for any button, link, or form control without an accessible name, tries a few choices in each tab's first dropdown (other opponents, other games), and finishes with a shareable-link check (a changed filter or dropdown lands in the address, and opening that address restores it).
+
+`python tests/simulate_new_season.py` rehearses the day a new season's opener is in the box-score archive but not yet charted (a copy of the site with a synthetic next-year opener and schedule, then the smoke test on it). It needs the sibling projects and `pip install openpyxl playwright`, so it is a by-hand check. It exists because the "current season" used to come from the play-by-play, which would have left Home and Players on the old season (warning "not loaded yet") until the first game was charted; it now comes from the box scores, and Home says "not charted yet" for a season with no play-by-play.
 
 `python tests/run_smoke.py` runs the same check headless (needs `pip install playwright`; set `SMOKE_BROWSER_CHANNEL=msedge` to use an installed
 browser instead of `playwright install chromium`). `.github/workflows/smoke.yml` runs it on every push to `master` and on pull requests;

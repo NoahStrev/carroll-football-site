@@ -411,7 +411,7 @@ function renderGroupedBar(container, { categories, valuesA, valuesB, colorA, col
 
   categories.forEach((cat, i) => {
     const col = el('div', 'barcol');
-    const plot = el('div', 'barplot');
+    const plot = el('div', 'barplot grouped');
     plot.style.gap = '6px';
     [[valuesA[i], colorA, nameA, countsA], [valuesB[i], colorB, nameB, countsB]].forEach(([v, color, name, counts]) => {
       const bar = el('div', 'bar');

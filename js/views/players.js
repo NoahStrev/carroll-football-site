@@ -95,7 +95,7 @@
               <tr class="total-row"><td>Career</td><td>${catData.career_games}</td>${cat.cols.map(([key]) => `<td>${catData.career[key] ?? '—'}</td>`).join('')}</tr>
             </tbody>
           </table></div>
-          ${latestLogged ? `<div class="gamelog-head"><b>Game by game</b>
+          ${latestLogged ? `<div class="gamelog-head"><b>Game by game</b> <span class="print-only gl-season-print">${esc(latestLogged.season)}</span>
             <select class="select-sm gl-season" aria-label="Season for the ${esc(cat.label)} game log">${logged.slice().reverse().map((x) => `<option value="${x.season}">${x.season}</option>`).join('')}</select></div>
             <div class="gamelog-body">${gameLogHTML(catId, latestLogged)}</div>` : ''}
         </div>
@@ -110,6 +110,7 @@
         const catId = body.dataset.cat;
         const season = player.categories[catId].seasons.find((x) => String(x.season) === sel.value);
         body.querySelector('.gamelog-body').innerHTML = gameLogHTML(catId, season);
+        body.querySelector('.gl-season-print').textContent = sel.value;
       });
     });
   }

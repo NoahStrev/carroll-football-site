@@ -218,9 +218,7 @@
             `<div class="tt-row"><span>${metric}</span><span>${metricLabel(metric, p.value)}</span></div>`,
             `<div class="tt-muted">${esc(p.session_label)}${p.classLabel ? `, ${esc(p.classLabel)}` : ''}</div>`,
           ].join('');
-          c.addEventListener('mouseenter', (e) => showTooltip(e.clientX, e.clientY, html));
-          c.addEventListener('mousemove', (e) => showTooltip(e.clientX, e.clientY, html));
-          c.addEventListener('mouseleave', hideTooltip);
+          attachTooltip(c, html); // hover, keyboard focus, and a screen-reader label
           g.appendChild(c);
         });
         return g;
@@ -239,6 +237,8 @@
       axis.appendChild(el('span', null, labelFor(allKeys[0])));
       axis.appendChild(el('span', null, labelFor(allKeys[allKeys.length - 1])));
       body.appendChild(axis);
+      body.appendChild(el('div', 'data-note', `Scale: ${metricLabel(metric, vMin)} (bottom) to ${metricLabel(metric, vMax)} (top). Hover or tab to a point for the session.`));
+      enableChartKeys(body);
     }
 
     function draw() {

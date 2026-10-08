@@ -309,8 +309,8 @@
     const tiles = [
       tile('Record', esc(B.record || '—'), B.conference_record ? `${esc(B.conference_record)} in the CCIW` : `${played} games`),
       tile('Points per game', `${fmt(S.pts_for_pg)} – ${fmt(S.pts_against_pg)}`, `for – against ${vs(deltaHTML(S.pts_for_pg - S.pts_against_pg, P && P.pts_for_pg - P.pts_against_pg, { label: `${label} margin` }))}`),
-      tile('Offense · yards / play', fmt(S.offense.ypp), `${pct(S.offense.success)} success ${vs(deltaHTML(S.offense.ypp, P && P.offense.ypp, { label }))}`, '--good'),
-      tile('Defense · yards allowed / play', fmt(S.defense.ypp), `${pct(S.defense.success)} success allowed ${vs(deltaHTML(S.defense.ypp, P && P.defense.ypp, { label, lowerBetter: true }))}`, '--critical'),
+      tile('Offense · yards / play', fmt(S.offense.ypp), S.offense.plays ? `${pct(S.offense.success)} success ${vs(deltaHTML(S.offense.ypp, P && P.offense.ypp, { label }))}` : 'not charted yet', '--good'),
+      tile('Defense · yards allowed / play', fmt(S.defense.ypp), S.defense.plays ? `${pct(S.defense.success)} success allowed ${vs(deltaHTML(S.defense.ypp, P && P.defense.ypp, { label, lowerBetter: true }))}` : 'not charted yet', '--critical'),
       tile('Special teams · avg score', fmt(S.st_score, 1), vs(deltaHTML(S.st_score, P && P.st_score, { digits: 1, label }))),
     ];
 

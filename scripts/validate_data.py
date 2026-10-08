@@ -175,6 +175,82 @@ def check_pbp_vs_box(game):
                 warn(f"game-data: {note}")
 
 
+# Opponent 4th-down tries the box score counts that the play-by-play does not have (an uncharted snap, or a penalty first
+# down the box counts as a conversion), each one try off: (date, side).
+KNOWN_FOURTH_GAPS = {("2022-11-12", "defense"), ("2026-09-19", "defense"), ("2026-09-26", "defense")}
+
+
+def check_fourth_downs(game):
+    """Fourth-down tries and conversions in the play-by-play against the box score's "4th Down Conversions" line.
+    Carroll's side matches the box exactly in all 55 archive games, and the opponent's in 52 (the rest are the reviewed
+    one-try gaps above). A new difference means a snap went missing or landed on the wrong side."""
+    raw = SITE.parent / "Special Teams Data" / "raw"
+    if not raw.exists():
+        return
+    stats = {"offense": {}, "defense": {}}  # side -> date -> [tries, made]
+    for side in stats:
+        for r in game[side]["official"]:
+            if r["down"] == 4 and r["play_type"] in ("Rush", "Pass", "Sack") and not r["is_penalty"]:
+                t = stats[side].setdefault(r["date"], [0, 0])
+                t[0] += 1
+                t[1] += 1 if (r["is_first_down"] or r["is_touchdown"]) else 0
+    charted = {r["date"] for r in game["offense"]["official"]}
+    for path in sorted(glob.glob(str(raw / "*_*.json"))):
+        d = json.loads(Path(path).read_text(encoding="utf-8"))
+        mo, dy = d["game_info"]["date"].split("/")[:2]
+        date = f"{Path(path).name.split('_')[0]}-{mo.zfill(2)}-{dy.zfill(2)}"
+        if date not in charted:
+            continue
+        home = d["game_info"]["matchup"].partition("-VS-")[2]
+        ab = d["home_away"]
+        mine = ab["home_abbr"] if "Carroll" in home else ab["away_abbr"]
+        conv = d["team_stats"]["Miscellaneous"].get("4th. Down Conversions")
+        if not conv:
+            continue
+        theirs = next(k for k in conv if k != mine)
+        for side, key in (("offense", mine), ("defense", theirs)):
+            box_made, box_tries = (int(x) for x in re.findall(r"\d+", conv[key])[:2])
+            tries, made = stats[side].get(date, [0, 0])
+            if (tries, made) == (box_tries, box_made) or (date, side) in KNOWN_FOURTH_GAPS:
+                continue
+            msg = f"game-data: {date} {side} 4th downs are {made} of {tries} in the play-by-play but {box_made} of {box_tries} in the box score"
+            (err if abs(tries - box_tries) > 1 else warn)(msg)
+
+
+KNOWN_FIELD_GOAL_GAPS = {("2021-10-30", "defense")}  # the box score lists a field-goal try the drive log does not
+
+
+def check_field_goals(game):
+    """Field goals made and tried, from how drives ended, against the box score's "Field Goals" line. Made matches in every
+    archive game and tries in all but one, so any new difference is a drive tagged to the wrong side or a mislabelled result."""
+    raw = SITE.parent / "Special Teams Data" / "raw"
+    if not raw.exists():
+        return
+    drives = {"offense": {}, "defense": {}}  # side -> date -> [tries, made]
+    for side in drives:
+        for dr in game[side]["drives"]:
+            t = drives[side].setdefault(dr["date"], [0, 0])
+            t[0] += 1 if (dr["result"] or "").startswith("Field Goal") else 0
+            t[1] += 1 if dr["result"] == "Field Goal Good" else 0
+    for path in sorted(glob.glob(str(raw / "*_*.json"))):
+        d = json.loads(Path(path).read_text(encoding="utf-8"))
+        mo, dy = d["game_info"]["date"].split("/")[:2]
+        date = f"{Path(path).name.split('_')[0]}-{mo.zfill(2)}-{dy.zfill(2)}"
+        fg = d["team_stats"]["Miscellaneous"].get("Field Goals: Total - Made")
+        if not fg or date not in drives["offense"]:
+            continue
+        home = d["game_info"]["matchup"].partition("-VS-")[2]
+        ab = d["home_away"]
+        mine = ab["home_abbr"] if "Carroll" in home else ab["away_abbr"]
+        theirs = next(k for k in fg if k != mine)
+        for side, key in (("offense", mine), ("defense", theirs)):
+            a, b = (int(x) for x in re.findall(r"\d+", fg[key])[:2])
+            box_made, box_tries = min(a, b), max(a, b)  # the source writes the pair in either order
+            tries, made = drives[side].get(date, [0, 0])
+            if (tries, made) != (box_tries, box_made) and (date, side) not in KNOWN_FIELD_GOAL_GAPS:
+                err(f"game-data: {date} {side} field goals are {made} of {tries} in the drive log but {box_made} of {box_tries} in the box score")
+
+
 def check_special_teams(home, st):
     box_dates = {g["date"] for gs in home["history"].values() for g in gs}
     latest = max(int(r["season"]) for rows in st["units"].values() for r in rows)
@@ -276,6 +352,8 @@ def main():
     home, game, st = load("home.json"), load("game-data.json"), load("special-teams.json")
     check_games(home, game)
     check_pbp_vs_box(game)
+    check_fourth_downs(game)
+    check_field_goals(game)
     check_special_teams(home, st)
     check_rankings(load("rankings.json"))
     check_team_stats(load("team-stats.json"))

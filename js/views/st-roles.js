@@ -109,7 +109,7 @@
           { label: 'Avg PAT/FG Score', glossary: 'Value / Score', value: (rows) => [fmt(mean(rows.map((r) => r.score)), 0)] },
         ],
         cards: (R) => [
-          { title: 'FG Make % by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { subset: fgs, metric: makeRate, labelFmt: p0, color: '--cat-1', noun: 'kicks' }) },
+          { title: 'FG Make % by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: fgs, metric: makeRate, labelFmt: p0, color: '--cat-1', noun: 'kicks' }) },
           {
             title: 'FG Make % by Distance Bucket',
             render(el, { rows }) {
@@ -192,10 +192,10 @@
           { label: 'Avg Return Allowed', dot: '--critical', value: (rows) => [`${fmt(mean(deepKick(rows).map((r) => r.return_length)), 1)} yds`] },
         ],
         cards: (R) => [
-          { title: 'Touchback % by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { subset: deepKick, metric: (g) => rate(g, (r) => r.touchback), labelFmt: p0, color: '--cat-1', noun: 'kicks' }) },
-          { title: 'Inside-25 % by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { subset: deepKick, metric: (g) => rate(g, (r) => r.inside_25), labelFmt: p0, color: '--cat-3', noun: 'kicks' }) },
-          { title: 'Avg Kickoff Distance by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { subset: deepKick, metric: (g) => mean(g.map((r) => r.total_distance)), labelFmt: yds(0), color: '--cat-4', noun: 'kicks' }) },
-          { title: 'Avg Return Allowed by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { subset: deepKick, metric: (g) => mean(g.map((r) => r.return_length)), labelFmt: yds(0), color: '--critical', noun: 'kicks' }) },
+          { title: 'Touchback % by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: deepKick, metric: (g) => rate(g, (r) => r.touchback), labelFmt: p0, color: '--cat-1', noun: 'kicks' }) },
+          { title: 'Inside-25 % by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: deepKick, metric: (g) => rate(g, (r) => r.inside_25), labelFmt: p0, color: '--cat-3', noun: 'kicks' }) },
+          { title: 'Avg Kickoff Distance by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: deepKick, metric: (g) => mean(g.map((r) => r.total_distance)), labelFmt: yds(0), color: '--cat-4', noun: 'kicks' }) },
+          { title: 'Avg Return Allowed by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: deepKick, metric: (g) => mean(g.map((r) => r.return_length)), labelFmt: yds(0), color: '--critical', noun: 'kicks' }) },
         ],
       },
       h2h: {
@@ -233,7 +233,7 @@
             prepare: (rows, st) => { const deep = deepKick(rows); return { deep, byQ: groupBy(deep, 'quarter'), heatRows: deepKick(reopenSeasons(D.units[R.unit], st, D.filters[R.unit].season)) }; },
             cards: [
               { title: 'Touchback % &amp; volume by quarter', render: (el, { byQ }) => quarterBars(el, R.unit, byQ, { metric: tb, color: '--cat-2', noun: 'kicks' }) },
-              { title: 'Avg return allowed by season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { subset: deepKick, metric: (g) => mean(g.map((r) => r.return_length)), labelFmt: yds(0), color: '--critical', noun: 'kicks' }) },
+              { title: 'Avg return allowed by season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: deepKick, metric: (g) => mean(g.map((r) => r.return_length)), labelFmt: yds(0), color: '--critical', noun: 'kicks' }) },
               { title: 'Touchback % — kicker × season', wide: true, note: heatNote('TB%; text = TB/attempts (deep kicks only)', 'only the Quarter filter narrows this grid (Kicker filter hides non-matching rows).'), render: (el, { heatRows }) => athleteHeat(el, R.unit, R.field, heatRows, { pred: (r) => r.touchback }) },
               { title: 'Touchback % by hash kicked from', render: (el, { deep }) => hashBars(el, deep, { metric: tb, color: '--cat-3', noun: 'kicks' }) },
               { title: 'Avg Kickoff Score by season', render: (el, { rows }) => scoreBars(el, R.unit, rows, 'kicks') },
@@ -265,10 +265,10 @@
           { label: 'Avg Punt Score', glossary: 'Value / Score', value: (rows) => [fmt(mean(rows.map((r) => r.score)), 0)] },
         ],
         cards: (R) => [
-          { title: 'Net Punt Yardage by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { metric: avgNet, labelFmt: yds(0), color: '--cat-1', noun: 'punts' }) },
-          { title: 'Gross Punt Distance by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { metric: (g) => mean(g.map((r) => r.total_distance)), labelFmt: yds(0), color: '--cat-4', noun: 'punts' }) },
-          { title: 'Inside-20 % by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { metric: (g) => rate(g, (r) => r.i20), labelFmt: p0, color: '--good', noun: 'punts' }) },
-          { title: 'Touchback % by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { metric: (g) => rate(g, isTouchback), labelFmt: p0, color: '--critical', noun: 'punts' }) },
+          { title: 'Net Punt Yardage by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { metric: avgNet, labelFmt: yds(0), color: '--cat-1', noun: 'punts' }) },
+          { title: 'Gross Punt Distance by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { metric: (g) => mean(g.map((r) => r.total_distance)), labelFmt: yds(0), color: '--cat-4', noun: 'punts' }) },
+          { title: 'Inside-20 % by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { metric: (g) => rate(g, (r) => r.i20), labelFmt: p0, color: '--good', noun: 'punts' }) },
+          { title: 'Touchback % by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { metric: (g) => rate(g, isTouchback), labelFmt: p0, color: '--critical', noun: 'punts' }) },
         ],
       },
       h2h: {
@@ -298,7 +298,7 @@
             prepare: (rows, st) => ({ byQ: groupBy(rows, 'quarter'), heatRows: reopenSeasons(D.units[R.unit], st, D.filters[R.unit].season) }),
             cards: [
               { title: 'Avg net punt by quarter', render: (el, { byQ }) => quarterBars(el, R.unit, byQ, { metric: avgNet, color: '--cat-2', noun: 'punts', labelFmt: yds(0) }) },
-              { title: 'Avg hangtime by season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { subset: (rs) => rs.filter((r) => r.hangtime !== null), metric: (g) => mean(g.map((r) => r.hangtime)), labelFmt: (v) => `${fmt(v, 2)}s`, color: '--cat-5', noun: 'punts' }) },
+              { title: 'Avg hangtime by season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: (rs) => rs.filter((r) => r.hangtime !== null), metric: (g) => mean(g.map((r) => r.hangtime)), labelFmt: (v) => `${fmt(v, 2)}s`, color: '--cat-5', noun: 'punts' }) },
               { title: 'Inside-20 % — punter × season', wide: true, note: heatNote('I20%; text = I20/punts', 'only the Quarter filter narrows this grid (Punter filter hides non-matching rows).'), render: (el, { heatRows }) => athleteHeat(el, R.unit, R.field, heatRows, { pred: (r) => r.i20 }) },
               { title: 'Inside-20 % by hash kicked from', render: (el, { rows }) => hashBars(el, rows, { metric: i20, color: '--cat-3', noun: 'punts' }) },
               { title: 'Inside-20 % by Snap Location', render: (el, { rows }) => snapLocBars(el, R.unit, rows, { metric: i20, color: '--cat-5', noun: 'punts' }) },
@@ -332,8 +332,8 @@
           { label: 'Avg PAT/FG Score', glossary: 'Value / Score', value: (rows) => [fmt(mean(rows.map((r) => r.score)), 0)] },
         ],
         cards: (R) => [
-          { title: 'PAT % by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { subset: pats, metric: makeRate, labelFmt: p0, color: '--cat-1', noun: 'snaps' }) },
-          { title: 'FG % by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { subset: fgs, metric: makeRate, labelFmt: p0, color: '--cat-3', noun: 'snaps' }) },
+          { title: 'PAT % by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: pats, metric: makeRate, labelFmt: p0, color: '--cat-1', noun: 'snaps' }) },
+          { title: 'FG % by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: fgs, metric: makeRate, labelFmt: p0, color: '--cat-3', noun: 'snaps' }) },
           {
             title: 'Snaps by Snapper',
             render(el, { rows }) {
@@ -343,7 +343,7 @@
               renderBar(el, { categories: snappers, values: snappers.map((s) => (by.get(s) || []).length), labelFmt: String, colorFn: () => cssVar('--cat-4'), tooltipExtra: (s) => `${pct(credited.length ? (by.get(s) || []).length / credited.length : null, 0)} of credited snaps` });
             },
           },
-          { title: 'Avg Snap Time by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { subset: (rs) => rs.filter((r) => r.snap_to_catch !== null), metric: (g) => mean(g.map((r) => r.snap_to_catch)), labelFmt: (v) => `${fmt(v, 2)}s`, color: '--cat-5', noun: 'snaps' }) },
+          { title: 'Avg Snap Time by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: (rs) => rs.filter((r) => r.snap_to_catch !== null), metric: (g) => mean(g.map((r) => r.snap_to_catch)), labelFmt: (v) => `${fmt(v, 2)}s`, color: '--cat-5', noun: 'snaps' }) },
         ],
       },
       h2h: {
@@ -412,10 +412,10 @@
           { label: 'Avg Punt Score', glossary: 'Value / Score', value: (rows) => [fmt(mean(rows.map((r) => r.score)), 0)] },
         ],
         cards: (R) => [
-          { title: 'Blocked Rate by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { metric: (g) => rate(g, (r) => r.blocked), labelFmt: p0, color: '--critical', noun: 'snaps' }) },
-          { title: 'Punter Tackle Rate by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { metric: (g) => rate(g, (r) => r.punter_tackle), labelFmt: p0, color: '--serious', noun: 'snaps' }) },
-          { title: 'Net Punt by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { metric: avgNet, labelFmt: yds(0), color: '--cat-1', noun: 'snaps' }) },
-          { title: 'Avg Snap Time by Season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { subset: (rs) => rs.filter((r) => r.snap_to_catch !== null), metric: (g) => mean(g.map((r) => r.snap_to_catch)), labelFmt: (v) => `${fmt(v, 2)}s`, color: '--cat-5', noun: 'snaps' }) },
+          { title: 'Blocked Rate by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { metric: (g) => rate(g, (r) => r.blocked), labelFmt: p0, color: '--critical', noun: 'snaps' }) },
+          { title: 'Punter Tackle Rate by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { metric: (g) => rate(g, (r) => r.punter_tackle), labelFmt: p0, color: '--serious', noun: 'snaps' }) },
+          { title: 'Net Punt by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { metric: avgNet, labelFmt: yds(0), color: '--cat-1', noun: 'snaps' }) },
+          { title: 'Avg Snap Time by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: (rs) => rs.filter((r) => r.snap_to_catch !== null), metric: (g) => mean(g.map((r) => r.snap_to_catch)), labelFmt: (v) => `${fmt(v, 2)}s`, color: '--cat-5', noun: 'snaps' }) },
         ],
       },
       h2h: {
@@ -445,7 +445,7 @@
             prepare: (rows, st) => ({ byQ: groupBy(rows, 'quarter'), heatRows: reopenSeasons(D.units[R.unit], st, D.filters[R.unit].season).filter((r) => r.snapper) }),
             cards: [
               { title: 'Protection-issue rate by quarter', note: 'Protection issue = Blocked or Punter Tackle.', render: (el, { byQ }) => quarterBars(el, R.unit, byQ, { metric: (g) => rate(g, protectionIssue), color: '--critical', noun: 'snaps' }) },
-              { title: 'Net punt by season', render: (el, { rows }) => ST.seasonBars(el, R.unit, rows, { metric: avgNet, labelFmt: yds(0), color: '--cat-1', noun: 'snaps' }) },
+              { title: 'Net punt by season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { metric: avgNet, labelFmt: yds(0), color: '--cat-1', noun: 'snaps' }) },
               { title: 'Blocked rate — snapper × season', wide: true, note: heatNote('blocked rate; text = blocked/punts', 'only the Quarter filter narrows this grid (Snapper filter hides non-matching rows).'), render: (el, { heatRows }) => athleteHeat(el, R.unit, R.field, heatRows, { pred: (r) => r.blocked }) },
               { title: 'Blocked rate by Snap Location', render: (el, { rows }) => snapLocBars(el, R.unit, rows, { metric: blocked, color: '--cat-5', noun: 'snaps' }) },
               { title: 'Avg Punt Score by season', render: (el, { rows }) => scoreBars(el, R.unit, rows, 'snaps') },

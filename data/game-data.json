@@ -114693,7 +114693,7 @@
 "drive_num": 20,
 "drive_result": "Touchdown",
 "is_touchdown": true,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -118983,7 +118983,7 @@
 "drive_num": 20,
 "drive_result": "Turnover",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -135961,7 +135961,7 @@
 "drive_num": 1,
 "drive_result": "Touchdown",
 "is_touchdown": true,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -139731,7 +139731,7 @@
 "drive_num": 1,
 "drive_result": "Touchdown",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -142253,7 +142253,7 @@
 "drive_num": 9,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -154317,7 +154317,7 @@
 "drive_num": 3,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -154525,7 +154525,7 @@
 "drive_num": 7,
 "drive_result": "Touchdown",
 "is_touchdown": true,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -162273,7 +162273,7 @@
 "drive_num": 17,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -167473,7 +167473,7 @@
 "drive_num": 12,
 "drive_result": "Touchdown",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -173791,7 +173791,7 @@
 "drive_num": 4,
 "drive_result": "Touchdown",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -176807,7 +176807,7 @@
 "drive_num": 7,
 "drive_result": "Turnover",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -178705,7 +178705,7 @@
 "drive_num": 7,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -180967,7 +180967,7 @@
 "drive_num": 14,
 "drive_result": "Touchdown",
 "is_touchdown": true,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -181305,7 +181305,7 @@
 "drive_num": 1,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -182579,7 +182579,7 @@
 "drive_num": 13,
 "drive_result": "Touchdown",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -196151,7 +196151,7 @@
 "drive_num": 9,
 "drive_result": "Field Goal Good",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -196359,7 +196359,7 @@
 "drive_num": 11,
 "drive_result": "Field Goal No Good",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -196489,7 +196489,7 @@
 "drive_num": 13,
 "drive_result": "Touchdown",
 "is_touchdown": true,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -294210,7 +294210,7 @@
 "drive_num": 18,
 "drive_result": "Touchdown",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -300554,7 +300554,7 @@
 "drive_num": 9,
 "drive_result": "Touchdown",
 "is_touchdown": true,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -304870,7 +304870,7 @@
 "drive_num": 21,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -320548,7 +320548,7 @@
 "drive_num": 24,
 "drive_result": "Turnover on Downs",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -321432,7 +321432,7 @@
 "drive_num": 14,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -323538,7 +323538,7 @@
 "drive_num": 23,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -333210,7 +333210,7 @@
 "drive_num": 7,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -334042,7 +334042,7 @@
 "drive_num": 22,
 "drive_result": "Turnover on Downs",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -336772,7 +336772,7 @@
 "drive_num": 5,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -339710,7 +339710,7 @@
 "drive_num": 1,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -341296,7 +341296,7 @@
 "drive_num": 26,
 "drive_result": "Touchdown",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -352580,7 +352580,7 @@
 "drive_num": 24,
 "drive_result": "Turnover",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -356688,7 +356688,7 @@
 "drive_num": 27,
 "drive_result": "Touchdown",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -360250,7 +360250,7 @@
 "drive_num": 18,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -361420,7 +361420,7 @@
 "drive_num": 10,
 "drive_result": "Turnover",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -361992,7 +361992,7 @@
 "drive_num": 20,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -374186,7 +374186,7 @@
 "drive_num": 18,
 "drive_result": "Touchdown",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -377644,7 +377644,7 @@
 "drive_num": 26,
 "drive_result": "Field Goal No Good",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
@@ -380530,7 +380530,7 @@
 "drive_num": 14,
 "drive_result": "Punt",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": false
 },
 {
@@ -384612,7 +384612,7 @@
 "drive_num": 14,
 "drive_result": "Touchdown",
 "is_touchdown": false,
-"is_penalty": true,
+"is_penalty": false,
 "is_first_down": true
 },
 {
