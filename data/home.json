@@ -1447,14 +1447,14 @@
           "ypp": 5.3284,
           "success": 0.3929,
           "explosive": 0.1361,
-          "turnovers": 67
+          "turnovers": 64
         },
         "defense": {
           "plays": 3370,
           "ypp": 5.7446,
           "success": 0.4235,
           "explosive": 0.1581,
-          "turnovers": 82
+          "turnovers": 81
         },
         "st_score": 44.1518,
         "pts_for_pg": 27.28,
@@ -1479,7 +1479,7 @@
             "ypp": 4.8364,
             "success": 0.3636,
             "explosive": 0.1273,
-            "turnovers": 3
+            "turnovers": 1
           },
           "defense": {
             "plays": 67,
@@ -1695,14 +1695,14 @@
             "ypp": 3.8302,
             "success": 0.2642,
             "explosive": 0.0755,
-            "turnovers": 4
+            "turnovers": 2
           },
           "defense": {
             "plays": 59,
             "ypp": 2.8644,
             "success": 0.3158,
             "explosive": 0.0877,
-            "turnovers": 1
+            "turnovers": 0
           },
           "st_score": 31.0706
         }
@@ -1713,14 +1713,14 @@
           "ypp": 5.0438,
           "success": 0.352,
           "explosive": 0.1349,
-          "turnovers": 16
+          "turnovers": 12
         },
         "defense": {
           "plays": 677,
           "ypp": 5.5392,
           "success": 0.4351,
           "explosive": 0.1374,
-          "turnovers": 19
+          "turnovers": 18
         },
         "st_score": 43.9732,
         "pts_for_pg": 21.6,
@@ -1732,7 +1732,7 @@
           "ypp": 5.3921,
           "success": 0.4021,
           "explosive": 0.1364,
-          "turnovers": 51
+          "turnovers": 52
         },
         "defense": {
           "plays": 2693,
@@ -2017,7 +2017,7 @@
           "ypp": 5.4692,
           "success": 0.4125,
           "explosive": 0.1394,
-          "turnovers": 36
+          "turnovers": 37
         },
         "defense": {
           "plays": 2030,
@@ -2217,7 +2217,7 @@
             "ypp": 5.7869,
             "success": 0.4426,
             "explosive": 0.1803,
-            "turnovers": 1
+            "turnovers": 2
           },
           "defense": {
             "plays": 74,
@@ -2283,7 +2283,7 @@
           "ypp": 6.0376,
           "success": 0.4443,
           "explosive": 0.1596,
-          "turnovers": 9
+          "turnovers": 10
         },
         "defense": {
           "plays": 643,

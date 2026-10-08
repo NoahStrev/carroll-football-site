@@ -195,5 +195,6 @@ const Tells = (function () {
     });
   }
 
-  return { tab: (side) => (side === 'offense' ? offenseTab : defenseTab) };
+  // leanAnalysis(a, b): a's run/pass lean by situation against b's (the Next Opponent tab points it at an opponent).
+  return { tab: (side) => (side === 'offense' ? offenseTab : defenseTab), leanAnalysis: offenseAnalysis, blitzAnalysis: defenseAnalysis };
 })();

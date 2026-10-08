@@ -15,7 +15,7 @@ projects in `Football/`.
 | Offense | `offense.html` | Scorecard · Tendencies · Outcomes · Tells (where Carroll's run/pass calls are predictable or differ from opponents) · Position Groups (QB / RB / WR / OL) | `game-data.json` |
 | Defense | `defense.html` | Scorecard · Tendencies · Outcomes · Tells (blitz and front tendencies by situation) · Position Groups (DL / LB / CB / S) | `game-data.json` |
 | Special Teams | `special-teams.html` | Overview · Money Unit · Punt · Punt Return · Kickoff · Kickoff Return · Athletes (role × Scorecard / Head-to-Head / Deep Dive) | `special-teams.json` |
-| Opponent Scouting | `opponent-scouting.html` | Next Opponent (a game-plan page; defaults to the next scheduled opponent, `#next/<opponent>`) · Game Review (a recap of any one game, `#review/<yyyy-mm-dd>`) · By Opponent · Offense · Defense (each: Carroll self-scout / opponent scout) | `game-data.json`, `home.json`, `meta.json`, `special-teams.json`, `team-stats.json` |
+| Opponent Scouting | `opponent-scouting.html` | Next Opponent (what to expect, a national-rank matchup card, and season totals; defaults to the next scheduled opponent, `#next/<opponent>`) · Game Plan (the same week as a two-page printable sheet, `#plan/<opponent>`) · Game Review (a recap of any one game, `#review/<yyyy-mm-dd>`) · By Opponent · Offense · Defense (each: Carroll self-scout / opponent scout) | `game-data.json`, `home.json`, `meta.json`, `special-teams.json`, `team-stats.json` |
 | Rankings | `rankings.html` | Offensive · Defensive · Special Teams · Additional Metrics (one season/week picker) | `rankings.json` |
 | Lifting & Strength | `lifting-strength.html` | Leaderboards (All Time / Last Session / each class) · Compare Athletes | `lifting.json` |
 | Players & Records | `players.html` | Career Stats (also a player profile: honors, record book, record watch, strength testing) · Compare Players · Record Book · Record Watch · Awards History | `career-stats.json`, `records.json` |
@@ -111,8 +111,18 @@ that buckets those rows by score ("Leading by 9+") as the opponent's own offense
 `build_game_data.py` also drops "Penalty, No Play" snaps (nullified and replayed, so not plays) and re-labels a drive whose
 "Touchdown" was really an interception/fumble returned the other way. With both, per-game yardage matches the official box score exactly in
 39 of 54 games and within ~30 yards in nearly all of the rest. Known source-side exceptions: 2021-11-06 vs Carthage has about 82 yards of
-Carroll's offense sitting in the defense data, and a handful of games carry a 20-30 yard rushing gap. `validate_data.py` re-checks the current
+Carroll's offense sitting in the defense data, and a handful of games carry a 20-30 yard rushing gap. Those gaps are inside the official box
+scores themselves, not our parsing: the parsed yards equal the play text in every play, and for 2023-10-07 vs North Central the same page
+reports 670 yards (drive chart), 695 (team stats) and 725 (play-by-play text). Treating accepted offensive penalties as nullified plays was
+tried and made the match worse, so it is not done. `validate_data.py` re-checks the current
 season on every refresh.
+
+## Weekly update
+
+`python scripts/weekly_update.py` runs the whole update in order (schedule guard, new box score, CCIW.org, NCAA.com, Hudl file from Downloads,
+site rebuild and validation), `--dry-run` shows what it would do, and `--only box,hudl,site` runs just some steps. It never commits or pushes,
+never maps a new opponent name, and never fixes a parse problem itself: anything needing a decision is listed under "NEEDS YOUR DECISION"
+and the exit code is 2. Run it when you want an update; nothing is scheduled.
 
 ## Running locally
 

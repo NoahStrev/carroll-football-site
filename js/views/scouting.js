@@ -1,7 +1,7 @@
 /* Opponent Scouting: how every opponent has been attacked / has attacked Carroll.
 
    Tabs: Next Opponent (a game-plan page for one opponent, defaulting to the next game on the
-   schedule), Game Review (a recap of one past game; js/views/game-review.js), By Opponent (per-opponent efficiency charts), Offense and Defense (scouting
+   schedule), Game Plan (the same week on a printable page; js/views/game-plan.js), Game Review (a recap of one past game; js/views/game-review.js), By Opponent (per-opponent efficiency charts), Offense and Defense (scouting
    reports). Each report tab covers two views of the same table, switched with a pill:
    Carroll's own tendencies (self scout) and the selected opponent(s)' tendencies (scout).
 
@@ -488,27 +488,13 @@
   // archive can be picked. #next/<opponent> deep-links (Home's "Scouting report" link).
   const shortDay = (iso) => Site.dayLabel(iso, { weekday: 'short', month: 'short', day: 'numeric' });
 
-  function nextOpponentOptions(H, meta) {
-    const upcoming = meta.schedule.filter((g) => g.date >= Site.today() && !g.completed);
-    const first = new Set(upcoming.map((g) => g.opponent));
-    const rest = [...new Set([...Object.keys(H.history), ...opponentOptions().map((o) => o.value).filter((v) => v !== ALL_OPPONENTS)])]
-      .filter((o) => !first.has(o)).sort();
-    return {
-      upcoming,
-      options: [
-        ...upcoming.map((g) => ({ group: 'On the schedule', value: g.opponent, label: `${Site.dayLabel(g.date)} · ${g.opponent}` })),
-        ...rest.map((o) => ({ group: 'All opponents', value: o, label: o })),
-      ],
-    };
-  }
-
   // Their snaps vs Carroll's defense, sliced the same ways the Offense tab does -- the sections
   // that matter for a game plan; the full table and Custom Situation builder live on that tab.
   const NEXT_SECTIONS = ['By Down', 'By Distance', 'By Field Zone', 'By Score Situation'];
 
   function nextOpponentTab(root, { sub }) {
     const D = G(), H = Site.data.home, meta = Site.data.meta;
-    const { upcoming, options } = nextOpponentOptions(H, meta);
+    const { upcoming, options } = GameIntel.opponentOptions();
     const wanted = sub && options.some((o) => o.value === sub) ? sub : null;
     const start = wanted || (upcoming[0] ? upcoming[0].opponent : options[0].value);
 
@@ -535,10 +521,12 @@
         { label: 'Their run %', value: ({ theirs, otherTheirs }) => { const a = runPassRows(theirs), b = runPassRows(otherTheirs); return a.length ? [pct(rate(a, isRunPlay)), `others: ${pct(rate(b, isRunPlay))}`] : ['—', 'not charted']; } },
         { label: 'Charted games', value: ({ charted, seasons }) => [String(charted.size), seasons.length ? `${seasons[0]}${seasons.length > 1 ? `–${seasons[seasons.length - 1]}` : ''}` : 'none yet'] },
       ],
-      intro: ({ opp, game, charted }) => (game
-        ? `${esc(opp)} is next: ${shortDay(game.date)}, ${game.home ? 'at home' : 'on the road'}${game.venue ? ` (${esc(game.venue)})` : ''}. ${charted.size ? `Carroll has ${charted.size} charted game${charted.size === 1 ? '' : 's'} against them to learn from.` : 'There are no charted games against them yet, so only the series history is available.'}`
-        : `${esc(opp)} is not on the remaining schedule — this is their history against Carroll.`),
+      intro: ({ opp, game, charted }) => `<b>${game ? `${esc(opp)} · ${shortDay(game.date)}, ${game.home ? 'home' : 'away'}${game.venue ? ` (${esc(game.venue)})` : ''}` : `${esc(opp)} (not on the remaining schedule)`}: what to expect</b>${GameIntel.bulletsHTML(opp)}${charted.size ? '' : '<div class="data-note">No charted games against them yet, so tendencies and results against Carroll are not available.</div>'}`,
       cards: [
+        {
+          title: 'Matchups (national rank)', wide: true,
+          render(el, { opp }) { el.innerHTML = GameIntel.matchupHTML(opp); },
+        },
         {
           title: 'Past meetings', table: {
             head: ['Date', 'Site', 'Result', 'Score'],
@@ -567,7 +555,7 @@
           },
         },
         {
-          title: 'Their season so far (national rank)', wide: true,
+          title: 'Their season so far, every category (national rank)', wide: true,
           render(el, { opp }) {
             const T = Site.data.teams, theirs = T.teams[opp], mine = T.teams.Carroll;
             if (!theirs) {
@@ -661,6 +649,7 @@
     data: { game: '../data/game-data.json', home: '../data/home.json', st: '../data/special-teams.json', teams: '../data/team-stats.json' },
     tabs: [
       { id: 'next', label: 'Next Opponent', render: nextOpponentTab },
+      { id: 'plan', label: 'Game Plan', render: GamePlan.tab },
       { id: 'review', label: 'Game Review', render: GameReview.render },
       { id: 'by-opponent', label: 'By Opponent', render: byOpponentTab },
       { id: 'offense', label: 'Offense', render: reportTab(offenseReportView) },

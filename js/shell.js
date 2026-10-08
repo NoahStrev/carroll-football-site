@@ -259,7 +259,7 @@ const Site = (() => {
    *   summary:  (ctx) => string       -- the "N plays in view" text
    *   intro:    string | (ctx) => string    -- an .insight note between the KPIs and the cards
    *   kpis:     [{ label, dot, glossary, value: (ctx) => [value, foot?] }]
-   *   cards:    [{ title, wide, noPrint, render(el, ctx), note, extra } |      // noPrint: leave it off a printout (links)
+   *   cards:    [{ title, wide, noPrint, printOnly, render(el, ctx), note, extra } |      // noPrint: leave it off a printout (links); printOnly: show only on a printout
    *              { title, wide, table: { head, rows: (ctx) => [[...]], empty }, note } |
    *              { raw: true, wide, render(el, ctx) } |     // card body is the whole card (trend cards)
    *              { section: 'Heading' }]                    // full-width heading between card groups
@@ -292,7 +292,7 @@ const Site = (() => {
           <div class="cards">
             ${cards.map((c, i) => {
               if (c.section) return `<h2 class="cards-heading">${c.section}</h2>`;
-              const cls = `${c.wide ? 'card wide' : 'card'}${c.table ? ' table-card' : ''}${c.noPrint ? ' no-print' : ''}`;
+              const cls = `${c.wide ? 'card wide' : 'card'}${c.table ? ' table-card' : ''}${c.noPrint ? ' no-print' : ''}${c.printOnly ? ' print-only-card' : ''}`;
               if (c.raw) return `<div class="${cls}" id="${uid}-c${i}"></div>`;
               return `<div class="${cls}"><div class="card-head"><h2>${c.title}</h2>${c.extra || ''}</div><div class="card-body" id="${uid}-c${i}"></div>${c.note ? `<div class="insight card-note">${c.note}</div>` : ''}</div>`;
             }).join('')}
