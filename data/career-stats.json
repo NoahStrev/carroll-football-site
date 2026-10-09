@@ -10535,9 +10535,9 @@
     },
     "ShortSnapping": {
      "career": {
-      "att": 163
+      "att": 168
      },
-     "career_games": 32,
+     "career_games": 34,
      "seasons": [
       {
        "season": 2023,
@@ -10546,8 +10546,8 @@
       },
       {
        "season": 2024,
-       "att": 42,
-       "games": 9
+       "att": 43,
+       "games": 10
       },
       {
        "season": 2025,
@@ -10556,8 +10556,8 @@
       },
       {
        "season": 2026,
-       "att": 22,
-       "games": 4
+       "att": 26,
+       "games": 5
       }
      ]
     },

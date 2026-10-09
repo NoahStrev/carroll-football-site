@@ -86,8 +86,10 @@ def build_punt(wb):
             "hash_kicked_from": r["Hash Kicked From"], "snap_location": r["Snap Location"],
             "converted_los": r["Converted Result LOS"],
             "field_bucket": field_bucket(r["Converted Result LOS"]),
-            "i20": r["I20?"],
+            "i20": r["I20?"], "i10": r["I10?"], "i5": r["I5?"], "fifty_plus": r["50+"],
+            "carry_distance": r["Carry Distance"], "roll": r["Roll"],
             "blocked": r["Blocked?"], "punter_tackle": r["Punter Tackle?"],
+            "snapper_tackle": r["Snapper Tackle?"],
             "value": r["Punt Value"], "score": r["Punt Score"],
         })
     return rows
@@ -104,7 +106,7 @@ def build_punt_return(wb):
             "is_home": r["Is Home"], "quarter": r["Quarter"], "returner": r["Returner"],
             "kick_outcome": r["Kick Outcome"], "next_drive_points": pts,
             "next_drive_outcome": outcome_bucket(pts), "drive_success": drive_success(pts),
-            "hangtime": r["Hangtime"], "carry_distance": r["Total Distance"],
+            "hangtime": r["Hangtime"], "total_distance": r["Total Distance"],
             "return_length": r["Return Length"], "snap_to_kick": snap_to_kick,
             "converted_los": r["Converted Result LOS"],
             "field_bucket": field_bucket(r["Converted Result LOS"]),
@@ -133,7 +135,8 @@ def build_kickoff(wb):
             "converted_los": r["Converted Result LOS"],
             "field_bucket": field_bucket(r["Converted Result LOS"]),
             "touchback": r["TB?"], "out_of_bounds": r["OB?"], "inside_25": r["I25?"],
-            "onside_obtained": r["Onside Obtained?"],
+            "onside_obtained": r["Onside Obtained?"], "kicker_tackle": r["Kicker Tackle?"],
+            "carry_distance": r["Carry Distance"], "roll": r["Roll"],
             "value": r["Kickoff Value"], "score": r["Kickoff Score"],
         })
     return rows

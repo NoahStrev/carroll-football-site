@@ -16,6 +16,17 @@
    rather than becoming their own version. */
 const UPDATES = [
   {
+    version: '1.4.1',
+    date: 'October 9, 2026',
+    title: 'Special Teams: tackles, carry and roll, miss locations and hash marks',
+    changes: [
+      { change: 'Punts and kickoffs now show how far the ball carried in the air and how far it rolled: trend cards on the Punt and Kickoff tabs, a roll-distance chart for punts, an Avg roll chart and column on the Punter and Kickoff Kicker pages, and a Punt Benchmarks chart (50+ yards, inside the 20, 10 and 5) with a 50+ Yard Rate tile and column for punters. Only charted kicks count toward carry and roll', effect: 'See whether punts are dying where they land, and which punters and kickers get the most out of the roll.' },
+      { change: 'Kicker Tackle (kickoffs) and Snapper Tackle (punts) are new: the Kickoff Kicker and Long Snapper pages show them as a tile and a column in the detail table, and the Kickoff and Punt tabs chart them. Kicker tackles come from the box score for every season; snapper tackles are hand-charted, so only charted punts count', effect: 'See who is making the tackle on coverage, not just who gets blocked.' },
+      { change: 'Field goal misses now show their direction (left, right, short) as well as blocks, and every extra point is counted as kicked from the middle, so the hash-mark chart now covers field goals only', effect: 'The misses chart and make-by-hash chart reflect the film charting.' },
+      { change: 'Special Teams workbooks keep typed Miss Location, Long Snapper and Snapper Tackle entries across rebuilds, and when two copies disagree the one saved last wins', effect: 'Charting you type in is no longer wiped by the next update.' },
+    ],
+  },
+  {
     version: '1.4.0',
     date: 'October 8, 2026',
     title: 'A simpler site with a new Home page, game-week tools, and a data-accuracy pass',

@@ -172,9 +172,10 @@
           },
         },
         {
-          title: 'Make % by Hash Kicked From',
-          render(el, { rows }) {
-            const by = groupBy(rows.filter((r) => r.hash_kicked_from), 'hash_kicked_from');
+          title: 'FG Make % by Hash Kicked From',
+          note: 'Field goals only — every extra point is kicked from the middle, so it carries no hash information.',
+          render(el, { fgRows }) {
+            const by = groupBy(fgRows.filter((r) => r.hash_kicked_from), 'hash_kicked_from');
             const hashes = HASH_ORDER.filter((h) => by.has(h));
             renderBar(el, { categories: hashes, values: hashes.map((h) => by.get(h).filter((r) => r.make).length / by.get(h).length), labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-3'), tooltipExtra: (h) => `${by.get(h).length} kicks` });
           },
@@ -184,7 +185,7 @@
           render(el, { rows, fgRows }) {
             const missRows = rows.filter((r) => !r.make && r.miss_location);
             const by = groupBy(missRows, 'miss_location');
-            if (!by.size) { el.innerHTML = '<div class="data-note">No blocked kicks in the current filter. Only "Blocked" is currently tracked as a miss reason in the source data (the Tableau version\'s L/Short breakdown isn\'t captured yet).</div>'; return; }
+            if (!by.size) { el.innerHTML = '<div class="data-note">No misses with a recorded location in the current filter (Blocked, L, R, or Short).</div>'; return; }
             const cats = [...by.keys()];
             renderBar(el, {
               categories: cats, values: cats.map((c) => by.get(c).length), labelFmt: (v) => String(v), colorFn: () => cssVar('--critical'),
@@ -251,6 +252,36 @@
         },
         { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'snap_to_kick', 's', 'Avg Snap to Kick') },
         { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'total_distance', ' yds', 'Avg Punt Distance') },
+        {
+          title: 'Punt Benchmarks',
+          note: 'Share of punts that went 50+ yards, or finished inside the opponent 20, 10 and 5.',
+          render(el, { rows }) {
+            const marks = [['50+ yds', (r) => r.fifty_plus], ['Inside 20', (r) => r.i20], ['Inside 10', (r) => r.i10], ['Inside 5', (r) => r.i5]];
+            renderBar(el, { categories: marks.map((m) => m[0]), values: marks.map((m) => rate(rows, m[1])), labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'), tooltipExtra: (k) => `${rows.filter(marks.find((m) => m[0] === k)[1]).length} of ${rows.length} punts` });
+          },
+        },
+        {
+          title: 'Roll After Landing',
+          note: 'Hand-charted punts only: how far the ball rolled after it landed.',
+          render(el, { rows }) {
+            const c = rows.filter((r) => r.roll !== null && r.roll !== undefined);
+            if (!c.length) { el.innerHTML = '<div class="data-note">No charted roll in the current filter.</div>'; return; }
+            const buckets = [['0 yds', (v) => v <= 0], ['1–5', (v) => v >= 1 && v <= 5], ['6–10', (v) => v >= 6 && v <= 10], ['11+', (v) => v > 10]];
+            const n = (b) => c.filter((r) => b[1](r.roll)).length;
+            renderBar(el, { categories: buckets.map((b) => b[0]), values: buckets.map((b) => n(b) / c.length), labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-4'), tooltipExtra: (k) => `${n(buckets.find((b) => b[0] === k))} of ${c.length} charted punts` });
+          },
+        },
+        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'carry_distance', ' yds', 'Avg Carry Distance (in the air)') },
+        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'roll', ' yds', 'Avg Roll After Landing') },
+        {
+          title: 'Coverage Tackles by Punter &amp; Snapper',
+          note: 'Punter tackles come from the box score (every punt). Snapper tackles are hand-charted, so that rate uses charted punts only.',
+          render(el, { rows }) {
+            const charted = rows.filter((r) => r.snapper_tackle !== null && r.snapper_tackle !== undefined);
+            const items = [{ k: 'Punter', n: rows.filter((r) => r.punter_tackle).length, of: rows.length }, { k: 'Snapper', n: charted.filter((r) => r.snapper_tackle).length, of: charted.length }].filter((i) => i.of);
+            renderBar(el, { categories: items.map((i) => i.k), values: items.map((i) => i.n / i.of), labelFmt: (v) => pct(v, 1), colorFn: () => cssVar('--cat-1'), tooltipExtra: (k) => { const i = items.find((x) => x.k === k); return `${i.n} tackles on ${i.of} punts`; } });
+          },
+        },
       ],
       footer: () => ST.source('punt', 'Punt'),
     });
@@ -267,7 +298,7 @@
       summary: ({ rows }) => `${rows.length} punts in view`,
       kpis: [
         countKpi('# of Punts'),
-        avgKpi('Avg Carry Distance', 'carry_distance', { unit: ' yds' }),
+        avgKpi('Avg Punt Distance', 'total_distance', { unit: ' yds' }),
         avgKpi('Avg Return Length', 'return_length', { unit: ' yds' }),
         avgKpi('Avg Snap to Kick', 'snap_to_kick', { digits: 2, unit: 's', charted: true }),
         avgKpi('Avg Field Position', 'converted_los'),
@@ -363,6 +394,17 @@
         },
         { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'converted_los', '', 'Avg Field Position') },
         { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'return_length', ' yds', 'Avg Return Length Allowed') },
+        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'carry_distance', ' yds', 'Avg Carry Distance (in the air)') },
+        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'roll', ' yds', 'Avg Roll After Landing') },
+        {
+          title: 'Kicker Tackles by Season',
+          note: 'Kickoffs where the kicker made the tackle, from the box-score tackle credit.',
+          render(el, { rows }) {
+            const by = groupBy(rows, 'season');
+            const seasons = [...by.keys()].sort();
+            renderBar(el, { categories: seasons, values: seasons.map((s) => by.get(s).filter((r) => r.kicker_tackle).length), labelFmt: String, colorFn: () => cssVar('--cat-1'), tooltipExtra: (s) => `${by.get(s).length} kicks` });
+          },
+        },
       ],
       footer: () => ST.source('kickoff', 'Kickoff', 'Only Deep and Onside kick types are distinguished in the source data (no separate Pooch/Squib category tracked).'),
     });

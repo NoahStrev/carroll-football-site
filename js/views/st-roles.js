@@ -25,6 +25,13 @@
   const onsideKick = (rows) => rows.filter((r) => r.kick_type === 'Onside');
   const isTouchback = (r) => r.kick_outcome === 'Touchback';
   const protectionIssue = (r) => r.blocked || r.punter_tackle;
+  // Snapper Tackle? is hand-charted: null means not charted, so only charted punts count toward it.
+  const chartedSnap = (rows) => rows.filter((r) => r.snapper_tackle !== null && r.snapper_tackle !== undefined);
+  const snapperTackles = (rows) => { const c = chartedSnap(rows); return [c.length ? String(c.filter((r) => r.snapper_tackle).length) : '—', `${c.length} charted punts`]; };
+  const kickerTackles = (rows) => [String(rows.filter((r) => r.kicker_tackle).length), `${rows.filter((r) => !r.touchback && !r.out_of_bounds).length} returned kicks`];
+  // Carry Distance and Roll are hand-charted: null means not charted, so averages use charted rows only.
+  const charted = (f) => (rs) => rs.filter((r) => r[f] !== null && r[f] !== undefined);
+  const avgCharted = (f) => (g) => { const c = charted(f)(g); return c.length ? `${fmt(mean(c.map((r) => r[f])), 1)} yds` : '—'; };
   const yds = (n) => (v) => `${fmt(v, n)} yds`;
   const p0 = (v) => pct(v, 0);
   const seasonWord = () => String(U().filters.money_unit.season.length);
@@ -190,6 +197,7 @@
           { label: 'Inside-25 Rate', value: (rows) => [pct(rate(deepKick(rows), (r) => r.inside_25))] },
           { label: 'Avg Kickoff Distance', value: (rows) => [`${fmt(mean(deepKick(rows).map((r) => r.total_distance)), 1)} yds`] },
           { label: 'Avg Return Allowed', dot: '--critical', value: (rows) => [`${fmt(mean(deepKick(rows).map((r) => r.return_length)), 1)} yds`] },
+          { label: 'Kicker Tackles', glossary: 'Kicker Tackle', value: kickerTackles },
         ],
         cards: (R) => [
           { title: 'Touchback % by Season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: deepKick, metric: (g) => rate(g, (r) => r.touchback), labelFmt: p0, color: '--cat-1', noun: 'kicks' }) },
@@ -226,6 +234,7 @@
           { label: 'Home vs Away TB%', value: ({ deep }) => [`${pct(rate(deep.filter((r) => r.is_home), (r) => r.touchback), 0)} / ${pct(rate(deep.filter((r) => !r.is_home), (r) => r.touchback), 0)}`, 'home / away'] },
           { label: 'Best Quarter (TB%)', value: ({ byQ }) => bestQuarter(byQ, (g) => rate(g, (r) => r.touchback), p0, 'attempts') },
           { label: 'Onside Recovery Rate', value: ({ rows }) => { const o = onsideKick(rows); return [pct(rate(o, (r) => r.onside_obtained)), `${o.filter((r) => r.onside_obtained).length}/${o.length} attempts`]; } },
+          { label: 'Kicker Tackles', glossary: 'Kicker Tackle', value: ({ rows }) => kickerTackles(rows) },
         ],
         build(R, D) {
           const tb = (g) => rate(g, (r) => r.touchback);
@@ -234,16 +243,18 @@
             cards: [
               { title: 'Touchback % &amp; volume by quarter', render: (el, { byQ }) => quarterBars(el, R.unit, byQ, { metric: tb, color: '--cat-2', noun: 'kicks' }) },
               { title: 'Avg return allowed by season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: deepKick, metric: (g) => mean(g.map((r) => r.return_length)), labelFmt: yds(0), color: '--critical', noun: 'kicks' }) },
+              { title: 'Avg roll by season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: (rs) => charted('roll')(deepKick(rs)), metric: (g) => mean(g.map((r) => r.roll)), labelFmt: yds(1), color: '--cat-4', noun: 'kicks' }) },
               { title: 'Touchback % — kicker × season', wide: true, note: heatNote('TB%; text = TB/attempts (deep kicks only)', 'only the Quarter filter narrows this grid (Kicker filter hides non-matching rows).'), render: (el, { heatRows }) => athleteHeat(el, R.unit, R.field, heatRows, { pred: (r) => r.touchback }) },
               { title: 'Touchback % by hash kicked from', render: (el, { deep }) => hashBars(el, deep, { metric: tb, color: '--cat-3', noun: 'kicks' }) },
               { title: 'Avg Kickoff Score by season', render: (el, { rows }) => scoreBars(el, R.unit, rows, 'kicks') },
             ],
             table: {
-              title: 'Kicker detail', note: 'Kicks/TB%/I25%/distance/return/Score are real and respect the filters above. Hangtime only reflects charted rows (2023 onward) — shows "—" for a kicker with none in view.',
+              title: 'Kicker detail', note: 'Kicks/TB%/I25%/distance/return/Tackles/Score are real and respect the filters above. Hangtime and Roll only reflect charted rows (2023 onward) — they show "—" for a kicker with none in view.',
               build: (rows) => athleteTable(R.unit, R.field, rows, 'Kicker', [
                 { label: 'Kicks', cell: (g) => g.length }, { label: 'TB%', cell: (g) => pct(tb(deepKick(g)), 0) }, { label: 'I25%', cell: (g) => pct(rate(deepKick(g), (r) => r.inside_25), 0) },
                 { label: 'Avg dist', cell: (g) => `${fmt(mean(deepKick(g).map((r) => r.total_distance)), 1)} yds` }, { label: 'Avg return', cell: (g) => `${fmt(mean(deepKick(g).map((r) => r.return_length)), 1)} yds` },
                 { label: 'Avg Score', cell: (g) => fmt(mean(g.map((r) => r.score)), 0) }, { label: 'Hangtime', cell: hangtime },
+                { label: 'Avg roll', cell: avgCharted('roll') }, { label: 'Tackles', cell: (g) => g.filter((r) => r.kicker_tackle).length },
               ]),
             },
           };
@@ -260,6 +271,7 @@
         kpis: [
           { label: 'Avg Net Punt', value: (rows) => [`${fmt(avgNet(rows), 1)} yds`] },
           { label: 'Inside-20 Rate', dot: '--good', value: (rows) => [pct(rate(rows, (r) => r.i20))] },
+          { label: '50+ Yard Rate', value: (rows) => [pct(rate(rows, (r) => r.fifty_plus))] },
           { label: 'Touchback Rate', dot: '--critical', value: (rows) => [pct(rate(rows, isTouchback))] },
           { label: 'Punts in View', value: (rows) => [String(rows.length)] },
           { label: 'Avg Punt Score', glossary: 'Value / Score', value: (rows) => [fmt(mean(rows.map((r) => r.score)), 0)] },
@@ -299,16 +311,18 @@
             cards: [
               { title: 'Avg net punt by quarter', render: (el, { byQ }) => quarterBars(el, R.unit, byQ, { metric: avgNet, color: '--cat-2', noun: 'punts', labelFmt: yds(0) }) },
               { title: 'Avg hangtime by season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: (rs) => rs.filter((r) => r.hangtime !== null), metric: (g) => mean(g.map((r) => r.hangtime)), labelFmt: (v) => `${fmt(v, 2)}s`, color: '--cat-5', noun: 'punts' }) },
+              { title: 'Avg roll by season', render: (el, { seasonRows }) => ST.seasonBars(el, R.unit, seasonRows, { subset: charted('roll'), metric: (g) => mean(g.map((r) => r.roll)), labelFmt: yds(1), color: '--cat-4', noun: 'punts' }) },
               { title: 'Inside-20 % — punter × season', wide: true, note: heatNote('I20%; text = I20/punts', 'only the Quarter filter narrows this grid (Punter filter hides non-matching rows).'), render: (el, { heatRows }) => athleteHeat(el, R.unit, R.field, heatRows, { pred: (r) => r.i20 }) },
               { title: 'Inside-20 % by hash kicked from', render: (el, { rows }) => hashBars(el, rows, { metric: i20, color: '--cat-3', noun: 'punts' }) },
               { title: 'Inside-20 % by Snap Location', render: (el, { rows }) => snapLocBars(el, R.unit, rows, { metric: i20, color: '--cat-5', noun: 'punts' }) },
               { title: 'Avg Punt Score by season', wide: true, render: (el, { rows }) => scoreBars(el, R.unit, rows, 'punts') },
             ],
             table: {
-              title: 'Punter detail', note: 'Punts/Net/Gross/I20%/TB%/Score are real and respect the filters above. Hangtime only reflects charted rows (2023 onward) — shows "—" for a punter with none in view.',
+              title: 'Punter detail', note: 'Punts/Net/Gross/I20%/TB%/Score are real and respect the filters above. Hangtime, Carry and Roll only reflect charted rows (2023 onward) — they show "—" for a punter with none in view.',
               build: (rows) => athleteTable(R.unit, R.field, rows, 'Punter', [
                 { label: 'Punts', cell: (g) => g.length }, { label: 'Net avg', cell: (g) => `${fmt(avgNet(g), 1)} yds` }, { label: 'Gross avg', cell: (g) => `${fmt(mean(g.map((r) => r.total_distance)), 1)} yds` },
                 { label: 'I20%', cell: (g) => pct(i20(g), 0) }, { label: 'TB%', cell: (g) => pct(rate(g, isTouchback), 0) }, { label: 'Avg Score', cell: (g) => fmt(mean(g.map((r) => r.score)), 0) }, { label: 'Hangtime', cell: hangtime },
+                { label: '50+%', cell: (g) => pct(rate(g, (r) => r.fifty_plus), 0) }, { label: 'Avg carry', cell: avgCharted('carry_distance') }, { label: 'Avg roll', cell: avgCharted('roll') },
               ]),
             },
           };
@@ -403,12 +417,13 @@
       summary: (n) => `${n} punts in view`,
       creditedSummary: (n) => `${n} credited punts in view`,
       scorecard: {
-        filterField: 'snapper', filterLabel: 'Snapper', footExtra: 'Net = gross distance − return yardage. Blocked/Punter Tackle rates use every punt, not just snapper-credited ones.',
+        filterField: 'snapper', filterLabel: 'Snapper', footExtra: 'Net = gross distance − return yardage. Blocked/Punter Tackle rates use every punt, not just snapper-credited ones. Snapper Tackles counts only punts where it has been charted.',
         kpis: [
           { label: 'Punts in View', value: (rows) => [String(rows.length)] },
           { label: 'Blocked Rate', dot: '--critical', value: (rows) => [pct(rate(rows, (r) => r.blocked))] },
           { label: 'Punter Tackle Rate', dot: '--critical', value: (rows) => [pct(rate(rows, (r) => r.punter_tackle))] },
           { label: 'Avg Net Punt', dot: '--good', value: (rows) => [`${fmt(avgNet(rows), 1)} yds`] },
+          { label: 'Snapper Tackles', glossary: 'Snapper Tackle', value: snapperTackles },
           { label: 'Avg Punt Score', glossary: 'Value / Score', value: (rows) => [fmt(mean(rows.map((r) => r.score)), 0)] },
         ],
         cards: (R) => [
@@ -436,6 +451,7 @@
         kpis: [
           { label: 'Blocked Rate', dot: '--critical', value: ({ rows }) => [pct(rate(rows, (r) => r.blocked))] },
           { label: 'Punter Tackle Rate', dot: '--critical', value: ({ rows }) => [pct(rate(rows, (r) => r.punter_tackle))] },
+          { label: 'Snapper Tackles', glossary: 'Snapper Tackle', value: ({ rows }) => snapperTackles(rows) },
           { label: 'Home vs Away Net', value: ({ rows }) => [`${fmt(avgNet(rows.filter((r) => r.is_home)), 0)} / ${fmt(avgNet(rows.filter((r) => !r.is_home)), 0)} yds`, 'home / away'] },
           { label: 'Best Quarter (Net)', value: ({ byQ }) => bestQuarter(byQ, avgNet, (v) => `${fmt(v, 1)} yds`, 'punts') },
         ],
@@ -451,10 +467,11 @@
               { title: 'Avg Punt Score by season', render: (el, { rows }) => scoreBars(el, R.unit, rows, 'snaps') },
             ],
             table: {
-              title: 'Snapper detail', note: 'Punts/Blocked%/Tackle%/Net/Score are real and respect the filters above. Snap Time only reflects charted rows (2023 onward) — shows "—" for a snapper with none in view.',
+              title: 'Snapper detail', note: 'Punts/Blocked%/Tackle%/Net/Score are real and respect the filters above. Tackle% is the punter tackle rate; Tackles is the snapper\'s own tackles, counted only on charted punts. Snap Time only reflects charted rows (2023 onward). Both show "—" for a snapper with none in view.',
               build: (rows) => athleteTable(R.unit, R.field, rows, 'Snapper', [
                 { label: 'Punts', cell: (g) => g.length }, { label: 'Blocked%', cell: (g) => pct(blocked(g), 0) }, { label: 'Tackle%', cell: (g) => pct(rate(g, (r) => r.punter_tackle), 0) },
                 { label: 'Net avg', cell: (g) => `${fmt(avgNet(g), 1)} yds` }, { label: 'Avg Score', cell: (g) => fmt(mean(g.map((r) => r.score)), 0) }, { label: 'Snap Time', cell: snapTime },
+                { label: 'Tackles', cell: (g) => snapperTackles(g)[0] },
               ]),
             },
           };
