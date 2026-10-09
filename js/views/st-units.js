@@ -275,7 +275,7 @@
         { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'roll', ' yds', 'Avg Roll After Landing') },
         {
           title: 'Coverage Tackles by Punter &amp; Snapper',
-          note: 'Punter tackles come from the box score (every punt). Snapper tackles are hand-charted, so that rate uses charted punts only.',
+          note: 'Punter tackles come from the box score (every punt). Snapper tackles are worked out from the box-score tackler and the typed snapper name, so that rate uses only punts where both are known.',
           render(el, { rows }) {
             const charted = rows.filter((r) => r.snapper_tackle !== null && r.snapper_tackle !== undefined);
             const items = [{ k: 'Punter', n: rows.filter((r) => r.punter_tackle).length, of: rows.length }, { k: 'Snapper', n: charted.filter((r) => r.snapper_tackle).length, of: charted.length }].filter((i) => i.of);

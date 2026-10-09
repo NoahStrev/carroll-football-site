@@ -32,7 +32,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.245,
 "score": 70.1
 },
@@ -66,7 +66,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.56,
 "score": 58.2
 },
@@ -100,7 +100,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -134,7 +134,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.199,
 "score": 69.4
 },
@@ -168,7 +168,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -202,7 +202,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.222,
 "score": 69.8
 },
@@ -236,7 +236,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -270,7 +270,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.55,
 "score": 74.6
 },
@@ -304,7 +304,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.172,
 "score": 63.9
 },
@@ -338,7 +338,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.337,
 "score": 71.5
 },
@@ -372,7 +372,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.041,
 "score": 67.1
 },
@@ -406,7 +406,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -440,7 +440,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.067,
 "score": 65.5
 },
@@ -474,7 +474,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.116,
 "score": 50
 },
@@ -508,7 +508,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.383,
 "score": 72.1
 },
@@ -542,7 +542,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.222,
 "score": 69.8
 },
@@ -576,7 +576,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.268,
 "score": 70.4
 },
@@ -610,7 +610,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.665,
 "score": 76.3
 },
@@ -644,7 +644,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -678,7 +678,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.122,
 "score": 68.3
 },
@@ -712,7 +712,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.088,
 "score": 50.4
 },
@@ -746,7 +746,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.258,
 "score": 47.9
 },
@@ -780,7 +780,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.135,
 "score": 49.7
 },
@@ -814,7 +814,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.482,
 "score": 59.3
 },
@@ -848,7 +848,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.268,
 "score": 70.4
 },
@@ -916,7 +916,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.095,
 "score": 67.9
 },
@@ -950,7 +950,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -984,7 +984,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.013,
 "score": 66.3
 },
@@ -1018,7 +1018,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.245,
 "score": 70.1
 },
@@ -1052,7 +1052,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.088,
 "score": 50.4
 },
@@ -1086,7 +1086,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.116,
 "score": 50
 },
@@ -1120,7 +1120,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.163,
 "score": 49.3
 },
@@ -1154,7 +1154,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.694,
 "score": 76.7
 },
@@ -1188,7 +1188,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.122,
 "score": 68.3
 },
@@ -1222,7 +1222,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -1290,7 +1290,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.694,
 "score": 76.7
 },
@@ -1324,7 +1324,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.56,
 "score": 58.2
 },
@@ -1358,7 +1358,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.268,
 "score": 70.4
 },
@@ -1392,7 +1392,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.116,
 "score": 50
 },
@@ -1426,7 +1426,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -1460,7 +1460,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.088,
 "score": 50.4
 },
@@ -1494,7 +1494,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.068,
 "score": 67.5
 },
@@ -1528,7 +1528,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.694,
 "score": 76.7
 },
@@ -1562,7 +1562,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.327,
 "score": 61.6
 },
@@ -1596,7 +1596,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.665,
 "score": 76.3
 },
@@ -1630,7 +1630,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -1664,7 +1664,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.383,
 "score": 72.1
 },
@@ -1698,7 +1698,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.327,
 "score": 61.6
 },
@@ -1732,7 +1732,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.715,
 "score": 55.9
 },
@@ -1766,7 +1766,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -1800,7 +1800,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.182,
 "score": 49
 },
@@ -1834,7 +1834,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.337,
 "score": 71.5
 },
@@ -1868,7 +1868,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.464,
 "score": 73.3
 },
@@ -1936,7 +1936,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.435,
 "score": 72.9
 },
@@ -1970,7 +1970,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.324,
 "score": 46.9
 },
@@ -2004,7 +2004,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.222,
 "score": 69.8
 },
@@ -2038,7 +2038,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -2072,7 +2072,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": true,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.324,
 "score": 46.9
 },
@@ -2106,7 +2106,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.041,
 "score": 67.1
 },
@@ -2140,7 +2140,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.327,
 "score": 61.6
 },
@@ -2174,7 +2174,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": true,
 "value": -0.094,
 "score": 65.1
 },
@@ -2208,7 +2208,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -2242,7 +2242,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.222,
 "score": 69.8
 },
@@ -2276,7 +2276,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.014,
 "score": 66.7
 },
@@ -2310,7 +2310,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.088,
 "score": 50.4
 },
@@ -2344,7 +2344,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.579,
 "score": 75
 },
@@ -2378,7 +2378,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.636,
 "score": 75.9
 },
@@ -2412,7 +2412,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.025,
 "score": 51.3
 },
@@ -2446,7 +2446,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.078,
 "score": 50.5
 },
@@ -2480,7 +2480,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.291,
 "score": 70.8
 },
@@ -2514,7 +2514,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -2548,7 +2548,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.094,
 "score": 65.1
 },
@@ -2582,7 +2582,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.013,
 "score": 66.3
 },
@@ -2616,7 +2616,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.314,
 "score": 71.1
 },
@@ -2650,7 +2650,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -2718,7 +2718,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.715,
 "score": 55.9
 },
@@ -2752,7 +2752,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -2786,7 +2786,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.199,
 "score": 69.4
 },
@@ -2820,7 +2820,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.56,
 "score": 58.2
 },
@@ -2854,7 +2854,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.87,
 "score": 53.6
 },
@@ -2888,7 +2888,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -2922,7 +2922,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.482,
 "score": 59.3
 },
@@ -2956,7 +2956,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.094,
 "score": 65.1
 },
@@ -2990,7 +2990,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.088,
 "score": 50.4
 },
@@ -3024,7 +3024,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.337,
 "score": 71.5
 },
@@ -3092,7 +3092,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.723,
 "score": 77.2
 },
@@ -3126,7 +3126,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -3160,7 +3160,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -3194,7 +3194,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -3228,7 +3228,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.173,
 "score": 49.1
 },
@@ -3262,7 +3262,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.078,
 "score": 50.5
 },
@@ -3296,7 +3296,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.87,
 "score": 53.6
 },
@@ -3330,7 +3330,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -3398,7 +3398,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.097,
 "score": 50.3
 },
@@ -3432,7 +3432,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.715,
 "score": 55.9
 },
@@ -3466,7 +3466,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.636,
 "score": 75.9
 },
@@ -3500,7 +3500,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.337,
 "score": 71.5
 },
@@ -3534,7 +3534,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.041,
 "score": 67.1
 },
@@ -3568,7 +3568,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.094,
 "score": 65.1
 },
@@ -3602,7 +3602,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.948,
 "score": 52.5
 },
@@ -3636,7 +3636,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.068,
 "score": 67.5
 },
@@ -3670,7 +3670,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -3704,7 +3704,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.268,
 "score": 70.4
 },
@@ -3738,7 +3738,7 @@
 "roll": 4,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.068,
 "score": 67.5
 },
@@ -3772,7 +3772,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.222,
 "score": 69.8
 },
@@ -3806,7 +3806,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.067,
 "score": 65.5
 },
@@ -3840,7 +3840,7 @@
 "roll": 8,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.492,
 "score": 73.8
 },
@@ -3874,7 +3874,7 @@
 "roll": 1,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.55,
 "score": 74.6
 },
@@ -3908,7 +3908,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": true,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.144,
 "score": 49.6
 },
@@ -3942,7 +3942,7 @@
 "roll": 9,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -3976,7 +3976,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -4010,7 +4010,7 @@
 "roll": 13,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.068,
 "score": 67.5
 },
@@ -4044,7 +4044,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.149,
 "score": 68.7
 },
@@ -4078,7 +4078,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.435,
 "score": 72.9
 },
@@ -4112,7 +4112,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.122,
 "score": 68.3
 },
@@ -4146,7 +4146,7 @@
 "roll": 7,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.579,
 "score": 75
 },
@@ -4180,7 +4180,7 @@
 "roll": 3,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -4214,7 +4214,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -4248,7 +4248,7 @@
 "roll": 26,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.199,
 "score": 69.4
 },
@@ -4282,7 +4282,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.723,
 "score": 77.2
 },
@@ -4316,7 +4316,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.268,
 "score": 70.4
 },
@@ -4350,7 +4350,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.211,
 "score": 48.6
 },
@@ -4384,7 +4384,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.172,
 "score": 63.9
 },
@@ -4418,7 +4418,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.521,
 "score": 74.2
 },
@@ -4452,7 +4452,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.192,
 "score": 48.8
 },
@@ -4486,7 +4486,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.172,
 "score": 63.9
 },
@@ -4520,7 +4520,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.088,
 "score": 50.4
 },
@@ -4554,7 +4554,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.948,
 "score": 52.5
 },
@@ -4588,7 +4588,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.088,
 "score": 50.4
 },
@@ -4622,7 +4622,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.324,
 "score": 46.9
 },
@@ -4656,7 +4656,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -4690,7 +4690,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -4724,7 +4724,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.752,
 "score": 77.6
 },
@@ -4758,7 +4758,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -4792,7 +4792,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.268,
 "score": 70.4
 },
@@ -4826,7 +4826,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.291,
 "score": 70.8
 },
@@ -4860,7 +4860,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.013,
 "score": 66.3
 },
@@ -4894,7 +4894,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": true,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.201,
 "score": 48.7
 },
@@ -4962,7 +4962,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.464,
 "score": 73.3
 },
@@ -4996,7 +4996,7 @@
 "roll": 5,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -5030,7 +5030,7 @@
 "roll": 6,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.327,
 "score": 61.6
 },
@@ -5064,7 +5064,7 @@
 "roll": 4,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.435,
 "score": 72.9
 },
@@ -5098,7 +5098,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.04,
 "score": 65.9
 },
@@ -5132,7 +5132,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -5166,7 +5166,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -5200,7 +5200,7 @@
 "roll": 7,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.694,
 "score": 76.7
 },
@@ -5268,7 +5268,7 @@
 "roll": 4,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.172,
 "score": 63.9
 },
@@ -5302,7 +5302,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.095,
 "score": 67.9
 },
@@ -5336,7 +5336,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.095,
 "score": 67.9
 },
@@ -5370,7 +5370,7 @@
 "roll": 9,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -5404,7 +5404,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.482,
 "score": 59.3
 },
@@ -5438,7 +5438,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.199,
 "score": 69.4
 },
@@ -5540,7 +5540,7 @@
 "roll": 4,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -5574,7 +5574,7 @@
 "roll": 24,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -5608,7 +5608,7 @@
 "roll": 16,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -5642,7 +5642,7 @@
 "roll": 1,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -5676,7 +5676,7 @@
 "roll": 11,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.482,
 "score": 59.3
 },
@@ -5710,7 +5710,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -5744,7 +5744,7 @@
 "roll": 4,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.579,
 "score": 75
 },
@@ -5778,7 +5778,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.464,
 "score": 73.3
 },
@@ -5812,7 +5812,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.116,
 "score": 50
 },
@@ -5846,7 +5846,7 @@
 "roll": 15,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.752,
 "score": 77.6
 },
@@ -5880,7 +5880,7 @@
 "roll": 6,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -5914,7 +5914,7 @@
 "roll": 4,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -5948,7 +5948,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -5982,7 +5982,7 @@
 "roll": 12,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.095,
 "score": 67.9
 },
@@ -6016,7 +6016,7 @@
 "roll": 21,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.723,
 "score": 77.2
 },
@@ -6050,7 +6050,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.291,
 "score": 70.8
 },
@@ -6084,7 +6084,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.55,
 "score": 74.6
 },
@@ -6118,7 +6118,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.694,
 "score": 76.7
 },
@@ -6152,7 +6152,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -6186,7 +6186,7 @@
 "roll": 7,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.792,
 "score": 54.8
 },
@@ -6220,7 +6220,7 @@
 "roll": 7,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.173,
 "score": 49.1
 },
@@ -6254,7 +6254,7 @@
 "roll": 11,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.222,
 "score": 69.8
 },
@@ -6322,7 +6322,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.222,
 "score": 69.8
 },
@@ -6356,7 +6356,7 @@
 "roll": 16,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -6390,7 +6390,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.337,
 "score": 71.5
 },
@@ -6424,7 +6424,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.637,
 "score": 57.1
 },
@@ -6458,7 +6458,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": true,
 "value": -1.107,
 "score": 50.1
 },
@@ -6492,7 +6492,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.041,
 "score": 67.1
 },
@@ -6526,7 +6526,7 @@
 "roll": 2,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -6560,7 +6560,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.291,
 "score": 70.8
 },
@@ -6594,7 +6594,7 @@
 "roll": 1,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -6628,7 +6628,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.464,
 "score": 73.3
 },
@@ -6662,7 +6662,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.435,
 "score": 72.9
 },
@@ -6696,7 +6696,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.088,
 "score": 50.4
 },
@@ -6730,7 +6730,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.249,
 "score": 62.8
 },
@@ -6764,7 +6764,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.078,
 "score": 50.5
 },
@@ -6798,7 +6798,7 @@
 "roll": 10,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.122,
 "score": 68.3
 },
@@ -6832,7 +6832,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -6866,7 +6866,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.87,
 "score": 53.6
 },
@@ -6934,7 +6934,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.068,
 "score": 67.5
 },
@@ -6968,7 +6968,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.088,
 "score": 50.4
 },
@@ -7002,7 +7002,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.201,
 "score": 48.7
 },
@@ -7070,7 +7070,7 @@
 "roll": 8,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.608,
 "score": 75.5
 },
@@ -7104,7 +7104,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.041,
 "score": 67.1
 },
@@ -7138,7 +7138,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.222,
 "score": 69.8
 },
@@ -7206,7 +7206,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -7240,7 +7240,7 @@
 "roll": -1,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.723,
 "score": 77.2
 },
@@ -7274,7 +7274,7 @@
 "roll": -1,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.201,
 "score": 48.7
 },
@@ -7308,7 +7308,7 @@
 "roll": 5,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.482,
 "score": 59.3
 },
@@ -7342,7 +7342,7 @@
 "roll": -3,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.095,
 "score": 67.9
 },
@@ -7376,7 +7376,7 @@
 "roll": 11,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.327,
 "score": 61.6
 },
@@ -7410,7 +7410,7 @@
 "roll": 13,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.172,
 "score": 63.9
 },
@@ -7444,7 +7444,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.464,
 "score": 73.3
 },
@@ -7478,7 +7478,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": true,
 "value": 0.245,
 "score": 70.1
 },
@@ -7512,7 +7512,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": true,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.715,
 "score": 55.9
 },
@@ -7546,7 +7546,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.694,
 "score": 76.7
 },
@@ -7580,7 +7580,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.088,
 "score": 50.4
 },
@@ -7614,7 +7614,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.277,
 "score": 47.6
 },
@@ -7648,7 +7648,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.766,
 "score": 77.8
 },
@@ -7682,7 +7682,7 @@
 "roll": 6,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -7716,7 +7716,7 @@
 "roll": 8,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -7750,7 +7750,7 @@
 "roll": 2,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.435,
 "score": 72.9
 },
@@ -7784,7 +7784,7 @@
 "roll": 1,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.144,
 "score": 49.6
 },
@@ -7818,7 +7818,7 @@
 "roll": 11,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.068,
 "score": 67.5
 },
@@ -7852,7 +7852,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -7886,7 +7886,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.315,
 "score": 47
 },
@@ -7920,7 +7920,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.097,
 "score": 50.3
 },
@@ -7954,7 +7954,7 @@
 "roll": 10,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.87,
 "score": 53.6
 },
@@ -7988,7 +7988,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.715,
 "score": 55.9
 },
@@ -8056,7 +8056,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.268,
 "score": 70.4
 },
@@ -8090,7 +8090,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.095,
 "score": 67.9
 },
@@ -8124,7 +8124,7 @@
 "roll": 5,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.636,
 "score": 75.9
 },
@@ -8158,7 +8158,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -0.482,
 "score": 59.3
 },
@@ -8192,7 +8192,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.176,
 "score": 69.1
 },
@@ -8226,7 +8226,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.324,
 "score": 46.9
 },
@@ -8260,7 +8260,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.229,
 "score": 48.3
 },
@@ -8294,7 +8294,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.097,
 "score": 50.3
 },
@@ -8328,7 +8328,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.135,
 "score": 49.7
 },
@@ -8362,7 +8362,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.025,
 "score": 51.3
 },
@@ -8396,7 +8396,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.229,
 "score": 48.3
 },
@@ -8430,7 +8430,7 @@
 "roll": -4,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.097,
 "score": 50.3
 },
@@ -8464,7 +8464,7 @@
 "roll": 0,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.464,
 "score": 73.3
 },
@@ -8532,7 +8532,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": true,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.078,
 "score": 50.5
 },
@@ -8566,7 +8566,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.014,
 "score": 66.7
 },
@@ -8600,7 +8600,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -8634,7 +8634,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -8668,7 +8668,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": 0.406,
 "score": 72.5
 },
@@ -8702,7 +8702,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.125,
 "score": 49.8
 },
@@ -8736,7 +8736,7 @@
 "roll": null,
 "blocked": false,
 "punter_tackle": false,
-"snapper_tackle": null,
+"snapper_tackle": false,
 "value": -1.248,
 "score": 48
 },

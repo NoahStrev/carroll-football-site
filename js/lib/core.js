@@ -242,7 +242,7 @@ const GLOSSARY = {
   'Play Outcome': 'The specific charted result of a play (Touchdown, Interception, Sack, Complete, Incomplete, Fumble, etc.), shown exactly as charted — including compound results like "Rush, TD" when more than one thing happened on the same play.',
   'Value / Score': "A \"points added over expectation\" metric computed for every Special Teams unit — how many points better or worse than an average Carroll attempt that play was, rescaled to a 0–100 Score for easy comparison across units.",
   'Snap Location': "A hand-charted snap-quality rating (scale still being finalized by the coaching staff, currently 1-3 or 1-5) — which end of the scale means \"better\" isn't confirmed yet.",
-  'Snapper Tackle': "A punt where the long snapper made a tackle in coverage. Hand-charted from film, so only charted punts are counted; an uncharted punt is left out rather than counted as no tackle.",
+  'Snapper Tackle': "A punt where the long snapper made a tackle in coverage. Worked out from the box score's tackle credit and the snapper named for that punt; a punt with no snapper named, or a return with no tackle credit, is left out rather than counted as no tackle.",
   'Kicker Tackle': "A kickoff where the kicker made the tackle on the return, read from the tackle credit in the box score. Counted for every season.",
   'Net Punt': "Gross punt distance minus the returner's return yardage — the real field-position value of a punt.",
   'Inside-20 (I20)': "A punt that pins the opponent inside their own 20-yard line — a strong special teams outcome.",
