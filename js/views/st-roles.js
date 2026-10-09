@@ -25,9 +25,9 @@
   const onsideKick = (rows) => rows.filter((r) => r.kick_type === 'Onside');
   const isTouchback = (r) => r.kick_outcome === 'Touchback';
   const protectionIssue = (r) => r.blocked || r.punter_tackle;
-  // Snapper Tackle? is derived from the box-score tackler and the typed Snapper Name: null means unknown, so only known punts count toward it.
+  // Snapper Tackle? is derived from the box-score tackler and the typed Snapper Name: null means no snapper named, so only punts with a named snapper count toward it.
   const chartedSnap = (rows) => rows.filter((r) => r.snapper_tackle !== null && r.snapper_tackle !== undefined);
-  const snapperTackles = (rows) => { const c = chartedSnap(rows); return [c.length ? String(c.filter((r) => r.snapper_tackle).length) : '—', `${c.length} known punts`]; };
+  const snapperTackles = (rows) => { const c = chartedSnap(rows); return [c.length ? String(c.filter((r) => r.snapper_tackle).length) : '—', `${c.length} punts`]; };
   const kickerTackles = (rows) => [String(rows.filter((r) => r.kicker_tackle).length), `${rows.filter((r) => !r.touchback && !r.out_of_bounds).length} returned kicks`];
   // Carry Distance and Roll are hand-charted: null means not charted, so averages use charted rows only.
   const charted = (f) => (rs) => rs.filter((r) => r[f] !== null && r[f] !== undefined);
@@ -417,7 +417,7 @@
       summary: (n) => `${n} punts in view`,
       creditedSummary: (n) => `${n} credited punts in view`,
       scorecard: {
-        filterField: 'snapper', filterLabel: 'Snapper', footExtra: 'Net = gross distance − return yardage. Blocked/Punter Tackle rates use every punt, not just snapper-credited ones. Snapper Tackles counts only punts where the snapper is named and the tackle credit is known.',
+        filterField: 'snapper', filterLabel: 'Snapper', footExtra: 'Net = gross distance − return yardage. Blocked/Punter Tackle rates use every punt, not just snapper-credited ones. Snapper Tackles counts only punts with a named snapper.',
         kpis: [
           { label: 'Punts in View', value: (rows) => [String(rows.length)] },
           { label: 'Blocked Rate', dot: '--critical', value: (rows) => [pct(rate(rows, (r) => r.blocked))] },
@@ -467,7 +467,7 @@
               { title: 'Avg Punt Score by season', render: (el, { rows }) => scoreBars(el, R.unit, rows, 'snaps') },
             ],
             table: {
-              title: 'Snapper detail', note: 'Punts/Blocked%/Tackle%/Net/Score are real and respect the filters above. Tackle% is the punter tackle rate; Tackles is the snapper\'s own tackles, counted only on punts where it is known. Snap Time only reflects charted rows (2023 onward). Both show "—" for a snapper with none in view.',
+              title: 'Snapper detail', note: 'Punts/Blocked%/Tackle%/Net/Score are real and respect the filters above. Tackle% is the punter tackle rate; Tackles is the snapper\'s own tackles, counted only on punts with a named snapper. Snap Time only reflects charted rows (2023 onward). Both show "—" for a snapper with none in view.',
               build: (rows) => athleteTable(R.unit, R.field, rows, 'Snapper', [
                 { label: 'Punts', cell: (g) => g.length }, { label: 'Blocked%', cell: (g) => pct(blocked(g), 0) }, { label: 'Tackle%', cell: (g) => pct(rate(g, (r) => r.punter_tackle), 0) },
                 { label: 'Net avg', cell: (g) => `${fmt(avgNet(g), 1)} yds` }, { label: 'Avg Score', cell: (g) => fmt(mean(g.map((r) => r.score)), 0) }, { label: 'Snap Time', cell: snapTime },
