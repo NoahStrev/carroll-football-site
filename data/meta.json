@@ -1,8 +1,8 @@
 {
   "pages": {
     "home": {
-      "through": "2026-10-03",
-      "text": "Games through Millikin, Oct 3"
+      "through": "2026-10-10",
+      "text": "Games through Illinois Wesleyan, Oct 10"
     },
     "offense": {
       "through": "2026-10-03",
@@ -17,16 +17,16 @@
       "text": "Charted through Millikin, Oct 3"
     },
     "special-teams": {
-      "through": "2026-10-03",
-      "text": "Box scores through Oct 3"
+      "through": "2026-10-10",
+      "text": "Box scores through Oct 10"
     },
     "players": {
-      "through": "2026-10-03",
-      "text": "Career stats through Millikin, Oct 3"
+      "through": "2026-10-10",
+      "text": "Career stats through Illinois Wesleyan, Oct 10"
     },
     "rankings": {
-      "through": "2026-10-06",
-      "text": "Rankings through Week 5 (Oct 6)"
+      "through": "2026-10-14",
+      "text": "Rankings through Week 6 (Oct 14)"
     },
     "lifting": {
       "through": null,
@@ -34,8 +34,8 @@
     }
   },
   "latest_game": {
-    "date": "2026-10-03",
-    "opponent": "Millikin"
+    "date": "2026-10-10",
+    "opponent": "Illinois Wesleyan"
   },
   "schedule": [
     {
@@ -98,11 +98,11 @@
       "opponent": "Illinois Wesleyan",
       "home": true,
       "conference": true,
-      "time": "2 p.m.",
+      "time": null,
       "venue": "Schneider Stadium",
       "city": "Waukesha, Wis.",
-      "completed": false,
-      "result": null
+      "completed": true,
+      "result": "L, 7-44"
     },
     {
       "date": "2026-10-17",

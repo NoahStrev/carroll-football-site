@@ -8517,7 +8517,7 @@
      "statistic": "Total Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 130,
+     "current_value": 136,
      "top_value": 291,
      "fifth_value": 243,
      "leaderboard": [
@@ -8565,7 +8565,7 @@
      "statistic": "Solo Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 83,
+     "current_value": 84,
      "top_value": 170,
      "fifth_value": 143,
      "leaderboard": [
@@ -8703,7 +8703,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 33,
+     "current_value": 35,
      "top_value": 43,
      "fifth_value": 24,
      "leaderboard": [
@@ -8745,7 +8745,7 @@
      "statistic": "PATs Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 70,
+     "current_value": 71,
      "top_value": 138,
      "fifth_value": 56,
      "leaderboard": [
@@ -8787,7 +8787,7 @@
      "statistic": "PATs Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 73,
+     "current_value": 74,
      "top_value": 156,
      "fifth_value": 68,
      "leaderboard": [
@@ -8831,7 +8831,7 @@
      "statistic": "Passing Yards",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 1252,
+     "current_value": 1376,
      "top_value": 2697,
      "fifth_value": 2213,
      "leaderboard": [
@@ -8873,7 +8873,7 @@
      "statistic": "Passing Completions",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 102,
+     "current_value": 115,
      "top_value": 200,
      "fifth_value": 182,
      "leaderboard": [
@@ -8915,7 +8915,7 @@
      "statistic": "Passing Attempts",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 168,
+     "current_value": 198,
      "top_value": 399,
      "fifth_value": 318,
      "leaderboard": [
@@ -9059,7 +9059,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 10,
+     "current_value": 12,
      "top_value": 17,
      "fifth_value": 12,
      "leaderboard": [
