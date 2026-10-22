@@ -1,32 +1,32 @@
 {
   "pages": {
     "home": {
-      "through": "2026-10-10",
-      "text": "Games through Illinois Wesleyan, Oct 10"
+      "through": "2026-10-17",
+      "text": "Games through Wheaton, Oct 17"
     },
     "offense": {
-      "through": "2026-10-03",
-      "text": "Charted through Millikin, Oct 3"
+      "through": "2026-10-17",
+      "text": "Charted through Wheaton, Oct 17"
     },
     "defense": {
-      "through": "2026-10-03",
-      "text": "Charted through Millikin, Oct 3"
+      "through": "2026-10-17",
+      "text": "Charted through Wheaton, Oct 17"
     },
     "scouting": {
-      "through": "2026-10-03",
-      "text": "Charted through Millikin, Oct 3"
+      "through": "2026-10-17",
+      "text": "Charted through Wheaton, Oct 17"
     },
     "special-teams": {
-      "through": "2026-10-10",
-      "text": "Box scores through Oct 10"
+      "through": "2026-10-17",
+      "text": "Box scores through Oct 17"
     },
     "players": {
-      "through": "2026-10-10",
-      "text": "Career stats through Illinois Wesleyan, Oct 10"
+      "through": "2026-10-17",
+      "text": "Career stats through Wheaton, Oct 17"
     },
     "rankings": {
-      "through": "2026-10-14",
-      "text": "Rankings through Week 6 (Oct 14)"
+      "through": "2026-10-22",
+      "text": "Rankings through Week 7 (Oct 22)"
     },
     "lifting": {
       "through": null,
@@ -34,8 +34,8 @@
     }
   },
   "latest_game": {
-    "date": "2026-10-10",
-    "opponent": "Illinois Wesleyan"
+    "date": "2026-10-17",
+    "opponent": "Wheaton"
   },
   "schedule": [
     {
@@ -109,11 +109,11 @@
       "opponent": "Wheaton",
       "home": false,
       "conference": true,
-      "time": "1 p.m.",
+      "time": null,
       "venue": "McCully Stadium",
       "city": "Wheaton, IL",
-      "completed": false,
-      "result": null
+      "completed": true,
+      "result": "L, 3-41"
     },
     {
       "date": "2026-10-24",

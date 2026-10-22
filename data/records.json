@@ -8517,7 +8517,7 @@
      "statistic": "Total Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 136,
+     "current_value": 142,
      "top_value": 291,
      "fifth_value": 243,
      "leaderboard": [
@@ -8565,7 +8565,7 @@
      "statistic": "Solo Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 84,
+     "current_value": 88,
      "top_value": 170,
      "fifth_value": 143,
      "leaderboard": [
@@ -8655,7 +8655,7 @@
      "statistic": "Field Goals Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 24,
+     "current_value": 25,
      "top_value": 28,
      "fifth_value": 14,
      "leaderboard": [
@@ -8703,7 +8703,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 35,
+     "current_value": 37,
      "top_value": 43,
      "fifth_value": 24,
      "leaderboard": [
@@ -8831,7 +8831,7 @@
      "statistic": "Passing Yards",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 1376,
+     "current_value": 1500,
      "top_value": 2697,
      "fifth_value": 2213,
      "leaderboard": [
@@ -8873,7 +8873,7 @@
      "statistic": "Passing Completions",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 115,
+     "current_value": 133,
      "top_value": 200,
      "fifth_value": 182,
      "leaderboard": [
@@ -8915,7 +8915,7 @@
      "statistic": "Passing Attempts",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 198,
+     "current_value": 230,
      "top_value": 399,
      "fifth_value": 318,
      "leaderboard": [
@@ -8948,6 +8948,96 @@
        "player": "Kyle Burlingame",
        "value": "318",
        "value_numeric": 318
+      }
+     ]
+    }
+   ],
+   "Receiving Yards": [
+    {
+     "statistic": "Receiving Yards",
+     "player": "Liam Patrick",
+     "position": "WR",
+     "current_value": 546,
+     "top_value": 1266,
+     "fifth_value": 1075,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Kevin Jennings",
+       "value": "1,266",
+       "value_numeric": 1266
+      },
+      {
+       "rank": 2,
+       "player": "Brandy Spoerl",
+       "value": "1,196",
+       "value_numeric": 1196
+      },
+      {
+       "rank": 3,
+       "player": "Bob Helf",
+       "value": "1,146",
+       "value_numeric": 1146
+      },
+      {
+       "rank": 4,
+       "player": "Pete Thompson",
+       "value": "1,095",
+       "value_numeric": 1095
+      },
+      {
+       "rank": 5,
+       "player": "Austin Eichstaedt",
+       "value": "1,075",
+       "value_numeric": 1075
+      }
+     ]
+    }
+   ],
+   "Solo Tackles": [
+    {
+     "statistic": "Solo Tackles",
+     "player": "Andrew Redmon",
+     "position": "LB",
+     "current_value": 28,
+     "top_value": 67,
+     "fifth_value": 55,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Mike Dziewit",
+       "value": "67",
+       "value_numeric": 67
+      },
+      {
+       "rank": 2,
+       "player": "Justin Kontny",
+       "value": "64",
+       "value_numeric": 64
+      },
+      {
+       "rank": 3,
+       "player": "Jim Vento",
+       "value": "61",
+       "value_numeric": 61
+      },
+      {
+       "rank": 4,
+       "player": "Brian Erickson",
+       "value": "60",
+       "value_numeric": 60
+      },
+      {
+       "rank": 5,
+       "player": "Jeremy Winter",
+       "value": "55",
+       "value_numeric": 55
+      },
+      {
+       "rank": 5,
+       "player": "Jeremy Winter",
+       "value": "55",
+       "value_numeric": 55
       }
      ]
     }
@@ -8999,7 +9089,7 @@
      "statistic": "Field Goals Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 6,
+     "current_value": 7,
      "top_value": 13,
      "fifth_value": 8,
      "leaderboard": [
@@ -9059,7 +9149,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 12,
+     "current_value": 14,
      "top_value": 17,
      "fifth_value": 12,
      "leaderboard": [
