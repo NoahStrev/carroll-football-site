@@ -28606,7 +28606,7 @@
 "stat": "YPG",
 "value": 289.8,
 "rank": 233,
-"context": "Opp Cpl=220; Opp Pass=355; Opp Pass <br/>Yds=2898; Opp Pass <br/>TDs=20; Yds/Att=8.16; Yds/Comp=11.82",
+"context": "Opp Cpl=220; Opp Pass=355; Opp Pass Yds=2898; Opp Pass TDs=20; Yds/Att=8.16; Yds/Comp=11.82",
 "week": null
 },
 {
@@ -28716,7 +28716,7 @@
 "stat": "Avg",
 "value": 5.6,
 "rank": 115,
-"context": "Opp <br/>STFL=38; Opp <br/>ATFL=36; Opp <br/>TFL=56; Opp <br/>Tackle Yds=260",
+"context": "Opp STFL=38; Opp ATFL=36; Opp TFL=56; Opp Tackle Yds=260",
 "week": null
 },
 {
@@ -28726,7 +28726,7 @@
 "stat": "Pass Eff",
 "value": 146.32,
 "rank": 191,
-"context": "Opp Pass=355; Opp Cpl=220; Opp Int=5; Opp Pass <br/>Yds=2898; Opp Pass <br/>TDs=20",
+"context": "Opp Pass=355; Opp Cpl=220; Opp Int=5; Opp Pass Yds=2898; Opp Pass TDs=20",
 "week": null
 },
 {
@@ -29076,7 +29076,7 @@
 "stat": "YPG",
 "value": 249.1,
 "rank": 188,
-"context": "Opp Cpl=198; Opp Pass=314; Opp Pass <br/>Yds=2491; Opp Pass <br/>TDs=28; Yds/Att=7.93; Yds/Comp=.00",
+"context": "Opp Cpl=198; Opp Pass=314; Opp Pass Yds=2491; Opp Pass TDs=28; Yds/Att=7.93; Yds/Comp=.00",
 "week": null
 },
 {
@@ -29186,7 +29186,7 @@
 "stat": "Avg",
 "value": 5.6,
 "rank": 103,
-"context": "Opp <br/>STFL=37; Opp <br/>ATFL=38; Opp <br/>TFL=56; Opp <br/>Tackle Yds=202",
+"context": "Opp STFL=37; Opp ATFL=38; Opp TFL=56; Opp Tackle Yds=202",
 "week": null
 },
 {
@@ -29196,7 +29196,7 @@
 "stat": "Pass Eff",
 "value": 151.48,
 "rank": 196,
-"context": "Opp Pass=314; Opp Cpl=198; Opp Int=12; Opp Pass <br/>Yds=2491; Opp Pass <br/>TDs=28",
+"context": "Opp Pass=314; Opp Cpl=198; Opp Int=12; Opp Pass Yds=2491; Opp Pass TDs=28",
 "week": null
 },
 {
@@ -29546,7 +29546,7 @@
 "stat": "YPG",
 "value": 203.4,
 "rank": 119,
-"context": "Opp Cpl=193; Opp Pass=320; Opp Pass <br/>Yds=2034; Opp Pass <br/>TDs=13; Yds/Att=6.36; Yds/Comp=.00",
+"context": "Opp Cpl=193; Opp Pass=320; Opp Pass Yds=2034; Opp Pass TDs=13; Yds/Att=6.36; Yds/Comp=.00",
 "week": null
 },
 {
@@ -29656,7 +29656,7 @@
 "stat": "Avg",
 "value": 5.5,
 "rank": 110,
-"context": "Opp <br/>STFL=40; Opp <br/>ATFL=30; Opp <br/>TFL=55; Opp <br/>Tackle Yds=200",
+"context": "Opp STFL=40; Opp ATFL=30; Opp TFL=55; Opp Tackle Yds=200",
 "week": null
 },
 {
@@ -29666,7 +29666,7 @@
 "stat": "Pass Eff",
 "value": 122.74,
 "rank": 80,
-"context": "Opp Pass=320; Opp Cpl=193; Opp Int=7; Opp Pass <br/>Yds=2034; Opp Pass <br/>TDs=13",
+"context": "Opp Pass=320; Opp Cpl=193; Opp Int=7; Opp Pass Yds=2034; Opp Pass TDs=13",
 "week": null
 },
 {
@@ -30016,7 +30016,7 @@
 "stat": "YPG",
 "value": 222.3,
 "rank": 161,
-"context": "Opp Cpl=184; Opp Pass=313; Opp Pass <br/>Yds=2223; Opp Pass <br/>TDs=22; Yds/Att=7.10; Yds/Comp=.00",
+"context": "Opp Cpl=184; Opp Pass=313; Opp Pass Yds=2223; Opp Pass TDs=22; Yds/Att=7.10; Yds/Comp=.00",
 "week": null
 },
 {
@@ -30126,7 +30126,7 @@
 "stat": "Avg",
 "value": 6,
 "rank": 144,
-"context": "Opp <br/>STFL=47; Opp <br/>ATFL=26; Opp <br/>TFL=60; Opp <br/>Tackle Yds=197",
+"context": "Opp STFL=47; Opp ATFL=26; Opp TFL=60; Opp Tackle Yds=197",
 "week": null
 },
 {
@@ -30136,7 +30136,7 @@
 "stat": "Pass Eff",
 "value": 133.97,
 "rank": 140,
-"context": "Opp Pass=313; Opp Cpl=184; Opp Int=12; Opp Pass <br/>Yds=2223; Opp Pass <br/>TDs=22",
+"context": "Opp Pass=313; Opp Cpl=184; Opp Int=12; Opp Pass Yds=2223; Opp Pass TDs=22",
 "week": null
 },
 {
@@ -30446,7 +30446,7 @@
 "stat": "YPG",
 "value": 81,
 "rank": 14,
-"context": "Opp Cpl=13; Opp Pass=21; Opp Pass <br/>Yds=81; Opp Pass <br/>TDs=0; Yds/Att=3.86; Yds/Comp=.00",
+"context": "Opp Cpl=13; Opp Pass=21; Opp Pass Yds=81; Opp Pass TDs=0; Yds/Att=3.86; Yds/Comp=.00",
 "week": 1
 },
 {
@@ -30556,7 +30556,7 @@
 "stat": "Avg",
 "value": 5,
 "rank": 79,
-"context": "Opp <br/>STFL=4; Opp <br/>ATFL=2; Opp <br/>TFL=5; Opp <br/>Tackle Yds=9",
+"context": "Opp STFL=4; Opp ATFL=2; Opp TFL=5; Opp Tackle Yds=9",
 "week": 1
 },
 {
@@ -30576,7 +30576,7 @@
 "stat": "Pass Eff",
 "value": 84.78,
 "rank": 34,
-"context": "Opp Pass=21; Opp Cpl=13; Opp Int=1; Opp Pass <br/>Yds=81; Opp Pass <br/>TDs=0",
+"context": "Opp Pass=21; Opp Cpl=13; Opp Int=1; Opp Pass Yds=81; Opp Pass TDs=0",
 "week": 1
 },
 {
@@ -30876,7 +30876,7 @@
 "stat": "YPG",
 "value": 118,
 "rank": 30,
-"context": "Opp Cpl=13; Opp Pass=21; Opp Pass <br/>Yds=118; Opp Pass <br/>TDs=0; Yds/Att=5.62; Yds/Comp=.00",
+"context": "Opp Cpl=13; Opp Pass=21; Opp Pass Yds=118; Opp Pass TDs=0; Yds/Att=5.62; Yds/Comp=.00",
 "week": 2
 },
 {
@@ -30986,7 +30986,7 @@
 "stat": "Avg",
 "value": 5,
 "rank": 79,
-"context": "Opp <br/>STFL=4; Opp <br/>ATFL=2; Opp <br/>TFL=5; Opp <br/>Tackle Yds=9",
+"context": "Opp STFL=4; Opp ATFL=2; Opp TFL=5; Opp Tackle Yds=9",
 "week": 2
 },
 {
@@ -31006,7 +31006,7 @@
 "stat": "Pass Eff",
 "value": 99.58,
 "rank": 58,
-"context": "Opp Pass=21; Opp Cpl=13; Opp Int=1; Opp Pass <br/>Yds=118; Opp Pass <br/>TDs=0",
+"context": "Opp Pass=21; Opp Cpl=13; Opp Int=1; Opp Pass Yds=118; Opp Pass TDs=0",
 "week": 2
 },
 {
@@ -31326,7 +31326,7 @@
 "stat": "YPG",
 "value": 123.3,
 "rank": 20,
-"context": "Opp Cpl=36; Opp Pass=72; Opp Pass <br/>Yds=370; Opp Pass <br/>TDs=1; Yds/Att=5.14; Yds/Comp=.00",
+"context": "Opp Cpl=36; Opp Pass=72; Opp Pass Yds=370; Opp Pass TDs=1; Yds/Att=5.14; Yds/Comp=.00",
 "week": 3
 },
 {
@@ -31436,7 +31436,7 @@
 "stat": "Avg",
 "value": 8,
 "rank": 198,
-"context": "Opp <br/>STFL=17; Opp <br/>ATFL=14; Opp <br/>TFL=24; Opp <br/>Tackle Yds=51",
+"context": "Opp STFL=17; Opp ATFL=14; Opp TFL=24; Opp Tackle Yds=51",
 "week": 3
 },
 {
@@ -31456,7 +31456,7 @@
 "stat": "Pass Eff",
 "value": 92.19,
 "rank": 29,
-"context": "Opp Pass=72; Opp Cpl=36; Opp Int=2; Opp Pass <br/>Yds=370; Opp Pass <br/>TDs=1",
+"context": "Opp Pass=72; Opp Cpl=36; Opp Int=2; Opp Pass Yds=370; Opp Pass TDs=1",
 "week": 3
 },
 {
@@ -31776,7 +31776,7 @@
 "stat": "YPG",
 "value": 123.3,
 "rank": 20,
-"context": "Opp Cpl=36; Opp Pass=72; Opp Pass <br/>Yds=370; Opp Pass <br/>TDs=1; Yds/Att=5.14; Yds/Comp=.00",
+"context": "Opp Cpl=36; Opp Pass=72; Opp Pass Yds=370; Opp Pass TDs=1; Yds/Att=5.14; Yds/Comp=.00",
 "week": 4
 },
 {
@@ -31886,7 +31886,7 @@
 "stat": "Avg",
 "value": 8,
 "rank": 198,
-"context": "Opp <br/>STFL=17; Opp <br/>ATFL=14; Opp <br/>TFL=24; Opp <br/>Tackle Yds=51",
+"context": "Opp STFL=17; Opp ATFL=14; Opp TFL=24; Opp Tackle Yds=51",
 "week": 4
 },
 {
@@ -31906,7 +31906,7 @@
 "stat": "Pass Eff",
 "value": 92.19,
 "rank": 29,
-"context": "Opp Pass=72; Opp Cpl=36; Opp Int=2; Opp Pass <br/>Yds=370; Opp Pass <br/>TDs=1",
+"context": "Opp Pass=72; Opp Cpl=36; Opp Int=2; Opp Pass Yds=370; Opp Pass TDs=1",
 "week": 4
 },
 {
@@ -32236,7 +32236,7 @@
 "stat": "YPG",
 "value": 126,
 "rank": 12,
-"context": "Opp Cpl=64; Opp Pass=137; Opp Pass <br/>Yds=630; Opp Pass <br/>TDs=2; Yds/Att=4.60; Yds/Comp=.00",
+"context": "Opp Cpl=64; Opp Pass=137; Opp Pass Yds=630; Opp Pass TDs=2; Yds/Att=4.60; Yds/Comp=.00",
 "week": 5
 },
 {
@@ -32346,7 +32346,7 @@
 "stat": "Avg",
 "value": 7.4,
 "rank": 192,
-"context": "Opp <br/>STFL=27; Opp <br/>ATFL=20; Opp <br/>TFL=37; Opp <br/>Tackle Yds=96",
+"context": "Opp STFL=27; Opp ATFL=20; Opp TFL=37; Opp Tackle Yds=96",
 "week": 5
 },
 {
@@ -32366,7 +32366,7 @@
 "stat": "Pass Eff",
 "value": 82.86,
 "rank": 3,
-"context": "Opp Pass=137; Opp Cpl=64; Opp Int=5; Opp Pass <br/>Yds=630; Opp Pass <br/>TDs=2",
+"context": "Opp Pass=137; Opp Cpl=64; Opp Int=5; Opp Pass Yds=630; Opp Pass TDs=2",
 "week": 5
 },
 {
@@ -32696,7 +32696,7 @@
 "stat": "YPG",
 "value": 126,
 "rank": 12,
-"context": "Opp Cpl=64; Opp Pass=137; Opp Pass <br/>Yds=630; Opp Pass <br/>TDs=2; Yds/Att=4.60; Yds/Comp=.00",
+"context": "Opp Cpl=64; Opp Pass=137; Opp Pass Yds=630; Opp Pass TDs=2; Yds/Att=4.60; Yds/Comp=.00",
 "week": 6
 },
 {
@@ -32806,7 +32806,7 @@
 "stat": "Avg",
 "value": 7.2,
 "rank": 182,
-"context": "Opp <br/>STFL=26; Opp <br/>ATFL=20; Opp <br/>TFL=36; Opp <br/>Tackle Yds=87",
+"context": "Opp STFL=26; Opp ATFL=20; Opp TFL=36; Opp Tackle Yds=87",
 "week": 6
 },
 {
@@ -32826,7 +32826,7 @@
 "stat": "Pass Eff",
 "value": 82.86,
 "rank": 3,
-"context": "Opp Pass=137; Opp Cpl=64; Opp Int=5; Opp Pass <br/>Yds=630; Opp Pass <br/>TDs=2",
+"context": "Opp Pass=137; Opp Cpl=64; Opp Int=5; Opp Pass Yds=630; Opp Pass TDs=2",
 "week": 6
 },
 {
@@ -33156,7 +33156,7 @@
 "stat": "YPG",
 "value": 176.4,
 "rank": 72,
-"context": "Opp Cpl=103; Opp Pass=188; Opp Pass <br/>Yds=1235; Opp Pass <br/>TDs=8; Yds/Att=6.57; Yds/Comp=.00",
+"context": "Opp Cpl=103; Opp Pass=188; Opp Pass Yds=1235; Opp Pass TDs=8; Yds/Att=6.57; Yds/Comp=.00",
 "week": 7
 },
 {
@@ -33266,7 +33266,7 @@
 "stat": "Avg",
 "value": 7.14,
 "rank": 187,
-"context": "Opp <br/>STFL=37; Opp <br/>ATFL=26; Opp <br/>TFL=50; Opp <br/>Tackle Yds=132",
+"context": "Opp STFL=37; Opp ATFL=26; Opp TFL=50; Opp Tackle Yds=132",
 "week": 7
 },
 {
@@ -33286,7 +33286,7 @@
 "stat": "Pass Eff",
 "value": 118.69,
 "rank": 93,
-"context": "Opp Pass=188; Opp Cpl=103; Opp Int=5; Opp Pass <br/>Yds=1235; Opp Pass <br/>TDs=8",
+"context": "Opp Pass=188; Opp Cpl=103; Opp Int=5; Opp Pass Yds=1235; Opp Pass TDs=8",
 "week": 7
 },
 {

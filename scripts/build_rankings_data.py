@@ -158,6 +158,13 @@ CATEGORY_SECTION = {
 }
 
 
+def clean_context(value):
+    """NCAA.com's context text arrives with raw line-break tags ("Opp <br/>STFL=4"); keep it as plain text."""
+    if not isinstance(value, str):
+        return value
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]*>", " ", value)).strip()
+
+
 def build_cciw():
     wb = openpyxl.load_workbook(CCIW_SRC, read_only=True, data_only=True)
     rows = []
@@ -213,7 +220,7 @@ def build_national():
             continue
         rows.append({
             "phase": phase, "season": str(r["Season"]), "category": r["Category"], "stat": r["Stat"],
-            "value": r["Value"], "rank": r["Rank"], "context": r["Context"], "week": None,
+            "value": r["Value"], "rank": r["Rank"], "context": clean_context(r["Context"]), "week": None,
         })
     wb.close()
 
@@ -242,7 +249,7 @@ def build_national():
                 continue
             rows.append({
                 "phase": phase, "season": season, "category": r["Category"], "stat": r["Stat"],
-                "value": r["Value"], "rank": r["Rank"], "context": r["Context"], "week": r["Week"],
+                "value": r["Value"], "rank": r["Rank"], "context": clean_context(r["Context"]), "week": r["Week"],
             })
             season_weeks[r["Week"]] = str(r["SnapshotDate"])[:10]
         wb.close()

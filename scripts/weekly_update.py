@@ -12,8 +12,10 @@ Steps (each is skippable with --only; they run in this order):
          the build reports a problem with the new game (a parse warning, or an opponent name it does not know)
   cciw   CCIW.org weekly snapshot + progression workbooks
   ncaa   NCAA.com national weekly snapshot + trend workbooks (several minutes; skipped if today's already exists)
-  hudl   file a Hudl "PlaylistData_*.xlsx" from Downloads into Game Analysis/raw under the right name, then run the
-         append-only combiner (never --rebuild)
+  hudl   file Hudl "PlaylistData_*.xlsx" exports from Downloads into Game Analysis/raw under the right names, then run
+         the append-only combiner (never --rebuild). One or several files: with more than one, each file is matched to a
+         played game by comparing the order of its offensive results (rush/complete/incomplete/sack) with that game's box
+         score, and anything it cannot match with confidence is left for you. Extra columns in the export are fine.
   site   refresh_all.py (every site JSON, then the validator)
 
 It never commits or pushes, never maps a new opponent name, and never fixes a parse problem on its own: anything that
@@ -171,6 +173,17 @@ def step_cciw(args, year):
 
 # ------------------------------------------------------------------------------------------------- NCAA
 
+def _blocked_by_script_policy(out):
+    return any(s in out for s in ("running scripts is disabled", "PSSecurityException", "UnauthorizedAccess"))
+
+
+def _script_policy_decision(step):
+    return (f"{step}: PowerShell refused to run its .ps1 script because script execution is disabled in the shell this ran from. "
+            "This tool does not change that setting. Run `python scripts/weekly_update.py --only ncaa` from a PowerShell session that "
+            "allows scripts (or allow them for your own account once, yourself: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned), "
+            "then run the site step again.")
+
+
 def step_ncaa(args, year):
     step_header("ncaa", "NCAA.com national snapshot (several minutes)")
     today = dt.date.today().isoformat()
@@ -189,6 +202,13 @@ def step_ncaa(args, year):
     # Direct "&" invocation inside -Command: the form this project's notes say works here (not -File / -ExecutionPolicy).
     cmd = ["powershell", "-NoProfile", "-Command", f"& '{scrape}' -Year {year} -SnapshotDate {today} *> '{log}'"]
     code, out = run(cmd, NCAA_DIR)
+    if code != 0 and _blocked_by_script_policy(out):
+        decisions.append(_script_policy_decision("ncaa"))
+        try:
+            folder.rmdir()  # nothing was written; leave no empty snapshot folder behind
+        except OSError:
+            pass
+        return
     if code != 0:
         raise SystemExit(f"NCAA scrape failed ({code}):\n{out[-1500:]}")
     import csv
@@ -201,6 +221,9 @@ def step_ncaa(args, year):
     if rows and zero / len(rows) > 0.25:
         decisions.append(f"ncaa: {zero} of {len(rows)} categories found nothing -- likely a site-side issue (happened for all of 2022). Do not publish this snapshot as-is.")
     code, out = run(["powershell", "-NoProfile", "-Command", f"& '{NCAA_DIR / 'build_weekly_trends.ps1'}' -Year {year}"], NCAA_DIR)
+    if code != 0 and _blocked_by_script_policy(out):
+        decisions.append(_script_policy_decision("ncaa (trend workbooks)"))
+        return
     if code != 0:
         raise SystemExit(f"build_weekly_trends.ps1 failed:\n{out[-1500:]}")
     notes.append(f"ncaa: snapshot {today} ({len(rows)} categories, {zero} empty), trend workbooks rebuilt")
@@ -240,6 +263,81 @@ def new_hudl_files(year):
     return sorted(found, key=lambda p: p.stat().st_mtime)
 
 
+def _hudl_sequence(path):
+    """The order of Carroll's offensive results in a Hudl export, as letters: R rush/scramble, C complete, I incomplete,
+    S sack, T interception (everything else -- penalties, timeouts, blanks -- is skipped)."""
+    import openpyxl
+    rows = list(openpyxl.load_workbook(path, read_only=True).active.iter_rows(values_only=True))
+    header = list(rows[0])
+    odk, result = header.index("ODK"), header.index("RESULT")
+    out = []
+    for r in rows[1:]:
+        if r[odk] != "O":
+            continue
+        v = r[result] or ""
+        for prefix, letter in (("Interception", "T"), ("Sack", "S"), ("Complete", "C"), ("Incomplete", "I"), ("Rush", "R"), ("Scramble", "R")):
+            if v.startswith(prefix):
+                out.append(letter)
+                break
+    return "".join(out)
+
+
+def _box_sequence(game, year):
+    """The same letters from the box score's play-by-play, for plays run in Carroll's drives."""
+    for path in glob.glob(str(ST_DIR / "raw" / f"{year}_*.json")):
+        d = json.loads(Path(path).read_text(encoding="utf-8"))
+        mo, dy = d["game_info"]["date"].split("/")[:2]
+        if f"{year}-{int(mo):02d}-{int(dy):02d}" != game["date"]:
+            continue
+        out = []
+        for p in d["play_by_play"]:
+            if "carroll" not in (p.get("drive") or "").lower():
+                continue
+            text = p["play"].lower()
+            if re.search(r"kickoff|punt|field goal|kick attempt|timeout|drive start|start of|end of", text):
+                continue
+            if re.search(r"\bpass\b", text):
+                out.append("T" if "intercept" in text else "C" if "pass complete" in text else "I" if "pass incomplete" in text else "")
+            elif "sacked" in text:
+                out.append("S")
+            elif re.search(r"\brush\b|kneel", text):
+                out.append("R")
+        return "".join(out)
+    return None
+
+
+# A Hudl export has no opponent or date inside it, only plays, so a file is matched to the played-but-uncharted game whose
+# box-score play-by-play it resembles most. Measured on the 55 filed 2021-26 games: a file scores 0.79-0.99 against its own
+# game and at most 0.77 against any other. Older exports with almost no result codes cannot be matched this way (and say so).
+HUDL_MIN_RATIO = 0.78    # a file must resemble its game at least this much
+HUDL_MIN_MARGIN = 0.15   # and the best assignment must beat the runner-up by this much in total, or a human decides
+
+
+def match_hudl_files(files, games, year):
+    """Assign each Hudl file to one of the played-but-uncharted games. Returns (pairs, reason); pairs is a list of
+    (file, game) or None when it cannot be done safely, with the reason."""
+    import difflib
+    import itertools
+    if len(files) > len(games):
+        return None, f"{len(files)} files but only {len(games)} played game(s) without charting"
+    seqs = {f: _hudl_sequence(f) for f in files}
+    boxes = {g["date"]: _box_sequence(g, year) for g in games}
+    if any(v is None for v in boxes.values()):
+        return None, "a played game has no box-score play-by-play"
+    ratio = lambda f, g: difflib.SequenceMatcher(None, seqs[f], boxes[g["date"]], autojunk=False).ratio()
+    options = []
+    for perm in itertools.permutations(games, len(files)):
+        pairs = list(zip(files, perm))
+        options.append((sum(ratio(f, g) for f, g in pairs), pairs))
+    options.sort(key=lambda o: -o[0])
+    best_total, best = options[0]
+    if any(ratio(f, g) < HUDL_MIN_RATIO for f, g in best):
+        return None, "play results do not resemble those games closely enough (" + "; ".join(f"{f.name} ~ {g['opponent']}: {ratio(f, g):.2f}" for f, g in best) + ")"
+    if len(options) > 1 and best_total - options[1][0] < HUDL_MIN_MARGIN:
+        return None, f"cannot tell which file is which game (best {best_total:.2f} vs next {options[1][0]:.2f})"
+    return best, None
+
+
 def step_hudl(args, year):
     step_header("hudl", "Hudl export")
     waiting = played_games_without_charting(year)
@@ -249,39 +347,47 @@ def step_hudl(args, year):
         say(f"Nothing to file: {msg}." + (f" Still waiting on charting for: {', '.join(g['opponent'] + ' ' + g['date'] for g in waiting)}." if waiting else ""))
         notes.append(f"hudl: {msg}" + (f"; waiting on {', '.join(g['opponent'] for g in waiting)}" if waiting else ""))
         return
-    if len(candidates) > 1:
-        decisions.append(f"hudl: {len(candidates)} PlaylistData files in Downloads ({', '.join(c.name for c in candidates)}) -- say which game each is, or pass one with --hudl.")
-        return
-    src = candidates[0]
-    if len(waiting) != 1:
-        decisions.append(f"hudl: found {src.name} but {len(waiting)} played games lack charting ({', '.join(g['opponent'] + ' ' + g['date'] for g in waiting) or 'none'}) -- cannot tell which game it is; rename it to 'Carroll vs <Opponent> M_D_YY.xlsx' in Game Analysis/raw yourself.")
-        return
-    game = waiting[0]
     import openpyxl
-    ws = openpyxl.load_workbook(src, read_only=True).active
-    header = [c for c in next(ws.iter_rows(values_only=True))]
-    reference = next(iter(sorted(glob.glob(str(GA_DIR / "raw" / f"Carroll vs * {str(year)[2:]}.xlsx")))), None)
-    if reference:
-        ref_header = [c for c in next(openpyxl.load_workbook(reference, read_only=True).active.iter_rows(values_only=True))]
-        if header != ref_header:
-            decisions.append(f"hudl: {src.name} has different columns than earlier exports (expected {len(ref_header)}, got {len(header)}) -- not filed.")
+    if len(candidates) == 1 and len(waiting) == 1:
+        pairs = [(candidates[0], waiting[0])]
+    else:
+        pairs, reason = match_hudl_files(candidates, waiting, year)
+        if pairs is None:
+            decisions.append(f"hudl: {len(candidates)} file(s) ({', '.join(c.name for c in candidates)}) vs {len(waiting)} uncharted game(s) "
+                             f"({', '.join(g['opponent'] + ' ' + g['date'] for g in waiting) or 'none'}): {reason}. "
+                             f"Rename each to 'Carroll vs <Opponent> M_D_YY.xlsx' in Game Analysis/raw yourself.")
             return
-    target = GA_DIR / "raw" / f"Carroll vs {short_opponent(game['opponent'])} {game['stamp']}.xlsx"
-    say(f"{src.name} -> {target.name}   (the only played game without charting: {game['opponent']} {game['date']})")
-    if target.exists():
-        decisions.append(f"hudl: {target.name} already exists -- not overwritten.")
+    refs = sorted(glob.glob(str(GA_DIR / "raw" / f"Carroll vs *_{str(year)[2:]}.xlsx")))
+    ref_header = [c for c in next(openpyxl.load_workbook(refs[0], read_only=True).active.iter_rows(values_only=True))] if refs else None
+    moves = []
+    for src, game in pairs:
+        header = [c for c in next(openpyxl.load_workbook(src, read_only=True).active.iter_rows(values_only=True))]
+        # Extra columns are fine (the combiner picks the ones it needs by name -- the 10/22/26 exports added "PLAY TYPE");
+        # a MISSING column is not.
+        if ref_header and [c for c in ref_header if c not in header]:
+            decisions.append(f"hudl: {src.name} is missing column(s) {[c for c in ref_header if c not in header]} that earlier exports have -- not filed.")
+            continue
+        target = GA_DIR / "raw" / f"Carroll vs {short_opponent(game['opponent'])} {game['stamp']}.xlsx"
+        say(f"{src.name} -> {target.name}   ({game['opponent']} {game['date']})")
+        if target.exists():
+            decisions.append(f"hudl: {target.name} already exists -- not overwritten.")
+            continue
+        moves.append((src, target))
+    if args.dry_run or not moves:
+        if moves:
+            say("(dry run: would move them there and run the append-only combiner)")
         return
-    if args.dry_run:
-        say("(dry run: would move it there and run the append-only combiner)")
-        return
-    shutil.move(str(src), str(target))
+    for src, target in moves:
+        shutil.move(str(src), str(target))
     code, out = run([sys.executable, "scripts/build_combined_dataset.py"], GA_DIR)  # append-only; never --rebuild
-    say("\n".join(out.strip().splitlines()[-5:]))
+    say("\n".join(out.strip().splitlines()[-6:]))
     if code != 0:
         raise SystemExit(f"build_combined_dataset.py failed:\n{out[-2000:]}")
-    if "Official play-by-play" in out and "0/1" in out:
-        decisions.append(f"hudl: {target.name} loaded but its official play-by-play did NOT match a box score -- check the file name/date.")
-    notes.append(f"hudl: filed {target.name}")
+    matched = re.search(r"(\d+)/(\d+) new game\(s\) matched", out)
+    if matched and matched.group(1) != matched.group(2):
+        decisions.append(f"hudl: loaded {len(moves)} file(s) but only {matched.group(1)} of {matched.group(2)} matched a box score's official play-by-play -- check the file names/dates.")
+    for _, target in moves:
+        notes.append(f"hudl: filed {target.name}")
 
 
 # ------------------------------------------------------------------------------------------------- site

@@ -16,6 +16,17 @@
    rather than becoming their own version. */
 const UPDATES = [
   {
+    version: '1.4.2',
+    date: 'October 22, 2026',
+    title: 'Data fixes: field position after returns, Carthage games, a missing extra point',
+    changes: [
+      { change: 'When a return ended on a field spot written with a six-letter team label (most 2021 to 2024 box scores, such as "Carrol" or "Wheato"), the final spot was missed and the play was recorded at its landing spot. About 130 punt, punt return, kickoff and kickoff return plays are corrected, along with their field-position bucket, Value and Score, and 84 kickoffs and returns now show the drive that followed them', effect: 'Return yardage, starting field position and the Special Teams scores for 2021 through 2026 are more accurate.' },
+      { change: 'In the three Carthage games (2023, 2025 and 2026) the source labelled Carthage\'s side of the field the same way it labels Carroll\'s, so Carthage\'s side was read as Carroll\'s and the field was mirrored. Those 36 plays are corrected', effect: 'Three punters each gain one inside-the-20 punt, Jacob Laurent gains one inside-the-25 kickoff, and the Special Teams scores for 2023, 2025 and 2026 move slightly.' },
+      { change: 'An extra point in the Oct 3, 2026 Millikin game that the box score listed with no kicker is now counted, credited to Matthew Swink as the only Carroll kicker', effect: 'Swink\'s extra points now read 72 of 75, and the game shows all four of Carroll\'s PATs.' },
+      { change: 'One misspelled personnel group ("MOSNTER") is counted as MONSTER, a stray number typed in a 2022 defensive-front field is ignored, and national ranking notes no longer carry stray line-break tags', effect: 'The personnel and front filters list one fewer odd choice.' },
+    ],
+  },
+  {
     version: '1.4.1',
     date: 'October 9, 2026',
     title: 'Special Teams: tackles, carry and roll, miss locations and hash marks',

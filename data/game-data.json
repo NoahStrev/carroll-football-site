@@ -2856,7 +2856,7 @@
 "play_efficiency": "Stuffed",
 "situation": "Standard Down",
 "field_zone": "Red Zone",
-"personnel": "MOSNTER",
+"personnel": "MONSTER",
 "formation": "MONSTER",
 "formation_strength": "L",
 "backfield": null,
@@ -107002,7 +107002,7 @@
 "motion": null,
 "protection": null,
 "play_call": "PLANE",
-"def_front": 62,
+"def_front": null,
 "stunt": null,
 "blitz": null,
 "cov_shell": "1 HIGH",
@@ -409080,7 +409080,6 @@
 "HEAVY",
 "M",
 "MONSTER",
-"MOSNTER",
 "SAVAGE",
 "T",
 "THUNDER"
@@ -409426,7 +409425,6 @@
 "Z WHEEL READ"
 ],
 "def_front": [
-62,
 "?",
 "???",
 "BEAR",

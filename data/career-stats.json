@@ -8208,7 +8208,7 @@
       "gross_yds": 1267,
       "net_yds": 971,
       "long": 57,
-      "i20": 5,
+      "i20": 6,
       "blocked": 1,
       "gross_avg": 38.4,
       "net_avg": 29.4
@@ -8221,7 +8221,7 @@
        "gross_yds": 1267,
        "net_yds": 971,
        "long": 57,
-       "i20": 5,
+       "i20": 6,
        "blocked": 1,
        "gross_avg": 38.4,
        "net_avg": 29.4,
@@ -30760,7 +30760,7 @@
       "gross_yds": 865,
       "net_yds": 697,
       "long": 43,
-      "i20": 3,
+      "i20": 4,
       "gross_avg": 30.9,
       "net_avg": 24.9
      },
@@ -30772,7 +30772,7 @@
        "gross_yds": 865,
        "net_yds": 697,
        "long": 43,
-       "i20": 3,
+       "i20": 4,
        "gross_avg": 30.9,
        "net_avg": 24.9,
        "games": 8
@@ -31278,7 +31278,7 @@
       "att": 155,
       "yds": 7363,
       "long": 77,
-      "inside_25": 55,
+      "inside_25": 53,
       "ob": 13,
       "tb": 16,
       "avg": 47.5
@@ -31290,7 +31290,7 @@
        "att": 39,
        "yds": 2006,
        "long": 64,
-       "inside_25": 15,
+       "inside_25": 12,
        "ob": 5,
        "tb": 1,
        "avg": 51.4,
@@ -31312,7 +31312,7 @@
        "att": 67,
        "yds": 3001,
        "long": 64,
-       "inside_25": 22,
+       "inside_25": 23,
        "tb": 8,
        "ob": 2,
        "avg": 44.8,
@@ -51972,12 +51972,12 @@
     },
     "PATFG": {
      "career": {
-      "exp_att": 74,
-      "exp_made": 71,
+      "exp_att": 75,
+      "exp_made": 72,
       "fg_att": 37,
       "fg_made": 25,
       "fg_pct": 67.6,
-      "exp_pct": 95.9
+      "exp_pct": 96.0
      },
      "career_games": 27,
      "seasons": [
@@ -52003,12 +52003,12 @@
       },
       {
        "season": 2026,
-       "exp_att": 16,
-       "exp_made": 15,
+       "exp_att": 17,
+       "exp_made": 16,
        "fg_att": 14,
        "fg_made": 7,
        "fg_pct": 50.0,
-       "exp_pct": 93.8,
+       "exp_pct": 94.1,
        "games": 7
       }
      ]
@@ -58131,7 +58131,7 @@
       "gross_yds": 5794,
       "net_yds": 5229,
       "long": 70,
-      "i20": 41,
+      "i20": 42,
       "gross_avg": 38.9,
       "net_avg": 35.1
      },
@@ -58165,7 +58165,7 @@
        "gross_yds": 1451,
        "net_yds": 1312,
        "long": 58,
-       "i20": 11,
+       "i20": 12,
        "gross_avg": 40.3,
        "net_avg": 36.4,
        "games": 9
@@ -58188,7 +58188,7 @@
       "att": 25,
       "yds": 878,
       "long": 65,
-      "inside_25": 7,
+      "inside_25": 6,
       "tb": 10,
       "ob": 2,
       "avg": 35.1
@@ -58200,7 +58200,7 @@
        "att": 25,
        "yds": 878,
        "long": 65,
-       "inside_25": 7,
+       "inside_25": 6,
        "tb": 10,
        "ob": 2,
        "avg": 35.1,

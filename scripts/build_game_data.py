@@ -238,6 +238,20 @@ def load_source(wb):
     return carroll_game_labels, opbp_all, opponent_by_game, date_by_game, games
 
 
+# Hudl charting slips found in the 2026-10-22 audit, cleaned here rather than in the user's own exports: one personnel
+# group typed "MOSNTER" next to 48 "MONSTER"s, and one 2022 Wisconsin Lutheran play with the number 62 in the defensive-front
+# column (a front is a name, so a bare number is a stray entry and reads as "not charted").
+PERSONNEL_TYPO_FIXES = {"MOSNTER": "MONSTER"}
+
+
+def clean_personnel(value):
+    return PERSONNEL_TYPO_FIXES.get(value, value) if isinstance(value, str) else value
+
+
+def clean_def_front(value):
+    return None if isinstance(value, (int, float)) and not isinstance(value, bool) else value
+
+
 def build_charted_plays(wb, carroll_game_labels, opponent_by_game, date_by_game):
     """The hand-charted Plays sheet, split into offense and defense rows."""
     # ---------------------------------------------------------- Plays sheet --
@@ -276,11 +290,11 @@ def build_charted_plays(wb, carroll_game_labels, opponent_by_game, date_by_game)
         if r["ODK"] == "O":
             offense_plays.append({
                 **base,
-                "personnel": r["PERSONNEL"], "formation": r["OFF FORM"],
+                "personnel": clean_personnel(r["PERSONNEL"]), "formation": r["OFF FORM"],
                 "formation_strength": r["OFF STR"], "backfield": r["BACKFIELD"],
                 "motion": r["MOTION"], "protection": r["PROTECTION"],
                 "play_call": r["PLAY_CALL"],
-                "def_front": r["DEF FRONT"], "stunt": r["STUNT"], "blitz": r["BLITZ"],
+                "def_front": clean_def_front(r["DEF FRONT"]), "stunt": r["STUNT"], "blitz": r["BLITZ"],
                 "cov_shell": r["COV SHELL"], "coverage": r["COVERAGE"],
             })
         else:
