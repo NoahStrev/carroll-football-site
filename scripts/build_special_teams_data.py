@@ -4,7 +4,7 @@ and writes ../data/special-teams.json -- row-level records for all 5 units (Punt
 Punt Return, Kickoff, Kickoff Return, PAT/FG "Money Unit"), enriched with the
 derived fields the dashboard's charts need (field-position bucket, points scored,
 etc.). Filtering/aggregation happens client-side in the dashboard's JS against this
-row-level data, same pattern as Special Teams Data/mockups/*.html.
+row-level data, same pattern as the July 2026 prototypes in Special Teams Data/_archive/mockups-2026-07/.
 
 Column semantics are per Special Teams Data/rules/*.md -- read those before changing
 what any field here means, not just this script's comments.
@@ -245,7 +245,7 @@ def main():
         payload["filters"][unit]["is_home"] = distinct(rows, "is_home")
 
     OUT.parent.mkdir(exist_ok=True)
-    with open(OUT, "w", encoding="utf-8") as f:
+    with open(OUT, "w", encoding="utf-8", newline="\n") as f:  # LF, matching .gitattributes (no CRLF warnings on commit)
         json.dump(payload, f, indent=0, default=str)
 
     for unit, rows in payload["units"].items():

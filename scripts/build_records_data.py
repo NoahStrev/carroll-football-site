@@ -65,6 +65,31 @@ CAREER_STATS_SRC = Path(__file__).resolve().parent.parent / "data" / "career-sta
 OUT = Path(__file__).resolve().parent.parent / "data" / "records.json"
 
 
+HOME_SRC = Path(__file__).resolve().parent.parent / "data" / "home.json"
+
+
+def clean_record_opponents(records):
+    """The record book's opponent text is the athletics site's own ("@ Augustana College (IL)", "vs.Carthage"); show
+    it in the site's own names ("at Augustana", "vs Carthage") like every other page (2026-10-23). Uses the opponent
+    names in home.json; the longest name the text starts with wins (so "Illinois College" never becomes "Illinois")."""
+    try:
+        names = sorted(json.loads(HOME_SRC.read_text(encoding="utf-8"))["history"], key=len, reverse=True)
+    except (OSError, ValueError, KeyError):
+        return
+    for rows in records.values():
+        for r in rows:
+            raw = r.get("opponent")
+            if not isinstance(raw, str) or not raw.strip():
+                continue
+            text = raw.strip()
+            where = "at" if text.startswith("@") else "vs" if text.lower().startswith("vs") else None
+            body = re.sub(r"^(@|vs\.?)\s*", "", text, flags=re.I).strip()
+            name = next((n for n in names if body.lower().startswith(n.lower())), None)
+            if name is None:
+                name = re.sub(r"\s*\((IL|WI)\)$|\s+(College|University)$", "", body).strip()
+            r["opponent"] = f"{where} {name}" if where else name
+
+
 def load_workbook_sheets(path):
     wb = openpyxl.load_workbook(path, read_only=True)
     return {name: sheet_rows(wb[name]) for name in wb.sheetnames}
@@ -453,6 +478,17 @@ def _numeric(v):
         return None
 
 
+# Record-book vs archive gaps that have been investigated and explained (see the site skill / development log,
+# 2026-09-24): printed as notes instead of WARNINGs. Keyed (statistic prefix as the warning prints it, player).
+EXPLAINED_GAPS = {
+    ("Sacks", "Josh Zank"): "career began 2008, before the 2010 archive; 2011 box scores credit 10.0",
+    ("Sacks 2011", "Josh Zank"): "the 2011 box scores themselves sum to 10.0",
+    ("Kickoff Returns", "Keon Miller"): "career began 2019, before the 2021 special-teams scope",
+    ("Kickoff Return Yards", "Keon Miller"): "career began 2019, before the 2021 special-teams scope",
+    ("Kickoff Returns 2022", "Keon Miller"): "the kickoff-return sheet credits him 27 kicks fielded, 3 with no return yardage; the book counts 25 returns",
+}
+
+
 def main():
     records = load_workbook_sheets(RECORDS_SRC)
     awards = load_workbook_sheets(AWARDS_SRC)
@@ -466,9 +502,10 @@ def main():
     )
     check_season_value_mismatches(career_stats["players"], records["SeasonIndividual"], warnings)
 
+    clean_record_opponents(records)
     out = {"records": records, "awards": awards, "record_watch": record_watch}
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUT, "w", encoding="utf-8") as f:
+    with open(OUT, "w", encoding="utf-8", newline="\n") as f:  # LF, matching .gitattributes (no CRLF warnings on commit)
         json.dump(out, f, indent=1)
 
     for name, rows in {**records, **awards}.items():
@@ -480,7 +517,10 @@ def main():
           f"season {season_n} entries across {len(record_watch['season'])} stats")
     print(f"wrote {OUT}")
     for w in warnings:
-        print(f"WARNING: {w}")
+        explained = next((why for (stat, player), why in EXPLAINED_GAPS.items() if w.startswith(f"{stat}:") and player in w), None)
+        # An already-investigated gap is a note, not a WARNING: the same five lines on every build trained everyone to
+        # skip the WARNING block, which is exactly where a NEW record break would show up (2026-10-23).
+        print(f"note (explained -- {explained}): {w[:110]}..." if explained else f"WARNING: {w}")
 
 
 if __name__ == "__main__":

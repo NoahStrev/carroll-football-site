@@ -195,8 +195,10 @@ function renderScatter(container, { points, xLabel, yLabel, colorMap, xDomain, y
   }
   const [xMin, xMax] = xDomain || [Math.min(...xs), Math.max(...xs)];
   const [yMin, yMax] = yDomain || [Math.min(...ys), Math.max(...ys)];
-  const sx = (v) => PAD_L + ((v - xMin) / (xMax - xMin || 1)) * (W - PAD_L - PAD_R);
-  const sy = (v) => H - PAD_B - ((v - yMin) / (yMax - yMin || 1)) * (H - PAD_B - PAD_T);
+  // INSET keeps a dot at the domain edge off the axis labels (a min-x point used to sit on top of the "55" tick).
+  const INSET = 8;
+  const sx = (v) => PAD_L + INSET + ((v - xMin) / (xMax - xMin || 1)) * (W - PAD_L - PAD_R - 2 * INSET);
+  const sy = (v) => H - PAD_B - INSET / 2 - ((v - yMin) / (yMax - yMin || 1)) * (H - PAD_B - PAD_T - INSET);
 
   const svgns = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(svgns, 'svg');
@@ -320,7 +322,9 @@ function renderHeatmap(container, { rowLabels, colLabels, cellFor, title = (r, c
 /** values: [number...] (chronological); labels: [string...] same length. Colors
  * each segment green if it's rising toward/above the running average, red if
  * falling below -- matches the reference dashboards' red/green trend lines. */
-function renderSparkline(container, { values, labels, unit = '', seasons, opponents }) {
+// lowerIsBetter (2026-10-23): for yards allowed, snap times, return yards allowed, the opponent's starting spot --
+// a falling line is the good direction, so green/red flip. Default stays "higher is better".
+function renderSparkline(container, { values, labels, unit = '', seasons, opponents, lowerIsBetter = false }) {
   container.innerHTML = '';
   const pts = values.map((v, i) => ({ v, l: labels[i], season: seasons && seasons[i], opponent: opponents && opponents[i] })).filter((p) => p.v !== null && p.v !== undefined);
   if (pts.length < 2) {
@@ -358,8 +362,8 @@ function renderSparkline(container, { values, labels, unit = '', seasons, oppone
     const seg = document.createElementNS(svgns, 'line');
     seg.setAttribute('x1', sx(i - 1)); seg.setAttribute('y1', sy(pts[i - 1].v));
     seg.setAttribute('x2', sx(i)); seg.setAttribute('y2', sy(pts[i].v));
-    const rising = pts[i].v >= pts[i - 1].v;
-    seg.setAttribute('stroke', rising ? cssVar('--good') : cssVar('--critical'));
+    const better = lowerIsBetter ? pts[i].v <= pts[i - 1].v : pts[i].v >= pts[i - 1].v;
+    seg.setAttribute('stroke', better ? cssVar('--good') : cssVar('--critical'));
     seg.setAttribute('stroke-width', '2');
     seg.setAttribute('stroke-linecap', 'round');
     svg.appendChild(seg);
@@ -368,7 +372,7 @@ function renderSparkline(container, { values, labels, unit = '', seasons, oppone
     const c = document.createElementNS(svgns, 'circle');
     c.setAttribute('cx', sx(i)); c.setAttribute('cy', sy(p.v)); c.setAttribute('r', 3);
     c.setAttribute('fill', cssVar('--surface-1'));
-    c.setAttribute('stroke', p.v >= avg ? cssVar('--good') : cssVar('--critical'));
+    c.setAttribute('stroke', (lowerIsBetter ? p.v <= avg : p.v >= avg) ? cssVar('--good') : cssVar('--critical'));
     c.setAttribute('stroke-width', '2');
     c.style.cursor = 'pointer';
     const prev = i > 0 ? pts[i - 1].v : null;
@@ -378,7 +382,7 @@ function renderSparkline(container, { values, labels, unit = '', seasons, oppone
       `<div class="tt-title">${p.l}${p.season ? `, ${p.season}` : ''}</div>`,
       p.opponent ? `<div class="tt-row"><span>Opponent</span><span>${p.opponent}</span></div>` : '',
       `<div class="tt-row"><span>Value</span><span>${fmt(p.v)}${unit}</span></div>`,
-      delta !== null ? `<div class="tt-row"><span>Vs previous</span><span style="color:${delta >= 0 ? 'var(--delta-good)' : 'var(--critical-text)'}">${delta >= 0 ? '+' : ''}${fmt(delta)}${unit}</span></div>` : '',
+      delta !== null ? `<div class="tt-row"><span>Vs previous</span><span style="color:${(lowerIsBetter ? delta <= 0 : delta >= 0) ? 'var(--delta-good)' : 'var(--critical-text)'}">${delta >= 0 ? '+' : ''}${fmt(delta)}${unit}</span></div>` : '',
       `<div class="tt-muted">${vsAvg >= 0 ? '+' : ''}${fmt(vsAvg)}${unit} vs average (${fmt(avg)}${unit})</div>`,
     ].join('');
     attachTooltip(c, html);
@@ -448,7 +452,7 @@ function renderGroupedBar(container, { categories, valuesA, valuesB, colorA, col
 
 /** Card with a "Last Game" KPI + "Last vs Previous Game" delta + sparkline (compares to the
  * immediately-prior game, not a season average). `container` becomes the whole card. */
-function renderTrendCard(container, rows, field, unit, title) {
+function renderTrendCard(container, rows, field, unit, title, { lowerIsBetter = false } = {}) {
   const { values, labels, seasons, opponents } = gameTrend(rows, field);
   const known = values.filter((v) => v !== null && v !== undefined && !Number.isNaN(v)); // a game with nothing charted for this field is not "the last game"
   const lastVal = known.length ? known[known.length - 1] : null;
@@ -468,10 +472,10 @@ function renderTrendCard(container, rows, field, unit, title) {
         </div>
         <div class="kpi small kpi-plain" style="border:none; padding:0; background:none; margin-top:10px;">
           <div class="label">Last vs Previous Game</div>
-          <div class="value" style="font-size:15px; color:${delta === null ? 'inherit' : (delta >= 0 ? 'var(--delta-good)' : 'var(--critical-text)')}">${delta === null ? '—' : (delta >= 0 ? '+' : '') + fmt(delta)}</div>
+          <div class="value" style="font-size:15px; color:${delta === null ? 'inherit' : ((lowerIsBetter ? delta <= 0 : delta >= 0) ? 'var(--delta-good)' : 'var(--critical-text)')}">${delta === null ? '—' : (delta >= 0 ? '+' : '') + fmt(delta)}</div>
         </div>
       </div>
       <div class="trend-chart"></div>
     </div>`;
-  renderSparkline(container.querySelector('.trend-chart'), { values, labels, unit, seasons, opponents });
+  renderSparkline(container.querySelector('.trend-chart'), { values, labels, unit, seasons, opponents, lowerIsBetter });
 }

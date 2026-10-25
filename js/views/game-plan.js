@@ -100,7 +100,7 @@ const GamePlan = (function () {
           render(el) { el.innerHTML = '<div class="notes-lines"><div></div><div></div><div></div><div></div></div>'; },
         },
       ],
-      footer: () => `Sources: Game Analysis's OfficialPlayByPlay and Plays sheets (${gameCoverageText(D.games)}), Special Teams Data box scores, NCAA team stats, Schedule. A tell needs 20+ snaps and a gap beyond chance.`,
+      footer: () => `This is the one-page printable plan (use ↓ PDF), so it repeats Next Opponent's headline bullets and matchups; the full report, with every stat category and meeting, is on Next Opponent. Sources: Game Analysis's OfficialPlayByPlay and Plays sheets (${gameCoverageText(D.games)}), Special Teams Data box scores, NCAA team stats, Schedule. A tell needs 20+ snaps and a gap beyond chance.`,
     });
 
     return view;

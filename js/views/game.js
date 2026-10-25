@@ -196,7 +196,7 @@
       ypp: 'Yards Allowed / Play', succ: 'Success % Allowed', exp: 'Explosive Rate Allowed', turn: 'Takeaway Rate', turnNoun: 'takeaways', rz: 'Red Zone TD % Allowed', ppd: 'Points Allowed / Drive',
       dots: { ypp: '--critical', succ: '--critical', turn: '--good' },
       down: 'Yards Allowed / Play by Down', sit: 'Success Rate Allowed by Situation', zone: 'Explosive Rate Allowed by Field Zone', drives: 'Opponent Drive Result Mix',
-      heat: 'Success Rate Allowed — Down × Distance', heatNote: 'Sequential blue = success rate allowed; text = successful/plays; faded cells have fewer than 5 snaps.', trend: 'Yards Allowed / Play by Game',
+      heat: 'Success Rate Allowed — Down × Distance', heatNote: 'Sequential blue = success rate allowed; text = successful/plays; faded cells have fewer than 5 snaps.', trend: 'Yards Allowed / Play by Game', trendLowerIsBetter: true,
       colors: { down: '--critical', sit: '--serious', zone: '--cat-8' },
       logHead: ['Opponent', 'Date', 'Plays', 'Yds/Play Allowed', 'Success % Allowed', 'Explosive % Allowed', 'Takeaways', 'Points/Drive Allowed'],
       logNote: "Yds/Play, Success %, Explosive %, and Takeaways respect every filter above. Points/Drive Allowed uses this game's full drive log regardless of the Quarter/Situation/Field Zone filters (drives aren't scoped to a single quarter or situation).",
@@ -286,7 +286,7 @@
               });
             },
           },
-          { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'yards', ' yds', S.trend) },
+          { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'yards', ' yds', S.trend, { lowerIsBetter: !!S.trendLowerIsBetter }) },
           {
             title: 'Game log', wide: true, note: S.logNote,
             table: {
@@ -329,8 +329,7 @@
           label: 'Most-Used Formation',
           value: ({ rows }) => {
             const by = groupBy(rows.filter((r) => r.formation), 'formation');
-            const top = topKeysByCount(by, 1)[0];
-            return [top || '—', top ? `${by.get(top).length} snaps` : ''];
+            return topCountKpi(by);
           },
         },
       ],

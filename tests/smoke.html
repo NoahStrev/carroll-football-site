@@ -140,17 +140,35 @@ async function checkPage(page, width) {
         record(page, `${tab.label} › ${select.options[i].text.slice(0, 40)}`, inspect(page, win, errors, width));
       }
     }
-    const pills = [...win.document.querySelectorAll('#site-stage .pillbar')];
-    for (let p = 0; p < pills.length; p++) {
-      const labels = [...pills[p].querySelectorAll('.pill')].map((b) => b.textContent.trim());
-      for (let i = 0; i < labels.length; i++) {
-        const bar = [...win.document.querySelectorAll('#site-stage .pillbar')][p];
-        if (!bar) break;
-        const btn = bar.querySelectorAll('.pill')[i];
-        if (!btn) break;
-        btn.click();
-        await settle(win);
-        record(page, `${tab.label} › ${labels[i]}`, inspect(page, win, errors, width));
+    // Pill bars. With two bars on one view (Athletes: role x view) every combination is opened, since a view
+    // can break for one role only; with one bar (or more than two) each pill is opened once.
+    const bars = () => [...win.document.querySelectorAll('#site-stage .pillbar')];
+    const pillLabels = (bar) => (bar ? [...bar.querySelectorAll('.pill')].map((b) => b.textContent.trim()) : []);
+    const clickPill = async (p, i) => {
+      const btn = bars()[p] && bars()[p].querySelectorAll('.pill')[i];
+      if (!btn) return false;
+      btn.click();
+      await settle(win);
+      return true;
+    };
+    const pillCount = bars().length;
+    if (pillCount === 2) {
+      const outer = pillLabels(bars()[0]);
+      for (let i = 0; i < outer.length; i++) {
+        if (!(await clickPill(0, i))) break;
+        const inner = pillLabels(bars()[1]);
+        for (let j = 0; j < inner.length; j++) {
+          if (!(await clickPill(1, j))) break;
+          record(page, `${tab.label} › ${outer[i]} › ${inner[j]}`, inspect(page, win, errors, width));
+        }
+      }
+    } else {
+      for (let p = 0; p < pillCount; p++) {
+        const labels = pillLabels(bars()[p]);
+        for (let i = 0; i < labels.length; i++) {
+          if (!(await clickPill(p, i))) break;
+          record(page, `${tab.label} › ${labels[i]}`, inspect(page, win, errors, width));
+        }
       }
     }
   }

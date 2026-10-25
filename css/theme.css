@@ -343,6 +343,9 @@ html, body {
 .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
 .cards > .wide { grid-column: 1 / -1; }
 .cards > .card:not(.table-card):not(.wide):not(.tight) > .card-body { min-height: 190px; } /* .tight: a card of text, not a chart */
+/* A card that only explains why it is empty (e.g. opponent fronts, charted 2021-24 only) shrinks to its note instead of
+   holding a chart-sized blank box (2026-10-23). Two such cards side by side then take one short row. */
+.cards > .card > .card-body:has(> .data-note:only-child) { min-height: 0; }
 .cards > .cards-heading { grid-column: 1 / -1; font-size: 15px; font-weight: 800; margin: 14px 0 0; }
 .cards > .cards-heading:first-child { margin-top: 0; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -473,6 +476,8 @@ table.mini td.change { font-weight: 600; }
 .record-section-title { font-size: 14px; font-weight: 800; margin: 20px 0 8px; }
 .record-section-title:first-child { margin-top: 0; }
 .watch-gap-good { color: var(--delta-good); font-weight: 700; }
+.good-text { color: var(--delta-good); }
+.crit-text { color: var(--critical-text); }
 .watch-gap-crit { color: var(--critical-text); font-weight: 700; }
 
 /* Lifting & Strength */
@@ -581,7 +586,8 @@ table.game-log td, table.game-log th { white-space: nowrap; }
   .tabbar { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
   /* on a phone, give each chart column room for a readable label and let the chart scroll */
   .barchart, .stacked { scrollbar-width: none; } /* a scrollbar would sit on top of the axis labels; the cut-off last bar is the hint */
-  .barcol { min-width: 58px; }
+  .barchart { gap: 8px; }
+  .barcol { min-width: 50px; } /* five bars fit a 390px phone; six or more scroll (2026-10-23) */
   .stackcol { min-width: 52px; }
   /* these rows scroll sideways with no scrollbar -- fade the right edge so it reads as "more here" */
   .sitenav .links, .tabbar { padding-right: 28px; -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }

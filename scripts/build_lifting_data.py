@@ -62,6 +62,11 @@ def metric_value(r):
         return r["value"]
     if metric in BEST_ATTEMPT_METRICS:
         return r["value"] if r["attempt"] == "Best" else None
+    if metric == "Combined Total" and "missing this session" in (r.get("notes") or ""):
+        # The Lifting Data project sums whatever lifts were recorded (a missing lift counts 0, like the source sheets).
+        # On the site a partial total (e.g. bench only = 189) would sit at the bottom of every leaderboard and drag
+        # progress lines down, so only a session with all three lifts has a Combined Total here (2026-10-23).
+        return None
     return r["calculated_1rm"]  # lifts + Combined Total
 
 
@@ -242,7 +247,7 @@ def main():
     }
 
     OUT.parent.mkdir(exist_ok=True)
-    with open(OUT, "w", encoding="utf-8") as f:
+    with open(OUT, "w", encoding="utf-8", newline="\n") as f:  # LF, matching .gitattributes (no CRLF warnings on commit)
         json.dump(payload, f, indent=0, default=str)
 
     print(f"leaderboard rows: {len(leaderboard_rows)}")

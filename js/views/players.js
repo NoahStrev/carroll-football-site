@@ -209,6 +209,9 @@
 
   const LIFT_METRICS = [['Bench', 'lb', true], ['Squat', 'lb', true], ['Clean', 'lb', true], ['Combined Total', 'lb', true], ['Vertical', 'in', true], ['Broad Jump', 'in', true], ['Pro Agility', 'sec', false], ['Weight', 'lb', null]];
 
+  // Green when the change is an improvement (a faster Pro Agility is a smaller number); weight has no good direction.
+  const changeTone = (change, higherBetter) => (change === null || change === 0 || higherBetter === null ? '' : ((change > 0) === higherBetter ? ' class="good-text"' : ' class="crit-text"'));
+
   function liftingHTML(player, L) {
     const a = L && L.athletes.find((x) => x.athlete_key === player.athlete_key);
     if (!a) return '';
@@ -220,7 +223,7 @@
       const best = higherBetter === null ? null : pts.reduce((b, p) => ((higherBetter ? p.value > b.value : p.value < b.value) ? p : b), pts[0]);
       const change = pts.length > 1 ? latest.value - first.value : null;
       const cell = (p) => `${fmt(p.value, Number.isInteger(p.value) ? 0 : 1)} <span class="muted">${esc(p.session_label)}</span>`;
-      return `<tr><td class="name">${metric} <span class="muted">(${unit})</span></td><td>${cell(first)}</td><td>${cell(latest)}</td><td>${best ? cell(best) : '—'}</td><td>${change === null ? '—' : `${change > 0 ? '+' : ''}${fmt(change, Number.isInteger(change) ? 0 : 1)}`}</td></tr>`;
+      return `<tr><td class="name">${metric} <span class="muted">(${unit})</span></td><td>${cell(first)}</td><td>${cell(latest)}</td><td>${best ? cell(best) : '—'}</td><td${changeTone(change, higherBetter)}>${change === null ? '—' : `${change > 0 ? '+' : ''}${fmt(change, Number.isInteger(change) ? 0 : 1)}`}</td></tr>`;
     }).filter(Boolean);
     if (!rows.length) return '';
     return `<div class="card wide table-card"><div class="card-head"><h2>Strength and testing</h2><span class="data-note">from Lifting &amp; Strength</span></div><div class="card-body flush"><div class="tbl-scroll"><table class="mini">
@@ -359,6 +362,9 @@
       .slice(0, n);
   }
 
+  // Rate columns (averages, percentages) always to one decimal, so a column doesn't mix 5.7 / 5.63 / 23 (2026-10-23).
+  const leaderCell = (k, v) => (v === null || v === undefined ? '—' : /^yards_per|^avg$|_avg$|_pct$/.test(k) ? fmt(v, 1) : String(v));
+
   function leadersTab(root) {
     const seasons = [...new Set(Site.data.career.players.flatMap((p) => Object.values(p.categories).flatMap((c) => c.seasons.map((x) => String(x.season)))))].sort().reverse();
     const kpi = (catId, key, label) => ({ label, value: ({ season }) => { const [top] = leaderRows(catId, key, season, 1); return top ? [esc(top.p.display_name), `${fmt(top.s[key], Number.isInteger(top.s[key]) ? 0 : 1)} ${key === 'tot' ? 'tackles' : key === 'net' || key === 'yds' ? 'yards' : key}`] : ['—', 'no one this season']; } });
@@ -380,7 +386,7 @@
           el.innerHTML = rows.length
             ? Site.tableHTML({
               head: ['#', 'Player', 'Pos', 'G', ...cat.cols.map(([, l]) => l)],
-              rows: rows.map(({ p, s }, i) => [String(i + 1), `<a href="#career/${encodeURIComponent(p.display_name)}">${esc(p.display_name)}</a>`, esc(p.position || '—'), String(s.games ?? '—'), ...cat.cols.map(([k]) => (k === key ? `<b>${s[k]}</b>` : String(s[k] ?? '—')))]),
+              rows: rows.map(({ p, s }, i) => [String(i + 1), `<a href="#career/${encodeURIComponent(p.display_name)}">${esc(p.display_name)}</a>`, esc(p.position || '—'), String(s.games ?? '—'), ...cat.cols.map(([k]) => (k === key ? `<b>${leaderCell(k, s[k])}</b>` : leaderCell(k, s[k])))]),
             }) + `<div class="data-note">${esc(label)}, ${esc(season)} — ranked on the counting stat; rate columns (average, percentage) come from the same season's totals.</div>`
             : `<div class="data-note">No one has recorded ${esc(label.toLowerCase())} in ${esc(season)}.</div>`;
         },

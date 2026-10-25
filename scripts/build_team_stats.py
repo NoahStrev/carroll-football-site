@@ -68,7 +68,7 @@ def main():
                     "rank": int(row["TrueRank"]),
                 }
     out = {"season": season, "snapshot_date": snap.name, "categories": stats, "teams": dict(sorted(teams.items()))}
-    OUT.write_text(json.dumps(out, indent=1, ensure_ascii=False), encoding="utf-8")
+    OUT.write_text(json.dumps(out, indent=1, ensure_ascii=False), encoding="utf-8", newline="\n")
     print(f"{season} snapshot {snap.name}: {len(teams)} teams x {len(stats)} categories -> {OUT}")
     print("  teams: " + ", ".join(out["teams"]))
 

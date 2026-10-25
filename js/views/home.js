@@ -89,7 +89,7 @@
     items.push({ w: rel(o.ypp, P.offense.ypp), good: o.ypp >= P.offense.ypp, text: `Offense averaged ${fmt(o.ypp)} yards per play (${label}: ${fmt(P.offense.ypp)}).` });
     items.push({ w: rel(d.ypp, P.defense.ypp), good: d.ypp <= P.defense.ypp, text: `Defense allowed ${fmt(d.ypp)} yards per play (${label}: ${fmt(P.defense.ypp)}).` });
     items.push({ w: rel(o.success, P.offense.success), good: o.success >= P.offense.success, text: `Offense success rate was ${pct(o.success, 0)} (${label}: ${pct(P.offense.success, 0)}).` });
-    items.push({ w: rel(d.success, P.defense.success), good: d.success <= P.defense.success, text: `Defense held opponents to a ${pct(d.success, 0)} success rate (${label}: ${pct(P.defense.success, 0)}).` });
+    items.push({ w: rel(d.success, P.defense.success), good: d.success <= P.defense.success, text: `Defense ${d.success <= P.defense.success ? 'held opponents to' : 'allowed'} a ${pct(d.success, 0)} success rate (${label}: ${pct(P.defense.success, 0)}).` });
     const net = d.turnovers - o.turnovers;
     items.push({ w: Math.abs(net) / 3, good: net >= 0, text: `Turnovers: ${d.turnovers} taken away, ${o.turnovers} given up (${net > 0 ? '+' : ''}${net}).` });
     return items.sort((a, b) => b.w - a.w).slice(0, 3);
@@ -154,7 +154,7 @@
         <div class="data-note" style="margin:2px 0 8px;">${esc(next.venue || '')}${next.city ? `, ${esc(next.city)}` : ''}</div>
         ${series ? `<ul class="tw-list">
           <li>Carroll is <b>${series.w}–${series.l}</b> against ${esc(next.opponent)} since ${series.since}.</li>
-          <li>${streakText(series)}, ${series.last.carroll_pts}–${series.last.opp_pts} (${series.last.season}).</li></ul>` : '<div class="data-note">No earlier meetings in the box-score archive.</div>'}
+          <li>${series.streak >= series.n ? 'Last meeting' : streakText(series)}, ${series.last.carroll_pts}–${series.last.opp_pts} (${series.last.season}).</li></ul>` : '<div class="data-note">No earlier meetings in the box-score archive.</div>'}
       </div>
       <div class="insight card-note"><a href="opponent-scouting.html#next/${encodeURIComponent(next.opponent)}">Scouting report: ${esc(next.opponent)} →</a>${rest ? `<br><span class="muted">Then: ${rest}</span>` : ''}</div>
     </div>`;

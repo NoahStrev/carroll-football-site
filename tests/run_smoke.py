@@ -56,7 +56,7 @@ def main():
                         page.wait_for_function("window.__smoke && window.__smoke.done", timeout=RUN_TIMEOUT_MS)
                         result = page.evaluate("window.__smoke")
                         break
-                    except Exception as err:  # noqa: BLE001 -- browser/tab crash: retry once, then fail loudly
+                    except Exception as err:  # browser/tab crash: retry once, then fail loudly
                         print(f"[retry] {width}px attempt {attempt}: {str(err).splitlines()[0]}")
                         if attempt == 2:
                             raise

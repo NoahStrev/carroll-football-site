@@ -158,11 +158,20 @@ CATEGORY_SECTION = {
 }
 
 
-def clean_context(value):
-    """NCAA.com's context text arrives with raw line-break tags ("Opp <br/>STFL=4"); keep it as plain text."""
-    if not isinstance(value, str):
-        return value
-    return re.sub(r"\s+", " ", re.sub(r"<[^>]*>", " ", value)).strip()
+# CCIW ranks are computed by the CCIW Buddah Report scraper, which until 2026-10-23 ranked the red-zone tables one way
+# for every column (so 2 red-zone interceptions read as Carroll's "#1 of 9", and 0 takeaways on defense as "#1") and
+# also ranked "G" (games played). The scraper is fixed for new snapshots; rows stored before the fix are left out here
+# rather than shown with a backwards rank.
+CCIW_RANK_FIX_DATE = "2026-10-23"
+CCIW_RED_ZONE_TURNOVER_METRICS = {("Red Zone Offense", m) for m in ("INT", "FUM", "Downs")} | {("Red Zone Defense", m) for m in ("INT", "FUM", "Downs")}
+
+
+def cciw_rank_usable(category, metric, snapshot_date):
+    if metric == "G":
+        return False
+    if (category, metric) in CCIW_RED_ZONE_TURNOVER_METRICS:
+        return bool(snapshot_date) and snapshot_date >= CCIW_RANK_FIX_DATE
+    return True
 
 
 def build_cciw():
@@ -170,7 +179,7 @@ def build_cciw():
     rows = []
     for sheet_name, phase in CCIW_SHEET_TO_PHASE.items():
         for r in sheet_rows(wb[sheet_name]):
-            if r["Rank"] is None or r["Out Of"] is None:
+            if r["Rank"] is None or r["Out Of"] is None or not cciw_rank_usable(r["Category"], r["Metric"], None):
                 continue
             rows.append({
                 "phase": phase, "season": str(r["Year"]), "category": r["Category"], "metric": r["Metric"],
@@ -192,7 +201,7 @@ def build_cciw():
             if sheet_name not in wb.sheetnames:
                 continue
             for r in sheet_rows(wb[sheet_name]):
-                if r["Rank"] is None or r["Out Of"] is None:
+                if r["Rank"] is None or r["Out Of"] is None or not cciw_rank_usable(r["Category"], r["Metric"], str(r["SnapshotDate"])[:10]):
                     continue
                 rows.append({
                     "phase": phase, "season": season, "category": r["Category"], "metric": r["Metric"],
@@ -220,7 +229,7 @@ def build_national():
             continue
         rows.append({
             "phase": phase, "season": str(r["Season"]), "category": r["Category"], "stat": r["Stat"],
-            "value": r["Value"], "rank": r["Rank"], "context": clean_context(r["Context"]), "week": None,
+            "value": r["Value"], "rank": r["Rank"], "week": None,
         })
     wb.close()
 
@@ -249,7 +258,7 @@ def build_national():
                 continue
             rows.append({
                 "phase": phase, "season": season, "category": r["Category"], "stat": r["Stat"],
-                "value": r["Value"], "rank": r["Rank"], "context": clean_context(r["Context"]), "week": r["Week"],
+                "value": r["Value"], "rank": r["Rank"], "week": r["Week"],
             })
             season_weeks[r["Week"]] = str(r["SnapshotDate"])[:10]
         wb.close()
@@ -284,7 +293,7 @@ def main():
     }
 
     OUT.parent.mkdir(exist_ok=True)
-    with open(OUT, "w", encoding="utf-8") as f:
+    with open(OUT, "w", encoding="utf-8", newline="\n") as f:  # LF, matching .gitattributes (no CRLF warnings on commit)
         json.dump(payload, f, indent=0, default=str)
 
     if cciw_weekly_files or national_weekly_files:

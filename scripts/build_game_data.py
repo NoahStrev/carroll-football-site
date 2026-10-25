@@ -282,7 +282,7 @@ def build_charted_plays(wb, carroll_game_labels, opponent_by_game, date_by_game)
             "season": season, "opponent": opponent,
             "game_label": r["GAME_LABEL"], "date": date_by_game.get(r["GAME_LABEL"]),
             "down": r["DN"], "distance": r["DIST"], "hash": r["HASH"],
-            "field_pos": r["YARD LN"], "yards": r["GN/LS"],
+            "yards": r["GN/LS"],
             "play_type": r["PLAY_TYPE"], "play_outcome": r["PLAY_OUTCOME"],
             "turnover_type": r["TURNOVER_TYPE"], "play_efficiency": r["PLAY_EFFICIENCY"],
             "situation": r["SITUATION"], "field_zone": r["FIELD_ZONE"],
@@ -291,8 +291,7 @@ def build_charted_plays(wb, carroll_game_labels, opponent_by_game, date_by_game)
             offense_plays.append({
                 **base,
                 "personnel": clean_personnel(r["PERSONNEL"]), "formation": r["OFF FORM"],
-                "formation_strength": r["OFF STR"], "backfield": r["BACKFIELD"],
-                "motion": r["MOTION"], "protection": r["PROTECTION"],
+                "backfield": r["BACKFIELD"], "protection": r["PROTECTION"],
                 "play_call": r["PLAY_CALL"],
                 "def_front": clean_def_front(r["DEF FRONT"]), "stunt": r["STUNT"], "blitz": r["BLITZ"],
                 "cov_shell": r["COV SHELL"], "coverage": r["COVERAGE"],
@@ -310,8 +309,7 @@ def build_charted_plays(wb, carroll_game_labels, opponent_by_game, date_by_game)
             # dashboard should say so explicitly rather than build unused UI for it.
             defense_plays.append({
                 **base,
-                "front_d": r["FRONT (D)"], "tag_d": r["TAG (D)"], "movement": r["MOVEMENT"],
-                "blitz_d": r["BLITZ (D)"], "num_d": r["#(D)"],
+                "front_d": r["FRONT (D)"], "movement": r["MOVEMENT"], "blitz_d": r["BLITZ (D)"],
             })
     return offense_plays, defense_plays
 
@@ -442,8 +440,14 @@ def main():
     offense_official, defense_official, drives_by_key, defensive_td_drives = build_official(opbp_all, carroll_game_labels, drive_sides)
     apply_corrections(offense_official, defense_official, drives_by_key, defensive_td_drives)
 
-    offense_drives = [{"drive_num": k[1], "game_label": k[0], **v} for k, v in drives_by_key.items() if v["side"] == "offense"]
-    defense_drives = [{"drive_num": k[1], "game_label": k[0], **v} for k, v in drives_by_key.items() if v["side"] == "defense"]
+    # A "drive" with no snap at all (the clock ran out after a kickoff, or the return was fumbled) is not a possession the
+    # offense ran: dropping it keeps Points/Drive and the Drive Result chart (which is built from plays) on the same drives
+    # (2026-10-23). The start spot / play count / yards were never read by the site and are not exported.
+    def drive_out(k, v):
+        return {"drive_num": k[1], "game_label": k[0], **{f: x for f, x in v.items() if f not in ("start_field_pos", "play_count", "yards")}}
+    real = {k: v for k, v in drives_by_key.items() if v.get("play_count")}
+    offense_drives = [drive_out(k, v) for k, v in real.items() if v["side"] == "offense"]
+    defense_drives = [drive_out(k, v) for k, v in real.items() if v["side"] == "defense"]
     for d in (*offense_drives, *defense_drives):
         del d["side"]
 
@@ -474,7 +478,7 @@ def main():
     }
 
     OUT.parent.mkdir(exist_ok=True)
-    with open(OUT, "w", encoding="utf-8") as f:
+    with open(OUT, "w", encoding="utf-8", newline="\n") as f:  # LF, matching .gitattributes (no CRLF warnings on commit)
         json.dump(payload, f, indent=0, default=str)
 
     print(f"games: {len(games)}")

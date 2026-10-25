@@ -433,7 +433,7 @@
       prepare(st) {
         const rows = filterByOpponentSeason(cfg.rows(), st.opponent, st.season);
         const byFront = groupBy(schemeRealRows(rows, f0.key), f0.key);
-        return { rows, matchBase: rows, games: new Set(rows.map((r) => r.game_label)), byFront, topFront: topKeysByCount(byFront, 1)[0] };
+        return { rows, matchBase: rows, games: new Set(rows.map((r) => r.game_label)), byFront };
       },
       kpis: [
         { label: 'Snaps (Charted)', value: ({ rows }) => [String(rows.length)] },
@@ -451,7 +451,7 @@
             return [rows.length ? pct(rate(rows, (r) => r[f1.key] && r[f1.key] !== '-')) : '—', `${rows.length} snaps in view`];
           },
         },
-        { label: 'Most-Used Front', value: ({ byFront, topFront }) => [topFront || '—', topFront ? `${byFront.get(topFront).length} snaps` : ''] },
+        { label: 'Most-Used Front', value: ({ byFront }) => topCountKpi(byFront) },
         { label: 'Games', value: ({ games }) => [String(games.size)] },
       ],
       intro: cfg.note,

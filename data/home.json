@@ -1339,7 +1339,7 @@
             "explosive": 0.1268,
             "turnovers": 1
           },
-          "st_score": 42.0519
+          "st_score": 50.237
         },
         {
           "date": "2026-09-12",
@@ -1363,7 +1363,7 @@
             "explosive": 0.2097,
             "turnovers": 1
           },
-          "st_score": 39.9583
+          "st_score": 46.9
         },
         {
           "date": "2026-09-19",
@@ -1387,7 +1387,7 @@
             "explosive": 0.0851,
             "turnovers": 0
           },
-          "st_score": 35.8208
+          "st_score": 48.5625
         },
         {
           "date": "2026-09-26",
@@ -1411,7 +1411,7 @@
             "explosive": 0.1034,
             "turnovers": 4
           },
-          "st_score": 46.2889
+          "st_score": 49.763
         },
         {
           "date": "2026-10-03",
@@ -1435,7 +1435,7 @@
             "explosive": 0.2,
             "turnovers": 1
           },
-          "st_score": 44.2833
+          "st_score": 51.2542
         },
         {
           "date": "2026-10-10",
@@ -1459,7 +1459,7 @@
             "explosive": 0.2727,
             "turnovers": 0
           },
-          "st_score": 36.1632
+          "st_score": 46.8842
         },
         {
           "date": "2026-10-17",
@@ -1483,7 +1483,7 @@
             "explosive": 0.25,
             "turnovers": 0
           },
-          "st_score": 38.6048
+          "st_score": 46.7333
         }
       ],
       "season_stats": {
@@ -1501,7 +1501,7 @@
           "explosive": 0.1787,
           "turnovers": 7
         },
-        "st_score": 40.75,
+        "st_score": 48.7554,
         "pts_for_pg": 21.5714,
         "pts_against_pg": 22.4286
       },
@@ -1520,7 +1520,7 @@
           "explosive": 0.1579,
           "turnovers": 81
         },
-        "st_score": 44.5759,
+        "st_score": 50.3374,
         "pts_for_pg": 27.28,
         "pts_against_pg": 28.7
       }
@@ -1552,7 +1552,7 @@
             "explosive": 0.1406,
             "turnovers": 0
           },
-          "st_score": 36.4125
+          "st_score": 47.3687
         },
         {
           "date": "2025-09-20",
@@ -1576,7 +1576,7 @@
             "explosive": 0.15,
             "turnovers": 0
           },
-          "st_score": 42.624
+          "st_score": 48.272
         },
         {
           "date": "2025-09-27",
@@ -1600,7 +1600,7 @@
             "explosive": 0.241,
             "turnovers": 2
           },
-          "st_score": 43.0519
+          "st_score": 48.4704
         },
         {
           "date": "2025-10-04",
@@ -1624,7 +1624,7 @@
             "explosive": 0.0533,
             "turnovers": 2
           },
-          "st_score": 47.1542
+          "st_score": 51.7292
         },
         {
           "date": "2025-10-12",
@@ -1648,7 +1648,7 @@
             "explosive": 0.0986,
             "turnovers": 4
           },
-          "st_score": 48.2333
+          "st_score": 51.3292
         },
         {
           "date": "2025-10-18",
@@ -1672,7 +1672,7 @@
             "explosive": 0.1343,
             "turnovers": 2
           },
-          "st_score": 47.9421
+          "st_score": 50.8368
         },
         {
           "date": "2025-10-25",
@@ -1696,7 +1696,7 @@
             "explosive": 0.087,
             "turnovers": 5
           },
-          "st_score": 50.2
+          "st_score": 53.263
         },
         {
           "date": "2025-11-01",
@@ -1720,7 +1720,7 @@
             "explosive": 0.2456,
             "turnovers": 1
           },
-          "st_score": 32.3381
+          "st_score": 43.3524
         },
         {
           "date": "2025-11-08",
@@ -1744,7 +1744,7 @@
             "explosive": 0.1346,
             "turnovers": 2
           },
-          "st_score": 53.1875
+          "st_score": 53.0625
         },
         {
           "date": "2025-11-15",
@@ -1768,7 +1768,7 @@
             "explosive": 0.0877,
             "turnovers": 0
           },
-          "st_score": 36.8882
+          "st_score": 47.7294
         }
       ],
       "season_stats": {
@@ -1786,7 +1786,7 @@
           "explosive": 0.1374,
           "turnovers": 18
         },
-        "st_score": 44.4147,
+        "st_score": 49.7594,
         "pts_for_pg": 21.6,
         "pts_against_pg": 28.1
       },
@@ -1805,7 +1805,7 @@
           "explosive": 0.1631,
           "turnovers": 63
         },
-        "st_score": 44.6119,
+        "st_score": 50.4663,
         "pts_for_pg": 28.7,
         "pts_against_pg": 28.85
       }
@@ -1837,7 +1837,7 @@
             "explosive": 0.1406,
             "turnovers": 2
           },
-          "st_score": 47.25
+          "st_score": 50.1583
         },
         {
           "date": "2024-09-21",
@@ -1861,7 +1861,7 @@
             "explosive": 0.1111,
             "turnovers": 1
           },
-          "st_score": 41.2
+          "st_score": 50.9208
         },
         {
           "date": "2024-09-28",
@@ -1885,7 +1885,7 @@
             "explosive": 0.1587,
             "turnovers": 1
           },
-          "st_score": 48.3125
+          "st_score": 53.7375
         },
         {
           "date": "2024-10-05",
@@ -1909,7 +1909,7 @@
             "explosive": 0.1167,
             "turnovers": 3
           },
-          "st_score": 47.0172
+          "st_score": 51.9966
         },
         {
           "date": "2024-10-12",
@@ -1933,7 +1933,7 @@
             "explosive": 0.0704,
             "turnovers": 1
           },
-          "st_score": 49.3536
+          "st_score": 54.1679
         },
         {
           "date": "2024-10-19",
@@ -1957,7 +1957,7 @@
             "explosive": 0.1385,
             "turnovers": 1
           },
-          "st_score": 47.3524
+          "st_score": 49.4333
         },
         {
           "date": "2024-10-26",
@@ -1981,7 +1981,7 @@
             "explosive": 0.1017,
             "turnovers": 2
           },
-          "st_score": 47.2097
+          "st_score": 52.2355
         },
         {
           "date": "2024-11-02",
@@ -2005,7 +2005,7 @@
             "explosive": 0.2656,
             "turnovers": 1
           },
-          "st_score": 45.655
+          "st_score": 49.13
         },
         {
           "date": "2024-11-09",
@@ -2029,7 +2029,7 @@
             "explosive": 0.0845,
             "turnovers": 0
           },
-          "st_score": 43.2696
+          "st_score": 50.5609
         },
         {
           "date": "2024-11-16",
@@ -2053,7 +2053,7 @@
             "explosive": 0.0882,
             "turnovers": 3
           },
-          "st_score": 51.8684
+          "st_score": 53.1263
         }
       ],
       "season_stats": {
@@ -2071,7 +2071,7 @@
           "explosive": 0.1265,
           "turnovers": 15
         },
-        "st_score": 46.7783,
+        "st_score": 51.5855,
         "pts_for_pg": 24.6,
         "pts_against_pg": 23.8
       },
@@ -2090,7 +2090,7 @@
           "explosive": 0.1752,
           "turnovers": 48
         },
-        "st_score": 43.9498,
+        "st_score": 50.1243,
         "pts_for_pg": 30.0667,
         "pts_against_pg": 30.5333
       }
@@ -2122,7 +2122,7 @@
             "explosive": 0.0526,
             "turnovers": 2
           },
-          "st_score": 48.256
+          "st_score": 53.388
         },
         {
           "date": "2023-09-16",
@@ -2146,7 +2146,7 @@
             "explosive": 0.1746,
             "turnovers": 4
           },
-          "st_score": 48.5091
+          "st_score": 51.2318
         },
         {
           "date": "2023-09-23",
@@ -2170,7 +2170,7 @@
             "explosive": 0.1733,
             "turnovers": 4
           },
-          "st_score": 44.7632
+          "st_score": 49.1895
         },
         {
           "date": "2023-09-30",
@@ -2194,7 +2194,7 @@
             "explosive": 0.2097,
             "turnovers": 1
           },
-          "st_score": 47.6652
+          "st_score": 52.987
         },
         {
           "date": "2023-10-07",
@@ -2218,7 +2218,7 @@
             "explosive": 0.4898,
             "turnovers": 0
           },
-          "st_score": 43.0741
+          "st_score": 49.5407
         },
         {
           "date": "2023-10-14",
@@ -2242,7 +2242,7 @@
             "explosive": 0.0857,
             "turnovers": 3
           },
-          "st_score": 51.8444
+          "st_score": 54.1667
         },
         {
           "date": "2023-10-21",
@@ -2266,7 +2266,7 @@
             "explosive": 0.1774,
             "turnovers": 0
           },
-          "st_score": 39.276
+          "st_score": 48.108
         },
         {
           "date": "2023-10-28",
@@ -2290,7 +2290,7 @@
             "explosive": 0.1549,
             "turnovers": 0
           },
-          "st_score": 40.196
+          "st_score": 49.764
         },
         {
           "date": "2023-11-04",
@@ -2314,7 +2314,7 @@
             "explosive": 0.0566,
             "turnovers": 3
           },
-          "st_score": 44.1208
+          "st_score": 49.5125
         },
         {
           "date": "2023-11-11",
@@ -2338,7 +2338,7 @@
             "explosive": 0.1613,
             "turnovers": 1
           },
-          "st_score": 41.7261
+          "st_score": 51.1826
         }
       ],
       "season_stats": {
@@ -2356,7 +2356,7 @@
           "explosive": 0.1683,
           "turnovers": 18
         },
-        "st_score": 45.1705,
+        "st_score": 50.9313,
         "pts_for_pg": 36.4,
         "pts_against_pg": 28.0
       },
@@ -2375,7 +2375,7 @@
           "explosive": 0.1784,
           "turnovers": 30
         },
-        "st_score": 43.2968,
+        "st_score": 49.6926,
         "pts_for_pg": 26.9,
         "pts_against_pg": 31.8
       }
@@ -2407,7 +2407,7 @@
             "explosive": 0.1,
             "turnovers": 1
           },
-          "st_score": 44.8385
+          "st_score": 50.3923
         },
         {
           "date": "2022-09-17",
@@ -2431,7 +2431,7 @@
             "explosive": 0.1176,
             "turnovers": 5
           },
-          "st_score": 46.7136
+          "st_score": 49.6227
         },
         {
           "date": "2022-09-24",
@@ -2455,7 +2455,7 @@
             "explosive": 0.1688,
             "turnovers": 3
           },
-          "st_score": 44.1222
+          "st_score": 49.9148
         },
         {
           "date": "2022-10-01",
@@ -2479,7 +2479,7 @@
             "explosive": 0.1642,
             "turnovers": 0
           },
-          "st_score": 42.529
+          "st_score": 50.5935
         },
         {
           "date": "2022-10-08",
@@ -2503,7 +2503,7 @@
             "explosive": 0.3393,
             "turnovers": 0
           },
-          "st_score": 38.336
+          "st_score": 46.704
         },
         {
           "date": "2022-10-15",
@@ -2527,7 +2527,7 @@
             "explosive": 0.1013,
             "turnovers": 1
           },
-          "st_score": 41.3533
+          "st_score": 49.7267
         },
         {
           "date": "2022-10-22",
@@ -2551,7 +2551,7 @@
             "explosive": 0.2703,
             "turnovers": 0
           },
-          "st_score": 40.3478
+          "st_score": 47.9261
         },
         {
           "date": "2022-10-29",
@@ -2575,7 +2575,7 @@
             "explosive": 0.102,
             "turnovers": 1
           },
-          "st_score": 45.7
+          "st_score": 51.7375
         },
         {
           "date": "2022-11-05",
@@ -2599,7 +2599,7 @@
             "explosive": 0.1184,
             "turnovers": 3
           },
-          "st_score": 45.9971
+          "st_score": 50.6206
         },
         {
           "date": "2022-11-12",
@@ -2623,7 +2623,7 @@
             "explosive": 0.2188,
             "turnovers": 1
           },
-          "st_score": 37.3067
+          "st_score": 48.72
         }
       ],
       "season_stats": {
@@ -2641,7 +2641,7 @@
           "explosive": 0.1697,
           "turnovers": 15
         },
-        "st_score": 43.0796,
+        "st_score": 49.763,
         "pts_for_pg": 29.3,
         "pts_against_pg": 30.5
       },
@@ -2660,7 +2660,7 @@
           "explosive": 0.1869,
           "turnovers": 15
         },
-        "st_score": 43.5407,
+        "st_score": 49.6136,
         "pts_for_pg": 24.5,
         "pts_against_pg": 33.1
       }
@@ -2692,7 +2692,7 @@
             "explosive": 0.1846,
             "turnovers": 3
           },
-          "st_score": 46.78
+          "st_score": 51.32
         },
         {
           "date": "2021-09-18",
@@ -2716,7 +2716,7 @@
             "explosive": 0.2154,
             "turnovers": 1
           },
-          "st_score": 47.6773
+          "st_score": 52.0773
         },
         {
           "date": "2021-09-25",
@@ -2740,7 +2740,7 @@
             "explosive": 0.1212,
             "turnovers": 1
           },
-          "st_score": 43.1
+          "st_score": 50.565
         },
         {
           "date": "2021-10-02",
@@ -2764,7 +2764,7 @@
             "explosive": 0.3667,
             "turnovers": 1
           },
-          "st_score": 44.98
+          "st_score": 49.49
         },
         {
           "date": "2021-10-09",
@@ -2788,7 +2788,7 @@
             "explosive": 0.1667,
             "turnovers": 2
           },
-          "st_score": 43.5929
+          "st_score": 50.675
         },
         {
           "date": "2021-10-16",
@@ -2812,7 +2812,7 @@
             "explosive": 0.2419,
             "turnovers": 1
           },
-          "st_score": 38.1269
+          "st_score": 44.7385
         },
         {
           "date": "2021-10-23",
@@ -2836,7 +2836,7 @@
             "explosive": 0.1549,
             "turnovers": 4
           },
-          "st_score": 41.3654
+          "st_score": 46.9769
         },
         {
           "date": "2021-10-30",
@@ -2860,7 +2860,7 @@
             "explosive": 0.2388,
             "turnovers": 1
           },
-          "st_score": 40.8765
+          "st_score": 48.2765
         },
         {
           "date": "2021-11-06",
@@ -2884,7 +2884,7 @@
             "explosive": 0.1304,
             "turnovers": 0
           },
-          "st_score": 50.7227
+          "st_score": 53.1545
         },
         {
           "date": "2021-11-13",
@@ -2908,7 +2908,7 @@
             "explosive": 0.0678,
             "turnovers": 1
           },
-          "st_score": 39.9133
+          "st_score": 49.5133
         }
       ],
       "season_stats": {
@@ -2926,7 +2926,7 @@
           "explosive": 0.1869,
           "turnovers": 15
         },
-        "st_score": 43.5407,
+        "st_score": 49.6136,
         "pts_for_pg": 24.5,
         "pts_against_pg": 33.1
       },

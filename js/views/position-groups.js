@@ -45,8 +45,7 @@ const PositionGroups = (function () {
             label: 'Most Common Protection',
             value: ({ rows }) => {
               const by = groupBy(rows.filter((r) => r.protection), 'protection');
-              const top = topKeysByCount(by, 1)[0];
-              return [top || '—', top ? `${by.get(top).length} snaps` : ''];
+              return topCountKpi(by);
             },
           },
         ],
@@ -72,8 +71,7 @@ const PositionGroups = (function () {
             label: 'Most-Used Backfield',
             value: ({ rows }) => {
               const by = groupBy(rows.filter((r) => r.backfield), 'backfield');
-              const top = topKeysByCount(by, 1)[0];
-              return [top || '—', top ? `${by.get(top).length} snaps` : ''];
+              return topCountKpi(by);
             },
           },
         ],
@@ -99,8 +97,7 @@ const PositionGroups = (function () {
             label: 'Most Common Shell Faced',
             value: ({ passRows }) => {
               const by = groupBy(passRows.filter((r) => r.cov_shell), 'cov_shell');
-              const top = topKeysByCount(by, 1)[0];
-              return [top || '—', top ? `${by.get(top).length} snaps` : ''];
+              return topCountKpi(by);
             },
           },
         ],
@@ -126,8 +123,7 @@ const PositionGroups = (function () {
             label: 'Most Common Protection',
             value: ({ rows }) => {
               const by = groupBy(rows.filter((r) => r.protection), 'protection');
-              const top = topKeysByCount(by, 1)[0];
-              return [top || '—', top ? `${by.get(top).length} snaps` : ''];
+              return topCountKpi(by);
             },
           },
         ],
@@ -168,8 +164,7 @@ const PositionGroups = (function () {
             label: 'Most-Used Front',
             value: ({ rows }) => {
               const by = groupBy(rows.filter((r) => r.front_d), 'front_d');
-              const top = topKeysByCount(by, 1)[0];
-              return [top || '—', top ? `${by.get(top).length} snaps` : ''];
+              return topCountKpi(by);
             },
           },
         ],
@@ -207,8 +202,7 @@ const PositionGroups = (function () {
             label: 'Most Common Blitz Call',
             value: ({ rows }) => {
               const by = groupBy(rows.filter(realCall('blitz_d')), 'blitz_d');
-              const top = topKeysByCount(by, 1)[0];
-              return [top || '—', top ? `${by.get(top).length} snaps` : ''];
+              return topCountKpi(by);
             },
           },
         ],
@@ -235,7 +229,7 @@ const PositionGroups = (function () {
         cards: [
           rateCard('Pass Efficiency Allowed by Direction', 'direction', { get: (c) => c.passRows, order: ['Left', 'Middle', 'Right'], color: '--critical', noun: 'passes' }),
           rateCard('Pass Efficiency Allowed by Depth', 'pass_depth', { get: (c) => c.passRows, order: ['Short', 'Deep'], color: '--serious', noun: 'passes' }),
-          { raw: true, wide: true, render: (el, { passRows }) => renderTrendCard(el, passRows, 'yards', ' yds', 'Pass Yards Allowed by Game') },
+          { raw: true, wide: true, render: (el, { passRows }) => renderTrendCard(el, passRows, 'yards', ' yds', 'Pass Yards Allowed by Game', { lowerIsBetter: true }) },
           {
             title: 'Direction detail', wide: true,
             table: {
@@ -273,7 +267,7 @@ const PositionGroups = (function () {
               renderBar(el, { categories: types, values: types.map((t) => rate(by.get(t), expl)), labelFmt: (v) => pct(v, 0), colorFn: (name) => (name === 'Run' ? cssVar('--cat-1') : cssVar('--cat-4')), tooltipExtra: (t) => `${by.get(t).length} plays` });
             },
           },
-          { raw: true, wide: true, render: (el, { rows }) => renderTrendCard(el, rows, 'yards', ' yds', 'Yards Allowed / Play by Game') },
+          { raw: true, wide: true, render: (el, { rows }) => renderTrendCard(el, rows, 'yards', ' yds', 'Yards Allowed / Play by Game', { lowerIsBetter: true }) },
           {
             title: 'Field zone detail', wide: true,
             table: {

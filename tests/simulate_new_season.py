@@ -11,7 +11,6 @@ What it checks: the new season becomes "current" on Home even though it has no p
 been charted, the compare tab and every other page still render, and nothing prints undefined or NaN.
 """
 
-import glob
 import json
 import os
 import shutil

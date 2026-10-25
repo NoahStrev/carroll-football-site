@@ -15,7 +15,10 @@ Checks, by file:
                            known play types, opponent spellings match the box-score canon, no "No Play" snaps,
                            no touchdown drive that really ended in a turnover, and (every season) each side's
                            yardage within reach of the official box score's total offense
-  special-teams.json       every row's date is a real box-score game, every unit present for the latest season
+  special-teams.json       every row's date is a real box-score game, every unit present for the latest season,
+                           and per game Carroll's punts, PATs, field goals and deep kickoffs match the box score
+  game-data.json (sides)   the charted plays split offense/defense like the official play-by-play (a block of
+                           defensive snaps coded as offense once moved a whole half to the wrong side)
   rankings.json            CCIW and national cover the same weeks
   team-stats.json          Carroll present with every category, snapshot not stale
   career-stats.json        no team pseudo-players, no duplicate display names, game logs add up to season totals
@@ -83,10 +86,11 @@ def check_games(home, game):
     # the current season's record printed by the box score vs the results we parsed
     for s_key, block in home["seasons"].items():
         games = [g for g in history if g["season"] == int(s_key)]
-        w = sum(g["result"] == "W" for g in games)
-        l = sum(g["result"] == "L" for g in games)
-        if block["record"] and block["record"] != f"{w}-{l}" and f"{w}-{l}" not in block["record"]:
-            err(f"home.json: {s_key} record says {block['record']} but its {len(games)} box scores add up to {w}-{l}")
+        wins = sum(g["result"] == "W" for g in games)
+        losses = sum(g["result"] == "L" for g in games)
+        computed = f"{wins}-{losses}"
+        if block["record"] and block["record"] != computed and computed not in block["record"]:
+            err(f"home.json: {s_key} record says {block['record']} but its {len(games)} box scores add up to {computed}")
         if len(block["games"]) != len(games):
             err(f"home.json: {s_key} lists {len(block['games'])} games but the box scores have {len(games)}")
 
@@ -138,8 +142,8 @@ KNOWN_BOX_GAPS = {
 
 def check_pbp_vs_box(game):
     """Each charted game's play-by-play yardage against the official box score's total offense. Nullified ("No Play")
-    snaps are excluded at build time, so the two should agree closely: 30 of 55 archive games match exactly on both
-    sides, 79 of 110 sides match, and every side is within 30 yards except one reviewed case (KNOWN_BOX_GAPS) -- the
+    snaps are excluded at build time, so the two should agree closely: 32 of 57 archive games match exactly on both
+    sides, 83 of 114 sides match, and every side is within 30 yards except one reviewed case (KNOWN_BOX_GAPS) -- the
     rest are inconsistencies inside the box scores. A bigger gap in any season is worth a look, e.g. a drive tagged to
     the wrong side, which moves its yards from one side to the other (2021-11-06 vs Carthage did exactly that and is
     fixed by MANUAL_DRIVE_SIDE_OVERRIDES in build_game_data.py)."""
@@ -182,7 +186,7 @@ KNOWN_FOURTH_GAPS = {("2022-11-12", "defense"), ("2026-09-19", "defense"), ("202
 
 def check_fourth_downs(game):
     """Fourth-down tries and conversions in the play-by-play against the box score's "4th Down Conversions" line.
-    Carroll's side matches the box exactly in all 55 archive games, and the opponent's in 52 (the rest are the reviewed
+    Carroll's side matches the box exactly in all 57 archive games, and the opponent's in 54 (the rest are the reviewed
     one-try gaps above). A new difference means a snap went missing or landed on the wrong side."""
     raw = SITE.parent / "Special Teams Data" / "raw"
     if not raw.exists():
@@ -262,6 +266,75 @@ def check_special_teams(home, st):
             warn(f"special-teams: {unit} has no rows for {latest}")
 
 
+def box_pair(text):
+    """'5 - 6' / '1 of 2' -> (tries, made); the source writes 'Total - Made' pairs in either order."""
+    a, b = (int(x) for x in re.findall(r"\d+", text)[:2])
+    return max(a, b), min(a, b)
+
+
+def check_special_teams_vs_box(st):
+    """Per game, Carroll's punts, PATs, field goals, and deep kickoffs in the special-teams sheets against the box score's
+    team stats (box scores leave onside kicks out of the kickoff count). All four match in every 2021+ game as of
+    2026-10-23, so any difference is a row missing from (or doubled in) the sheet, or a game charted under the wrong date."""
+    raw = SITE.parent / "Special Teams Data" / "raw"
+    if not raw.exists():
+        return
+    first = min(int(r["season"]) for rows in st["units"].values() for r in rows)
+    sheet = {}  # date -> {stat: count}
+
+    def bump(d, key, n=1):
+        sheet.setdefault(iso(d), Counter())[key] += n
+    for r in st["units"]["punt"]:
+        bump(r["date"], "punts")
+    for r in st["units"]["kickoff"]:
+        if "onside" not in str(r["kick_type"] or "").lower():
+            bump(r["date"], "kickoffs")
+    for r in st["units"]["money_unit"]:
+        kind = "pat" if r["fg_exp"] == "EXP" else "fg"
+        bump(r["date"], f"{kind}_tries")
+        bump(r["date"], f"{kind}_made", 1 if r["make"] else 0)
+    for path in sorted(glob.glob(str(raw / "*_*.json"))):
+        season = int(Path(path).name.split("_")[0])
+        if season < first:
+            continue
+        d = json.loads(Path(path).read_text(encoding="utf-8"))
+        mo, dy = d["game_info"]["date"].split("/")[:2]
+        day = f"{season}-{mo.zfill(2)}-{dy.zfill(2)}"
+        home = d["game_info"]["matchup"].partition("-VS-")[2]
+        ab = d["home_away"]
+        mine = ab["home_abbr"] if "Carroll" in home else ab["away_abbr"]
+        ts = d["team_stats"]
+        box = {"punts": int(re.findall(r"\d+", ts["Punting"]["Punts - Yds."][mine])[0]),
+               "kickoffs": int(re.findall(r"\d+", ts["Kickoffs"]["Total - Yds."][mine])[0])}
+        for kind, key in (("pat", "PAT: Total - Made"), ("fg", "Field Goals: Total - Made")):
+            box[f"{kind}_tries"], box[f"{kind}_made"] = box_pair(ts["Miscellaneous"].get(key, {}).get(mine, "0 - 0"))
+        mine_sheet = sheet.get(day, Counter())
+        diffs = [f"{k} {mine_sheet[k]} vs {v}" for k, v in box.items() if mine_sheet[k] != v]
+        if diffs:
+            err(f"special-teams: {day} sheet vs box score: {', '.join(diffs)}")
+
+
+def check_charted_sides(game):
+    """The charted (Hudl) plays and the official play-by-play should split a game between offense and defense the same
+    way. Every game is within 2.5 points of offense share as of 2026-10-23; Wash U 2023-11-11 was ~15 points off before
+    a block of defensive snaps coded "O" was fixed (fix_miscoded_defense in Game Analysis/build_combined_dataset.py)."""
+    count = lambda rows: Counter(r["date"] for r in rows)
+    charted = {s: count(game[s]["plays"]) for s in ("offense", "defense")}
+    official = {s: count(game[s]["official"]) for s in ("offense", "defense")}
+    for d in sorted(set(charted["offense"]) | set(charted["defense"])):
+        c_total = charted["offense"][d] + charted["defense"][d]
+        o_total = official["offense"][d] + official["defense"][d]
+        if not c_total or not o_total:
+            continue
+        gap = charted["offense"][d] / c_total - official["offense"][d] / o_total
+        msg = (f"game-data: {d} charted plays are {charted['offense'][d]} offense / {charted['defense'][d]} defense but the "
+               f"official play-by-play is {official['offense'][d]} / {official['defense'][d]} -- snaps coded to the wrong side?")
+        if abs(gap) > 0.10:
+            err(msg)
+        elif abs(gap) > 0.05:
+            warn(msg)
+
+
 def check_rankings(rk):
     a, b = rk["cciw"]["weeks"], rk["national"]["weeks"]
     if a != b:
@@ -307,7 +380,7 @@ def check_game_logs(cs):
         err(f"career-stats: ...and {bad - 5} more game-log mismatches")
 
 
-def check_meta(meta, home):
+def check_meta(meta):
     if not meta["schedule"]:
         warn("meta: the schedule is empty (is Schedule/schedule.json present?)")
         return
@@ -355,11 +428,13 @@ def main():
     check_fourth_downs(game)
     check_field_goals(game)
     check_special_teams(home, st)
+    check_special_teams_vs_box(st)
+    check_charted_sides(game)
     check_rankings(load("rankings.json"))
     check_team_stats(load("team-stats.json"))
     check_career(load("career-stats.json"))
     check_game_logs(load("career-stats.json"))
-    check_meta(load("meta.json"), home)
+    check_meta(load("meta.json"))
     check_no_regressions(home, game, st)
 
     for w in warnings:

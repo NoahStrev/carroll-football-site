@@ -16,6 +16,21 @@
    rather than becoming their own version. */
 const UPDATES = [
   {
+    version: '1.4.3',
+    date: 'October 25, 2026',
+    title: 'Full review: one Special Teams score scale, trend colours, career kickoffs, lifting names',
+    changes: [
+      { change: 'Every Special Teams Score now uses one scale: 50 is an average Carroll attempt at that unit, and each point of Value is 10 Score points (60 = one point better than average, 40 = one point worse). Before, each unit stretched its own range to 0-100, so an average attempt scored 67 on punts but 12 on punt returns and 28 on kickoff returns', effect: 'Green (50 and up) now means better than average for every unit. Punt Return and Kickoff Return are no longer red in every season, Punt is no longer green when below its average, and the Overview and Home averages compare like with like.' },
+      { change: 'Trend lines for stats where lower is better now colour a drop green and a rise red: yards allowed per play, pass yards allowed, snap-to-kick and snap-to-catch times, return yards allowed, and the opponent\'s starting spot after a kickoff (renamed from "Avg Field Position")', effect: 'Green always means the good direction on every trend card.' },
+      { change: 'Career kickoff numbers on the Players page now come from the box score. The kickoff sheet leaves the distance blank on a touchback, so touchbacks used to count as 0 yards, and onside kicks were counted as kickoffs', effect: 'Kickoff yards and averages are correct for every kicker. For example, Matthew Swink\'s 2026 average reads 63.4 instead of 22.9.' },
+      { change: 'In the Nov 11, 2023 Wash U film file, 64 of Carroll\'s defensive snaps were labelled as offense. They are now counted as defense, and any future file with the same mistake is fixed the same way', effect: 'The 2023 offense and defense tendencies are corrected, and the Defense page now has that game.' },
+      { change: 'Five athletes whose names were misspelled in some lifting sheets (Lichucki, Colin Chappel, Dominick Caruso, Griffiths, Quintin Fisher) are merged, and a Combined Total from a session where a lift was missing is left out', effect: 'Each athlete has one unbroken progress line, and partial totals no longer pull down averages and leaderboards.' },
+      { change: 'CCIW rankings had red-zone interceptions, fumbles and turnovers on downs ranked the wrong way round (Carroll\'s two red-zone interceptions showed as a green "#1"). Those ranks are hidden for past weeks and come back ranked correctly (fewer is better on offense, more is better on defense) from the next weekly update. The meaningless "games played" ranks are gone, and national percentages show as percents', effect: 'A green "#1" in the rankings always means Carroll is best at it.' },
+      { change: 'End-of-game "drives" with no plays (the clock ran out after a kickoff) no longer count', effect: 'Points per drive and the Drive Result Mix now use the same drives.' },
+      { change: 'Smaller fixes: Special Teams tiles say whose number it is (the opponent\'s next-drive points and starting spot); ties for "most used" name every tied option; rate columns show one decimal; Home no longer says "held opponents to" for a poor defensive game or repeats the series streak; the strength Change column is coloured; bar charts fit on phones; record-book opponent names are cleaned up; and Game Plan is labelled as the one-page printable plan', effect: 'Fewer misleading labels and cleaner tables across the site.' },
+    ],
+  },
+  {
     version: '1.4.2',
     date: 'October 22, 2026',
     title: 'Data fixes: field position after returns, Carthage games, a missing extra point',

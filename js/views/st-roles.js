@@ -60,7 +60,7 @@
     const by = groupBy(rows, 'season');
     const seasons = ST.seasonsInView(unit, rows);
     renderBar(el, {
-      categories: seasons, values: seasons.map((s) => mean((by.get(s) || []).map((r) => r.score))), labelFmt: (v) => fmt(v, 0),
+      categories: seasons, values: seasons.map((s) => mean((by.get(s) || []).map((r) => r.score))), labelFmt: (v) => fmt(v, 1), // 1 decimal so a red 49.6 never reads "50"
       colorFn: (s, v) => (v >= 50 ? cssVar('--good') : cssVar('--critical')), tooltipExtra: (s) => `${(by.get(s) || []).length} ${noun}`,
     });
   }

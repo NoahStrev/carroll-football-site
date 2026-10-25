@@ -91,7 +91,7 @@ const NextOpponent = (function () {
               el.innerHTML = `<div class="data-note">${esc(opp)} is not in the CCIW national-ranking tables (a non-conference team), so there are no season totals to show.</div>`;
               return;
             }
-            const show = (row, stat) => (row ? `${stat === 'Pct' ? pct(row.value, 1) : fmt(row.value, stat === 'Avg' ? 2 : 1)} <span class="muted">· #${row.rank}</span>` : '—');
+            const show = (row, stat) => (row ? `${stat === 'Pct' ? pct(row.value, 1) : fmt(row.value, stat === 'Avg' && Math.abs(row.value) < 10 ? 2 : 1)} <span class="muted">· #${row.rank}</span>` : '—');
             const sections = { offense: 'Offense', defense: 'Defense', other: 'Turnovers and punting' };
             let body = '';
             Object.entries(sections).forEach(([group, title]) => {

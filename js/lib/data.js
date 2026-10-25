@@ -152,6 +152,16 @@ function topKeysByCount(map, n = 10) {
   return [...map.entries()].sort((a, b) => b[1].length - a[1].length).slice(0, n).map(([k]) => k);
 }
 
+/** "Most-used X" KPI value from a groupBy() Map: [label, foot]. Every key tied for the top count is named
+ * ("PRO / DEUCE", "69 snaps each") instead of silently picking one of them (2026-10-23). */
+function topCountKpi(map, noun = 'snaps') {
+  const entries = [...map.entries()];
+  if (!entries.length) return ['—', ''];
+  const best = Math.max(...entries.map(([, v]) => v.length));
+  const tied = entries.filter(([, v]) => v.length === best).map(([k]) => k);
+  return tied.length > 1 ? [tied.slice(0, 3).join(' / '), `${best} ${noun} each`] : [tied[0], `${best} ${noun}`];
+}
+
 /** Opponents' snaps as THEIR offense. game-data's defense.official is Carroll's defense, i.e. the opponent's
  * offense, but its score_differential is still Carroll's lead (verified: Carroll up 13 reads +13 on both
  * sheets). Anything that treats those rows as the opponent's own offense and buckets them by score ("Leading

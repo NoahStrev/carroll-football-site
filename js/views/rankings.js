@@ -20,18 +20,21 @@
   // own year's pool and sorted next to a different year's would imply a cross-season
   // comparison neither source publishes, so Rank is dropped and each season's real
   // value is listed, newest season first.
+  // NCAA.com publishes percentage stats as fractions (0.576); show them as percents like the CCIW table (57.6%).
+  const showValue = (r, scope) => (scope.id === 'national' && r.stat === 'Pct' && typeof r.value === 'number' && Math.abs(r.value) <= 1 ? pct(r.value, 1) : Site.esc(r.value));
+
   function rankTable(scope, rows, ranked) {
     if (!rows.length) return `<div class="lb-empty">No ${scope.label}-scope rows for this selection.</div>`;
     const right = 'text-align:right;';
     if (ranked) {
       const body = rows.slice().sort((a, b) => a.rank - b.rank).map((r) => `
         <tr><td class="name">${Site.esc(r.category)}</td><td>${Site.esc(r[scope.statField])}</td>
-        <td style="${right}">${Site.esc(r.value)}</td><td style="${right}">${scope.rankCell(r)}</td></tr>`).join('');
+        <td style="${right}">${showValue(r, scope)}</td><td style="${right}">${scope.rankCell(r)}</td></tr>`).join('');
       return `<table class="mini rank-table"><thead><tr><th>Category</th><th>${scope.statHead}</th><th style="${right}">Value</th><th style="${right}">${scope.rankHead}</th></tr></thead><tbody>${body}</tbody></table>`;
     }
     const body = rows.slice().sort((a, b) => b.season.localeCompare(a.season) || a.category.localeCompare(b.category)).map((r) => `
       <tr><td>${r.season}</td><td class="name">${Site.esc(r.category)}</td><td>${Site.esc(r[scope.statField])}</td>
-      <td style="${right}">${Site.esc(r.value)}</td></tr>`).join('');
+      <td style="${right}">${showValue(r, scope)}</td></tr>`).join('');
     return `<table class="mini rank-table"><thead><tr><th>Season</th><th>Category</th><th>${scope.statHead}</th><th style="${right}">Value</th></tr></thead><tbody>${body}</tbody></table>`;
   }
 

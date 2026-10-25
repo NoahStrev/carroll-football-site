@@ -3,8 +3,8 @@
    (build_special_teams_data.py): { units: {unit: [row...]}, filters: {unit: {field: [options]}} }.
 
    Every unit sheet carries a Value/Score column -- "points added over expectation" vs.
-   an average Carroll attempt at that unit, rescaled to 0-100 -- which is what the Overview
-   compares across units. */
+   an average Carroll attempt at that unit; Score = 50 + 10 x Value, clamped to 0-100 (since 2026-10-23,
+   the same rule for every unit), which is what the Overview compares across units. */
 (function () {
   const U = () => Site.data.st;
   const esc = Site.esc;
@@ -84,7 +84,8 @@
           render(el, { byUnit }) {
             renderBar(el, {
               categories: UNIT_KEYS.map((u) => UNIT_LABELS[u]), values: UNIT_KEYS.map((u) => mean(byUnit[u].map((r) => r.score))),
-              labelFmt: (v) => fmt(v, 0), colorFn: (name, v) => (v === null ? cssVar('--muted') : v >= 50 ? cssVar('--good') : cssVar('--critical')),
+              // one decimal, like the tiles above: a 49.5 average is red, and "50" on a red bar would contradict the note
+              labelFmt: (v) => fmt(v, 1), colorFn: (name, v) => (v === null ? cssVar('--muted') : v >= 50 ? cssVar('--good') : cssVar('--critical')),
               tooltipExtra: (name, i) => `${byUnit[UNIT_KEYS[i]].length} plays`,
             });
           },
@@ -111,7 +112,7 @@
           // Deliberately reads every season, NOT the season-filtered rows -- comparing across
           // seasons at once is the table's whole point.
           title: 'Avg Score — unit × season', wide: true,
-          note: "Avg Score (0–100 rescale of each unit's own Value metric) per season — always shows every season regardless of the Season filter above, which only scopes the KPIs/charts. A dash means that unit has no charted plays that season.",
+          note: "Avg Score per season (50 = an average Carroll attempt at that unit; each point of Value is 10 Score points) — always shows every season regardless of the Season filter above, which only scopes the KPIs/charts. A dash means that unit has no charted plays that season.",
           table: {
             head: ['Unit', ...allSeasons.map((s) => ({ label: s, align: 'right' })), { label: 'All Time', align: 'right' }],
             rows: () => UNIT_KEYS.map((u) => {
@@ -193,8 +194,8 @@
             });
           },
         },
-        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'snap_to_catch', 's', 'Avg Snap to Catch') },
-        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'snap_to_kick', 's', 'Avg Snap to Kick') },
+        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'snap_to_catch', 's', 'Avg Snap to Catch', { lowerIsBetter: true }) },
+        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'snap_to_kick', 's', 'Avg Snap to Kick', { lowerIsBetter: true }) },
       ],
       footer: () => ST.source('money_unit', 'PAT-FG', "Snap-timing fields recompute only from rows where they're actually charted."),
     });
@@ -216,8 +217,8 @@
         avgKpi('Avg Hangtime', 'hangtime', { digits: 2, unit: 's', charted: true }),
         avgKpi('Avg Distance', 'total_distance', { unit: ' yds' }),
         avgKpi('Avg Snap to Kick', 'snap_to_kick', { digits: 2, unit: 's', charted: true }),
-        avgKpi('Avg Field Position', 'converted_los'),
-        avgKpi('Avg Points Scored', 'next_drive_points', { digits: 2 }),
+        avgKpi('Opponent Start (own yd line)', 'converted_los'),
+        avgKpi('Opponent Pts Next Drive', 'next_drive_points', { digits: 2 }),
       ],
       cards: [
         {
@@ -250,14 +251,14 @@
             renderStacked(el, { categories: buckets, series: Object.fromEntries(OUTCOME_CATS.map((o) => [o, buckets.map((b) => by.get(b).filter((r) => r.next_drive_outcome === o).length)])), order: OUTCOME_CATS, colors: categoricalColorMap(OUTCOME_CATS) });
           },
         },
-        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'snap_to_kick', 's', 'Avg Snap to Kick') },
+        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'snap_to_kick', 's', 'Avg Snap to Kick', { lowerIsBetter: true }) },
         { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'total_distance', ' yds', 'Avg Punt Distance') },
         {
           title: 'Punt Benchmarks',
           note: 'Share of punts that went 50+ yards, or finished inside the opponent 20, 10 and 5.',
           render(el, { rows }) {
             const marks = [['50+ yds', (r) => r.fifty_plus], ['Inside 20', (r) => r.i20], ['Inside 10', (r) => r.i10], ['Inside 5', (r) => r.i5]];
-            renderBar(el, { categories: marks.map((m) => m[0]), values: marks.map((m) => rate(rows, m[1])), labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'), tooltipExtra: (k) => `${rows.filter(marks.find((m) => m[0] === k)[1]).length} of ${rows.length} punts` });
+            renderBar(el, { categories: marks.map((m) => m[0]), values: marks.map((m) => rate(rows, m[1])), labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-1'), counts: marks.map(() => rows.length), tooltipExtra: (k) => `${rows.filter(marks.find((m) => m[0] === k)[1]).length} of ${rows.length} punts` });
           },
         },
         {
@@ -268,7 +269,7 @@
             if (!c.length) { el.innerHTML = '<div class="data-note">No charted roll in the current filter.</div>'; return; }
             const buckets = [['0 yds', (v) => v <= 0], ['1–5', (v) => v >= 1 && v <= 5], ['6–10', (v) => v >= 6 && v <= 10], ['11+', (v) => v > 10]];
             const n = (b) => c.filter((r) => b[1](r.roll)).length;
-            renderBar(el, { categories: buckets.map((b) => b[0]), values: buckets.map((b) => n(b) / c.length), labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-4'), tooltipExtra: (k) => `${n(buckets.find((b) => b[0] === k))} of ${c.length} charted punts` });
+            renderBar(el, { categories: buckets.map((b) => b[0]), values: buckets.map((b) => n(b) / c.length), labelFmt: (v) => pct(v, 0), colorFn: () => cssVar('--cat-4'), counts: buckets.map(() => c.length), xlab2: (k) => `${n(buckets.find((b) => b[0] === k))} of ${c.length}`, tooltipExtra: (k) => `${n(buckets.find((b) => b[0] === k))} of ${c.length} charted punts` });
           },
         },
         { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'carry_distance', ' yds', 'Avg Carry Distance (in the air)') },
@@ -279,7 +280,7 @@
           render(el, { rows }) {
             const charted = rows.filter((r) => r.snapper_tackle !== null && r.snapper_tackle !== undefined);
             const items = [{ k: 'Punter', n: rows.filter((r) => r.punter_tackle).length, of: rows.length }, { k: 'Snapper', n: charted.filter((r) => r.snapper_tackle).length, of: charted.length }].filter((i) => i.of);
-            renderBar(el, { categories: items.map((i) => i.k), values: items.map((i) => i.n / i.of), labelFmt: (v) => pct(v, 1), colorFn: () => cssVar('--cat-1'), tooltipExtra: (k) => { const i = items.find((x) => x.k === k); return `${i.n} tackles on ${i.of} punts`; } });
+            renderBar(el, { categories: items.map((i) => i.k), values: items.map((i) => i.n / i.of), labelFmt: (v) => pct(v, 1), colorFn: () => cssVar('--cat-1'), counts: items.map((i) => i.of), xlab2: (k) => { const i = items.find((x) => x.k === k); return `${i.n} of ${i.of}`; }, tooltipExtra: (k) => { const i = items.find((x) => x.k === k); return `${i.n} tackles on ${i.of} punts`; } });
           },
         },
       ],
@@ -301,8 +302,8 @@
         avgKpi('Avg Punt Distance', 'total_distance', { unit: ' yds' }),
         avgKpi('Avg Return Length', 'return_length', { unit: ' yds' }),
         avgKpi('Avg Snap to Kick', 'snap_to_kick', { digits: 2, unit: 's', charted: true }),
-        avgKpi('Avg Field Position', 'converted_los'),
-        avgKpi('Avg Points Scored', 'next_drive_points', { digits: 2 }),
+        avgKpi('Carroll Start (own yd line)', 'converted_los'),
+        avgKpi('Carroll Pts Next Drive', 'next_drive_points', { digits: 2 }),
       ],
       cards: [
         {
@@ -361,10 +362,10 @@
       kpis: [
         countKpi('# of Kicks'),
         avgKpi('Avg Hangtime', 'hangtime', { digits: 2, unit: 's', charted: true }),
-        avgKpi('Avg Distance', 'total_distance', { unit: ' yds' }),
+        avgKpi('Avg Distance (no touchbacks)', 'total_distance', { unit: ' yds' }),
         avgKpi('Avg Return Length', 'return_length', { unit: ' yds' }),
-        avgKpi('Avg Field Position', 'converted_los'),
-        avgKpi('Avg Points Scored', 'next_drive_points', { digits: 2 }),
+        avgKpi('Opponent Start (own yd line)', 'converted_los'),
+        avgKpi('Opponent Pts Next Drive', 'next_drive_points', { digits: 2 }),
       ],
       cards: [
         {
@@ -392,8 +393,8 @@
             renderBar(el, { categories: types, values: types.map((t) => rate(byType.get(t), driveOk)), labelFmt: (v) => pct(v, 0), colorFn: (name) => typeColors[name], tooltipExtra: (t) => `${byType.get(t).length} kicks` });
           },
         },
-        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'converted_los', '', 'Avg Field Position') },
-        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'return_length', ' yds', 'Avg Return Length Allowed') },
+        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'converted_los', '', 'Avg Opponent Starting Spot', { lowerIsBetter: true }) },
+        { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'return_length', ' yds', 'Avg Return Length Allowed', { lowerIsBetter: true }) },
         { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'carry_distance', ' yds', 'Avg Carry Distance (in the air)') },
         { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'roll', ' yds', 'Avg Roll After Landing') },
         {
@@ -422,10 +423,10 @@
       kpis: [
         countKpi('# of Returns'),
         avgKpi('Avg Hangtime', 'hangtime', { digits: 2, unit: 's', charted: true }),
-        avgKpi('Avg Distance', 'total_distance', { unit: ' yds' }),
+        avgKpi('Avg Kick Distance (no touchbacks)', 'total_distance', { unit: ' yds' }),
         avgKpi('Avg Return Length', 'return_length', { unit: ' yds' }),
-        avgKpi('Avg Field Position', 'converted_los'),
-        avgKpi('Avg Points Scored', 'next_drive_points', { digits: 2 }),
+        avgKpi('Carroll Start (own yd line)', 'converted_los'),
+        avgKpi('Carroll Pts Next Drive', 'next_drive_points', { digits: 2 }),
       ],
       cards: [
         {

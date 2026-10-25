@@ -91,7 +91,7 @@ Upstream projects (sibling folders) → `scripts/build_*.py` → `data/*.json` �
 | `build_game_data.py` | `game-data.json` | `Game Analysis/processed/combined_play_data.xlsx` |
 | `build_rankings_data.py` | `rankings.json` | CCIW and National Buddah Report workbooks |
 | `build_team_stats.py` | `team-stats.json` | National Buddah Report's latest weekly snapshot (`raw/<season>/<date>/team/*.csv`): every CCIW team's season totals and national rank |
-| `validate_data.py` | — | Sanity-checks every JSON above (duplicate or vanished games, scores vs records, unknown opponent spellings, missing plays); exits non-zero on an ERROR |
+| `validate_data.py` | — | Sanity-checks every JSON above (duplicate or vanished games, scores vs records, unknown opponent spellings, missing plays, special-teams counts and play yardage vs the box score, charted plays on the wrong side); exits non-zero on an ERROR |
 | `build_home_data.py` | `home.json`, `meta.json` | `game-data.json`, `special-teams.json`, `rankings.json`, `lifting.json`, box-score results back to 2010, `Schedule/schedule.json` |
 
 `python scripts/refresh_all.py` runs all eight in dependency order, then `stamp_assets.py` and `validate_data.py` (a failed check makes the refresh exit non-zero) and prints a pass/fail
@@ -122,22 +122,27 @@ that buckets those rows by score ("Leading by 9+") as the opponent's own offense
 
 `build_game_data.py` also drops "Penalty, No Play" snaps (nullified and replayed, so not plays) and re-labels a drive whose
 "Touchdown" was really an interception/fumble returned the other way. With both, per-game yardage matches the official box score exactly on both sides in
-30 of 55 games (79 of 110 sides), and every side is within 30 yards except 2024-10-12's offense (-32). One drive the source tagged to the wrong side (2021-11-06 vs Carthage, Carroll's final field-goal drive) is moved back by
+32 of 57 games (83 of 114 sides), and every side is within 30 yards except 2024-10-12's offense (-32). One drive the source tagged to the wrong side (2021-11-06 vs Carthage, Carroll's final field-goal drive) is moved back by
 `MANUAL_DRIVE_SIDE_OVERRIDES` in build_game_data.py, which makes that game match its box score exactly. A handful of other games carry a 20-30 yard rushing gap. Those gaps are inside the official box
 scores themselves, not our parsing: the parsed yards equal the play text in every play, and for 2023-10-07 vs North Central the same page
 reports 670 yards (drive chart), 695 (team stats) and 725 (play-by-play text). Treating accepted offensive penalties as nullified plays was
 tried and made the match worse, so it is not done. `validate_data.py` re-checks every season on every refresh (the reviewed 2024-10-12 gap is listed in `KNOWN_BOX_GAPS`).
 
-Fourth downs: the play-by-play's tries and conversions match the box score's "4th Down Conversions" line exactly for Carroll in all 55 games and for opponents in 52 (the other three are one try off:
+Fourth downs: the play-by-play's tries and conversions match the box score's "4th Down Conversions" line exactly for Carroll in all 57 games and for opponents in 54 (the other three are one try off:
 an uncharted snap, or a penalty first down the box counts as a conversion; `KNOWN_FOURTH_GAPS` in validate_data.py). A snap that carries a *declined* penalty is a normal snap, so
 `is_penalty` means an accepted penalty only.
 
 Turnovers: the play-by-play holds offensive and defensive snaps only, so a fumble lost on a punt or kickoff return is in the box score's turnover
 count but not in ours (a handful of games differ this way, always by one or two). Four rows the source mislabelled — a fumble Carroll recovered itself
 flagged as a turnover, and three real takeaways on drives labelled "Punt" — are corrected in `MANUAL_NOT_A_TURNOVER` / `MANUAL_DRIVE_RESULT_OVERRIDES`
-(build_game_data.py); the validator warns about any new turnover flagged on a drive that went on to score or punt. Special teams counts: the
-kickoff sheet logs onside kicks that the box score's kickoff total leaves out (8 of the 10 games that differ); the punt-return and kickoff-return
-sheets log every kick received, while the box counts only kicks actually returned, so those two are not comparable counts.
+(build_game_data.py); the validator warns about any new turnover flagged on a drive that went on to score or punt. Special teams counts: Carroll's punts, PATs,
+field goals and deep kickoffs match the box score in every 2021+ game, and `validate_data.py` stops the refresh on any new difference. The kickoff sheet also logs onside
+kicks, which the box score's kickoff total leaves out (the 8 games whose raw kickoff counts differ); the punt-return and kickoff-return sheets log every kick
+received, while the box counts only kicks actually returned, so those two are not comparable counts.
+
+Charted (Hudl) plays: each game's charted plays must split offense/defense like the official play-by-play (all games are within 2.5 points of offense share).
+Wash U 2023-11-11 once had 64 defensive snaps coded "O"; `fix_miscoded_defense` in Game Analysis' `build_combined_dataset.py` now re-codes a row as defense when its
+defensive call columns are filled and its offensive ones are empty, and the validator flags any game that drifts.
 
 ## Weekly update
 
@@ -159,7 +164,7 @@ http — `fetch()` of local JSON doesn't work from `file://`.
 
 `tests/smoke.html` is the regression check. With the local server running, open
 `http://localhost:8731/tests/smoke.html?width=390&autorun=1` (also try `820` and `1280`). It loads every page in a frame
-at that width, opens every tab and sub-view pill, and fails a view for script errors, a near-empty view, stray
+at that width, opens every tab and sub-view pill (every combination where a view has two pill bars, e.g. Special Teams > Athletes role x view), and fails a view for script errors, a near-empty view, stray
 `undefined`/`NaN` text, sideways page overflow, or content clipped inside a card. Run it after any change to the shell,
 the shared library, or the CSS. (Opponent front/coverage views are *expected* to show their "not charted" explanation for
 2026 — that passes; it is a data gap, not a bug.) It also checks for a duplicated id and for any button, link, or form control without an accessible name, tries a few choices in each tab's first dropdown (other opponents, other games), and finishes with a shareable-link check (a changed filter or dropdown lands in the address, and opening that address restores it).
@@ -180,11 +185,11 @@ The workflow also runs `scripts/validate_data.py` on the committed data first (i
   inline "?" hints. The changelog lives in `js/views/updates-data.js` (one entry per day of shipped work).
 - **Don't duplicate helpers.** If two views need the same thing it belongs in `js/lib/` (data/formatting/charts), `js/shell.js`
   (page structure), or `theme.css` (look). Card factories (`countCard`, `rateCard`, `detailTable` in `views/game.js`;
-  `athleteTable`, `quarterBars`, ... in `views/st-athletes.js`) are the pattern for chart families.
+  `athleteTable` in `views/st-athletes.js`, `quarterBars` in `views/st-roles.js`) are the pattern for chart families.
 - **Asset versions.** Every `<script src>` and stylesheet address in the pages ends in `?v=<hash of that file>` (`scripts/stamp_assets.py`), so a browser
   never pairs a new page with an old cached script. `refresh_all.py` runs it; after editing any file in `js/` or `css/` run `python scripts/stamp_assets.py`
   yourself (the GitHub Action fails with `--check` if you forget).
-- **Small samples look small.** A rate over fewer than 5 snaps is drawn faded (`renderBar`'s `counts`, the heatmap's cells; `SMALL_SAMPLE` in `js/lib/charts.js`) and its tooltip says so; `axisLabel` gives a long category a shorter axis name while the tooltip keeps the full one.
+- **Small samples look small.** A rate over fewer than 5 snaps is drawn faded (`renderBar`'s `counts`, the heatmap's cells; `SMALL_SAMPLE` in `js/lib/charts.js`) and its tooltip says so. Pass `counts` on every new rate chart (the Punt Benchmarks, Roll After Landing and Coverage Tackles charts do, with an "n of N" second label); `axisLabel` gives a long category a shorter axis name while the tooltip keeps the full one.
 - **Empty views explain themselves.** When a chart has nothing to show, say why (e.g. opponent front/coverage were only
   charted 2021–2024) instead of drawing blank axes.
 - **Verify before shipping.** Load each changed page at desktop, tablet (~820px) and phone (~390px) widths, in light and dark,

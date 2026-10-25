@@ -204,7 +204,7 @@ def write_meta(game_data, st, latest, names):
         "latest_game": {"date": latest["date"], "opponent": latest["opponent"]} if latest else None,
         "schedule": parse_schedule(names),
     }
-    META_OUT.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
+    META_OUT.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8", newline="\n")
     print(f"meta -> {META_OUT}")
 
 
@@ -294,7 +294,7 @@ def main():
         "history": dict(sorted(history.items())),
         "seasons": seasons,
     }
-    OUT.write_text(json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8")
+    OUT.write_text(json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8", newline="\n")
     write_meta(game_data, st, latest, names)
     cur = seasons[str(season)]
     print(f"season {season}: {cur['record']} ({cur['conference_record']} CCIW), {len(cur['games'])} games; {len(seasons)} seasons -> {OUT}")

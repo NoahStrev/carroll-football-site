@@ -435,6 +435,13 @@ CATEGORY_SPECS = {
 }
 
 
+# The box score's per-kicker Kickoffs table ("No.", "Yds.", "TB", "OB"): the official kick count (onside kicks are not
+# in it) and yards that include touchbacks. Used for seasons the Special Teams sheets cover, so the Kickoffs category
+# keeps the same 2021+ scope as the other special-teams categories (2026-10-23).
+KICKOFF_BOX_SPEC = {"sum": {"att": ["No."], "yds": ["Yds."], "tb": ["TB"], "ob": ["OB"]}}
+KICKOFF_BOX_FIRST_SEASON = 2021
+
+
 def get_field(row, aliases):
     for a in aliases:
         if a in row:
@@ -675,13 +682,11 @@ def accumulate_one_special_teams_row(category, bucket, row):
         if row.get("blocked"):
             bump(bucket, "blocked")
     elif category == "Kickoffs":
-        bump(bucket, "att")
-        bump(bucket, "yds", row.get("total_distance") or 0)
+        # Kicks, yards, touchbacks and out-of-bounds come from the box score's own Kickoffs table (see
+        # KICKOFF_BOX_SPEC): the kickoff sheet leaves Total Distance blank on a touchback, so summing it here counted
+        # every touchback as 0 yards (Swink 2026: 756 yds / 22.9 avg vs the box score's 1,965). Only what the box
+        # score doesn't have comes from the sheet: the longest kick and kicks pinned inside the 25.
         bump_max(bucket, "long", row.get("total_distance") or 0)
-        if row.get("touchback"):
-            bump(bucket, "tb")
-        if row.get("out_of_bounds"):
-            bump(bucket, "ob")
         if row.get("inside_25"):
             bump(bucket, "inside_25")
     elif category in ("PuntReturn", "KickoffReturn"):
@@ -738,11 +743,13 @@ def accumulate_special_teams(players, roster, last_name_to_keys, unmatched_displ
             player = players.setdefault(display, {"athlete_key": athlete_key, "categories": {}})
             cat_bucket = player["categories"].setdefault(category, {"career": {}, "seasons": {}, "career_games": set(), "season_games": {}})
             accumulate_one_special_teams_row(category, cat_bucket["career"], row)
-            cat_bucket["career_games"].add(game_label)
+            if category != "Kickoffs":  # kickoff games are counted from the box-score lines (accumulate_players)
+                cat_bucket["career_games"].add(game_label)
             if season is not None:
                 season_bucket = cat_bucket["seasons"].setdefault(season, {})
                 accumulate_one_special_teams_row(category, season_bucket, row)
-                cat_bucket["season_games"].setdefault(season, set()).add(game_label)
+                if category != "Kickoffs":
+                    cat_bucket["season_games"].setdefault(season, set()).add(game_label)
 
     # Snapping is tracked separately from the kicker's own PATFG stats --
     # money_unit's `long_snapper` field (the PAT/FG "short" snap, despite
@@ -942,6 +949,20 @@ def accumulate_players(files, roster, last_name_to_keys, unmatched_display):
                         line = cat_bucket["game_log"].setdefault(year, {}).setdefault(game_label, {"date": iso_game_date(data.get("game_info", {}).get("date"), year)})
                         accumulate(line, spec, row)
 
+        kick_teams = ps.get("Kickoffs", {})
+        if year is not None and year >= KICKOFF_BOX_FIRST_SEASON and isinstance(kick_teams, dict) and kick_teams:
+            car_key = carroll_key_for_game(data, kick_teams)
+            for row in (kick_teams.get(car_key) or []) if car_key else []:
+                athlete_key, display = match_player(row.get("player", ""), roster, last_name_to_keys, unmatched_display, year)
+                if display is None:
+                    continue
+                player = players.setdefault(display, {"athlete_key": athlete_key, "categories": {}})
+                cat_bucket = player["categories"].setdefault("Kickoffs", {"career": {}, "seasons": {}, "career_games": set(), "season_games": {}})
+                accumulate(cat_bucket["career"], KICKOFF_BOX_SPEC, row)
+                cat_bucket["career_games"].add(game_label)
+                accumulate(cat_bucket["seasons"].setdefault(year, {}), KICKOFF_BOX_SPEC, row)
+                cat_bucket["season_games"].setdefault(year, set()).add(game_label)
+
     accumulate_special_teams(players, roster, last_name_to_keys, unmatched_display)
     return players, unmatched_names
 
@@ -954,10 +975,18 @@ def add_derived(cat, bucket):
         bucket["completion_pct"] = round(100 * bucket["cmp"] / bucket["att"], 1)
         bucket["yards_per_att"] = round(bucket["yds"] / bucket["att"], 1)
     if cat == "Rushing" and bucket.get("att"):
-        bucket["yards_per_carry"] = round(bucket["net"] / bucket["att"], 2)
+        bucket["yards_per_carry"] = round(bucket["net"] / bucket["att"], 1)
     if cat == "Receiving" and bucket.get("rec"):
         bucket["yards_per_rec"] = round(bucket["yds"] / bucket["rec"], 1)
     add_special_teams_derived(cat, bucket)
+
+
+# Accumulated (and used for derived rates) but never shown anywhere on the site, so not exported (2026-10-23, ~130 KB).
+UNEXPORTED_FIELDS = {"sack_yds", "tfl_yds", "fr", "fr_yds", "gain", "sack", "net_yds"}
+
+
+def _exported(stats):
+    return {k: v for k, v in stats.items() if k not in UNEXPORTED_FIELDS}
 
 
 def format_players(players, roster):
@@ -977,11 +1006,11 @@ def format_players(players, roster):
                 for line in lines.values():
                     add_derived(cat, line)
             entry["categories"][cat] = {
-                "career": cat_bucket["career"],
+                "career": _exported(cat_bucket["career"]),
                 "career_games": len(cat_bucket["career_games"]),
                 "seasons": [
-                    {"season": yr, **stats, "games": len(cat_bucket["season_games"].get(yr, [])),
-                     **({"log": sorted(cat_bucket["game_log"][yr].values(), key=lambda g: g["date"] or "")} if yr in cat_bucket.get("game_log", {}) else {})}
+                    {"season": yr, **_exported(stats), "games": len(cat_bucket["season_games"].get(yr, [])),
+                     **({"log": sorted((_exported(g) for g in cat_bucket["game_log"][yr].values()), key=lambda g: g["date"] or "")} if yr in cat_bucket.get("game_log", {}) else {})}
                     for yr, stats in sorted(cat_bucket["seasons"].items())
                 ],
             }
@@ -998,7 +1027,7 @@ def main():
     out_players = format_players(players, roster)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUT, "w", encoding="utf-8") as f:
+    with open(OUT, "w", encoding="utf-8", newline="\n") as f:  # LF, matching .gitattributes (no CRLF warnings on commit)
         json.dump({"players": out_players, "unmatched_names": sorted(unmatched_names)}, f, indent=1)
 
     matched = sum(1 for p in out_players if p["athlete_key"])
