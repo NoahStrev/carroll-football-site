@@ -174,7 +174,7 @@
               { title: 'Avg PAT/FG Score by season', wide: true, render: (el, { rows }) => scoreBars(el, R.unit, rows, 'kicks') },
             ],
             table: {
-              title: 'Kicker &amp; miss-type detail', note: 'Attempts/makes/PAT/FG/Long/Score are real and respect the filters above. Avg Op Time only reflects charted rows (2023 onward) — shows "—" for a kicker with none in view.',
+              title: 'Kicker &amp; miss-type detail', note: 'Attempts, makes, PAT, FG, Long and Score count every kick and respect the filters above. Avg Op Time only reflects charted rows (2023 onward) — shows "—" for a kicker with none in view.',
               build: (rows) => athleteTable(R.unit, R.field, rows, 'Kicker', [
                 { label: 'PAT (made/att)', cell: (g) => `${makes(pats(g)).length}/${pats(g).length}` }, { label: 'PAT %', cell: (g) => pct(makeRate(pats(g)), 0) },
                 { label: 'FG (made/att)', cell: (g) => `${makes(fgs(g)).length}/${fgs(g).length}` }, { label: 'FG %', cell: (g) => pct(makeRate(fgs(g)), 0) },
@@ -249,7 +249,7 @@
               { title: 'Avg Kickoff Score by season', render: (el, { rows }) => scoreBars(el, R.unit, rows, 'kicks') },
             ],
             table: {
-              title: 'Kicker detail', note: 'Kicks/TB%/I25%/distance/return/Tackles/Score are real and respect the filters above. Hangtime and Roll only reflect charted rows (2023 onward) — they show "—" for a kicker with none in view.',
+              title: 'Kicker detail', note: 'Kicks, TB%, I25%, distance, return, tackles and Score count every kick and respect the filters above. Hangtime and Roll only reflect charted rows (2023 onward) — they show "—" for a kicker with none in view.',
               build: (rows) => athleteTable(R.unit, R.field, rows, 'Kicker', [
                 { label: 'Kicks', cell: (g) => g.length }, { label: 'TB%', cell: (g) => pct(tb(deepKick(g)), 0) }, { label: 'I25%', cell: (g) => pct(rate(deepKick(g), (r) => r.inside_25), 0) },
                 { label: 'Avg dist', cell: (g) => `${fmt(mean(deepKick(g).map((r) => r.total_distance)), 1)} yds` }, { label: 'Avg return', cell: (g) => `${fmt(mean(deepKick(g).map((r) => r.return_length)), 1)} yds` },
@@ -318,7 +318,7 @@
               { title: 'Avg Punt Score by season', wide: true, render: (el, { rows }) => scoreBars(el, R.unit, rows, 'punts') },
             ],
             table: {
-              title: 'Punter detail', note: 'Punts/Net/Gross/I20%/TB%/Score are real and respect the filters above. Hangtime, Carry and Roll only reflect charted rows (2023 onward) — they show "—" for a punter with none in view.',
+              title: 'Punter detail', note: 'Punts, Net, Gross, I20%, TB% and Score count every punt and respect the filters above. Hangtime, Carry and Roll only reflect charted rows (2023 onward) — they show "—" for a punter with none in view.',
               build: (rows) => athleteTable(R.unit, R.field, rows, 'Punter', [
                 { label: 'Punts', cell: (g) => g.length }, { label: 'Net avg', cell: (g) => `${fmt(avgNet(g), 1)} yds` }, { label: 'Gross avg', cell: (g) => `${fmt(mean(g.map((r) => r.total_distance)), 1)} yds` },
                 { label: 'I20%', cell: (g) => pct(i20(g), 0) }, { label: 'TB%', cell: (g) => pct(rate(g, isTouchback), 0) }, { label: 'Avg Score', cell: (g) => fmt(mean(g.map((r) => r.score)), 0) }, { label: 'Hangtime', cell: hangtime },

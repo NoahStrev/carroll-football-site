@@ -376,6 +376,9 @@ table.records-table thead th, table.rank-table thead th, table.lb-scroll thead t
 .insight b { color: var(--text-primary); }
 .view-intro { margin-bottom: 14px; }
 .data-note { font-size: 10.5px; color: var(--muted); margin-top: 6px; }
+/* A long slash-joined run such as "Kicks/TB%/I25%/distance" is one word to the browser: on a 320px phone with a wider
+   font (Linux's) it outgrew its card and got clipped (2026-10-25). Notes may break such a run where they must. */
+.insight, .data-note, .card-note { overflow-wrap: anywhere; }
 
 .avatar[style*="--cat-2"], .avatar[style*="--cat-3"], .avatar[style*="--cat-4"], .avatar[style*="--cat-5"] { color: #0b0b0b; } /* white initials on the lighter palette colours miss contrast */
 .avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; flex-shrink: 0; }
