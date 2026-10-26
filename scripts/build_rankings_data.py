@@ -160,8 +160,9 @@ CATEGORY_SECTION = {
 
 # CCIW ranks are computed by the CCIW Buddah Report scraper, which until 2026-10-23 ranked the red-zone tables one way
 # for every column (so 2 red-zone interceptions read as Carroll's "#1 of 9", and 0 takeaways on defense as "#1") and
-# also ranked "G" (games played). The scraper is fixed for new snapshots; rows stored before the fix are left out here
-# rather than shown with a backwards rank.
+# also ranked "G" (games played). The 2016-2025 season files were re-scraped with the fix on 2026-10-25 (old copies in
+# output_carroll/_archive/pre-rank-fix-2026-10), so season rows are usable; in-season weekly snapshots taken before the
+# fix cannot be re-scraped (the site only shows current totals), so those red-zone turnover ranks stay left out.
 CCIW_RANK_FIX_DATE = "2026-10-23"
 CCIW_RED_ZONE_TURNOVER_METRICS = {("Red Zone Offense", m) for m in ("INT", "FUM", "Downs")} | {("Red Zone Defense", m) for m in ("INT", "FUM", "Downs")}
 
@@ -169,8 +170,8 @@ CCIW_RED_ZONE_TURNOVER_METRICS = {("Red Zone Offense", m) for m in ("INT", "FUM"
 def cciw_rank_usable(category, metric, snapshot_date):
     if metric == "G":
         return False
-    if (category, metric) in CCIW_RED_ZONE_TURNOVER_METRICS:
-        return bool(snapshot_date) and snapshot_date >= CCIW_RANK_FIX_DATE
+    if (category, metric) in CCIW_RED_ZONE_TURNOVER_METRICS and snapshot_date is not None:
+        return snapshot_date >= CCIW_RANK_FIX_DATE  # a weekly snapshot; season rows (None) were re-scraped
     return True
 
 

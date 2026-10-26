@@ -213,6 +213,7 @@ function playMetrics(rows) {
     turnover: rate(rows, (r) => r.is_turnover),          // turnovers per snap
     turnovers: rows.filter((r) => r.is_turnover).length, // turnovers in total
     runPct: runPass.length ? rate(runPass, isRunPlay) : null,
+    epa: mean(rows.map((r) => r.epa)),                    // expected points added per play (build_game_data.py)
   };
 }
 

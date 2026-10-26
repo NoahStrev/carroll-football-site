@@ -88,10 +88,10 @@ Upstream projects (sibling folders) → `scripts/build_*.py` → `data/*.json` �
 | `build_career_stats.py` | `career-stats.json` | `Special Teams Data/raw/*.json` box scores, `special-teams.json`, Lifting Data roster |
 | `build_records_data.py` | `records.json` | `Records & Awards/output/*.xlsx`, `career-stats.json` |
 | `build_lifting_data.py` | `lifting.json` | `Lifting Data/output/Lifting_Consolidated_AllYears.xlsx` |
-| `build_game_data.py` | `game-data.json` | `Game Analysis/processed/combined_play_data.xlsx` |
+| `build_game_data.py` | `game-data.json`, `game-data-latest.json` | `Game Analysis/processed/combined_play_data.xlsx`, box scores (turnovers on kicks, field-position labels) |
 | `build_rankings_data.py` | `rankings.json` | CCIW and National Buddah Report workbooks |
 | `build_team_stats.py` | `team-stats.json` | National Buddah Report's latest weekly snapshot (`raw/<season>/<date>/team/*.csv`): every CCIW team's season totals and national rank |
-| `validate_data.py` | — | Sanity-checks every JSON above (duplicate or vanished games, scores vs records, unknown opponent spellings, missing plays, special-teams counts and play yardage vs the box score, charted plays on the wrong side); exits non-zero on an ERROR |
+| `validate_data.py` | — | Sanity-checks every JSON above (duplicate or vanished games, scores vs records, unknown opponent spellings, missing plays, special-teams counts, turnovers, career totals and play yardage vs the box score, charted plays on the wrong side, lifting name typos); exits non-zero on an ERROR |
 | `build_home_data.py` | `home.json`, `meta.json` | `game-data.json`, `special-teams.json`, `rankings.json`, `lifting.json`, box-score results back to 2010, `Schedule/schedule.json` |
 
 `python scripts/refresh_all.py` runs all eight in dependency order, then `stamp_assets.py` and `validate_data.py` (a failed check makes the refresh exit non-zero) and prints a pass/fail
@@ -132,8 +132,10 @@ Fourth downs: the play-by-play's tries and conversions match the box score's "4t
 an uncharted snap, or a penalty first down the box counts as a conversion; `KNOWN_FOURTH_GAPS` in validate_data.py). A snap that carries a *declined* penalty is a normal snap, so
 `is_penalty` means an accepted penalty only.
 
-Turnovers: the play-by-play holds offensive and defensive snaps only, so a fumble lost on a punt or kickoff return is in the box score's turnover
-count but not in ours (a handful of games differ this way, always by one or two). Four rows the source mislabelled — a fumble Carroll recovered itself
+Turnovers: the play-by-play holds offensive and defensive snaps only, so a fumble or muff on a punt or kickoff that the kicking team recovers (a
+turnover the box score counts) is taken from the box score's play text by `kick_turnovers()` (build_lib.py) and stored per game as `st_turnovers` in
+game-data.json. Game Review's turnover margin and Home's turnover totals add these, so giveaways and takeaways match the box score in all 57 games
+(`check_turnovers_vs_box` keeps checking); the per-snap Turnover/Takeaway Rate stays snap-based. Four rows the source mislabelled — a fumble Carroll recovered itself
 flagged as a turnover, and three real takeaways on drives labelled "Punt" — are corrected in `MANUAL_NOT_A_TURNOVER` / `MANUAL_DRIVE_RESULT_OVERRIDES`
 (build_game_data.py); the validator warns about any new turnover flagged on a drive that went on to score or punt. Special teams counts: Carroll's punts, PATs,
 field goals and deep kickoffs match the box score in every 2021+ game, and `validate_data.py` stops the refresh on any new difference. The kickoff sheet also logs onside
@@ -143,6 +145,25 @@ received, while the box counts only kicks actually returned, so those two are no
 Charted (Hudl) plays: each game's charted plays must split offense/defense like the official play-by-play (all games are within 2.5 points of offense share).
 Wash U 2023-11-11 once had 64 defensive snaps coded "O"; `fix_miscoded_defense` in Game Analysis' `build_combined_dataset.py` now re-codes a row as defense when its
 defensive call columns are filled and its offensive ones are empty, and the validator flags any game that drifts.
+Many 2021-24 film files have no result on most rows ("Unknown", neither run nor pass). `fill_unknown_film_rows()` (build_game_data.py) lines each
+game's film rows up with its official snaps and fills an "Unknown" row's run/pass type, result words, success rating and turnover flag from its match
+(about 625 rows a side). Checked by hiding the labels on 4,500 hand-charted plays and filling them: run/pass agrees 99.5% of the time, the success
+rating 99.9%, the result words 98%.
+
+Field position: OfficialPlayByPlay's FIELD_ZONE read the field backwards in four games where Carroll was not labelled CAR/CU (Carthage 2023 "CAU" and
+2025 "PIO", where Carthage was "CAR"; North Park 2023 "PIOS"; UW Eau Claire 2025 "CUP"). build_game_data.py works out the distance to the goal itself
+from each game's official abbreviations (`yards_to_goal()`) and recomputes the zone. The combiner is fixed for new games too, but rows already in its
+workbook keep the old FIELD_ZONE until a `--rebuild`.
+
+Expected points: `add_expected_points()` (build_game_data.py) fits the points a drive is worth from each down, distance and distance to the goal on
+every official snap since 2021 (7 a touchdown, 3 a field goal, -7 a return touchdown, -2 a safety), and gives every run/pass/sack its expected points
+added (`epa`): the next snap's EP minus this one's, or the drive's points for its last snap. The build prints a calibration check (model vs actual
+points for 1st downs by field position); all bands agree within about 0.1 points. Offense and Defense show EPA on the Scorecard and Game Review.
+
+Faster first load: build_game_data.py also writes `game-data-latest.json` (the latest season only, about 0.9 MB against 8 MB). The Offense and Defense
+pages draw from it first (`quickData` / `quickTabs` in Site.mount) and load the full file right after; a tab that reads every season (Tells) waits
+for it. On a throttled phone those pages appear in about 2.1 s instead of 3.7 s. The validator checks the light file is exactly the full file's
+latest season.
 
 ## Weekly update
 
@@ -168,6 +189,11 @@ at that width, opens every tab and sub-view pill (every combination where a view
 `undefined`/`NaN` text, sideways page overflow, or content clipped inside a card. Run it after any change to the shell,
 the shared library, or the CSS. (Opponent front/coverage views are *expected* to show their "not charted" explanation for
 2026 — that passes; it is a data gap, not a bug.) It also checks for a duplicated id and for any button, link, or form control without an accessible name, tries a few choices in each tab's first dropdown (other opponents, other games), and finishes with a shareable-link check (a changed filter or dropdown lands in the address, and opening that address restores it).
+
+`python -m unittest discover -s tests` runs saved real examples for the box-score name parsing (`tests/test_names.py`: multi-word surnames,
+suffixes, three-letter first names, the lifting typo check) -- the GitHub workflow runs it too. The Special Teams parser has its own in
+`Special Teams Data/tests/` (`python -m unittest discover -s tests` from that folder): plays from the Carthage and six-letter-label games that past
+bugs got wrong, each with the play text it was checked against.
 
 `python tests/simulate_new_season.py` rehearses the day a new season's opener is in the box-score archive but not yet charted (a copy of the site with a synthetic next-year opener and schedule, then the smoke test on it). It needs the sibling projects and `pip install openpyxl playwright`, so it is a by-hand check. It exists because the "current season" used to come from the play-by-play, which would have left Home and Players on the old season (warning "not loaded yet") until the first game was charted; it now comes from the box scores, and Home says "not charted yet" for a season with no play-by-play.
 

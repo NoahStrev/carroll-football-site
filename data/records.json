@@ -8518,8 +8518,6 @@
      "player": "Evan Griffiths",
      "position": "LB",
      "current_value": 142,
-     "top_value": 291,
-     "fifth_value": 243,
      "leaderboard": [
       {
        "rank": 1,
@@ -8566,8 +8564,6 @@
      "player": "Evan Griffiths",
      "position": "LB",
      "current_value": 88,
-     "top_value": 170,
-     "fifth_value": 143,
      "leaderboard": [
       {
        "rank": 1,
@@ -8608,8 +8604,6 @@
      "player": "August Johansen",
      "position": "BOB",
      "current_value": 10.5,
-     "top_value": 26,
-     "fifth_value": 18,
      "leaderboard": [
       {
        "rank": 1,
@@ -8656,8 +8650,6 @@
      "player": "Matthew Swink",
      "position": "SPEC",
      "current_value": 25,
-     "top_value": 28,
-     "fifth_value": 14,
      "leaderboard": [
       {
        "rank": 1,
@@ -8704,8 +8696,6 @@
      "player": "Matthew Swink",
      "position": "SPEC",
      "current_value": 37,
-     "top_value": 43,
-     "fifth_value": 24,
      "leaderboard": [
       {
        "rank": 1,
@@ -8746,8 +8736,6 @@
      "player": "Matthew Swink",
      "position": "SPEC",
      "current_value": 72,
-     "top_value": 138,
-     "fifth_value": 56,
      "leaderboard": [
       {
        "rank": 1,
@@ -8788,8 +8776,6 @@
      "player": "Matthew Swink",
      "position": "SPEC",
      "current_value": 75,
-     "top_value": 156,
-     "fifth_value": 68,
      "leaderboard": [
       {
        "rank": 1,
@@ -8832,8 +8818,6 @@
      "player": "Elisha Nieves",
      "position": "QB",
      "current_value": 1500,
-     "top_value": 2697,
-     "fifth_value": 2213,
      "leaderboard": [
       {
        "rank": 1,
@@ -8874,8 +8858,6 @@
      "player": "Elisha Nieves",
      "position": "QB",
      "current_value": 133,
-     "top_value": 200,
-     "fifth_value": 182,
      "leaderboard": [
       {
        "rank": 1,
@@ -8916,8 +8898,6 @@
      "player": "Elisha Nieves",
      "position": "QB",
      "current_value": 230,
-     "top_value": 399,
-     "fifth_value": 318,
      "leaderboard": [
       {
        "rank": 1,
@@ -8958,8 +8938,6 @@
      "player": "Liam Patrick",
      "position": "WR",
      "current_value": 546,
-     "top_value": 1266,
-     "fifth_value": 1075,
      "leaderboard": [
       {
        "rank": 1,
@@ -9000,8 +8978,6 @@
      "player": "Andrew Redmon",
      "position": "LB",
      "current_value": 28,
-     "top_value": 67,
-     "fifth_value": 55,
      "leaderboard": [
       {
        "rank": 1,
@@ -9048,8 +9024,6 @@
      "player": "August Johansen",
      "position": "BOB",
      "current_value": 8.0,
-     "top_value": 13.5,
-     "fifth_value": 11,
      "leaderboard": [
       {
        "rank": 1,
@@ -9090,8 +9064,6 @@
      "player": "Matthew Swink",
      "position": "SPEC",
      "current_value": 7,
-     "top_value": 13,
-     "fifth_value": 8,
      "leaderboard": [
       {
        "rank": 1,
@@ -9150,8 +9122,6 @@
      "player": "Matthew Swink",
      "position": "SPEC",
      "current_value": 14,
-     "top_value": 17,
-     "fifth_value": 12,
      "leaderboard": [
       {
        "rank": 1,

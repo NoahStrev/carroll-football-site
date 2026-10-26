@@ -37,9 +37,11 @@ from pathlib import Path
 
 import openpyxl
 
-from build_lib import distinct, sheet_rows
+from build_lib import box_iso_date, distinct, kick_turnovers, sheet_rows
 
 SRC = Path(__file__).resolve().parent.parent.parent / "Game Analysis" / "processed" / "combined_play_data.xlsx"
+RAW_BOX = Path(__file__).resolve().parent.parent.parent / "Special Teams Data" / "raw"
+LATEST_OUT = Path(__file__).resolve().parent.parent / "data" / "game-data-latest.json"
 OUT = Path(__file__).resolve().parent.parent / "data" / "game-data.json"
 
 CARROLL = "Carroll (WI)"
@@ -252,6 +254,9 @@ def clean_def_front(value):
     return None if isinstance(value, (int, float)) and not isinstance(value, bool) else value
 
 
+STRENGTH_NAMES = {"R": "Right", "L": "Left", "BAL": "Balanced"}
+
+
 def build_charted_plays(wb, carroll_game_labels, opponent_by_game, date_by_game):
     """The hand-charted Plays sheet, split into offense and defense rows."""
     # ---------------------------------------------------------- Plays sheet --
@@ -291,6 +296,9 @@ def build_charted_plays(wb, carroll_game_labels, opponent_by_game, date_by_game)
             offense_plays.append({
                 **base,
                 "personnel": clean_personnel(r["PERSONNEL"]), "formation": r["OFF FORM"],
+                # Formation strength and pre-snap motion are charted on the film but were never shown; the Offense
+                # Tendencies tab has a card for each (2026-10-25). Motion is written only when a player moves.
+                "formation_strength": STRENGTH_NAMES.get(r["OFF STR"]), "motion": r["MOTION"],
                 "backfield": r["BACKFIELD"], "protection": r["PROTECTION"],
                 "play_call": r["PLAY_CALL"],
                 "def_front": clean_def_front(r["DEF FRONT"]), "stunt": r["STUNT"], "blitz": r["BLITZ"],
@@ -312,6 +320,154 @@ def build_charted_plays(wb, carroll_game_labels, opponent_by_game, date_by_game)
                 "front_d": r["FRONT (D)"], "movement": r["MOVEMENT"], "blitz_d": r["BLITZ (D)"],
             })
     return offense_plays, defense_plays
+
+
+# --- film rows with no result (2026-10-25) ---------------------------------------------------------------------------
+# Many 2021-24 Hudl exports have no RESULT on most rows (2021 North Central: 0 of 58 offensive plays; eight 2021-22
+# offenses under 15%), so those rows are "Unknown" -- neither run nor pass -- and have no success rating, which leaves the
+# run/pass and success-rate charts for those seasons built on a handful of plays. The official play-by-play has every
+# snap, so each game's film rows are lined up with its official snaps (down, distance, yards) and an "Unknown" row
+# with an exact match takes its run/pass type, a result tag in the film's own words, a success rating (same rule as the
+# Game Analysis combiner), and a turnover flag. Rows already charted are never changed.
+SUCCESS_SHARE = {1: 0.5, 2: 0.7}
+
+
+def efficiency(is_run, down, distance, yards):
+    if down is None or distance is None or yards is None or distance <= 0:
+        return None
+    if yards >= (10 if is_run else 15):
+        return "Explosive"
+    if yards <= 0:
+        return "Stuffed"
+    return "Successful" if yards >= SUCCESS_SHARE.get(int(down), 1.0) * distance else "Unsuccessful"
+
+
+def film_result(official):
+    """The film's own result words for an official snap, from its play text and tags."""
+    text = official["_text"].lower()
+    tags = official["play_outcome"] or ""
+    fumble = "fumble" in text and official["is_turnover"]
+    if official["play_type"] == "Sack":
+        return "Sack, Fumble" if fumble else "Sack"
+    if official["play_type"] == "Rush":
+        return "Fumble" if fumble else "Rush, TD" if "Touchdown" in tags else "Rush"
+    if "intercept" in text:
+        return "Interception, Def TD" if "Touchdown" in tags else "Interception"
+    if "incomplete" in text:
+        return "Incomplete"
+    if fumble:
+        return "Complete, Fumble"
+    return "Complete, TD" if "Touchdown" in tags else "Complete"
+
+
+def fill_unknown_film_rows(charted, official):
+    """Fill "Unknown" film rows from their matching official snap, per game (see the comment above). Returns the count."""
+    import difflib
+    # Lined up on (down, yards); a pair counts only when the distances agree too, or the official one is blank -- the
+    # official sheet leaves distance empty on goal to go ("1st and goal"), where the film has the yards to the goal line.
+    key = lambda r: (r["down"], r["yards"])
+    by_game = {}
+    for r in official:
+        by_game.setdefault(r["game_label"], []).append(r)
+    filled = 0
+    film_by_game = {}
+    for r in charted:
+        film_by_game.setdefault(r["game_label"], []).append(r)
+    for label, film in film_by_game.items():
+        offi = by_game.get(label, [])
+        sm = difflib.SequenceMatcher(None, [key(r) for r in film], [key(r) for r in offi], autojunk=False)
+        pairs = []
+        for tag, a1, a2, b1, b2 in sm.get_opcodes():
+            if tag == "equal":
+                pairs += zip(film[a1:a2], offi[b1:b2])
+            elif tag == "replace" and a2 - a1 == b2 - b1:
+                # same spot in the sequence but the yards differ: the film spots the ball a little differently than the
+                # official play text, so allow up to 3 yards when the down matches
+                pairs += [(f, o) for f, o in zip(film[a1:a2], offi[b1:b2]) if f["down"] == o["down"]
+                          and (f["yards"] is None or o["yards"] is None or abs(f["yards"] - o["yards"]) <= 3)]
+        for f, o in pairs:
+            if f["play_type"] != "Unknown" or o["play_type"] not in ("Rush", "Pass", "Sack"):
+                continue
+            if o["distance"] is not None and o["distance"] != f["distance"]:
+                continue
+            is_run = o["play_type"] == "Rush"
+            f["play_type"] = "Run" if is_run else "Pass"
+            f["play_outcome"] = film_result(o)
+            f["play_efficiency"] = efficiency(is_run, f["down"], f["distance"], f["yards"])
+            if o["is_turnover"] and not f["turnover_type"]:
+                f["turnover_type"] = "Turnover"
+            filled += 1
+    return filled
+
+
+# --- expected points (2026-10-25) --------------------------------------------------------------------------------------
+# Expected points (EP) = the points a drive is worth on average from a given down, distance and field position, fitted on
+# every official snap since 2021 (Carroll's and its opponents', about 7,000) against how many points that drive actually
+# scored: 7 for a touchdown, 3 for a field goal, -7 when the ball was returned for a touchdown, -2 for a safety, 0
+# otherwise. A play's expected points added (EPA) is EP after it minus EP before it: the next snap's EP, or the drive's
+# points for its last snap. So a drive's EPA adds up to its points minus what its first snap was expected to produce --
+# the same "points over expectation" idea as the Special Teams Value. Drives cut off by the end of a half or game are
+# left out of the fit, and their last snap gets no EPA. One model for both sides: Carroll's defense is judged by the
+# opponents' EPA per play (lower is better).
+DRIVE_POINTS = {"Touchdown": 7, "Field Goal Good": 3, "Safety": -2}
+CLOCK_ENDED = {"End of Half", "End of Game", None}
+EP_PLAY_TYPES = {"Rush", "Pass", "Sack"}
+YTG_KNOTS = (10, 20, 30, 40, 50, 60, 70, 80, 90)
+
+
+def ep_features(down, distance, ytg):
+    import math
+    dist = distance if distance else ytg  # goal to go: the official sheet leaves distance blank
+    dist = max(1, min(dist, 30))
+    f = [1.0, ytg] + [max(0.0, ytg - k) for k in YTG_KNOTS]
+    f += [1.0 if down == d else 0.0 for d in (2, 3, 4)]
+    f += [math.log(dist) * (1.0 if down == d else 0.0) for d in (1, 2, 3, 4)]
+    return f
+
+
+def add_expected_points(sides, drives_by_key, defensive_td_drives):
+    """Adds "ep" and "epa" to every Rush/Pass/Sack snap of both sides (in place); returns calibration rows."""
+    import numpy as np
+
+    def drive_points(key):
+        if key in defensive_td_drives:
+            return -7
+        return DRIVE_POINTS.get((drives_by_key.get(key) or {}).get("result"), 0)
+
+    def usable(r):
+        return r["play_type"] in EP_PLAY_TYPES and r["down"] in (1, 2, 3, 4) and r["_ytg"] is not None and r["drive_num"] is not None
+
+    fit = [r for rows in sides for r in rows if usable(r)
+           and (drives_by_key.get((r["game_label"], r["drive_num"])) or {}).get("result") not in CLOCK_ENDED]
+    X = np.array([ep_features(r["down"], r["distance"], r["_ytg"]) for r in fit])
+    y = np.array([drive_points((r["game_label"], r["drive_num"])) for r in fit], dtype=float)
+    coef, *_ = np.linalg.lstsq(X, y, rcond=None)
+
+    def ep(r):
+        return float(np.clip(np.dot(ep_features(r["down"], r["distance"], r["_ytg"]), coef), -2, 7))
+
+    for rows in sides:
+        snaps = [r for r in rows if usable(r)]
+        for r in snaps:
+            r["ep"] = round(ep(r), 2)
+        for i, r in enumerate(snaps):
+            key = (r["game_label"], r["drive_num"])
+            nxt = snaps[i + 1] if i + 1 < len(snaps) else None
+            if nxt is not None and (nxt["game_label"], nxt["drive_num"]) == key:
+                r["epa"] = round(nxt["ep"] - r["ep"], 2)
+            elif (drives_by_key.get(key) or {}).get("result") in CLOCK_ENDED:
+                r["epa"] = None
+            else:
+                r["epa"] = round(drive_points(key) - r["ep"], 2)
+        for r in rows:
+            r.setdefault("ep", None)
+            r.setdefault("epa", None)
+    cal = []
+    for lo in range(0, 100, 20):
+        band = [(ep(r), drive_points((r["game_label"], r["drive_num"]))) for r in fit if lo < r["_ytg"] <= lo + 20 and r["down"] == 1]
+        if band:
+            cal.append((f"1st down, {lo + 1}-{lo + 20} yds to go", len(band), sum(a for a, _ in band) / len(band), sum(b for _, b in band) / len(band)))
+    return cal
 
 
 def resolve_drive_sides(opbp_all, carroll_game_labels):
@@ -351,6 +507,44 @@ def resolve_drive_sides(opbp_all, carroll_game_labels):
     return drive_sides
 
 
+# --- field position (2026-10-25) --------------------------------------------------------------------------------------
+# OfficialPlayByPlay's FIELD_ZONE treats only CAR/CARROLL/CARROL/CU as Carroll's side of the field. In four games Carroll
+# was labelled otherwise -- "CAU" and "PIO" in the 2023 and 2025 Carthage games (where Carthage was "CAR"), "PIOS" at
+# North Park 2023, "CUP" at UW Eau Claire 2025 -- so the field was mirrored for about 280 snaps: Carroll's own 30 read as
+# the red zone, which also skewed Red Zone TD %. Distance to the goal is worked out here from each game's own official
+# abbreviations (the box score's home_away), and the zone recomputed from it with the combiner's thresholds.
+_YARD_LINE_RE = re.compile(r"^([A-Za-z]+)(\d+)$")
+_CARROLL_LABELS = {"CAR", "CU", "CUP", "CARROLL", "CARROL", "CARR", "PIO", "PIOS", "CAU"}
+_NOT_CARROLL = {"CARTH", "CART", "CARTHAGE"}
+_game_abbrs = {}
+
+
+def game_abbrs(source_json):
+    """(Carroll's, the opponent's) official abbreviation for one box score."""
+    if source_json not in _game_abbrs:
+        box = json.loads((RAW_BOX / source_json).read_text(encoding="utf-8"))
+        ha = box["home_away"]
+        mine = ha["home_abbr"] if "Carroll" in box["game_info"]["matchup"].partition("-VS-")[2] else ha["away_abbr"]
+        _game_abbrs[source_json] = (mine.upper(), (ha["away_abbr"] if mine == ha["home_abbr"] else ha["home_abbr"]).upper())
+    return _game_abbrs[source_json]
+
+
+def yards_to_goal(yard_line, carroll_has_ball, source_json):
+    m = _YARD_LINE_RE.match(yard_line or "")
+    if not m or not source_json:
+        return None
+    prefix, number = m.group(1).upper(), int(m.group(2))
+    mine, opp = game_abbrs(source_json)
+    carroll_side = prefix not in _NOT_CARROLL and prefix != opp and (prefix == mine or prefix.startswith(mine) or prefix in _CARROLL_LABELS)
+    return (100 - number) if carroll_side == carroll_has_ball else number
+
+
+def field_zone(ytg):
+    if ytg is None:
+        return None
+    return "Red Zone" if ytg <= 20 else "Opponent Territory" if ytg < 40 else "Midfield" if ytg <= 60 else "Own Territory" if ytg <= 90 else "Backed Up"
+
+
 def build_official(opbp_all, carroll_game_labels, drive_sides):
     """OfficialPlayByPlay snaps for each side, plus the drive summaries."""
     # ------------------------------------------------- OfficialPlayByPlay ----
@@ -387,15 +581,16 @@ def build_official(opbp_all, carroll_game_labels, drive_sides):
         # of 54 games (21 before). A penalty that was accepted but the play counted still stays in.
         if "No Play" in (r["PLAY_OUTCOME"] or ""):
             continue
+        ytg = yards_to_goal(r["YARD_LINE"], side == "offense", r["SOURCE_JSON"])
         row = {
             "season": season, "opponent": r["OPPONENT"],
             "game_label": r["GAME_LABEL"], "date": r["GAME_DATE"], "quarter": r["QUARTER"],
             "down": r["DOWN"], "distance": r["DISTANCE"], "is_goal_to_go": r["IS_GOAL_TO_GO"],
-            "field_zone": r["FIELD_ZONE"], "situation": r["SITUATION"],
+            "field_zone": field_zone(ytg) if ytg is not None else r["FIELD_ZONE"], "situation": r["SITUATION"], "_ytg": ytg,
             "play_type": r["PLAY_TYPE"], "direction": r["DIRECTION"], "pass_depth": r["PASS_DEPTH"],
             "yards": r["YARDS"], "play_efficiency": r["PLAY_EFFICIENCY"],
             "play_outcome": r["PLAY_OUTCOME"], "is_turnover": r["IS_TURNOVER"],
-            "score_differential": r["SCORE_DIFFERENTIAL"],
+            "score_differential": r["SCORE_DIFFERENTIAL"], "_text": r["PLAY_TEXT"] or "",
             "is_two_minute_drill": two_minute_drill(r["QUARTER"], r["DRIVE_CLOCK"]),
             # Broadcast from the drive this play belongs to (same convention the
             # source workbook already uses for DRIVE_YARDS etc) so a Red Zone /
@@ -439,6 +634,13 @@ def main():
     drive_sides = resolve_drive_sides(opbp_all, carroll_game_labels)
     offense_official, defense_official, drives_by_key, defensive_td_drives = build_official(opbp_all, carroll_game_labels, drive_sides)
     apply_corrections(offense_official, defense_official, drives_by_key, defensive_td_drives)
+    filled = {side: fill_unknown_film_rows(film, offi) for side, film, offi in
+              (("offense", offense_plays, offense_official), ("defense", defense_plays, defense_official))}
+    print(f"film rows with no result filled from the official play-by-play: offense {filled['offense']}, defense {filled['defense']}")
+    for label, n, pred, actual in add_expected_points((offense_official, defense_official), drives_by_key, defensive_td_drives):
+        print(f"  EP check, {label}: {n} snaps, model {pred:.2f} vs actual {actual:.2f} points")
+    for r in (*offense_official, *defense_official):
+        del r["_text"], r["_ytg"]
 
     # A "drive" with no snap at all (the clock ran out after a kickoff, or the return was fumbled) is not a possession the
     # offense ran: dropping it keeps Points/Drive and the Drive Result chart (which is built from plays) on the same drives
@@ -450,6 +652,15 @@ def main():
     defense_drives = [drive_out(k, v) for k, v in real.items() if v["side"] == "defense"]
     for d in (*offense_drives, *defense_drives):
         del d["side"]
+
+    # Punt and kickoff turnovers per game from the box scores (see build_lib.kick_turnovers): the play-by-play above has
+    # only offensive and defensive snaps, so Game Review and Home add these to their turnover totals.
+    kick_to = {}
+    for path in sorted(RAW_BOX.glob("*_*.json")):
+        box = json.loads(path.read_text(encoding="utf-8"))
+        kick_to[box_iso_date(box, path.name)] = [{k: v for k, v in t.items() if k != "play"} for t in kick_turnovers(box)]
+    for g in games:
+        g["st_turnovers"] = kick_to.get(g["date"], [])
 
     payload = {
         "generated_from": SRC.name,
@@ -478,6 +689,14 @@ def main():
     }
 
     OUT.parent.mkdir(exist_ok=True)
+    # The latest season on its own, for the Offense/Defense pages to draw first (js/shell.js cfg.quickData): same shape,
+    # every game and filter option, only the latest season's rows.
+    latest = max(r["season"] for r in offense_official)
+    light = {**payload, "partial_season": latest}
+    for side in ("offense", "defense"):
+        light[side] = {k: [r for r in rows if r["season"] == latest] for k, rows in payload[side].items()}
+    LATEST_OUT.write_text(json.dumps(light, ensure_ascii=False, separators=(",", ":")), encoding="utf-8", newline="\n")
+
     with open(OUT, "w", encoding="utf-8", newline="\n") as f:  # LF, matching .gitattributes (no CRLF warnings on commit)
         json.dump(payload, f, indent=0, default=str)
 

@@ -216,6 +216,10 @@ NAME_ALIASES = {
     # stats silently inflating an unrelated roster athlete's total, this is
     # the mechanism to suspect first.
     ("Johnson", "M."): ("Johnson", "Michael"),
+    # 2026-10-25: 2010 "Beau Le Fevre" and 2011 "Bo Le Fevre" are one receiver -- the awards list has "Beau LeFevre",
+    # 2011 Second Team All-MWC -- so both box-score spellings take the awards spelling.
+    ("Le Fevre", "Beau"): ("LeFevre", "Beau"),
+    ("Le Fevre", "Bo"): ("LeFevre", "Beau"),
 }
 
 
@@ -291,6 +295,10 @@ def season_plausible(person, season):
 NON_PERSON_NAMES = {"team", "totals", "total", "opponent", "opponents"}
 
 
+SURNAME_PARTICLES = {"van", "von", "de", "del", "der", "le", "la", "du", "st.", "st"}
+NAME_SUFFIXES = {"jr", "sr", "ii", "iii", "iv"}
+
+
 def split_raw_name(raw_name):
     """Every raw "player" field value -> (last, first), handling the 3 real
     formats confirmed across this archive (2026-09-08) -- returns (None,
@@ -305,6 +313,7 @@ def split_raw_name(raw_name):
       because every one of his rows that year read "Lamont Williams", not
       "Williams,Lamont", and a comma-only parser skipped them all without
       even attempting a match).
+    - "First Two-Word-Last" (no comma, 3+ words), e.g. "Ted Van Thiel" -> ("Van Thiel", "Ted").
     - A bare last name alone, no first name/initial at all (e.g. just
       "Burlingame") -- real for some seasons' Passing rows specifically;
       returns first="" rather than failing, since merge_key_for_unmatched/
@@ -320,12 +329,25 @@ def split_raw_name(raw_name):
         return None, None  # a team-credited line, not a player
     if "," not in raw_name:
         bits = raw_name.split()
+        if len(bits) == 2 and bits[0].lower() in SURNAME_PARTICLES:
+            return raw_name.strip(), ""  # "Van Schaick" -- a two-word surname alone, not first name "Van" (2026-10-25)
         if len(bits) == 2:
             return bits[1], bits[0]
         if len(bits) == 1:
             return bits[0], ""
+        if len(bits) >= 3:
+            # "First Van Last" -- a multi-word surname with no comma (Ted Van Thiel, Beau Le Fevre, Adam Van Schyndel,
+            # 2010-14). These used to fall through to "unparseable" and their lines were silently dropped (found
+            # 2026-10-25 by the new season-total check in validate_data.py: 2012 was 19 tackles short).
+            return " ".join(bits[1:]), bits[0]
         return None, None
     parts = [p.strip() for p in raw_name.split(",")]
+    if len(parts) == 2 and len(parts[0].split()) >= 2 and parts[1].lower().rstrip(".") in NAME_SUFFIXES:
+        # (only with a "First Last" before the comma: "Muth, JR" is J.R. Muth, initials, not a suffix)
+        # "Carlos Cadet, Jr." (the special-teams sheets' format) -- the suffix is not a first name. Parse the
+        # "First Last" part, then attach the suffix the way the "Cadet, Jr.,Carlos" box-score format does (2026-10-25).
+        last, first = split_raw_name(parts[0])
+        return (f"{last} {parts[1]}" if last else None), first
     if len(parts) == 3:
         return f"{parts[0]} {parts[1]}", parts[2]
     return parts[0], parts[1] if len(parts) > 1 else ""
@@ -560,7 +582,7 @@ def resolve_unmatched_identities(raw_groups):
             last_counts[last_spelling] += count
         last = last_counts.most_common(1)[0][0]
         firsts = {p[0] for p in pairs}
-        full_names = {f for f in firsts if f and len(initial_letters(f)) > 3}
+        full_names = {f for f in firsts if f and not is_initial(f)}
 
         if full_names:
             # Two "full names" (both > 3 letters) aren't necessarily two
@@ -601,7 +623,7 @@ def resolve_unmatched_identities(raw_groups):
                     resolved[p] = f"{canon_for[first]} {last}"
                     continue
                 key = initial_letters(first)
-                matches = [c for c in canonicals if 1 <= len(key) <= 3 and canon_anchor[c][: len(key)] == key]
+                matches = [c for c in canonicals if is_initial(first) and canon_anchor[c][: len(key)] == key]
                 resolved[p] = f"{matches[0]} {last}" if len(matches) == 1 else None
             continue
 
@@ -626,6 +648,14 @@ def resolve_unmatched_identities(raw_groups):
             for p in pairs:
                 resolved[p] = None
     return resolved
+
+
+def is_initial(first):
+    """An initial is up to 3 letters written with a period or in capitals ("K.", "J.R", "JR", "CJ"). A short real first
+    name ("Ted", "Joe", "Tim", "Ty") is mixed case with no period. Before 2026-10-25 any first name of 3 letters or fewer
+    counted as initials, so an unmatched "Joe Kashul" was shown as "J.O.E. Kashul" (12 players)."""
+    letters = initial_letters(first)
+    return 1 <= len(letters) <= 3 and ("." in first or first.strip().isupper())
 
 
 def initial_letters(s):
@@ -671,6 +701,11 @@ SPECIAL_TEAMS_UNITS = [
 
 def accumulate_one_special_teams_row(category, bucket, row):
     if category == "Punting":
+        if row.get("blocked"):
+            # The box score credits a blocked punt to TEAM, not the punter (Brillakis 2021-10-16, Veit 2026-09-12), so it
+            # counts as blocked but not as one of his punts -- his punts and average match the official line (2026-10-25).
+            bump(bucket, "blocked")
+            return
         bump(bucket, "att")
         gross = row.get("total_distance") or 0
         ret = row.get("return_length") or 0
@@ -679,8 +714,6 @@ def accumulate_one_special_teams_row(category, bucket, row):
         bump_max(bucket, "long", gross)
         if row.get("i20"):
             bump(bucket, "i20")
-        if row.get("blocked"):
-            bump(bucket, "blocked")
     elif category == "Kickoffs":
         # Kicks, yards, touchbacks and out-of-bounds come from the box score's own Kickoffs table (see
         # KICKOFF_BOX_SPEC): the kickoff sheet leaves Total Distance blank on a touchback, so summing it here counted

@@ -385,6 +385,36 @@
 "phase": "offense",
 "season": "2016",
 "category": "Red Zone Offense",
+"metric": "Downs",
+"value": "2",
+"rank": 2,
+"out_of": 9,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2016",
+"category": "Red Zone Offense",
+"metric": "FUM",
+"value": "1",
+"rank": 3,
+"out_of": 9,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2016",
+"category": "Red Zone Offense",
+"metric": "INT",
+"value": "3",
+"rank": 8,
+"out_of": 9,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2016",
+"category": "Red Zone Offense",
 "metric": "TDS",
 "value": "12",
 "rank": 8,
@@ -998,6 +1028,36 @@
 "metric": "%",
 "value": "63",
 "rank": 9,
+"out_of": 9,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2017",
+"category": "Red Zone Offense",
+"metric": "Downs",
+"value": "7",
+"rank": 9,
+"out_of": 9,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2017",
+"category": "Red Zone Offense",
+"metric": "FUM",
+"value": "0",
+"rank": 1,
+"out_of": 9,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2017",
+"category": "Red Zone Offense",
+"metric": "INT",
+"value": "2",
+"rank": 6,
 "out_of": 9,
 "week": null
 },
@@ -1625,6 +1685,36 @@
 "phase": "offense",
 "season": "2018",
 "category": "Red Zone Offense",
+"metric": "Downs",
+"value": "6",
+"rank": 9,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2018",
+"category": "Red Zone Offense",
+"metric": "FUM",
+"value": "0",
+"rank": 1,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2018",
+"category": "Red Zone Offense",
+"metric": "INT",
+"value": "2",
+"rank": 5,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2018",
+"category": "Red Zone Offense",
 "metric": "TDS",
 "value": "12",
 "rank": 9,
@@ -2238,6 +2328,36 @@
 "metric": "%",
 "value": "66.7",
 "rank": 8,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2019",
+"category": "Red Zone Offense",
+"metric": "Downs",
+"value": "5",
+"rank": 8,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2019",
+"category": "Red Zone Offense",
+"metric": "FUM",
+"value": "0",
+"rank": 1,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2019",
+"category": "Red Zone Offense",
+"metric": "INT",
+"value": "0",
+"rank": 1,
 "out_of": 10,
 "week": null
 },
@@ -2865,6 +2985,36 @@
 "phase": "offense",
 "season": "2021",
 "category": "Red Zone Offense",
+"metric": "Downs",
+"value": "2",
+"rank": 4,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2021",
+"category": "Red Zone Offense",
+"metric": "FUM",
+"value": "1",
+"rank": 3,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2021",
+"category": "Red Zone Offense",
+"metric": "INT",
+"value": "1",
+"rank": 4,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2021",
+"category": "Red Zone Offense",
 "metric": "TDS",
 "value": "17",
 "rank": 8,
@@ -3478,6 +3628,36 @@
 "metric": "%",
 "value": "72.2",
 "rank": 7,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2022",
+"category": "Red Zone Offense",
+"metric": "Downs",
+"value": "1",
+"rank": 2,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2022",
+"category": "Red Zone Offense",
+"metric": "FUM",
+"value": "1",
+"rank": 5,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2022",
+"category": "Red Zone Offense",
+"metric": "INT",
+"value": "5",
+"rank": 10,
 "out_of": 10,
 "week": null
 },
@@ -4105,6 +4285,36 @@
 "phase": "offense",
 "season": "2023",
 "category": "Red Zone Offense",
+"metric": "Downs",
+"value": "3",
+"rank": 5,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2023",
+"category": "Red Zone Offense",
+"metric": "FUM",
+"value": "0",
+"rank": 1,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2023",
+"category": "Red Zone Offense",
+"metric": "INT",
+"value": "0",
+"rank": 1,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2023",
+"category": "Red Zone Offense",
 "metric": "TDS",
 "value": "32",
 "rank": 4,
@@ -4717,6 +4927,36 @@
 "category": "Red Zone Offense",
 "metric": "%",
 "value": "80.8",
+"rank": 7,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2024",
+"category": "Red Zone Offense",
+"metric": "Downs",
+"value": "1",
+"rank": 2,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2024",
+"category": "Red Zone Offense",
+"metric": "FUM",
+"value": "0",
+"rank": 1,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2024",
+"category": "Red Zone Offense",
+"metric": "INT",
+"value": "2",
 "rank": 7,
 "out_of": 10,
 "week": null
@@ -5345,6 +5585,36 @@
 "phase": "offense",
 "season": "2025",
 "category": "Red Zone Offense",
+"metric": "Downs",
+"value": "0",
+"rank": 1,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2025",
+"category": "Red Zone Offense",
+"metric": "FUM",
+"value": "0",
+"rank": 1,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2025",
+"category": "Red Zone Offense",
+"metric": "INT",
+"value": "2",
+"rank": 7,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "offense",
+"season": "2025",
+"category": "Red Zone Offense",
 "metric": "TDS",
 "value": "16",
 "rank": 7,
@@ -5915,6 +6185,36 @@
 "phase": "defense",
 "season": "2016",
 "category": "Red Zone Defense",
+"metric": "Downs",
+"value": "3",
+"rank": 7,
+"out_of": 9,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2016",
+"category": "Red Zone Defense",
+"metric": "FUM",
+"value": "1",
+"rank": 3,
+"out_of": 9,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2016",
+"category": "Red Zone Defense",
+"metric": "INT",
+"value": "0",
+"rank": 7,
+"out_of": 9,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2016",
+"category": "Red Zone Defense",
 "metric": "TDS",
 "value": "40",
 "rank": 9,
@@ -6458,6 +6758,36 @@
 "metric": "%",
 "value": "95.5",
 "rank": 9,
+"out_of": 9,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2017",
+"category": "Red Zone Defense",
+"metric": "Downs",
+"value": "1",
+"rank": 8,
+"out_of": 9,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2017",
+"category": "Red Zone Defense",
+"metric": "FUM",
+"value": "0",
+"rank": 7,
+"out_of": 9,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2017",
+"category": "Red Zone Defense",
+"metric": "INT",
+"value": "0",
+"rank": 6,
 "out_of": 9,
 "week": null
 },
@@ -7015,6 +7345,36 @@
 "phase": "defense",
 "season": "2018",
 "category": "Red Zone Defense",
+"metric": "Downs",
+"value": "3",
+"rank": 4,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2018",
+"category": "Red Zone Defense",
+"metric": "FUM",
+"value": "1",
+"rank": 4,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2018",
+"category": "Red Zone Defense",
+"metric": "INT",
+"value": "0",
+"rank": 8,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2018",
+"category": "Red Zone Defense",
 "metric": "TDS",
 "value": "36",
 "rank": 8,
@@ -7558,6 +7918,36 @@
 "metric": "%",
 "value": "78",
 "rank": 7,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2019",
+"category": "Red Zone Defense",
+"metric": "Downs",
+"value": "5",
+"rank": 4,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2019",
+"category": "Red Zone Defense",
+"metric": "FUM",
+"value": "0",
+"rank": 6,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2019",
+"category": "Red Zone Defense",
+"metric": "INT",
+"value": "0",
+"rank": 6,
 "out_of": 10,
 "week": null
 },
@@ -8115,6 +8505,36 @@
 "phase": "defense",
 "season": "2021",
 "category": "Red Zone Defense",
+"metric": "Downs",
+"value": "3",
+"rank": 2,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2021",
+"category": "Red Zone Defense",
+"metric": "FUM",
+"value": "2",
+"rank": 2,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2021",
+"category": "Red Zone Defense",
+"metric": "INT",
+"value": "0",
+"rank": 8,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2021",
+"category": "Red Zone Defense",
 "metric": "TDS",
 "value": "32",
 "rank": 9,
@@ -8658,6 +9078,36 @@
 "metric": "%",
 "value": "76.3",
 "rank": 6,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2022",
+"category": "Red Zone Defense",
+"metric": "Downs",
+"value": "1",
+"rank": 9,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2022",
+"category": "Red Zone Defense",
+"metric": "FUM",
+"value": "1",
+"rank": 3,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2022",
+"category": "Red Zone Defense",
+"metric": "INT",
+"value": "2",
+"rank": 4,
 "out_of": 10,
 "week": null
 },
@@ -9215,6 +9665,36 @@
 "phase": "defense",
 "season": "2023",
 "category": "Red Zone Defense",
+"metric": "Downs",
+"value": "1",
+"rank": 10,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2023",
+"category": "Red Zone Defense",
+"metric": "FUM",
+"value": "1",
+"rank": 2,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2023",
+"category": "Red Zone Defense",
+"metric": "INT",
+"value": "3",
+"rank": 2,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2023",
+"category": "Red Zone Defense",
 "metric": "TDS",
 "value": "23",
 "rank": 2,
@@ -9765,6 +10245,36 @@
 "phase": "defense",
 "season": "2024",
 "category": "Red Zone Defense",
+"metric": "Downs",
+"value": "2",
+"rank": 6,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2024",
+"category": "Red Zone Defense",
+"metric": "FUM",
+"value": "3",
+"rank": 1,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2024",
+"category": "Red Zone Defense",
+"metric": "INT",
+"value": "1",
+"rank": 4,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2024",
+"category": "Red Zone Defense",
 "metric": "TDS",
 "value": "22",
 "rank": 5,
@@ -10308,6 +10818,36 @@
 "metric": "%",
 "value": "84.6",
 "rank": 9,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2025",
+"category": "Red Zone Defense",
+"metric": "Downs",
+"value": "1",
+"rank": 8,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2025",
+"category": "Red Zone Defense",
+"metric": "FUM",
+"value": "0",
+"rank": 6,
+"out_of": 10,
+"week": null
+},
+{
+"phase": "defense",
+"season": "2025",
+"category": "Red Zone Defense",
+"metric": "INT",
+"value": "2",
+"rank": 2,
 "out_of": 10,
 "week": null
 },

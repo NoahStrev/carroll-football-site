@@ -177,8 +177,11 @@ const Site = (() => {
     if (cfg.tabs.length < 2) tabbar.hidden = true;
     tabbar.innerHTML = cfg.tabs.map((t) => `<button type="button" class="tabbtn" role="tab" id="tab-${esc(t.id)}" data-tab="${esc(t.id)}">${esc(t.label)}</button>`).join('');
 
+    const partialData = new Set(); // data names still holding their cfg.quickData stand-in
+
     function show(id, sub) {
       const tab = cfg.tabs.find((t) => t.id === id) || cfg.tabs[0];
+      const waitForFull = partialData.size && !(cfg.quickTabs || []).includes(tab.id);
       currentTab = tab.id;
       currentSub = sub || null;
       tabbar.querySelectorAll('.tabbtn').forEach((b) => {
@@ -197,6 +200,10 @@ const Site = (() => {
       root.setAttribute('role', 'tabpanel');
       root.setAttribute('aria-labelledby', `tab-${tab.id}`);
       stage.appendChild(root);
+      if (waitForFull) { // this tab reads every season, so it waits for the full data file (see cfg.quickData)
+        root.innerHTML = '<div class="card"><div class="card-body">Loading data for every season…</div></div>';
+        return;
+      }
       try {
         tab.render(root, { sub: sub || null });
         focusableScrollers(root);
@@ -233,14 +240,26 @@ const Site = (() => {
     if (activeLink) activeLink.scrollIntoView({ inline: 'center', block: 'nearest' }); // narrow screens scroll the nav row
 
     const names = Object.keys(cfg.data || {});
-    Promise.all([loadMeta(), ...names.map((n) => fetch(cfg.data[n], { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(`${cfg.data[n]}: HTTP ${r.status}`); return r.json(); }))])
+    const fetchJSON = (url) => fetch(url, { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`); return r.json(); });
+    // cfg.quickData {name: url}: a lighter stand-in (Offense/Defense: the latest season only, ~1/6 of game-data.json)
+    // drawn first, so a phone shows the page in about half the time; the full file loads right after and the view is
+    // drawn again. Only cfg.quickTabs (tabs that open on the latest season) draw from the stand-in; any other tab waits
+    // for the full file (2026-10-25).
+    const quick = cfg.quickData || {};
+    Promise.all([loadMeta(), ...names.map((n) => fetchJSON(quick[n] || cfg.data[n]))])
       .then(([meta, ...results]) => {
         state.data.meta = meta; // every page gets Site.data.meta (the schedule, per-page "data through" text)
         names.forEach((n, i) => { state.data[n] = results[i]; });
+        names.filter((n) => quick[n]).forEach((n) => partialData.add(n));
         showFreshness(cfg.nav, meta);
         const render = () => { const h = parseHash(); show(h.tab, h.sub); };
         window.addEventListener('hashchange', render);
         render();
+        if (partialData.size) {
+          Promise.all([...partialData].map((n) => fetchJSON(cfg.data[n]).then((full) => { state.data[n] = full; })))
+            .then(() => { partialData.clear(); render(); })
+            .catch((err) => { stage.innerHTML = `<div class="card"><div class="card-body">Couldn't load every season (${esc(err.message || err)}). Check your connection and reload the page.</div></div>`; });
+        }
       })
       .catch((err) => {
         stage.innerHTML = `<div class="card"><div class="card-body">Couldn't load this page's data (${esc(err.message || err)}). Check your connection and reload the page. If you are running the site locally, serve it over http:// (python scripts/serve.py) rather than opening the file.</div></div>`;

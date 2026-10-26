@@ -19,9 +19,15 @@ Checks, by file:
                            and per game Carroll's punts, PATs, field goals and deep kickoffs match the box score
   game-data.json (sides)   the charted plays split offense/defense like the official play-by-play (a block of
                            defensive snaps coded as offense once moved a whole half to the wrong side)
+  game-data.json (turnovers) per game, giveaways and takeaways (snaps plus punt/kickoff fumbles and muffs) equal the
+                           box score's fumbles lost plus interceptions for each team
   rankings.json            CCIW and national cover the same weeks
   team-stats.json          Carroll present with every category, snapshot not stale
-  career-stats.json        no team pseudo-players, no duplicate display names, game logs add up to season totals
+  career-stats.json        no team pseudo-players, no duplicate display names, game logs add up to season totals,
+                           every season's passing/rushing/receiving/defense totals equal the box scores' player
+                           lines, and each punter's punts/yards and kicker's field goals match the box score
+  lifting (source data)    no athlete split in two by a name typo (close spelling, same position, never in the same
+                           session -- WARNING, the fix is a NAME_TYPO_FIXES entry in Lifting Data)
   meta.json                schedule present; games the schedule says are played but not loaded (WARNING)
   vs. the last commit      no game, charted play, or special-teams row count may drop (a re-export that
                            silently lost data would otherwise ship)
@@ -335,6 +341,51 @@ def check_charted_sides(game):
             warn(msg)
 
 
+def check_turnovers_vs_box(game):
+    """Giveaways and takeaways per game against the box score (fumbles lost + interceptions thrown, each team). The
+    snaps come from the official play-by-play; turnovers on punts and kickoffs (st_turnovers, from build_lib.
+    kick_turnovers) are added. All 57 games matched when this was added (2026-10-25)."""
+    raw = SITE.parent / "Special Teams Data" / "raw"
+    if not raw.exists():
+        return
+    snaps = {s: Counter(r["date"] for r in game[s]["official"] if r["is_turnover"]) for s in ("offense", "defense")}
+    kicks = {g["date"]: g.get("st_turnovers", []) for g in game["games"]}
+    nums = lambda s: [int(x) for x in re.findall(r"\d+", s or "")]
+    for path in sorted(glob.glob(str(raw / "*_*.json"))):
+        d = json.loads(Path(path).read_text(encoding="utf-8"))
+        mo, dy = d["game_info"]["date"].split("/")[:2]
+        day = f"{Path(path).name[:4]}-{mo.zfill(2)}-{dy.zfill(2)}"
+        if day not in kicks:
+            continue
+        home = d["game_info"]["matchup"].partition("-VS-")[2]
+        ab = d["home_away"]
+        mine = ab["home_abbr"] if "Carroll" in home else ab["away_abbr"]
+        ts = d["team_stats"]
+        theirs = next(k for k in ts["Total Offense"]["Fumbles - Lost"] if k != mine)
+        box = lambda t: nums(ts["Total Offense"]["Fumbles - Lost"][t])[1] + nums(ts["Passing"]["Comp.-Att.-Int."][t])[2]
+        given = snaps["offense"][day] + sum(t["side"] == "given" for t in kicks[day])
+        taken = snaps["defense"][day] + sum(t["side"] == "taken" for t in kicks[day])
+        if (given, taken) != (box(mine), box(theirs)):
+            err(f"game-data: {day} turnovers are {given} given / {taken} taken but the box score says {box(mine)} / {box(theirs)}")
+
+
+def check_latest_file(game):
+    """game-data-latest.json (what Offense/Defense draw first) must be exactly the full file's latest season."""
+    path = DATA / "game-data-latest.json"
+    if not path.exists():
+        err("game-data-latest.json is missing (build_game_data.py writes it)")
+        return
+    light = json.loads(path.read_text(encoding="utf-8"))
+    season = light.get("partial_season")
+    for side in ("offense", "defense"):
+        for key in ("plays", "official", "drives"):
+            want = [r for r in game[side][key] if r["season"] == season]
+            if light[side][key] != want:
+                err(f"game-data-latest.json: {side} {key} differ from game-data.json's {season} rows ({len(light[side][key])} vs {len(want)}) -- rebuild with build_game_data.py")
+    if light["games"] != game["games"] or light["filters"] != game["filters"]:
+        err("game-data-latest.json: games or filter options differ from game-data.json")
+
+
 def check_rankings(rk):
     a, b = rk["cciw"]["weeks"], rk["national"]["weeks"]
     if a != b:
@@ -378,6 +429,138 @@ def check_game_logs(cs):
                                 err(f"career-stats: {p['display_name']} {cat} {s['season']} game log sums to {total} {key} but the season says {s[key]}")
     if bad > 5:
         err(f"career-stats: ...and {bad - 5} more game-log mismatches")
+
+
+# Box-score differences reviewed by hand: (season, last name, stat) -> why.
+KNOWN_CAREER_BOX_GAPS = {
+    (2025, "swink", "gross_yds"): "2025-10-25 at Elmhurst: the box score counts his 41-yard punt (returned, with an "
+                                       "Elmhurst holding penalty) as 0 yards; the play text and the punt sheet say 41",
+}
+
+
+def check_career_vs_box(cs):
+    """Career Stats against the box scores it is built from.
+    1. Every season's team total for each box-score category (passing, rushing, receiving, defense) must equal the sum
+       of the box scores' Carroll player lines. A shortfall means lines were dropped by the name parser -- e.g. until
+       2026-10-25 a three-word name with no comma ("Ted Van Thiel") was skipped, losing 19 tackles in 2012. TEAM lines
+       and bare jersey numbers ("70", "9" -- four lines in 2011/2018) are not players, so they are left out of both sides.
+    2. Punting and field goals come from the special-teams sheets, so per punter/kicker per season (2021+) they must
+       match the box score's Punting table and Field Goals list (blocked punts are credited to TEAM in the box score and
+       left out of a punter's punts). Kickoffs come from the box score itself; returns are not comparable (the sheets
+       log every kick received, the box only returns)."""
+    raw = SITE.parent / "Special Teams Data" / "raw"
+    if not raw.exists():
+        return
+    import build_career_stats as bcs  # same folder; only needed when the box scores are present
+
+    site_tot, box_tot = Counter(), Counter()
+    for p in cs["players"]:
+        for cat in bcs.CATEGORY_SPECS:
+            for s in p["categories"].get(cat, {}).get("seasons", []):
+                for key in bcs.CATEGORY_SPECS[cat]["sum"]:
+                    if key not in bcs.UNEXPORTED_FIELDS:
+                        site_tot[(int(s["season"]), cat, key)] += s.get(key, 0) or 0
+    site_st, box_st = Counter(), Counter()
+    for p in cs["players"]:
+        bits = [b for b in p["display_name"].split() if b.lower().rstrip(".") not in bcs.NAME_SUFFIXES]
+        who = bits[-1].lower()  # punters and kickers are matched by last name (box lines are "Last,First", "First Last" or "Last")
+        for cat, keys in (("Punting", ("att", "gross_yds")), ("PATFG", ("fg_att", "fg_made"))):
+            for s in p["categories"].get(cat, {}).get("seasons", []):
+                for k in keys:
+                    site_st[(int(s["season"]), who, k)] += s.get(k, 0) or 0
+    first_st = 2021
+    for path in sorted(glob.glob(str(raw / "*_*.json"))):
+        d = json.loads(Path(path).read_text(encoding="utf-8"))
+        season = bcs.season_year(d.get("game_info", {}).get("date"), Path(path).stem)
+        ps = d.get("player_stats", {})
+        for cat, spec in bcs.CATEGORY_SPECS.items():
+            teams = ps.get(cat, {})
+            if not isinstance(teams, dict) or not teams:
+                continue
+            key = bcs.carroll_key_for_game(d, teams)
+            for row in teams.get(key) or [] if key else []:
+                name = (row.get("player") or "").strip()
+                if name.lower() in bcs.NON_PERSON_NAMES or name.isdigit():
+                    continue
+                bucket = {}
+                bcs.accumulate(bucket, {"sum": spec["sum"]}, row)
+                for k, v in bucket.items():
+                    if k not in bcs.UNEXPORTED_FIELDS:
+                        box_tot[(season, cat, k)] += v
+        if season < first_st:
+            continue
+        for cat, rows_key in (("Punting", "Punting"), ("PATFG", "Field Goals")):
+            teams = ps.get(rows_key, {})
+            key = bcs.carroll_key_for_game(d, teams) if isinstance(teams, dict) and teams else None
+            for row in teams.get(key) or [] if key else []:
+                last, _first = bcs.split_raw_name(row.get("player") or "")
+                if last is None:
+                    continue  # TEAM (a blocked punt) or a jersey number
+                who = last.split()[-1].lower() if last.split()[-1].lower().rstrip(".") not in bcs.NAME_SUFFIXES else last.split()[0].lower()
+                if cat == "Punting":
+                    box_st[(season, who, "att")] += bcs.num(row.get("Punts"))
+                    box_st[(season, who, "gross_yds")] += bcs.num(row.get("Yds."))
+                else:
+                    box_st[(season, who, "fg_att")] += 1
+                    box_st[(season, who, "fg_made")] += 1 if str(row.get("Result", "")).upper().startswith("GOOD") else 0
+    for k in sorted(set(site_tot) | set(box_tot)):
+        if abs(site_tot[k] - box_tot[k]) > 1e-6:
+            err(f"career-stats: {k[0]} {k[1]} {k[2]} adds up to {site_tot[k]:g} but the box scores' player lines say {box_tot[k]:g} -- lines dropped or doubled?")
+    for k in sorted(set(site_st) | set(box_st)):
+        if site_st[k] != box_st[k] and k not in KNOWN_CAREER_BOX_GAPS:
+            season, last, stat = k
+            err(f"career-stats: {season} {last.title()} {stat} is {site_st[k]} but the box score says {box_st[k]}")
+
+
+# Pairs the near-duplicate lifting check flags that are really two different people: ((last, first), (last, first)).
+LIFTING_DIFFERENT_PEOPLE = set()
+
+
+def edit_distance(a, b):
+    """Letters to add, drop, change, or swap (adjacent) to turn a into b, ignoring case."""
+    a, b = a.lower(), b.lower()
+    d = [[i + j if i * j == 0 else 0 for j in range(len(b) + 1)] for i in range(len(a) + 1)]
+    for i in range(1, len(a) + 1):
+        for j in range(1, len(b) + 1):
+            d[i][j] = min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] != b[j - 1]))
+            if i > 1 and j > 1 and a[i - 1] == b[j - 2] and a[i - 2] == b[j - 1]:
+                d[i][j] = min(d[i][j], d[i - 2][j - 2] + 1)
+    return d[-1][-1]
+
+
+def check_lifting_name_typos():
+    """An athlete whose name a recording sheet misspelled for some sessions shows up as two athletes, each with half a
+    progress line (five such splits were fixed by hand on 2026-10-23, a sixth -- Camren/Cameran Banks -- was found by
+    this check). Flags two names that share a last name with first names 1-2 letters apart (or a first name with last
+    names 1-2 letters apart), at the same position, that never appear in the same session. Reads the Lifting Data
+    project's own output, so every athlete is covered, not just those with a chart on the site."""
+    src = SITE.parent / "Lifting Data" / "output" / "Lifting_Consolidated_AllYears.xlsx"
+    if not src.exists():
+        return
+    import openpyxl  # only needed when the sibling project is present
+    import itertools
+    rows = openpyxl.load_workbook(src, read_only=True)["Data"].iter_rows(values_only=True)
+    ix = {h: i for i, h in enumerate(next(rows))}
+    people = {}
+    for r in rows:
+        first, last = r[ix["first_name"]], r[ix["last_name"]]
+        if not first or not last:
+            continue
+        p = people.setdefault((last, first), {"sessions": set(), "pos": set()})
+        p["sessions"].add((r[ix["football_year"]], r[ix["testing_period"]]))
+        if r[ix["position"]]:
+            p["pos"].add(r[ix["position"]])
+    for (a, pa), (b, pb) in itertools.combinations(sorted(people.items()), 2):
+        (la, fa), (lb, fb) = a, b
+        same_last = la.lower() == lb.lower() and min(len(fa), len(fb)) >= 4 and 0 < edit_distance(fa, fb) <= 2
+        same_first = fa.lower() == fb.lower() and min(len(la), len(lb)) >= 4 and 0 < edit_distance(la, lb) <= 2
+        if not (same_last or same_first) or (a, b) in LIFTING_DIFFERENT_PEOPLE or (b, a) in LIFTING_DIFFERENT_PEOPLE:
+            continue
+        if (pa["pos"] and pb["pos"] and not pa["pos"] & pb["pos"]) or pa["sessions"] & pb["sessions"]:
+            continue
+        warn(f"lifting: {fa} {la} and {fb} {lb} ({'/'.join(sorted(pa['pos'] | pb['pos'])) or 'no position'}) look like one athlete "
+             f"split by a typo -- add the wrong spelling to NAME_TYPO_FIXES in Lifting Data/scripts/build_lifting_dataset.py "
+             f"(or to LIFTING_DIFFERENT_PEOPLE here if they really are two people)")
 
 
 def check_meta(meta):
@@ -430,10 +613,14 @@ def main():
     check_special_teams(home, st)
     check_special_teams_vs_box(st)
     check_charted_sides(game)
+    check_turnovers_vs_box(game)
+    check_latest_file(game)
     check_rankings(load("rankings.json"))
     check_team_stats(load("team-stats.json"))
     check_career(load("career-stats.json"))
     check_game_logs(load("career-stats.json"))
+    check_career_vs_box(load("career-stats.json"))
+    check_lifting_name_typos()
     check_meta(load("meta.json"))
     check_no_regressions(home, game, st)
 

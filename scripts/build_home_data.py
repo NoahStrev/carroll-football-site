@@ -247,11 +247,22 @@ def main():
             m, d, y = r["date"].split("/")
             st_by_date[f"{y}-{int(m):02d}-{int(d):02d}"].append(r["score"])
 
+    # Turnovers on punts and kickoffs, by game date (build_game_data.py takes them from the box scores). Added to the
+    # team turnover totals below, so they match the box score's; the offense/defense "turnovers" stay snap-based.
+    kick_to = {g["date"]: g.get("st_turnovers", []) for g in game_data["games"]}
+
+    def team_turnovers(off_rows, def_rows, dates):
+        kicks = [t for d in dates for t in kick_to.get(d, [])]
+        return {"given": sum(1 for r in off_rows if r.get("is_turnover")) + sum(t["side"] == "given" for t in kicks),
+                "taken": sum(1 for r in def_rows if r.get("is_turnover")) + sum(t["side"] == "taken" for t in kicks)}
+
     def pooled(season_filter):
         off = [r for r in game_data["offense"]["official"] if season_filter(r["season"])]
         dfn = [r for r in game_data["defense"]["official"] if season_filter(r["season"])]
         st_scores = [r["score"] for rows in st["units"].values() for r in rows if season_filter(int(r["season"]))]
-        return {"offense": side_metrics(off), "defense": side_metrics(dfn), "st_score": r4(mean(st_scores))}
+        dates = {g["date"] for g in game_data["games"] if season_filter(g["season"])}
+        return {"offense": side_metrics(off), "defense": side_metrics(dfn), "st_score": r4(mean(st_scores)),
+                "turnovers": team_turnovers(off, dfn, dates)}
 
     def per_game(box_games, key):
         return r4(sum(g[key] for g in box_games) / len(box_games)) if box_games else None
@@ -270,6 +281,7 @@ def main():
                 "carroll_pts": g["carroll_pts"], "opp_pts": g["opp_pts"],
                 "result": "W" if g["carroll_pts"] > g["opp_pts"] else "L" if g["carroll_pts"] < g["opp_pts"] else "T",
                 "charted": charted, "offense": off if charted else None, "defense": dfn if charted else None,
+                "turnovers": team_turnovers(off_by_date.get(g["date"], []), def_by_date.get(g["date"], []), [g["date"]]) if charted else None,
                 "st_score": r4(mean(st_by_date.get(g["date"], []))),
             })
         wins = sum(g["result"] == "W" for g in games)

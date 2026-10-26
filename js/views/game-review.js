@@ -42,6 +42,7 @@ const GameReview = (function () {
     const games = gameList(H, D);
     const start = games.some((g) => g.date === sub) ? sub : (games.find((g) => g.charted) || games[0]).date;
     const f1 = (v) => fmt(v, 1), p0 = (v) => pct(v, 0);
+    const f2s = (v) => (v === null || v === undefined ? '—' : `${v > 0 ? '+' : ''}${fmt(v, 2)}`); // signed, for EPA
     const count = (v) => (Number.isInteger(v) ? String(v) : fmt(v, 1)); // a real score or play count reads as a whole number
 
     const view = Site.view(root, {
@@ -56,11 +57,13 @@ const GameReview = (function () {
         const game = games.find((g) => g.date === st.game);
         const on = (r) => r.date === game.date;
         const off = D.offense.official.filter(on), def = D.defense.official.filter(on);
+        // fumbles and muffs on punts and kickoffs that the kicking team recovered (from the box score)
+        const kickTO = (D.games.find((g) => g.date === game.date) || {}).st_turnovers || [];
         const otherOff = D.offense.official.filter((r) => !on(r)), otherDef = D.defense.official.filter((r) => !on(r));
         const others = games.filter((g) => g.date !== game.date);
         const stRows = (key) => ST.units[key].filter((r) => stDate(r.date) === game.date);
         return {
-          game, off, def, otherOff, otherDef, others, stRows,
+          game, off, def, otherOff, otherDef, others, stRows, kickTO,
           offM: playMetrics(off), defM: playMetrics(def), otherOffM: playMetrics(otherOff), otherDefM: playMetrics(otherDef),
           otherGames: Math.max(1, gameCount(otherOff)),
         };
@@ -69,7 +72,12 @@ const GameReview = (function () {
         { label: 'Result', value: ({ game }) => [`${game.result} ${game.carroll_pts}–${game.opp_pts}`, `${game.home ? 'Home vs' : 'At'} ${game.opponent}`] },
         { label: 'Offense · yards / play', value: ({ game, offM, otherOffM }) => (game.charted ? [fmt(offM.ypp), `usual ${fmt(otherOffM.ypp)}`] : ['—', 'not charted']) },
         { label: 'Defense · yards allowed / play', value: ({ game, defM, otherDefM }) => (game.charted ? [fmt(defM.ypp), `usual ${fmt(otherDefM.ypp)}`] : ['—', 'not charted']) },
-        { label: 'Turnover margin', value: ({ game, offM, defM }) => { if (!game.charted) return ['—', 'not charted']; const net = defM.turnovers - offM.turnovers; return [`${net > 0 ? '+' : ''}${net}`, `${defM.turnovers} taken · ${offM.turnovers} given`]; } },
+        { label: 'Turnover margin', value: ({ game, offM, defM, kickTO }) => {
+          if (!game.charted) return ['—', 'not charted'];
+          const taken = defM.turnovers + kickTO.filter((t) => t.side === 'taken').length, given = offM.turnovers + kickTO.filter((t) => t.side === 'given').length;
+          const net = taken - given;
+          return [`${net > 0 ? '+' : ''}${net}`, `${taken} taken · ${given} given`];
+        } },
         { label: 'Special teams · avg score', value: ({ stRows }) => { const all = ST_UNITS.flatMap(([k]) => stRows(k).map((r) => r.score)); return all.length ? [fmt(mean(all)), `${all.length} plays`] : ['—', 'no plays']; } },
       ],
       intro: ({ game }) => (game.charted
@@ -88,12 +96,14 @@ const GameReview = (function () {
               versusRow('Offense: yards / play', offM.ypp, otherOffM.ypp, f1, true),
               versusRow('Offense: success rate', offM.success, otherOffM.success, p0, true),
               versusRow('Offense: explosive rate', offM.explosive, otherOffM.explosive, p0, true),
+              versusRow('Offense: EPA / play', offM.epa, otherOffM.epa, f2s, true),
               versusRow('Offense: run %', offM.runPct, otherOffM.runPct, p0, true),
               versusRow('Points allowed', game.opp_pts, usualPts('opp_pts'), count, false),
               versusRow('Defense: plays faced', defM.plays, perGame(otherDefM.plays), count, null),
               versusRow('Defense: yards / play allowed', defM.ypp, otherDefM.ypp, f1, false),
               versusRow('Defense: success rate allowed', defM.success, otherDefM.success, p0, false),
               versusRow('Defense: explosive rate allowed', defM.explosive, otherDefM.explosive, p0, false),
+              versusRow('Defense: EPA / play allowed', defM.epa, otherDefM.epa, f2s, false),
               versusRow('Opponent run %', defM.runPct, otherDefM.runPct, p0, null),
             ];
             el.innerHTML = Site.tableHTML({ head: ['', 'This game', 'Usual'], rows })
@@ -148,10 +158,11 @@ const GameReview = (function () {
         },
         {
           title: 'Turnovers',
-          render(el, { game, off, def }) {
+          render(el, { game, off, def, kickTO }) {
             if (!gated(el, game)) return;
             const line = (who) => (r) => [who, r.quarter, downDist(r), esc(r.play_outcome || r.play_type), esc(r.field_zone || '—')];
-            const rows = [...off.filter((r) => r.is_turnover).map(line('Carroll gave away')), ...def.filter((r) => r.is_turnover).map(line('Carroll took away'))]
+            const kick = (t) => [t.side === 'taken' ? 'Carroll took away' : 'Carroll gave away', t.quarter, '—', esc(t.kind), 'Special teams'];
+            const rows = [...off.filter((r) => r.is_turnover).map(line('Carroll gave away')), ...def.filter((r) => r.is_turnover).map(line('Carroll took away')), ...kickTO.map(kick)]
               .sort((a, b) => QUARTERS.indexOf(a[1]) - QUARTERS.indexOf(b[1]));
             el.innerHTML = Site.tableHTML({ head: ['', 'Qtr', 'Down & dist', 'Type', 'Where'], rows, empty: 'No turnovers in this game.' });
           },
@@ -171,7 +182,7 @@ const GameReview = (function () {
           },
         },
       ],
-      footer: () => `Source: Game Analysis's OfficialPlayByPlay sheet (${gameCoverageText(D.games)}), Special Teams Data box scores and Value/Score. Turnover margin is takeaways minus giveaways on offensive and defensive snaps; a fumble lost on a punt or kickoff return is a special teams play, so the official box score can show one more.`,
+      footer: () => `Source: Game Analysis's OfficialPlayByPlay sheet (${gameCoverageText(D.games)}), Special Teams Data box scores and Value/Score. Turnover margin is takeaways minus giveaways, counting fumbles and muffs on punts and kickoffs that the kicking team recovered, so it matches the official box score.`,
     });
 
     return view;

@@ -82,7 +82,7 @@
       return [
         { good: null, text: `Offense averaged ${fmt(o.ypp)} yards per play, ${pct(o.success, 0)} success rate.` },
         { good: null, text: `Defense allowed ${fmt(d.ypp)} yards per play, ${pct(d.success, 0)} success rate.` },
-        { good: null, text: `Turnovers: ${d.turnovers} taken away, ${o.turnovers} given up.` },
+        { good: null, text: `Turnovers: ${g.turnovers.taken} taken away, ${g.turnovers.given} given up.` },
       ];
     }
     const rel = (now, base) => (base ? Math.abs(now - base) / base : 0);
@@ -90,8 +90,9 @@
     items.push({ w: rel(d.ypp, P.defense.ypp), good: d.ypp <= P.defense.ypp, text: `Defense allowed ${fmt(d.ypp)} yards per play (${label}: ${fmt(P.defense.ypp)}).` });
     items.push({ w: rel(o.success, P.offense.success), good: o.success >= P.offense.success, text: `Offense success rate was ${pct(o.success, 0)} (${label}: ${pct(P.offense.success, 0)}).` });
     items.push({ w: rel(d.success, P.defense.success), good: d.success <= P.defense.success, text: `Defense ${d.success <= P.defense.success ? 'held opponents to' : 'allowed'} a ${pct(d.success, 0)} success rate (${label}: ${pct(P.defense.success, 0)}).` });
-    const net = d.turnovers - o.turnovers;
-    items.push({ w: Math.abs(net) / 3, good: net >= 0, text: `Turnovers: ${d.turnovers} taken away, ${o.turnovers} given up (${net > 0 ? '+' : ''}${net}).` });
+    // team totals, so a fumble on a punt or kickoff return counts too (they match the box score)
+    const tk = g.turnovers.taken, gv = g.turnovers.given, net = tk - gv;
+    items.push({ w: Math.abs(net) / 3, good: net >= 0, text: `Turnovers: ${tk} taken away, ${gv} given up (${net > 0 ? '+' : ''}${net}).` });
     return items.sort((a, b) => b.w - a.w).slice(0, 3);
   }
 
@@ -241,11 +242,11 @@
               versusRow('Offense: yards / play', sa.offense.ypp, sb.offense.ypp, f2, true),
               versusRow('Offense: success rate', sa.offense.success, sb.offense.success, p1, true),
               versusRow('Offense: explosive rate', sa.offense.explosive, sb.offense.explosive, p1, true),
-              versusRow('Offense: turnovers per game', perGame(sa.offense.turnovers, A), perGame(sb.offense.turnovers, B), f1, false),
+              versusRow('Turnovers given up per game', perGame(sa.turnovers.given, A), perGame(sb.turnovers.given, B), f1, false),
               versusRow('Defense: yards / play allowed', sa.defense.ypp, sb.defense.ypp, f2, false),
               versusRow('Defense: success rate allowed', sa.defense.success, sb.defense.success, p1, false),
               versusRow('Defense: explosive rate allowed', sa.defense.explosive, sb.defense.explosive, p1, false),
-              versusRow('Defense: takeaways per game', perGame(sa.defense.turnovers, A), perGame(sb.defense.turnovers, B), f1, true),
+              versusRow('Takeaways per game', perGame(sa.turnovers.taken, A), perGame(sb.turnovers.taken, B), f1, true),
               versusRow('Special teams: average score', sa.st_score, sb.st_score, f1, true),
               rankRow('CCIW rank: scoring offense', HEADLINES[0]),
               rankRow('CCIW rank: scoring defense', HEADLINES[1]),

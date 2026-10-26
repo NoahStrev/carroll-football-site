@@ -324,8 +324,9 @@ function renderHeatmap(container, { rowLabels, colLabels, cellFor, title = (r, c
  * falling below -- matches the reference dashboards' red/green trend lines. */
 // lowerIsBetter (2026-10-23): for yards allowed, snap times, return yards allowed, the opponent's starting spot --
 // a falling line is the good direction, so green/red flip. Default stays "higher is better".
-function renderSparkline(container, { values, labels, unit = '', seasons, opponents, lowerIsBetter = false }) {
+function renderSparkline(container, { values, labels, unit = '', seasons, opponents, lowerIsBetter = false, decimals = 1 }) {
   container.innerHTML = '';
+  const f = (v) => fmt(v, decimals); // EPA per play needs 2 decimals; yards and seconds read fine with 1
   const pts = values.map((v, i) => ({ v, l: labels[i], season: seasons && seasons[i], opponent: opponents && opponents[i] })).filter((p) => p.v !== null && p.v !== undefined);
   if (pts.length < 2) {
     container.appendChild(el('div', 'foot', 'Not enough data points.'));
@@ -342,7 +343,7 @@ function renderSparkline(container, { values, labels, unit = '', seasons, oppone
   const svg = document.createElementNS(svgns, 'svg');
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
   svg.setAttribute('role', 'img');
-  svg.setAttribute('aria-label', `Game-by-game trend, ${pts.length} games: ${fmt(pts[0].v)}${unit} in the first, ${fmt(pts[pts.length - 1].v)}${unit} in the latest, ${fmt(avg)}${unit} on average`);
+  svg.setAttribute('aria-label', `Game-by-game trend, ${pts.length} games: ${f(pts[0].v)}${unit} in the first, ${f(pts[pts.length - 1].v)}${unit} in the latest, ${f(avg)}${unit} on average`);
   svg.style.width = '100%';
   svg.style.height = `${H}px`;
 
@@ -381,9 +382,9 @@ function renderSparkline(container, { values, labels, unit = '', seasons, oppone
     const html = () => [
       `<div class="tt-title">${p.l}${p.season ? `, ${p.season}` : ''}</div>`,
       p.opponent ? `<div class="tt-row"><span>Opponent</span><span>${p.opponent}</span></div>` : '',
-      `<div class="tt-row"><span>Value</span><span>${fmt(p.v)}${unit}</span></div>`,
-      delta !== null ? `<div class="tt-row"><span>Vs previous</span><span style="color:${(lowerIsBetter ? delta <= 0 : delta >= 0) ? 'var(--delta-good)' : 'var(--critical-text)'}">${delta >= 0 ? '+' : ''}${fmt(delta)}${unit}</span></div>` : '',
-      `<div class="tt-muted">${vsAvg >= 0 ? '+' : ''}${fmt(vsAvg)}${unit} vs average (${fmt(avg)}${unit})</div>`,
+      `<div class="tt-row"><span>Value</span><span>${f(p.v)}${unit}</span></div>`,
+      delta !== null ? `<div class="tt-row"><span>Vs previous</span><span style="color:${(lowerIsBetter ? delta <= 0 : delta >= 0) ? 'var(--delta-good)' : 'var(--critical-text)'}">${delta >= 0 ? '+' : ''}${f(delta)}${unit}</span></div>` : '',
+      `<div class="tt-muted">${vsAvg >= 0 ? '+' : ''}${f(vsAvg)}${unit} vs average (${f(avg)}${unit})</div>`,
     ].join('');
     attachTooltip(c, html);
     svg.appendChild(c);
@@ -452,7 +453,7 @@ function renderGroupedBar(container, { categories, valuesA, valuesB, colorA, col
 
 /** Card with a "Last Game" KPI + "Last vs Previous Game" delta + sparkline (compares to the
  * immediately-prior game, not a season average). `container` becomes the whole card. */
-function renderTrendCard(container, rows, field, unit, title, { lowerIsBetter = false } = {}) {
+function renderTrendCard(container, rows, field, unit, title, { lowerIsBetter = false, decimals = 1 } = {}) {
   const { values, labels, seasons, opponents } = gameTrend(rows, field);
   const known = values.filter((v) => v !== null && v !== undefined && !Number.isNaN(v)); // a game with nothing charted for this field is not "the last game"
   const lastVal = known.length ? known[known.length - 1] : null;
@@ -468,14 +469,14 @@ function renderTrendCard(container, rows, field, unit, title, { lowerIsBetter = 
       <div>
         <div class="kpi small kpi-plain" style="border:none; padding:0; background:none;">
           <div class="label">Last Game Avg</div>
-          <div class="value">${fmt(lastVal)}${unit}</div>
+          <div class="value">${fmt(lastVal, decimals)}${unit}</div>
         </div>
         <div class="kpi small kpi-plain" style="border:none; padding:0; background:none; margin-top:10px;">
           <div class="label">Last vs Previous Game</div>
-          <div class="value" style="font-size:15px; color:${delta === null ? 'inherit' : ((lowerIsBetter ? delta <= 0 : delta >= 0) ? 'var(--delta-good)' : 'var(--critical-text)')}">${delta === null ? '—' : (delta >= 0 ? '+' : '') + fmt(delta)}</div>
+          <div class="value" style="font-size:15px; color:${delta === null ? 'inherit' : ((lowerIsBetter ? delta <= 0 : delta >= 0) ? 'var(--delta-good)' : 'var(--critical-text)')}">${delta === null ? '—' : (delta >= 0 ? '+' : '') + fmt(delta, decimals)}</div>
         </div>
       </div>
       <div class="trend-chart"></div>
     </div>`;
-  renderSparkline(container.querySelector('.trend-chart'), { values, labels, unit, seasons, opponents, lowerIsBetter });
+  renderSparkline(container.querySelector('.trend-chart'), { values, labels, unit, seasons, opponents, lowerIsBetter, decimals });
 }

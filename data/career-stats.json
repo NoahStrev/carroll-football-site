@@ -2116,18 +2116,18 @@
     },
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 3,
-      "ast": 1,
-      "tot": 4,
+      "solo": 7,
+      "ast": 4,
+      "tot": 11,
       "ff": 0,
       "int": 0,
-      "brup": 1,
+      "brup": 2,
       "blkd": 0,
       "qh": 0,
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 3,
+     "career_games": 7,
      "seasons": [
       {
        "season": 2011,
@@ -2156,6 +2156,20 @@
        "tfl": 0,
        "sacks": 0,
        "games": 2
+      },
+      {
+       "season": 2014,
+       "solo": 4,
+       "ast": 3,
+       "tot": 7,
+       "ff": 0,
+       "int": 0,
+       "brup": 1,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 4
       }
      ]
     }
@@ -6735,6 +6749,74 @@
    }
   },
   {
+   "display_name": "Beau LeFevre",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Receiving": {
+     "career": {
+      "rec": 15,
+      "yds": 138,
+      "td": 1,
+      "long": 28,
+      "yards_per_rec": 9.2
+     },
+     "career_games": 10,
+     "seasons": [
+      {
+       "season": 2010,
+       "rec": 5,
+       "yds": 67,
+       "td": 1,
+       "long": 28,
+       "yards_per_rec": 13.4,
+       "games": 4
+      },
+      {
+       "season": 2011,
+       "rec": 10,
+       "yds": 71,
+       "td": 0,
+       "long": 13,
+       "yards_per_rec": 7.1,
+       "games": 6
+      }
+     ]
+    },
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 1,
+      "ast": 1,
+      "tot": 2,
+      "ff": 0,
+      "int": 0,
+      "brup": 0,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 0,
+      "sacks": 0
+     },
+     "career_games": 2,
+     "seasons": [
+      {
+       "season": 2010,
+       "solo": 1,
+       "ast": 1,
+       "tot": 2,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 2
+      }
+     ]
+    }
+   }
+  },
+  {
    "display_name": "Beau Veit",
    "athlete_key": null,
    "position": null,
@@ -6781,25 +6863,25 @@
     },
     "Punting": {
      "career": {
-      "att": 33,
+      "att": 32,
       "gross_yds": 1267,
       "long": 57,
       "i20": 6,
       "blocked": 1,
-      "gross_avg": 38.4,
-      "net_avg": 29.4
+      "gross_avg": 39.6,
+      "net_avg": 30.3
      },
      "career_games": 7,
      "seasons": [
       {
        "season": 2026,
-       "att": 33,
+       "att": 32,
        "gross_yds": 1267,
        "long": 57,
        "i20": 6,
        "blocked": 1,
-       "gross_avg": 38.4,
-       "net_avg": 29.4,
+       "gross_avg": 39.6,
+       "net_avg": 30.3,
        "games": 7
       }
      ]
@@ -10370,6 +10452,44 @@
          "sacks": 0
         }
        ]
+      }
+     ]
+    },
+    "PuntReturn": {
+     "career": {
+      "att": 1,
+      "yds": 1,
+      "long": 1,
+      "avg": 1.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2025,
+       "att": 1,
+       "yds": 1,
+       "long": 1,
+       "avg": 1.0,
+       "games": 1
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 7,
+      "yds": 114,
+      "long": 49,
+      "avg": 16.3
+     },
+     "career_games": 2,
+     "seasons": [
+      {
+       "season": 2025,
+       "att": 7,
+       "yds": 114,
+       "long": 49,
+       "avg": 16.3,
+       "games": 2
       }
      ]
     }
@@ -14029,36 +14149,6 @@
    }
   },
   {
-   "display_name": "D.A.N. Keil",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Rushing": {
-     "career": {
-      "att": 1,
-      "loss": 0,
-      "net": 3,
-      "td": 0,
-      "long": 3,
-      "yards_per_carry": 3.0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2011,
-       "att": 1,
-       "loss": 0,
-       "net": 3,
-       "td": 0,
-       "long": 3,
-       "yards_per_carry": 3.0,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
    "display_name": "Dakota Berg",
    "athlete_key": null,
    "position": null,
@@ -14752,6 +14842,36 @@
          "sacks": 0
         }
        ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "Dan Keil",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Rushing": {
+     "career": {
+      "att": 1,
+      "loss": 0,
+      "net": 3,
+      "td": 0,
+      "long": 3,
+      "yards_per_carry": 3.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2011,
+       "att": 1,
+       "loss": 0,
+       "net": 3,
+       "td": 0,
+       "long": 3,
+       "yards_per_carry": 3.0,
+       "games": 1
       }
      ]
     }
@@ -16356,25 +16476,25 @@
    "categories": {
     "Punting": {
      "career": {
-      "att": 45,
+      "att": 44,
       "gross_yds": 1395,
       "long": 66,
       "i20": 10,
       "blocked": 1,
-      "gross_avg": 31.0,
-      "net_avg": 28.9
+      "gross_avg": 31.7,
+      "net_avg": 29.5
      },
      "career_games": 9,
      "seasons": [
       {
        "season": 2021,
-       "att": 45,
+       "att": 44,
        "gross_yds": 1395,
        "long": 66,
        "i20": 10,
        "blocked": 1,
-       "gross_avg": 31.0,
-       "net_avg": 28.9,
+       "gross_avg": 31.7,
+       "net_avg": 29.5,
        "games": 9
       }
      ]
@@ -23997,67 +24117,6 @@
    }
   },
   {
-   "display_name": "J.A.Y. Mangum",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Rushing": {
-     "career": {
-      "att": 2,
-      "loss": 0,
-      "net": 17,
-      "td": 0,
-      "long": 14,
-      "yards_per_carry": 8.5
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2014,
-       "att": 2,
-       "loss": 0,
-       "net": 17,
-       "td": 0,
-       "long": 14,
-       "yards_per_carry": 8.5,
-       "games": 1
-      }
-     ]
-    },
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 0,
-      "ast": 1,
-      "tot": 1,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "sacks": 0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2014,
-       "solo": 0,
-       "ast": 1,
-       "tot": 1,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "sacks": 0,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
    "display_name": "J.J. Keels",
    "athlete_key": null,
    "position": null,
@@ -24167,372 +24226,6 @@
        "tfl": 0,
        "sacks": 0,
        "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "J.O.E. Beckstrand",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Rushing": {
-     "career": {
-      "att": 416,
-      "loss": 108,
-      "net": 1970,
-      "td": 22,
-      "long": 65,
-      "yards_per_carry": 4.7
-     },
-     "career_games": 20,
-     "seasons": [
-      {
-       "season": 2010,
-       "att": 212,
-       "loss": 46,
-       "net": 924,
-       "td": 10,
-       "long": 65,
-       "yards_per_carry": 4.4,
-       "games": 10
-      },
-      {
-       "season": 2011,
-       "att": 204,
-       "loss": 62,
-       "net": 1046,
-       "td": 12,
-       "long": 58,
-       "yards_per_carry": 5.1,
-       "games": 10
-      }
-     ]
-    },
-    "Receiving": {
-     "career": {
-      "rec": 27,
-      "yds": 280,
-      "td": 1,
-      "long": 34,
-      "yards_per_rec": 10.4
-     },
-     "career_games": 16,
-     "seasons": [
-      {
-       "season": 2010,
-       "rec": 11,
-       "yds": 138,
-       "td": 0,
-       "long": 34,
-       "yards_per_rec": 12.5,
-       "games": 8
-      },
-      {
-       "season": 2011,
-       "rec": 16,
-       "yds": 142,
-       "td": 1,
-       "long": 21,
-       "yards_per_rec": 8.9,
-       "games": 8
-      }
-     ]
-    },
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 1,
-      "ast": 0,
-      "tot": 1,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "sacks": 0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2011,
-       "solo": 1,
-       "ast": 0,
-       "tot": 1,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "sacks": 0,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "J.O.E. Kashul",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 1,
-      "ast": 0,
-      "tot": 1,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "sacks": 0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2011,
-       "solo": 1,
-       "ast": 0,
-       "tot": 1,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "sacks": 0,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "J.O.E. O'Leary",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 6,
-      "ast": 1,
-      "tot": 7,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 1.0,
-      "sacks": 0
-     },
-     "career_games": 4,
-     "seasons": [
-      {
-       "season": 2021,
-       "solo": 6,
-       "ast": 1,
-       "tot": 7,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 1.0,
-       "sacks": 0,
-       "games": 4,
-       "log": [
-        {
-         "date": "2021-10-16",
-         "solo": 2,
-         "ast": 1,
-         "tot": 3,
-         "ff": 0,
-         "int": 0,
-         "brup": 0,
-         "blkd": 0,
-         "qh": 0,
-         "tfl": 1.0,
-         "sacks": 0
-        },
-        {
-         "date": "2021-10-23",
-         "solo": 1,
-         "ast": 0,
-         "tot": 1,
-         "ff": 0,
-         "int": 0,
-         "brup": 0,
-         "blkd": 0,
-         "qh": 0,
-         "tfl": 0,
-         "sacks": 0
-        },
-        {
-         "date": "2021-10-30",
-         "solo": 2,
-         "ast": 0,
-         "tot": 2,
-         "ff": 0,
-         "int": 0,
-         "brup": 0,
-         "blkd": 0,
-         "qh": 0,
-         "tfl": 0,
-         "sacks": 0
-        },
-        {
-         "date": "2021-11-06",
-         "solo": 1,
-         "ast": 0,
-         "tot": 1,
-         "ff": 0,
-         "int": 0,
-         "brup": 0,
-         "blkd": 0,
-         "qh": 0,
-         "tfl": 0,
-         "sacks": 0
-        }
-       ]
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "J.O.E. Pijanowski",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 3,
-      "ast": 2,
-      "tot": 5,
-      "ff": 0,
-      "int": 0,
-      "brup": 1,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "sacks": 0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2015,
-       "solo": 3,
-       "ast": 2,
-       "tot": 5,
-       "ff": 0,
-       "int": 0,
-       "brup": 1,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "sacks": 0,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "J.O.N. Koszuta",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 3,
-      "ast": 5,
-      "tot": 8,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "sacks": 0
-     },
-     "career_games": 7,
-     "seasons": [
-      {
-       "season": 2011,
-       "solo": 0,
-       "ast": 3,
-       "tot": 3,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "sacks": 0,
-       "games": 3
-      },
-      {
-       "season": 2012,
-       "solo": 3,
-       "ast": 2,
-       "tot": 5,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "sacks": 0,
-       "games": 4
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "J.R. Carlos Cadet",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "PuntReturn": {
-     "career": {
-      "att": 1,
-      "yds": 1,
-      "long": 1,
-      "avg": 1.0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2025,
-       "att": 1,
-       "yds": 1,
-       "long": 1,
-       "avg": 1.0,
-       "games": 1
-      }
-     ]
-    },
-    "KickoffReturn": {
-     "career": {
-      "att": 7,
-      "yds": 114,
-      "long": 49,
-      "avg": 16.3
-     },
-     "career_games": 2,
-     "seasons": [
-      {
-       "season": 2025,
-       "att": 7,
-       "yds": 114,
-       "long": 49,
-       "avg": 16.3,
-       "games": 2
       }
      ]
     }
@@ -29876,6 +29569,67 @@
    }
   },
   {
+   "display_name": "Jay Mangum",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Rushing": {
+     "career": {
+      "att": 2,
+      "loss": 0,
+      "net": 17,
+      "td": 0,
+      "long": 14,
+      "yards_per_carry": 8.5
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2014,
+       "att": 2,
+       "loss": 0,
+       "net": 17,
+       "td": 0,
+       "long": 14,
+       "yards_per_carry": 8.5,
+       "games": 1
+      }
+     ]
+    },
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 0,
+      "ast": 1,
+      "tot": 1,
+      "ff": 0,
+      "int": 0,
+      "brup": 0,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 0,
+      "sacks": 0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2014,
+       "solo": 0,
+       "ast": 1,
+       "tot": 1,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
    "display_name": "Jaydin Redding",
    "athlete_key": "redding_jaydin",
    "position": "CB",
@@ -30703,6 +30457,275 @@
    }
   },
   {
+   "display_name": "Joe Beckstrand",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Rushing": {
+     "career": {
+      "att": 416,
+      "loss": 108,
+      "net": 1970,
+      "td": 22,
+      "long": 65,
+      "yards_per_carry": 4.7
+     },
+     "career_games": 20,
+     "seasons": [
+      {
+       "season": 2010,
+       "att": 212,
+       "loss": 46,
+       "net": 924,
+       "td": 10,
+       "long": 65,
+       "yards_per_carry": 4.4,
+       "games": 10
+      },
+      {
+       "season": 2011,
+       "att": 204,
+       "loss": 62,
+       "net": 1046,
+       "td": 12,
+       "long": 58,
+       "yards_per_carry": 5.1,
+       "games": 10
+      }
+     ]
+    },
+    "Receiving": {
+     "career": {
+      "rec": 27,
+      "yds": 280,
+      "td": 1,
+      "long": 34,
+      "yards_per_rec": 10.4
+     },
+     "career_games": 16,
+     "seasons": [
+      {
+       "season": 2010,
+       "rec": 11,
+       "yds": 138,
+       "td": 0,
+       "long": 34,
+       "yards_per_rec": 12.5,
+       "games": 8
+      },
+      {
+       "season": 2011,
+       "rec": 16,
+       "yds": 142,
+       "td": 1,
+       "long": 21,
+       "yards_per_rec": 8.9,
+       "games": 8
+      }
+     ]
+    },
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 1,
+      "ast": 0,
+      "tot": 1,
+      "ff": 0,
+      "int": 0,
+      "brup": 0,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 0,
+      "sacks": 0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2011,
+       "solo": 1,
+       "ast": 0,
+       "tot": 1,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "Joe Kashul",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 1,
+      "ast": 0,
+      "tot": 1,
+      "ff": 0,
+      "int": 0,
+      "brup": 0,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 0,
+      "sacks": 0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2011,
+       "solo": 1,
+       "ast": 0,
+       "tot": 1,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "Joe O'Leary",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 6,
+      "ast": 1,
+      "tot": 7,
+      "ff": 0,
+      "int": 0,
+      "brup": 0,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 1.0,
+      "sacks": 0
+     },
+     "career_games": 4,
+     "seasons": [
+      {
+       "season": 2021,
+       "solo": 6,
+       "ast": 1,
+       "tot": 7,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 1.0,
+       "sacks": 0,
+       "games": 4,
+       "log": [
+        {
+         "date": "2021-10-16",
+         "solo": 2,
+         "ast": 1,
+         "tot": 3,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 1.0,
+         "sacks": 0
+        },
+        {
+         "date": "2021-10-23",
+         "solo": 1,
+         "ast": 0,
+         "tot": 1,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2021-10-30",
+         "solo": 2,
+         "ast": 0,
+         "tot": 2,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2021-11-06",
+         "solo": 1,
+         "ast": 0,
+         "tot": 1,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "Joe Pijanowski",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 3,
+      "ast": 2,
+      "tot": 5,
+      "ff": 0,
+      "int": 0,
+      "brup": 1,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 0,
+      "sacks": 0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2015,
+       "solo": 3,
+       "ast": 2,
+       "tot": 5,
+       "ff": 0,
+       "int": 0,
+       "brup": 1,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
    "display_name": "John Caucutt",
    "athlete_key": null,
    "position": null,
@@ -31149,6 +31172,58 @@
        "completion_pct": 0.0,
        "yards_per_att": 0.0,
        "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "Jon Koszuta",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 3,
+      "ast": 5,
+      "tot": 8,
+      "ff": 0,
+      "int": 0,
+      "brup": 0,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 0,
+      "sacks": 0
+     },
+     "career_games": 7,
+     "seasons": [
+      {
+       "season": 2011,
+       "solo": 0,
+       "ast": 3,
+       "tot": 3,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 3
+      },
+      {
+       "season": 2012,
+       "solo": 3,
+       "ast": 2,
+       "tot": 5,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 4
       }
      ]
     }
@@ -52617,7 +52692,112 @@
    }
   },
   {
-   "display_name": "S.A.M. Spence",
+   "display_name": "Sam Corey",
+   "athlete_key": "corey_sam",
+   "position": "BOB",
+   "categories": {
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 0,
+      "ast": 2,
+      "tot": 2,
+      "ff": 0,
+      "int": 0,
+      "brup": 0,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 0,
+      "sacks": 0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2024,
+       "solo": 0,
+       "ast": 2,
+       "tot": 2,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 1,
+       "log": [
+        {
+         "date": "2024-09-21",
+         "solo": 0,
+         "ast": 2,
+         "tot": 2,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "Sam Nelson",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 35,
+      "ast": 21,
+      "tot": 56,
+      "ff": 0,
+      "int": 0,
+      "brup": 1,
+      "blkd": 0,
+      "qh": 1,
+      "tfl": 8.0,
+      "sacks": 3.0
+     },
+     "career_games": 12,
+     "seasons": [
+      {
+       "season": 2017,
+       "solo": 27,
+       "ast": 15,
+       "tot": 42,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 1,
+       "tfl": 5.0,
+       "sacks": 1.0,
+       "games": 9
+      },
+      {
+       "season": 2018,
+       "solo": 8,
+       "ast": 6,
+       "tot": 14,
+       "ff": 0,
+       "int": 0,
+       "brup": 1,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 3.0,
+       "sacks": 2.0,
+       "games": 3
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "Sam Spence",
    "athlete_key": null,
    "position": null,
    "categories": {
@@ -52727,111 +52907,6 @@
        "long": 9,
        "yards_per_rec": 6.4,
        "games": 5
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Sam Corey",
-   "athlete_key": "corey_sam",
-   "position": "BOB",
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 0,
-      "ast": 2,
-      "tot": 2,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "sacks": 0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2024,
-       "solo": 0,
-       "ast": 2,
-       "tot": 2,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "sacks": 0,
-       "games": 1,
-       "log": [
-        {
-         "date": "2024-09-21",
-         "solo": 0,
-         "ast": 2,
-         "tot": 2,
-         "ff": 0,
-         "int": 0,
-         "brup": 0,
-         "blkd": 0,
-         "qh": 0,
-         "tfl": 0,
-         "sacks": 0
-        }
-       ]
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "Sam Nelson",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 35,
-      "ast": 21,
-      "tot": 56,
-      "ff": 0,
-      "int": 0,
-      "brup": 1,
-      "blkd": 0,
-      "qh": 1,
-      "tfl": 8.0,
-      "sacks": 3.0
-     },
-     "career_games": 12,
-     "seasons": [
-      {
-       "season": 2017,
-       "solo": 27,
-       "ast": 15,
-       "tot": 42,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 1,
-       "tfl": 5.0,
-       "sacks": 1.0,
-       "games": 9
-      },
-      {
-       "season": 2018,
-       "solo": 8,
-       "ast": 6,
-       "tot": 14,
-       "ff": 0,
-       "int": 0,
-       "brup": 1,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 3.0,
-       "sacks": 2.0,
-       "games": 3
       }
      ]
     }
@@ -55122,245 +55197,6 @@
    }
   },
   {
-   "display_name": "T.I.M. Haumschild",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Rushing": {
-     "career": {
-      "att": 19,
-      "loss": 8,
-      "net": 45,
-      "td": 1,
-      "long": 13,
-      "yards_per_carry": 2.4
-     },
-     "career_games": 7,
-     "seasons": [
-      {
-       "season": 2010,
-       "att": 4,
-       "loss": 2,
-       "net": 12,
-       "td": 0,
-       "long": 12,
-       "yards_per_carry": 3.0,
-       "games": 1
-      },
-      {
-       "season": 2011,
-       "att": 7,
-       "loss": 5,
-       "net": 11,
-       "td": 1,
-       "long": 6,
-       "yards_per_carry": 1.6,
-       "games": 3
-      },
-      {
-       "season": 2012,
-       "att": 8,
-       "loss": 1,
-       "net": 22,
-       "td": 0,
-       "long": 13,
-       "yards_per_carry": 2.8,
-       "games": 3
-      }
-     ]
-    },
-    "Receiving": {
-     "career": {
-      "rec": 1,
-      "yds": 11,
-      "td": 0,
-      "long": 11,
-      "yards_per_rec": 11.0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2012,
-       "rec": 1,
-       "yds": 11,
-       "td": 0,
-       "long": 11,
-       "yards_per_rec": 11.0,
-       "games": 1
-      }
-     ]
-    },
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 0,
-      "ast": 1,
-      "tot": 1,
-      "ff": 0,
-      "int": 0,
-      "brup": 0,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0,
-      "sacks": 0
-     },
-     "career_games": 1,
-     "seasons": [
-      {
-       "season": 2012,
-       "solo": 0,
-       "ast": 1,
-       "tot": 1,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "sacks": 0,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "T.I.M. Holan",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 32,
-      "ast": 12,
-      "tot": 44,
-      "ff": 0,
-      "int": 2,
-      "brup": 2,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 0.5,
-      "sacks": 0
-     },
-     "career_games": 13,
-     "seasons": [
-      {
-       "season": 2011,
-       "solo": 5,
-       "ast": 1,
-       "tot": 6,
-       "ff": 0,
-       "int": 0,
-       "brup": 0,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "sacks": 0,
-       "games": 4
-      },
-      {
-       "season": 2012,
-       "solo": 27,
-       "ast": 11,
-       "tot": 38,
-       "ff": 0,
-       "int": 2,
-       "brup": 2,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0.5,
-       "sacks": 0,
-       "games": 9
-      }
-     ]
-    }
-   }
-  },
-  {
-   "display_name": "T.I.M. Losby",
-   "athlete_key": null,
-   "position": null,
-   "categories": {
-    "Individual Defensive Statistics": {
-     "career": {
-      "solo": 27,
-      "ast": 34,
-      "tot": 61,
-      "ff": 0,
-      "int": 1,
-      "brup": 5,
-      "blkd": 0,
-      "qh": 0,
-      "tfl": 2.0,
-      "sacks": 0
-     },
-     "career_games": 18,
-     "seasons": [
-      {
-       "season": 2010,
-       "solo": 9,
-       "ast": 9,
-       "tot": 18,
-       "ff": 0,
-       "int": 0,
-       "brup": 2,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 2.0,
-       "sacks": 0,
-       "games": 8
-      },
-      {
-       "season": 2011,
-       "solo": 18,
-       "ast": 25,
-       "tot": 43,
-       "ff": 0,
-       "int": 1,
-       "brup": 3,
-       "blkd": 0,
-       "qh": 0,
-       "tfl": 0,
-       "sacks": 0,
-       "games": 10
-      }
-     ]
-    },
-    "Rushing": {
-     "career": {
-      "att": 2,
-      "loss": 2,
-      "net": 42,
-      "td": 0,
-      "long": 44,
-      "yards_per_carry": 21.0
-     },
-     "career_games": 2,
-     "seasons": [
-      {
-       "season": 2010,
-       "att": 1,
-       "loss": 0,
-       "net": 44,
-       "td": 0,
-       "long": 44,
-       "yards_per_carry": 44.0,
-       "games": 1
-      },
-      {
-       "season": 2011,
-       "att": 1,
-       "loss": 2,
-       "net": -2,
-       "td": 0,
-       "long": 0,
-       "yards_per_carry": -2.0,
-       "games": 1
-      }
-     ]
-    }
-   }
-  },
-  {
    "display_name": "TJ Lawson",
    "athlete_key": null,
    "position": null,
@@ -55469,6 +55305,72 @@
        "tfl": 0,
        "sacks": 0,
        "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "Ted Van Thiel",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 12,
+      "ast": 14,
+      "tot": 26,
+      "ff": 0,
+      "int": 1,
+      "brup": 1,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 4.5,
+      "sacks": 0.5
+     },
+     "career_games": 13,
+     "seasons": [
+      {
+       "season": 2010,
+       "solo": 0,
+       "ast": 2,
+       "tot": 2,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0.5,
+       "sacks": 0.5,
+       "games": 1
+      },
+      {
+       "season": 2011,
+       "solo": 2,
+       "ast": 3,
+       "tot": 5,
+       "ff": 0,
+       "int": 1,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 4
+      },
+      {
+       "season": 2012,
+       "solo": 10,
+       "ast": 9,
+       "tot": 19,
+       "ff": 0,
+       "int": 0,
+       "brup": 1,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 4.0,
+       "sacks": 0,
+       "games": 8
       }
      ]
     }
@@ -55616,6 +55518,245 @@
          "sacks": 0
         }
        ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "Tim Haumschild",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Rushing": {
+     "career": {
+      "att": 19,
+      "loss": 8,
+      "net": 45,
+      "td": 1,
+      "long": 13,
+      "yards_per_carry": 2.4
+     },
+     "career_games": 7,
+     "seasons": [
+      {
+       "season": 2010,
+       "att": 4,
+       "loss": 2,
+       "net": 12,
+       "td": 0,
+       "long": 12,
+       "yards_per_carry": 3.0,
+       "games": 1
+      },
+      {
+       "season": 2011,
+       "att": 7,
+       "loss": 5,
+       "net": 11,
+       "td": 1,
+       "long": 6,
+       "yards_per_carry": 1.6,
+       "games": 3
+      },
+      {
+       "season": 2012,
+       "att": 8,
+       "loss": 1,
+       "net": 22,
+       "td": 0,
+       "long": 13,
+       "yards_per_carry": 2.8,
+       "games": 3
+      }
+     ]
+    },
+    "Receiving": {
+     "career": {
+      "rec": 1,
+      "yds": 11,
+      "td": 0,
+      "long": 11,
+      "yards_per_rec": 11.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2012,
+       "rec": 1,
+       "yds": 11,
+       "td": 0,
+       "long": 11,
+       "yards_per_rec": 11.0,
+       "games": 1
+      }
+     ]
+    },
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 0,
+      "ast": 1,
+      "tot": 1,
+      "ff": 0,
+      "int": 0,
+      "brup": 0,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 0,
+      "sacks": 0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2012,
+       "solo": 0,
+       "ast": 1,
+       "tot": 1,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "Tim Holan",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 32,
+      "ast": 12,
+      "tot": 44,
+      "ff": 0,
+      "int": 2,
+      "brup": 2,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 0.5,
+      "sacks": 0
+     },
+     "career_games": 13,
+     "seasons": [
+      {
+       "season": 2011,
+       "solo": 5,
+       "ast": 1,
+       "tot": 6,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 4
+      },
+      {
+       "season": 2012,
+       "solo": 27,
+       "ast": 11,
+       "tot": 38,
+       "ff": 0,
+       "int": 2,
+       "brup": 2,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0.5,
+       "sacks": 0,
+       "games": 9
+      }
+     ]
+    }
+   }
+  },
+  {
+   "display_name": "Tim Losby",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 27,
+      "ast": 34,
+      "tot": 61,
+      "ff": 0,
+      "int": 1,
+      "brup": 5,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 2.0,
+      "sacks": 0
+     },
+     "career_games": 18,
+     "seasons": [
+      {
+       "season": 2010,
+       "solo": 9,
+       "ast": 9,
+       "tot": 18,
+       "ff": 0,
+       "int": 0,
+       "brup": 2,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 2.0,
+       "sacks": 0,
+       "games": 8
+      },
+      {
+       "season": 2011,
+       "solo": 18,
+       "ast": 25,
+       "tot": 43,
+       "ff": 0,
+       "int": 1,
+       "brup": 3,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 10
+      }
+     ]
+    },
+    "Rushing": {
+     "career": {
+      "att": 2,
+      "loss": 2,
+      "net": 42,
+      "td": 0,
+      "long": 44,
+      "yards_per_carry": 21.0
+     },
+     "career_games": 2,
+     "seasons": [
+      {
+       "season": 2010,
+       "att": 1,
+       "loss": 0,
+       "net": 44,
+       "td": 0,
+       "long": 44,
+       "yards_per_carry": 44.0,
+       "games": 1
+      },
+      {
+       "season": 2011,
+       "att": 1,
+       "loss": 2,
+       "net": -2,
+       "td": 0,
+       "long": 0,
+       "yards_per_carry": -2.0,
+       "games": 1
       }
      ]
     }
@@ -58763,7 +58904,7 @@
    }
   },
   {
-   "display_name": "V.A.N. Schaick",
+   "display_name": "Van Schaick",
    "athlete_key": null,
    "position": null,
    "categories": {
@@ -60229,6 +60370,7 @@
   "Adam Harnen",
   "Adam Nevinski",
   "Adam Sivia",
+  "Adam Van Schyndel",
   "Adam VanSchyndel",
   "Aguina, Michael",
   "Alan Arden",
@@ -60252,6 +60394,7 @@
   "Bahling, Colton",
   "Baird, Tyler",
   "Barrett, Patrick",
+  "Beau Le Fevre",
   "Bell, Preston",
   "Ben Kujawa",
   "Benjamin Semenak",
@@ -60262,6 +60405,7 @@
   "Billy Schmid",
   "Billy Schwartz",
   "Blank,Parker",
+  "Bo Le Fevre",
   "Boers, Paxton",
   "Bohannon,Jahkai",
   "Bois-McLenna,Konnor",
@@ -60606,6 +60750,7 @@
   "Tate  Koester",
   "Taylor, John",
   "Taylor,John",
+  "Ted Van Thiel",
   "Thode, Jacob",
   "Thorsen, Andrew",
   "Thorsen, Andy",

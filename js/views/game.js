@@ -185,8 +185,9 @@
       down: 'Yards / Play by Down', sit: 'Success Rate by Situation', zone: 'Explosive Rate by Field Zone', drives: 'Drive Result Mix',
       heat: 'Success Rate — Down × Distance', heatNote: 'Sequential blue = success rate; text = successful/plays; faded cells have fewer than 5 snaps.', trend: 'Yards / Play by Game',
       colors: { down: '--cat-1', sit: '--cat-3', zone: '--cat-2' },
-      logHead: ['Opponent', 'Date', 'Plays', 'Yds/Play', 'Success %', 'Explosive %', 'Turnovers', 'Points/Drive'],
-      logNote: "Yds/Play, Success %, Explosive %, and Turnovers respect every filter above. Points/Drive uses this game's full drive log regardless of the Quarter/Situation/Field Zone filters (drives aren't scoped to a single quarter or situation).",
+      logHead: ['Opponent', 'Date', 'Plays', 'Yds/Play', 'Success %', 'Explosive %', 'EPA/Play', 'Turnovers', 'Points/Drive'],
+      epa: 'Expected Points Added per Play', epaTrend: 'EPA / Play by Game', epaGood: 1,
+      logNote: "Yds/Play, Success %, Explosive %, EPA/Play, and Turnovers respect every filter above. Points/Drive uses this game's full drive log regardless of the Quarter/Situation/Field Zone filters (drives aren't scoped to a single quarter or situation).",
       footExtra: '',
       outcomeAvg: 'Avg Yards', outcomeTurn: 'Turnover Rate', outcomeTurnGlossary: 'Turnover Rate', outcomeTurnNoun: 'turnovers', outcomeTurnDot: '--critical', outcomeYppDot: '--good', outcomeMix: 'Outcome Mix by Play Type',
     },
@@ -198,8 +199,9 @@
       down: 'Yards Allowed / Play by Down', sit: 'Success Rate Allowed by Situation', zone: 'Explosive Rate Allowed by Field Zone', drives: 'Opponent Drive Result Mix',
       heat: 'Success Rate Allowed — Down × Distance', heatNote: 'Sequential blue = success rate allowed; text = successful/plays; faded cells have fewer than 5 snaps.', trend: 'Yards Allowed / Play by Game', trendLowerIsBetter: true,
       colors: { down: '--critical', sit: '--serious', zone: '--cat-8' },
-      logHead: ['Opponent', 'Date', 'Plays', 'Yds/Play Allowed', 'Success % Allowed', 'Explosive % Allowed', 'Takeaways', 'Points/Drive Allowed'],
-      logNote: "Yds/Play, Success %, Explosive %, and Takeaways respect every filter above. Points/Drive Allowed uses this game's full drive log regardless of the Quarter/Situation/Field Zone filters (drives aren't scoped to a single quarter or situation).",
+      logHead: ['Opponent', 'Date', 'Plays', 'Yds/Play Allowed', 'Success % Allowed', 'Explosive % Allowed', 'EPA/Play Allowed', 'Takeaways', 'Points/Drive Allowed'],
+      epa: 'Expected Points Added per Play Allowed', epaTrend: 'EPA / Play Allowed by Game', epaGood: -1,
+      logNote: "Yds/Play, Success %, Explosive %, EPA/Play, and Takeaways respect every filter above. Points/Drive Allowed uses this game's full drive log regardless of the Quarter/Situation/Field Zone filters (drives aren't scoped to a single quarter or situation).",
       footExtra: ", opponent's-possession rows",
       outcomeAvg: 'Avg Yards Allowed', outcomeTurn: 'Takeaway Rate', outcomeTurnGlossary: 'Takeaway Rate', outcomeTurnNoun: 'takeaways', outcomeTurnDot: '--good', outcomeYppDot: '--critical', outcomeMix: 'Outcome Mix by Play Type Faced',
     },
@@ -288,6 +290,31 @@
           },
           { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'yards', ' yds', S.trend, { lowerIsBetter: !!S.trendLowerIsBetter }) },
           {
+            // EPA can be negative, so a table with green/red values rather than bars (2026-10-25)
+            title: S.epa,
+            note: 'Points the play added to what the drive was expected to score, from down, distance and field position (see Expected Points Added in the Glossary). Above 0 is better than an average play for the team with the ball. Rush, pass and sack snaps on the official play-by-play.',
+            table: {
+              head: ['', { label: 'Plays', align: 'right' }, { label: 'EPA / play', align: 'right' }, { label: 'Total EPA', align: 'right' }],
+              empty: 'No plays in current filter.',
+              rows({ rows }) {
+                const withEpa = rows.filter((r) => r.epa !== null && r.epa !== undefined);
+                const tone = (v) => (v === null ? '' : v * S.epaGood > 0 ? 'good-text' : v * S.epaGood < 0 ? 'crit-text' : '');
+                const line = (label, g) => {
+                  if (!g.length) return null;
+                  const per = mean(g.map((r) => r.epa)), total = g.reduce((s, r) => s + r.epa, 0);
+                  return [label, String(g.length), `<span class="${tone(per)}">${per > 0 ? '+' : ''}${fmt(per, 2)}</span>`, `${total > 0 ? '+' : ''}${fmt(total, 1)}`];
+                };
+                return [
+                  line('All plays', withEpa),
+                  line('Runs', withEpa.filter((r) => r.play_type === 'Rush')),
+                  line('Passes (incl. sacks)', withEpa.filter((r) => r.play_type === 'Pass' || r.play_type === 'Sack')),
+                  ...DOWNS.map((d) => line(`${ordinalDown(d)} down`, withEpa.filter((r) => r.down === d))),
+                ].filter(Boolean);
+              },
+            },
+          },
+          { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'epa', '', S.epaTrend, { lowerIsBetter: S.epaGood < 0, decimals: 2 }) },
+          {
             title: 'Game log', wide: true, note: S.logNote,
             table: {
               head: S.logHead,
@@ -299,7 +326,8 @@
                   const gRows = byGame.get(g.game_label);
                   const gEff = withEfficiency(gRows);
                   const gDrives = drivesByGame.get(g.game_label) || [];
-                  return [esc(g.opponent), g.date, gRows.length, fmt(mean(gRows.map((r) => r.yards)), 1), pct(rate(gEff, succ), 0), pct(rate(gEff, expl), 0), gRows.filter((r) => r.is_turnover).length, fmt(gDrives.length ? mean(gDrives.map(pointsOf)) : null, 2)];
+                  const gEpa = mean(gRows.map((r) => r.epa));
+                  return [esc(g.opponent), g.date, gRows.length, fmt(mean(gRows.map((r) => r.yards)), 1), pct(rate(gEff, succ), 0), pct(rate(gEff, expl), 0), gEpa === null ? '—' : `${gEpa > 0 ? '+' : ''}${fmt(gEpa, 2)}`, gRows.filter((r) => r.is_turnover).length, fmt(gDrives.length ? mean(gDrives.map(pointsOf)) : null, 2)];
                 });
               },
             },
@@ -313,6 +341,14 @@
   /* --------------------------------------------------------------- tendencies -- */
 
   const runPassOf = (rows) => rows.filter((r) => r.play_type === 'Run' || r.play_type === 'Pass');
+
+  // One row of a "how does this split play" table: snaps, run share, yards per play, success rate (motion, strength).
+  const SPLIT_HEAD = ['', { label: 'Plays', align: 'right' }, { label: 'Run %', align: 'right' }, { label: 'Yds / play', align: 'right' }, { label: 'Success %', align: 'right' }];
+  function splitRow(label, rows) {
+    if (!rows.length) return null;
+    const eff = withEfficiency(rows);
+    return [label, String(rows.length), pct(rate(rows, (r) => r.play_type === 'Run'), 0), fmt(mean(rows.map((r) => r.yards)), 1), eff.length ? pct(rate(eff, succ), 0) : '—'];
+  }
 
   function offenseTendencies(root) {
     const D = G();
@@ -340,6 +376,30 @@
         countCard('Personnel Usage', 'personnel', { color: '--cat-3', tip: 'avg', has: (r) => r.personnel !== null && r.personnel !== undefined }),
         countCard('Opponent Defensive Front Shown', 'def_front', { color: '--cat-2', noun: 'plays', tip: 'count' }),
         countCard('Opponent Coverage Shown', 'coverage', { color: '--cat-5', noun: 'plays', tip: 'count' }),
+        {
+          title: 'Pre-Snap Motion',
+          note: 'Motion is charted only when a player moves before the snap, so a play with nothing charted counts as no motion. Motion names are the staff\'s own (e.g. HAP, YAP); ones used on fewer than 5 snaps in view are left out.',
+          table: { head: SPLIT_HEAD, empty: 'No run/pass snaps in current filter.', rows: ({ runPass }) => {
+            const moved = runPass.filter((r) => r.motion);
+            const byMotion = groupBy(moved, 'motion');
+            const named = [...byMotion.entries()].filter(([, g]) => g.length >= 5).sort((a, b) => b[1].length - a[1].length).slice(0, 8);
+            return [splitRow('No motion', runPass.filter((r) => !r.motion)), splitRow('Any motion', moved), ...named.map(([m, g]) => splitRow(`&nbsp;&nbsp;${esc(m)}`, g))].filter(Boolean);
+          } },
+        },
+        {
+          title: 'Formation Strength',
+          note: 'Which side the formation is strong to, as charted. "Wide side" is toward the field when the ball is on a hash; snaps from the middle of the field are only in the Right/Left rows.',
+          table: { head: SPLIT_HEAD, empty: 'No run/pass snaps with a charted strength in current filter.', rows: ({ runPass }) => {
+            const charted = runPass.filter((r) => r.formation_strength);
+            const toField = (r) => (r.hash === 'L' && r.formation_strength === 'Right') || (r.hash === 'R' && r.formation_strength === 'Left');
+            const toBoundary = (r) => (r.hash === 'L' && r.formation_strength === 'Left') || (r.hash === 'R' && r.formation_strength === 'Right');
+            return [
+              ...['Right', 'Left', 'Balanced'].map((s) => splitRow(s, charted.filter((r) => r.formation_strength === s))),
+              splitRow('Strong to the wide side', charted.filter(toField)),
+              splitRow('Strong to the short side', charted.filter(toBoundary)),
+            ].filter(Boolean);
+          } },
+        },
         detailTable('Play call detail (top 15 by volume)', 'play_call', 'Play Call', [
           { label: 'N', cell: (g) => g.length }, { label: 'Avg Yards', cell: avgYds }, { label: 'Success %', cell: succPct }, { label: 'Explosive %', cell: explPct },
         ], { empty: 'No play calls in current filter.', note: 'Only ~35% of snaps have a specific Play Call charted (on top of the Run/Pass bucket) — this table only ever counts rows that actually have one, respecting every filter above.' }),
@@ -446,6 +506,10 @@
       title: S.title,
       lead: S.lead,
       data: { game: '../data/game-data.json' },
+      // these tabs open on the latest season, so they can draw from the light file while the full one loads; Tells
+      // compares every season and waits
+      quickData: { game: '../data/game-data-latest.json' },
+      quickTabs: ['scorecard', 'tendencies', 'outcomes', 'fourth', 'positions'],
       tabs: [
         { id: 'scorecard', label: 'Scorecard', render: scorecardTab(side) },
         { id: 'tendencies', label: 'Tendencies', render: side === 'offense' ? offenseTendencies : defenseTendencies },

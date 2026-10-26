@@ -56008,8 +56008,8 @@
 "value": 216
 },
 {
-"athlete_key": "banks_camren",
-"first_name": "Camren",
+"athlete_key": "banks_cameran",
+"first_name": "Cameran",
 "last_name": "Banks",
 "position": "CB",
 "class": "Sophomore",
@@ -57711,8 +57711,8 @@
 "value": 195
 },
 {
-"athlete_key": "banks_camren",
-"first_name": "Camren",
+"athlete_key": "banks_cameran",
+"first_name": "Cameran",
 "last_name": "Banks",
 "position": "CB",
 "class": "Sophomore",
@@ -58556,8 +58556,8 @@
 "value": 94
 },
 {
-"athlete_key": "banks_camren",
-"first_name": "Camren",
+"athlete_key": "banks_cameran",
+"first_name": "Cameran",
 "last_name": "Banks",
 "position": "CB",
 "class": "Sophomore",
@@ -59557,8 +59557,8 @@
 "value": 4.7
 },
 {
-"athlete_key": "banks_camren",
-"first_name": "Camren",
+"athlete_key": "banks_cameran",
+"first_name": "Cameran",
 "last_name": "Banks",
 "position": "CB",
 "class": "Sophomore",
@@ -60506,8 +60506,8 @@
 "value": 28.5
 },
 {
-"athlete_key": "banks_camren",
-"first_name": "Camren",
+"athlete_key": "banks_cameran",
+"first_name": "Cameran",
 "last_name": "Banks",
 "position": "CB",
 "class": "Sophomore",
@@ -89379,8 +89379,8 @@
 "value": 40.9
 },
 {
-"athlete_key": "banks_camren",
-"first_name": "Camren",
+"athlete_key": "banks_cameran",
+"first_name": "Cameran",
 "last_name": "Banks",
 "position": "CB",
 "class": "Sophomore",
@@ -141371,6 +141371,62 @@
 "session_label": "April 2024-25",
 "metric": "Strength Score (Team)",
 "value": 13.2
+},
+{
+"football_year": "2025-26",
+"testing_period": "\u2014",
+"session_label": "2025-26",
+"metric": "Height",
+"value": 73
+},
+{
+"football_year": "2025-26",
+"testing_period": "December",
+"session_label": "December 2025-26",
+"metric": "Weight",
+"value": 162.5
+},
+{
+"football_year": "2025-26",
+"testing_period": "December",
+"session_label": "December 2025-26",
+"metric": "Bench",
+"value": 225
+},
+{
+"football_year": "2025-26",
+"testing_period": "December",
+"session_label": "December 2025-26",
+"metric": "Clean",
+"value": 205
+},
+{
+"football_year": "2025-26",
+"testing_period": "December",
+"session_label": "December 2025-26",
+"metric": "Broad Jump",
+"value": 107
+},
+{
+"football_year": "2025-26",
+"testing_period": "December",
+"session_label": "December 2025-26",
+"metric": "Pro Agility",
+"value": 4.7
+},
+{
+"football_year": "2025-26",
+"testing_period": "December",
+"session_label": "December 2025-26",
+"metric": "Vertical",
+"value": 29.5
+},
+{
+"football_year": "2025-26",
+"testing_period": "December",
+"session_label": "December 2025-26",
+"metric": "Athleticism Score (Team)",
+"value": 58.5
 }
 ]
 },
@@ -149099,69 +149155,6 @@
 "session_label": "December 2025-26",
 "metric": "Athleticism Score (Team)",
 "value": 40.9
-}
-]
-},
-{
-"athlete_key": "banks_camren",
-"first_name": "Camren",
-"last_name": "Banks",
-"points": [
-{
-"football_year": "2025-26",
-"testing_period": "\u2014",
-"session_label": "2025-26",
-"metric": "Height",
-"value": 73
-},
-{
-"football_year": "2025-26",
-"testing_period": "December",
-"session_label": "December 2025-26",
-"metric": "Weight",
-"value": 162.5
-},
-{
-"football_year": "2025-26",
-"testing_period": "December",
-"session_label": "December 2025-26",
-"metric": "Bench",
-"value": 225
-},
-{
-"football_year": "2025-26",
-"testing_period": "December",
-"session_label": "December 2025-26",
-"metric": "Clean",
-"value": 205
-},
-{
-"football_year": "2025-26",
-"testing_period": "December",
-"session_label": "December 2025-26",
-"metric": "Broad Jump",
-"value": 107
-},
-{
-"football_year": "2025-26",
-"testing_period": "December",
-"session_label": "December 2025-26",
-"metric": "Pro Agility",
-"value": 4.7
-},
-{
-"football_year": "2025-26",
-"testing_period": "December",
-"session_label": "December 2025-26",
-"metric": "Vertical",
-"value": 29.5
-},
-{
-"football_year": "2025-26",
-"testing_period": "December",
-"session_label": "December 2025-26",
-"metric": "Athleticism Score (Team)",
-"value": 58.5
 }
 ]
 },

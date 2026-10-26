@@ -6,7 +6,7 @@ const GLOSSARY_CATEGORIES = [
   {
     title: 'Efficiency & Situational Terms',
     terms: ['Explosive Play', 'Success Rate', 'Stuffed', 'Play Efficiency', 'Money Down', 'Passing Down',
-      'Standard Down', 'Field Zone', 'Red Zone', 'Points / Drive (approx.)', 'Turnover Rate', 'Takeaway Rate',
+      'Standard Down', 'Field Zone', 'Red Zone', 'Expected Points Added (EPA)', 'Points / Drive (approx.)', 'Turnover Rate', 'Takeaway Rate',
       'Drive Result Mix', 'Play Outcome'],
   },
   { title: 'Offense & Defense Schematics', terms: ['Personnel', 'Coverage', 'Coverage Shell', 'Direction', 'Pass Depth', 'Hash'] },

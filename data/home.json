@@ -1339,6 +1339,10 @@
             "explosive": 0.1268,
             "turnovers": 1
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 1
+          },
           "st_score": 50.237
         },
         {
@@ -1362,6 +1366,10 @@
             "success": 0.3871,
             "explosive": 0.2097,
             "turnovers": 1
+          },
+          "turnovers": {
+            "given": 4,
+            "taken": 1
           },
           "st_score": 46.9
         },
@@ -1387,6 +1395,10 @@
             "explosive": 0.0851,
             "turnovers": 0
           },
+          "turnovers": {
+            "given": 3,
+            "taken": 0
+          },
           "st_score": 48.5625
         },
         {
@@ -1410,6 +1422,10 @@
             "success": 0.1379,
             "explosive": 0.1034,
             "turnovers": 4
+          },
+          "turnovers": {
+            "given": 0,
+            "taken": 5
           },
           "st_score": 49.763
         },
@@ -1435,6 +1451,10 @@
             "explosive": 0.2,
             "turnovers": 1
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 1
+          },
           "st_score": 51.2542
         },
         {
@@ -1458,6 +1478,10 @@
             "success": 0.6,
             "explosive": 0.2727,
             "turnovers": 0
+          },
+          "turnovers": {
+            "given": 3,
+            "taken": 0
           },
           "st_score": 46.8842
         },
@@ -1483,6 +1507,10 @@
             "explosive": 0.25,
             "turnovers": 0
           },
+          "turnovers": {
+            "given": 0,
+            "taken": 0
+          },
           "st_score": 46.7333
         }
       ],
@@ -1502,6 +1530,10 @@
           "turnovers": 7
         },
         "st_score": 48.7554,
+        "turnovers": {
+          "given": 14,
+          "taken": 8
+        },
         "pts_for_pg": 21.5714,
         "pts_against_pg": 22.4286
       },
@@ -1521,6 +1553,10 @@
           "turnovers": 81
         },
         "st_score": 50.3374,
+        "turnovers": {
+          "given": 72,
+          "taken": 86
+        },
         "pts_for_pg": 27.28,
         "pts_against_pg": 28.7
       }
@@ -1552,6 +1588,10 @@
             "explosive": 0.1406,
             "turnovers": 0
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 0
+          },
           "st_score": 47.3687
         },
         {
@@ -1575,6 +1615,10 @@
             "success": 0.4833,
             "explosive": 0.15,
             "turnovers": 0
+          },
+          "turnovers": {
+            "given": 1,
+            "taken": 0
           },
           "st_score": 48.272
         },
@@ -1600,6 +1644,10 @@
             "explosive": 0.241,
             "turnovers": 2
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 3
+          },
           "st_score": 48.4704
         },
         {
@@ -1623,6 +1671,10 @@
             "success": 0.3867,
             "explosive": 0.0533,
             "turnovers": 2
+          },
+          "turnovers": {
+            "given": 1,
+            "taken": 2
           },
           "st_score": 51.7292
         },
@@ -1648,6 +1700,10 @@
             "explosive": 0.0986,
             "turnovers": 4
           },
+          "turnovers": {
+            "given": 3,
+            "taken": 4
+          },
           "st_score": 51.3292
         },
         {
@@ -1671,6 +1727,10 @@
             "success": 0.597,
             "explosive": 0.1343,
             "turnovers": 2
+          },
+          "turnovers": {
+            "given": 1,
+            "taken": 2
           },
           "st_score": 50.8368
         },
@@ -1696,6 +1756,10 @@
             "explosive": 0.087,
             "turnovers": 5
           },
+          "turnovers": {
+            "given": 0,
+            "taken": 5
+          },
           "st_score": 53.263
         },
         {
@@ -1719,6 +1783,10 @@
             "success": 0.614,
             "explosive": 0.2456,
             "turnovers": 1
+          },
+          "turnovers": {
+            "given": 2,
+            "taken": 1
           },
           "st_score": 43.3524
         },
@@ -1744,6 +1812,10 @@
             "explosive": 0.1346,
             "turnovers": 2
           },
+          "turnovers": {
+            "given": 0,
+            "taken": 2
+          },
           "st_score": 53.0625
         },
         {
@@ -1768,6 +1840,10 @@
             "explosive": 0.0877,
             "turnovers": 0
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 0
+          },
           "st_score": 47.7294
         }
       ],
@@ -1787,6 +1863,10 @@
           "turnovers": 18
         },
         "st_score": 49.7594,
+        "turnovers": {
+          "given": 14,
+          "taken": 19
+        },
         "pts_for_pg": 21.6,
         "pts_against_pg": 28.1
       },
@@ -1806,6 +1886,10 @@
           "turnovers": 63
         },
         "st_score": 50.4663,
+        "turnovers": {
+          "given": 58,
+          "taken": 67
+        },
         "pts_for_pg": 28.7,
         "pts_against_pg": 28.85
       }
@@ -1837,6 +1921,10 @@
             "explosive": 0.1406,
             "turnovers": 2
           },
+          "turnovers": {
+            "given": 0,
+            "taken": 2
+          },
           "st_score": 50.1583
         },
         {
@@ -1860,6 +1948,10 @@
             "success": 0.3968,
             "explosive": 0.1111,
             "turnovers": 1
+          },
+          "turnovers": {
+            "given": 3,
+            "taken": 1
           },
           "st_score": 50.9208
         },
@@ -1885,6 +1977,10 @@
             "explosive": 0.1587,
             "turnovers": 1
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 1
+          },
           "st_score": 53.7375
         },
         {
@@ -1908,6 +2004,10 @@
             "success": 0.3333,
             "explosive": 0.1167,
             "turnovers": 3
+          },
+          "turnovers": {
+            "given": 2,
+            "taken": 3
           },
           "st_score": 51.9966
         },
@@ -1933,6 +2033,10 @@
             "explosive": 0.0704,
             "turnovers": 1
           },
+          "turnovers": {
+            "given": 3,
+            "taken": 1
+          },
           "st_score": 54.1679
         },
         {
@@ -1956,6 +2060,10 @@
             "success": 0.3385,
             "explosive": 0.1385,
             "turnovers": 1
+          },
+          "turnovers": {
+            "given": 0,
+            "taken": 1
           },
           "st_score": 49.4333
         },
@@ -1981,6 +2089,10 @@
             "explosive": 0.1017,
             "turnovers": 2
           },
+          "turnovers": {
+            "given": 1,
+            "taken": 2
+          },
           "st_score": 52.2355
         },
         {
@@ -2004,6 +2116,10 @@
             "success": 0.6406,
             "explosive": 0.2656,
             "turnovers": 1
+          },
+          "turnovers": {
+            "given": 1,
+            "taken": 1
           },
           "st_score": 49.13
         },
@@ -2029,6 +2145,10 @@
             "explosive": 0.0845,
             "turnovers": 0
           },
+          "turnovers": {
+            "given": 1,
+            "taken": 0
+          },
           "st_score": 50.5609
         },
         {
@@ -2053,6 +2173,10 @@
             "explosive": 0.0882,
             "turnovers": 3
           },
+          "turnovers": {
+            "given": 1,
+            "taken": 3
+          },
           "st_score": 53.1263
         }
       ],
@@ -2072,6 +2196,10 @@
           "turnovers": 15
         },
         "st_score": 51.5855,
+        "turnovers": {
+          "given": 14,
+          "taken": 15
+        },
         "pts_for_pg": 24.6,
         "pts_against_pg": 23.8
       },
@@ -2091,6 +2219,10 @@
           "turnovers": 48
         },
         "st_score": 50.1243,
+        "turnovers": {
+          "given": 44,
+          "taken": 52
+        },
         "pts_for_pg": 30.0667,
         "pts_against_pg": 30.5333
       }
@@ -2122,6 +2254,10 @@
             "explosive": 0.0526,
             "turnovers": 2
           },
+          "turnovers": {
+            "given": 1,
+            "taken": 2
+          },
           "st_score": 53.388
         },
         {
@@ -2145,6 +2281,10 @@
             "success": 0.4762,
             "explosive": 0.1746,
             "turnovers": 4
+          },
+          "turnovers": {
+            "given": 0,
+            "taken": 4
           },
           "st_score": 51.2318
         },
@@ -2170,6 +2310,10 @@
             "explosive": 0.1733,
             "turnovers": 4
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 4
+          },
           "st_score": 49.1895
         },
         {
@@ -2193,6 +2337,10 @@
             "success": 0.5323,
             "explosive": 0.2097,
             "turnovers": 1
+          },
+          "turnovers": {
+            "given": 1,
+            "taken": 1
           },
           "st_score": 52.987
         },
@@ -2218,6 +2366,10 @@
             "explosive": 0.4898,
             "turnovers": 0
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 0
+          },
           "st_score": 49.5407
         },
         {
@@ -2241,6 +2393,10 @@
             "success": 0.2571,
             "explosive": 0.0857,
             "turnovers": 3
+          },
+          "turnovers": {
+            "given": 1,
+            "taken": 3
           },
           "st_score": 54.1667
         },
@@ -2266,6 +2422,10 @@
             "explosive": 0.1774,
             "turnovers": 0
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 0
+          },
           "st_score": 48.108
         },
         {
@@ -2289,6 +2449,10 @@
             "success": 0.3239,
             "explosive": 0.1549,
             "turnovers": 0
+          },
+          "turnovers": {
+            "given": 3,
+            "taken": 0
           },
           "st_score": 49.764
         },
@@ -2314,6 +2478,10 @@
             "explosive": 0.0566,
             "turnovers": 3
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 3
+          },
           "st_score": 49.5125
         },
         {
@@ -2338,6 +2506,10 @@
             "explosive": 0.1613,
             "turnovers": 1
           },
+          "turnovers": {
+            "given": 1,
+            "taken": 1
+          },
           "st_score": 51.1826
         }
       ],
@@ -2357,6 +2529,10 @@
           "turnovers": 18
         },
         "st_score": 50.9313,
+        "turnovers": {
+          "given": 15,
+          "taken": 18
+        },
         "pts_for_pg": 36.4,
         "pts_against_pg": 28.0
       },
@@ -2376,6 +2552,10 @@
           "turnovers": 30
         },
         "st_score": 49.6926,
+        "turnovers": {
+          "given": 29,
+          "taken": 34
+        },
         "pts_for_pg": 26.9,
         "pts_against_pg": 31.8
       }
@@ -2407,6 +2587,10 @@
             "explosive": 0.1,
             "turnovers": 1
           },
+          "turnovers": {
+            "given": 0,
+            "taken": 1
+          },
           "st_score": 50.3923
         },
         {
@@ -2430,6 +2614,10 @@
             "success": 0.2941,
             "explosive": 0.1176,
             "turnovers": 5
+          },
+          "turnovers": {
+            "given": 1,
+            "taken": 6
           },
           "st_score": 49.6227
         },
@@ -2455,6 +2643,10 @@
             "explosive": 0.1688,
             "turnovers": 3
           },
+          "turnovers": {
+            "given": 0,
+            "taken": 3
+          },
           "st_score": 49.9148
         },
         {
@@ -2478,6 +2670,10 @@
             "success": 0.4627,
             "explosive": 0.1642,
             "turnovers": 0
+          },
+          "turnovers": {
+            "given": 1,
+            "taken": 0
           },
           "st_score": 50.5935
         },
@@ -2503,6 +2699,10 @@
             "explosive": 0.3393,
             "turnovers": 0
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 0
+          },
           "st_score": 46.704
         },
         {
@@ -2526,6 +2726,10 @@
             "success": 0.2532,
             "explosive": 0.1013,
             "turnovers": 1
+          },
+          "turnovers": {
+            "given": 4,
+            "taken": 2
           },
           "st_score": 49.7267
         },
@@ -2551,6 +2755,10 @@
             "explosive": 0.2703,
             "turnovers": 0
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 0
+          },
           "st_score": 47.9261
         },
         {
@@ -2574,6 +2782,10 @@
             "success": 0.2449,
             "explosive": 0.102,
             "turnovers": 1
+          },
+          "turnovers": {
+            "given": 2,
+            "taken": 1
           },
           "st_score": 51.7375
         },
@@ -2599,6 +2811,10 @@
             "explosive": 0.1184,
             "turnovers": 3
           },
+          "turnovers": {
+            "given": 0,
+            "taken": 3
+          },
           "st_score": 50.6206
         },
         {
@@ -2623,6 +2839,10 @@
             "explosive": 0.2188,
             "turnovers": 1
           },
+          "turnovers": {
+            "given": 3,
+            "taken": 1
+          },
           "st_score": 48.72
         }
       ],
@@ -2642,6 +2862,10 @@
           "turnovers": 15
         },
         "st_score": 49.763,
+        "turnovers": {
+          "given": 15,
+          "taken": 17
+        },
         "pts_for_pg": 29.3,
         "pts_against_pg": 30.5
       },
@@ -2661,6 +2885,10 @@
           "turnovers": 15
         },
         "st_score": 49.6136,
+        "turnovers": {
+          "given": 14,
+          "taken": 17
+        },
         "pts_for_pg": 24.5,
         "pts_against_pg": 33.1
       }
@@ -2692,6 +2920,10 @@
             "explosive": 0.1846,
             "turnovers": 3
           },
+          "turnovers": {
+            "given": 2,
+            "taken": 3
+          },
           "st_score": 51.32
         },
         {
@@ -2715,6 +2947,10 @@
             "success": 0.6308,
             "explosive": 0.2154,
             "turnovers": 1
+          },
+          "turnovers": {
+            "given": 0,
+            "taken": 1
           },
           "st_score": 52.0773
         },
@@ -2740,6 +2976,10 @@
             "explosive": 0.1212,
             "turnovers": 1
           },
+          "turnovers": {
+            "given": 1,
+            "taken": 1
+          },
           "st_score": 50.565
         },
         {
@@ -2763,6 +3003,10 @@
             "success": 0.75,
             "explosive": 0.3667,
             "turnovers": 1
+          },
+          "turnovers": {
+            "given": 0,
+            "taken": 1
           },
           "st_score": 49.49
         },
@@ -2788,6 +3032,10 @@
             "explosive": 0.1667,
             "turnovers": 2
           },
+          "turnovers": {
+            "given": 3,
+            "taken": 2
+          },
           "st_score": 50.675
         },
         {
@@ -2811,6 +3059,10 @@
             "success": 0.5,
             "explosive": 0.2419,
             "turnovers": 1
+          },
+          "turnovers": {
+            "given": 1,
+            "taken": 1
           },
           "st_score": 44.7385
         },
@@ -2836,6 +3088,10 @@
             "explosive": 0.1549,
             "turnovers": 4
           },
+          "turnovers": {
+            "given": 0,
+            "taken": 5
+          },
           "st_score": 46.9769
         },
         {
@@ -2859,6 +3115,10 @@
             "success": 0.4776,
             "explosive": 0.2388,
             "turnovers": 1
+          },
+          "turnovers": {
+            "given": 4,
+            "taken": 1
           },
           "st_score": 48.2765
         },
@@ -2884,6 +3144,10 @@
             "explosive": 0.1304,
             "turnovers": 0
           },
+          "turnovers": {
+            "given": 0,
+            "taken": 1
+          },
           "st_score": 53.1545
         },
         {
@@ -2908,6 +3172,10 @@
             "explosive": 0.0678,
             "turnovers": 1
           },
+          "turnovers": {
+            "given": 3,
+            "taken": 1
+          },
           "st_score": 49.5133
         }
       ],
@@ -2927,6 +3195,10 @@
           "turnovers": 15
         },
         "st_score": 49.6136,
+        "turnovers": {
+          "given": 14,
+          "taken": 17
+        },
         "pts_for_pg": 24.5,
         "pts_against_pg": 33.1
       },

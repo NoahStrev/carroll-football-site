@@ -434,7 +434,9 @@ def _build_watch_entries(players, leaders_by_statistic, current_season, value_fn
         candidates.sort(key=lambda e: (e["gap"] is not None, e["gap"] if e["gap"] is not None else 0))
         trimmed = _trim_to_meaningful(candidates)
         if trimmed:
-            watch[stat] = [{k: v for k, v in e.items() if k != "gap"} for e in trimmed]
+            # gap, top_value and fifth_value only decide the order and the cut above; the page works from "leaderboard"
+            # itself, so they are not written out (2026-10-25)
+            watch[stat] = [{k: v for k, v in e.items() if k not in ("gap", "top_value", "fifth_value")} for e in trimmed]
     return watch
 
 
