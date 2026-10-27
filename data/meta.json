@@ -1,32 +1,32 @@
 {
   "pages": {
     "home": {
-      "through": "2026-10-17",
-      "text": "Games through Wheaton, Oct 17"
+      "through": "2026-10-24",
+      "text": "Games through North Central, Oct 24"
     },
     "offense": {
-      "through": "2026-10-17",
-      "text": "Charted through Wheaton, Oct 17"
+      "through": "2026-10-24",
+      "text": "Charted through North Central, Oct 24"
     },
     "defense": {
-      "through": "2026-10-17",
-      "text": "Charted through Wheaton, Oct 17"
+      "through": "2026-10-24",
+      "text": "Charted through North Central, Oct 24"
     },
     "scouting": {
-      "through": "2026-10-17",
-      "text": "Charted through Wheaton, Oct 17"
+      "through": "2026-10-24",
+      "text": "Charted through North Central, Oct 24"
     },
     "special-teams": {
-      "through": "2026-10-17",
-      "text": "Box scores through Oct 17"
+      "through": "2026-10-24",
+      "text": "Box scores through Oct 24"
     },
     "players": {
-      "through": "2026-10-17",
-      "text": "Career stats through Wheaton, Oct 17"
+      "through": "2026-10-24",
+      "text": "Career stats through North Central, Oct 24"
     },
     "rankings": {
-      "through": "2026-10-22",
-      "text": "Rankings through Week 7 (Oct 22)"
+      "through": "2026-10-27",
+      "text": "Rankings through Week 8 (Oct 27)"
     },
     "lifting": {
       "through": null,
@@ -34,8 +34,8 @@
     }
   },
   "latest_game": {
-    "date": "2026-10-17",
-    "opponent": "Wheaton"
+    "date": "2026-10-24",
+    "opponent": "North Central"
   },
   "schedule": [
     {
@@ -120,11 +120,11 @@
       "opponent": "North Central",
       "home": true,
       "conference": true,
-      "time": "1 p.m.",
+      "time": null,
       "venue": "Schneider Stadium",
       "city": "Waukesha, Wis.",
-      "completed": false,
-      "result": null
+      "completed": true,
+      "result": "L, 7-62"
     },
     {
       "date": "2026-10-31",

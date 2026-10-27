@@ -8517,7 +8517,7 @@
      "statistic": "Total Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 142,
+     "current_value": 143,
      "leaderboard": [
       {
        "rank": 1,
@@ -8563,7 +8563,7 @@
      "statistic": "Solo Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 88,
+     "current_value": 89,
      "leaderboard": [
       {
        "rank": 1,
@@ -8695,7 +8695,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 37,
+     "current_value": 39,
      "leaderboard": [
       {
        "rank": 1,
@@ -8735,7 +8735,7 @@
      "statistic": "PATs Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 72,
+     "current_value": 73,
      "leaderboard": [
       {
        "rank": 1,
@@ -8775,7 +8775,7 @@
      "statistic": "PATs Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 75,
+     "current_value": 76,
      "leaderboard": [
       {
        "rank": 1,
@@ -8817,7 +8817,7 @@
      "statistic": "Passing Yards",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 1500,
+     "current_value": 1547,
      "leaderboard": [
       {
        "rank": 1,
@@ -8857,7 +8857,7 @@
      "statistic": "Passing Completions",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 133,
+     "current_value": 141,
      "leaderboard": [
       {
        "rank": 1,
@@ -8897,7 +8897,7 @@
      "statistic": "Passing Attempts",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 230,
+     "current_value": 256,
      "leaderboard": [
       {
        "rank": 1,
@@ -8937,7 +8937,7 @@
      "statistic": "Receiving Yards",
      "player": "Liam Patrick",
      "position": "WR",
-     "current_value": 546,
+     "current_value": 571,
      "leaderboard": [
       {
        "rank": 1,
@@ -8972,12 +8972,92 @@
      ]
     }
    ],
+   "Receptions": [
+    {
+     "statistic": "Receptions",
+     "player": "Liam Patrick",
+     "position": "WR",
+     "current_value": 38,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Kevin Jennings",
+       "value": "93",
+       "value_numeric": 93
+      },
+      {
+       "rank": 2,
+       "player": "Brandy Spoerl",
+       "value": "83",
+       "value_numeric": 83
+      },
+      {
+       "rank": 3,
+       "player": "Adam Fletcher",
+       "value": "75",
+       "value_numeric": 75
+      },
+      {
+       "rank": 4,
+       "player": "Austin Eichstaedt",
+       "value": "72",
+       "value_numeric": 72
+      },
+      {
+       "rank": 5,
+       "player": "Pete Thompson",
+       "value": "71",
+       "value_numeric": 71
+      }
+     ]
+    }
+   ],
+   "Total Tackles": [
+    {
+     "statistic": "Total Tackles",
+     "player": "Andrew Redmon",
+     "position": "LB",
+     "current_value": 49,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Mike Dziewit",
+       "value": "108",
+       "value_numeric": 108
+      },
+      {
+       "rank": 1,
+       "player": "Dave Uelman",
+       "value": "108",
+       "value_numeric": 108
+      },
+      {
+       "rank": 3,
+       "player": "Justin Kontny",
+       "value": "107",
+       "value_numeric": 107
+      },
+      {
+       "rank": 4,
+       "player": "Jim Vento",
+       "value": "99",
+       "value_numeric": 99
+      },
+      {
+       "rank": 5,
+       "player": "Don Hostetler",
+       "value": "98",
+       "value_numeric": 98
+      }
+     ]
+    }
+   ],
    "Solo Tackles": [
     {
      "statistic": "Solo Tackles",
      "player": "Andrew Redmon",
      "position": "LB",
-     "current_value": 28,
+     "current_value": 33,
      "leaderboard": [
       {
        "rank": 1,
@@ -9121,7 +9201,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 14,
+     "current_value": 16,
      "leaderboard": [
       {
        "rank": 1,

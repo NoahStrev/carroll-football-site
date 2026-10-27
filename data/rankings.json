@@ -17582,6 +17582,656 @@
 "week": 7
 },
 {
+"phase": "offense",
+"season": "2026",
+"category": "3rd Down Conversions",
+"metric": "ATT",
+"value": "113",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "3rd Down Conversions",
+"metric": "CONV",
+"value": "32",
+"rank": 4,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "3rd Down Conversions",
+"metric": "PCT",
+"value": "28.3",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "4th Down Conversions",
+"metric": "ATT",
+"value": "13",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "4th Down Conversions",
+"metric": "CONV",
+"value": "9",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "4th Down Conversions",
+"metric": "PCT",
+"value": "69.2",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "First Downs",
+"metric": "AVG/G",
+"value": "16.4",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "First Downs",
+"metric": "PASS",
+"value": "65",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "First Downs",
+"metric": "PEN",
+"value": "14",
+"rank": 4,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "First Downs",
+"metric": "RUSH",
+"value": "52",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "First Downs",
+"metric": "Total",
+"value": "131",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Defense Efficiency",
+"metric": "ATT",
+"value": "221",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Defense Efficiency",
+"metric": "COMP",
+"value": "125",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Defense Efficiency",
+"metric": "EFFIC",
+"value": "126.4",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Defense Efficiency",
+"metric": "INT",
+"value": "6",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Defense Efficiency",
+"metric": "PCT",
+"value": "56.6",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Defense Efficiency",
+"metric": "TD",
+"value": "11",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Defense Efficiency",
+"metric": "YDS",
+"value": "1547",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Efficiency",
+"metric": "ATT",
+"value": "277",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Efficiency",
+"metric": "COMP",
+"value": "152",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Efficiency",
+"metric": "EFFIC",
+"value": "109.4",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Efficiency",
+"metric": "INT",
+"value": "10",
+"rank": 9,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Efficiency",
+"metric": "PCT",
+"value": "54.9",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Efficiency",
+"metric": "TD",
+"value": "9",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Efficiency",
+"metric": "YDS",
+"value": "1683",
+"rank": 4,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Offense",
+"metric": "ATT",
+"value": "277",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Offense",
+"metric": "AVG",
+"value": "6.1",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Offense",
+"metric": "AVG/G",
+"value": "210.4",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Offense",
+"metric": "COMP",
+"value": "152",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Offense",
+"metric": "INT",
+"value": "10",
+"rank": 9,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Offense",
+"metric": "PCT",
+"value": "54.9",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Offense",
+"metric": "TD",
+"value": "9",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Offense",
+"metric": "YDS",
+"value": "1683",
+"rank": 4,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Penalties",
+"metric": "AVG/G",
+"value": "42.8",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Penalties",
+"metric": "NO",
+"value": "40",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Penalties",
+"metric": "YDS",
+"value": "342",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Red Zone Offense",
+"metric": "%",
+"value": "75",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Red Zone Offense",
+"metric": "Downs",
+"value": "0",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Red Zone Offense",
+"metric": "FUM",
+"value": "0",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Red Zone Offense",
+"metric": "INT",
+"value": "2",
+"rank": 9,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Red Zone Offense",
+"metric": "TDS",
+"value": "9",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Rushing Offense",
+"metric": "ATT",
+"value": "236",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Rushing Offense",
+"metric": "AVG",
+"value": "4.3",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Rushing Offense",
+"metric": "TD",
+"value": "10",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Rushing Offense",
+"metric": "YDS",
+"value": "1012",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Rushing Offense",
+"metric": "YDS/G",
+"value": "126.5",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Sacks Against",
+"metric": "NO",
+"value": "6",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Sacks Against",
+"metric": "YDS",
+"value": "28",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Scoring Offense",
+"metric": "2XP",
+"value": "0",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Scoring Offense",
+"metric": "AVG/G",
+"value": "19.8",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Scoring Offense",
+"metric": "DXP",
+"value": "0",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Scoring Offense",
+"metric": "FG",
+"value": "7",
+"rank": 3,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Scoring Offense",
+"metric": "PTS",
+"value": "158",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Scoring Offense",
+"metric": "SAF",
+"value": "0",
+"rank": 3,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Scoring Offense",
+"metric": "TD",
+"value": "20",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Scoring Offense",
+"metric": "XPT",
+"value": "17",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Time of Possession",
+"metric": "AVG/G",
+"value": "29:36",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Time of Possession",
+"metric": "TIME",
+"value": "236:54",
+"rank": 3,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Total Offense",
+"metric": "AVG/G",
+"value": "336.9",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Total Offense",
+"metric": "AVG/P",
+"value": "5.3",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Total Offense",
+"metric": "PASS",
+"value": "1683",
+"rank": 4,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Total Offense",
+"metric": "PLAYS",
+"value": "513",
+"rank": 3,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Total Offense",
+"metric": "RUSH",
+"value": "1012",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Total Offense",
+"metric": "TD",
+"value": "19",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Total Offense",
+"metric": "YDS",
+"value": "2695",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
 "phase": "defense",
 "season": "2026",
 "category": "Fumbles Forced",
@@ -21432,6 +22082,586 @@
 "week": 7
 },
 {
+"phase": "defense",
+"season": "2026",
+"category": "Fumbles Forced",
+"metric": "AVG/G",
+"value": "1.00",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Fumbles Forced",
+"metric": "NO",
+"value": "8",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Fumbles Recovered",
+"metric": "AVG/G",
+"value": "0.38",
+"rank": 8,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Fumbles Recovered",
+"metric": "NO",
+"value": "3",
+"rank": 8,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Fumbles Recovered",
+"metric": "YDS",
+"value": "3",
+"rank": 4,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Interceptions",
+"metric": "AVG",
+"value": "4.2",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Interceptions",
+"metric": "NO",
+"value": "6",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Interceptions",
+"metric": "TD",
+"value": "0",
+"rank": 4,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Interceptions",
+"metric": "YDS",
+"value": "25",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent 1st Downs",
+"metric": "AVG/G",
+"value": "19.1",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent 1st Downs",
+"metric": "PASS",
+"value": "61",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent 1st Downs",
+"metric": "PEN",
+"value": "14",
+"rank": 8,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent 1st Downs",
+"metric": "RUSH",
+"value": "78",
+"rank": 9,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent 1st Downs",
+"metric": "Total",
+"value": "153",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent 3rd Down Conversions",
+"metric": "ATT",
+"value": "94",
+"rank": 4,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent 3rd Down Conversions",
+"metric": "CONV",
+"value": "25",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent 3rd Down Conversions",
+"metric": "PCT",
+"value": "26.6",
+"rank": 3,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent 4th Down Conversions",
+"metric": "ATT",
+"value": "16",
+"rank": 3,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent 4th Down Conversions",
+"metric": "CONV",
+"value": "4",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent 4th Down Conversions",
+"metric": "PCT",
+"value": "25.0",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent Penalties",
+"metric": "AVG/G",
+"value": "66.0",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent Penalties",
+"metric": "NO",
+"value": "59",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Opponent Penalties",
+"metric": "YDS",
+"value": "528",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Passing Defense",
+"metric": "ATT",
+"value": "221",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Passing Defense",
+"metric": "AVG",
+"value": "7.0",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Passing Defense",
+"metric": "AVG/G",
+"value": "193.4",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Passing Defense",
+"metric": "COMP",
+"value": "125",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Passing Defense",
+"metric": "INT",
+"value": "6",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Passing Defense",
+"metric": "PCT",
+"value": "56.6",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Passing Defense",
+"metric": "TD",
+"value": "11",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Passing Defense",
+"metric": "YDS",
+"value": "1547",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Red Zone Defense",
+"metric": "%",
+"value": "77.1",
+"rank": 4,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Red Zone Defense",
+"metric": "Downs",
+"value": "3",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Red Zone Defense",
+"metric": "FUM",
+"value": "1",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Red Zone Defense",
+"metric": "INT",
+"value": "0",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Red Zone Defense",
+"metric": "TDS",
+"value": "23",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Rushing Defense",
+"metric": "ATT",
+"value": "285",
+"rank": 8,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Rushing Defense",
+"metric": "AVG",
+"value": "5.4",
+"rank": 8,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Rushing Defense",
+"metric": "TD",
+"value": "17",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Rushing Defense",
+"metric": "YDS",
+"value": "1538",
+"rank": 8,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Rushing Defense",
+"metric": "YDS/G",
+"value": "192.3",
+"rank": 8,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Sacks By",
+"metric": "NO",
+"value": "19",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Sacks By",
+"metric": "YDS",
+"value": "140",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Scoring Defense",
+"metric": "2XP",
+"value": "0",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Scoring Defense",
+"metric": "AVG/G",
+"value": "27.4",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Scoring Defense",
+"metric": "DXP",
+"value": "0",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Scoring Defense",
+"metric": "FG",
+"value": "6",
+"rank": 8,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Scoring Defense",
+"metric": "PTS",
+"value": "219",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Scoring Defense",
+"metric": "SAF",
+"value": "0",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Scoring Defense",
+"metric": "TD",
+"value": "29",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Scoring Defense",
+"metric": "XPT",
+"value": "27",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Total Defense",
+"metric": "AVG/G",
+"value": "385.6",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Total Defense",
+"metric": "AVG/P",
+"value": "6.1",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Total Defense",
+"metric": "PASS",
+"value": "1547",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Total Defense",
+"metric": "PLAYS",
+"value": "506",
+"rank": 9,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Total Defense",
+"metric": "RUSH",
+"value": "1538",
+"rank": 8,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Total Defense",
+"metric": "TD",
+"value": "28",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Total Defense",
+"metric": "YDS",
+"value": "3085",
+"rank": 9,
+"out_of": 9,
+"week": 8
+},
+{
 "phase": "special_teams",
 "season": "2026",
 "category": "Field Goals",
@@ -23110,6 +24340,246 @@
 "rank": 3,
 "out_of": 9,
 "week": 7
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Field Goals",
+"metric": "PCT",
+"value": ".438",
+"rank": 9,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Kickoff Coverage",
+"metric": "AVG",
+"value": "63.5",
+"rank": 9,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Kickoff Coverage",
+"metric": "NET",
+"value": "40.8",
+"rank": 5,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Kickoff Coverage",
+"metric": "NO",
+"value": "33",
+"rank": 4,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Kickoff Coverage",
+"metric": "RET",
+"value": "246",
+"rank": 3,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Kickoff Coverage",
+"metric": "TB",
+"value": "20",
+"rank": 9,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Kickoff Coverage",
+"metric": "YDS",
+"value": "2094",
+"rank": 4,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Kickoff Returns",
+"metric": "AVG",
+"value": "15.2",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Kickoff Returns",
+"metric": "NO",
+"value": "26",
+"rank": 3,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Kickoff Returns",
+"metric": "TD",
+"value": "0",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Kickoff Returns",
+"metric": "YDS",
+"value": "395",
+"rank": 6,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "PAT",
+"metric": "PCT",
+"value": ".895",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punt Returns",
+"metric": "AVG",
+"value": "9.6",
+"rank": 3,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punt Returns",
+"metric": "NO",
+"value": "20",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punt Returns",
+"metric": "TD",
+"value": "1",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punt Returns",
+"metric": "YDS",
+"value": "192",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punting",
+"metric": "AVG",
+"value": "6.2",
+"rank": 3,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punting",
+"metric": "AVG/P",
+"value": "40.6",
+"rank": 3,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punting",
+"metric": "FC",
+"value": "2",
+"rank": 9,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punting",
+"metric": "NET/P",
+"value": "31.9",
+"rank": 7,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punting",
+"metric": "NO",
+"value": "41",
+"rank": 2,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punting",
+"metric": "RET",
+"value": "256",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punting",
+"metric": "TB",
+"value": "5",
+"rank": 1,
+"out_of": 9,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punting",
+"metric": "YDS",
+"value": "1663",
+"rank": 1,
+"out_of": 9,
+"week": 8
 }
 ],
 "seasons": [
@@ -23153,6 +24623,10 @@
 {
 "week": 7,
 "date": "2026-10-22"
+},
+{
+"week": 8,
+"date": "2026-10-27"
 }
 ]
 }
@@ -27658,6 +29132,420 @@
 "value": 0.571,
 "rank": 103,
 "week": 7
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "3rd Down Conversion Pct",
+"stat": "Pct",
+"value": 0.288,
+"rank": 207,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "3rd Down Conversion Pct Defense",
+"stat": "Pct",
+"value": 0.272,
+"rank": 21,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "4th Down Conversion Pct",
+"stat": "Pct",
+"value": 0.692,
+"rank": 20,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "4th Down Conversion Pct Defense",
+"stat": "Pct",
+"value": 0.25,
+"rank": 17,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Blocked Kicks",
+"stat": "Blkd",
+"value": 3,
+"rank": 38,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Blocked Kicks Allowed",
+"stat": "Blkd",
+"value": 2,
+"rank": 101,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Blocked Punts",
+"stat": "Blkd Punts",
+"value": 2,
+"rank": 14,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Blocked Punts Allowed",
+"stat": "Blkd Punts",
+"value": 1,
+"rank": 137,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Completion Percentage",
+"stat": "Pct",
+"value": 0.549,
+"rank": 162,
+"week": 8
+},
+{
+"phase": "overall",
+"season": "2026",
+"category": "Fewest Penalties",
+"stat": "PYards",
+"value": 342,
+"rank": 105,
+"week": 8
+},
+{
+"phase": "overall",
+"season": "2026",
+"category": "Fewest Penalties Per Game",
+"stat": "PenPerGame",
+"value": 5,
+"rank": 63,
+"week": 8
+},
+{
+"phase": "overall",
+"season": "2026",
+"category": "Fewest Penalty Yards",
+"stat": "PYards",
+"value": 342,
+"rank": 92,
+"week": 8
+},
+{
+"phase": "overall",
+"season": "2026",
+"category": "Fewest Penalty Yards Per Game",
+"stat": "YPG",
+"value": 42.75,
+"rank": 61,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "First Downs Defense",
+"stat": "Opp FD",
+"value": 153,
+"rank": 198,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "First Downs Offense",
+"stat": "FD",
+"value": 131,
+"rank": 105,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Fumbles Lost",
+"stat": "Fum Lost",
+"value": 7,
+"rank": 195,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Fumbles Recovered",
+"stat": "Fum Rec",
+"value": 3,
+"rank": 153,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Kickoff Return Defense",
+"stat": "Avg",
+"value": 20.5,
+"rank": 157,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Kickoff Returns",
+"stat": "Avg",
+"value": 15.19,
+"rank": 219,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Net Punting",
+"stat": "Net Yds",
+"value": 32.44,
+"rank": 145,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passes Had Intercepted",
+"stat": "Int",
+"value": 10,
+"rank": 199,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Passes Intercepted",
+"stat": "Int Ret TDs",
+"value": 0,
+"rank": 122,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Offense",
+"stat": "YPG",
+"value": 210.4,
+"rank": 110,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Passing Yards Allowed",
+"stat": "YPG",
+"value": 193.4,
+"rank": 103,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Passing Yards per Completion",
+"stat": "Avg",
+"value": 11.07,
+"rank": 181,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punt Return Defense",
+"stat": "Avg",
+"value": 10.13,
+"rank": 169,
+"week": 8
+},
+{
+"phase": "special_teams",
+"season": "2026",
+"category": "Punt Returns",
+"stat": "Avg",
+"value": 9.42,
+"rank": 82,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Red Zone Defense",
+"stat": "Pct",
+"value": 0.771,
+"rank": 124,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Red Zone Offense",
+"stat": "Pct",
+"value": 0.75,
+"rank": 130,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Rushing Defense",
+"stat": "YPG",
+"value": 192.2,
+"rank": 203,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Rushing Offense",
+"stat": "YPG",
+"value": 126.5,
+"rank": 127,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Sacks Allowed",
+"stat": "Avg",
+"value": 0.75,
+"rank": 24,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Scoring Defense",
+"stat": "Avg",
+"value": 27.38,
+"rank": 147,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Scoring Offense",
+"stat": "PPG",
+"value": 19.8,
+"rank": 167,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Tackles for Loss Allowed",
+"stat": "Avg",
+"value": 7,
+"rank": 187,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Team Passing Efficiency",
+"stat": "Pass Eff",
+"value": 109.41,
+"rank": 186,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Team Passing Efficiency Defense",
+"stat": "Pass Eff",
+"value": 126.36,
+"rank": 122,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Team Sacks",
+"stat": "Avg",
+"value": 2.38,
+"rank": 77,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Team Tackles for Loss",
+"stat": "TFLPG",
+"value": 6.5,
+"rank": 82,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Time of Possession",
+"stat": "AvgTOP",
+"value": 29,
+"rank": 126,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Total Defense",
+"stat": "YPG",
+"value": 385.6,
+"rank": 182,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Total Offense",
+"stat": "YPG",
+"value": 336.9,
+"rank": 129,
+"week": 8
+},
+{
+"phase": "overall",
+"season": "2026",
+"category": "Turnover Margin",
+"stat": "Avg",
+"value": -1,
+"rank": 212,
+"week": 8
+},
+{
+"phase": "defense",
+"season": "2026",
+"category": "Turnovers Gained",
+"stat": "Turn Gain",
+"value": 9,
+"rank": 155,
+"week": 8
+},
+{
+"phase": "offense",
+"season": "2026",
+"category": "Turnovers Lost",
+"stat": "Turn Lost",
+"value": 17,
+"rank": 216,
+"week": 8
+},
+{
+"phase": "overall",
+"season": "2026",
+"category": "Winning Percentage",
+"stat": "Pct",
+"value": 0.5,
+"rank": 117,
+"week": 8
 }
 ],
 "seasons": [
@@ -27696,6 +29584,10 @@
 {
 "week": 7,
 "date": "2026-10-22"
+},
+{
+"week": 8,
+"date": "2026-10-27"
 }
 ]
 }
