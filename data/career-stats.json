@@ -90,6 +90,32 @@
    }
   },
   {
+   "display_name": "A.J. Adeleye",
+   "athlete_key": null,
+   "position": null,
+   "categories": {
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 11,
+      "long": 11,
+      "avg": 11.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2026,
+       "att": 1,
+       "yds": 11,
+       "long": 11,
+       "avg": 11.0,
+       "games": 1
+      }
+     ]
+    }
+   }
+  },
+  {
    "display_name": "AJ Moorer",
    "athlete_key": "moorer_aj",
    "position": "CB",
@@ -494,13 +520,13 @@
    "categories": {
     "Receiving": {
      "career": {
-      "rec": 34,
-      "yds": 401,
+      "rec": 35,
+      "yds": 410,
       "td": 1,
       "long": 49,
-      "yards_per_rec": 11.8
+      "yards_per_rec": 11.7
      },
-     "career_games": 20,
+     "career_games": 21,
      "seasons": [
       {
        "season": 2024,
@@ -614,12 +640,12 @@
       },
       {
        "season": 2026,
-       "rec": 20,
-       "yds": 235,
+       "rec": 21,
+       "yds": 244,
        "td": 1,
        "long": 49,
-       "yards_per_rec": 11.8,
-       "games": 8,
+       "yards_per_rec": 11.6,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -683,6 +709,14 @@
          "yds": 0,
          "td": 0,
          "long": 0
+        },
+        {
+         "date": "2026-10-31",
+         "rec": 1,
+         "yds": 9,
+         "td": 0,
+         "long": 9,
+         "yards_per_rec": 9.0
         }
        ]
       }
@@ -2521,9 +2555,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 10,
-      "ast": 5,
-      "tot": 15,
+      "solo": 14,
+      "ast": 7,
+      "tot": 21,
       "ff": 0,
       "int": 1,
       "brup": 0,
@@ -2532,13 +2566,13 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 6,
+     "career_games": 7,
      "seasons": [
       {
        "season": 2026,
-       "solo": 10,
-       "ast": 5,
-       "tot": 15,
+       "solo": 14,
+       "ast": 7,
+       "tot": 21,
        "ff": 0,
        "int": 1,
        "brup": 0,
@@ -2546,7 +2580,7 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 6,
+       "games": 7,
        "log": [
         {
          "date": "2026-09-05",
@@ -2617,6 +2651,19 @@
          "date": "2026-10-24",
          "solo": 3,
          "ast": 3,
+         "tot": 6,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 4,
+         "ast": 2,
          "tot": 6,
          "ff": 0,
          "int": 0,
@@ -3352,9 +3399,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 46,
-      "ast": 23,
-      "tot": 69,
+      "solo": 48,
+      "ast": 24,
+      "tot": 72,
       "ff": 2,
       "int": 5,
       "brup": 14,
@@ -3363,7 +3410,7 @@
       "tfl": 2.5,
       "sacks": 1.0
      },
-     "career_games": 26,
+     "career_games": 27,
      "seasons": [
       {
        "season": 2023,
@@ -3633,9 +3680,9 @@
       },
       {
        "season": 2026,
-       "solo": 14,
-       "ast": 7,
-       "tot": 21,
+       "solo": 16,
+       "ast": 8,
+       "tot": 24,
        "ff": 1,
        "int": 1,
        "brup": 4,
@@ -3643,7 +3690,7 @@
        "qh": 0,
        "tfl": 1.0,
        "sacks": 0,
-       "games": 8,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -3743,6 +3790,19 @@
          "tot": 4,
          "ff": 0,
          "int": 1,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 2,
+         "ast": 1,
+         "tot": 3,
+         "ff": 0,
+         "int": 0,
          "brup": 0,
          "blkd": 0,
          "qh": 0,
@@ -4147,9 +4207,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 38,
-      "ast": 21,
-      "tot": 59,
+      "solo": 39,
+      "ast": 25,
+      "tot": 64,
       "ff": 1,
       "int": 0,
       "brup": 3,
@@ -4158,7 +4218,7 @@
       "tfl": 4.0,
       "sacks": 1.0
      },
-     "career_games": 14,
+     "career_games": 15,
      "seasons": [
       {
        "season": 2024,
@@ -4272,9 +4332,9 @@
       },
       {
        "season": 2026,
-       "solo": 33,
-       "ast": 16,
-       "tot": 49,
+       "solo": 34,
+       "ast": 20,
+       "tot": 54,
        "ff": 1,
        "int": 0,
        "brup": 2,
@@ -4282,7 +4342,7 @@
        "qh": 0,
        "tfl": 4.0,
        "sacks": 1.0,
-       "games": 8,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -4387,8 +4447,40 @@
          "qh": 0,
          "tfl": 0,
          "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 1,
+         "ast": 4,
+         "tot": 5,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
         }
        ]
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 0,
+      "long": 0,
+      "avg": 0.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2026,
+       "att": 1,
+       "yds": 0,
+       "long": 0,
+       "avg": 0.0,
+       "games": 1
       }
      ]
     }
@@ -4651,13 +4743,13 @@
    "categories": {
     "Receiving": {
      "career": {
-      "rec": 11,
-      "yds": 56,
+      "rec": 15,
+      "yds": 87,
       "td": 0,
       "long": 21,
-      "yards_per_rec": 5.1
+      "yards_per_rec": 5.8
      },
-     "career_games": 6,
+     "career_games": 7,
      "seasons": [
       {
        "season": 2025,
@@ -4680,12 +4772,12 @@
       },
       {
        "season": 2026,
-       "rec": 9,
-       "yds": 46,
+       "rec": 13,
+       "yds": 77,
        "td": 0,
        "long": 21,
-       "yards_per_rec": 5.1,
-       "games": 5,
+       "yards_per_rec": 5.9,
+       "games": 6,
        "log": [
         {
          "date": "2026-09-05",
@@ -4726,6 +4818,14 @@
          "td": 0,
          "long": 5,
          "yards_per_rec": 5.0
+        },
+        {
+         "date": "2026-10-31",
+         "rec": 4,
+         "yds": 31,
+         "td": 0,
+         "long": 13,
+         "yards_per_rec": 7.8
         }
        ]
       }
@@ -4744,7 +4844,7 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 4,
+     "career_games": 5,
      "seasons": [
       {
        "season": 2025,
@@ -4800,7 +4900,7 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 2,
+       "games": 3,
        "log": [
         {
          "date": "2026-09-05",
@@ -4827,6 +4927,19 @@
          "qh": 0,
          "tfl": 0,
          "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 0,
+         "ast": 0,
+         "tot": 0,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
         }
        ]
       }
@@ -4834,14 +4947,14 @@
     },
     "Rushing": {
      "career": {
-      "att": 56,
-      "loss": 41,
-      "net": 227,
-      "td": 1,
+      "att": 70,
+      "loss": 46,
+      "net": 343,
+      "td": 3,
       "long": 76,
-      "yards_per_carry": 4.1
+      "yards_per_carry": 4.9
      },
-     "career_games": 9,
+     "career_games": 10,
      "seasons": [
       {
        "season": 2025,
@@ -4893,13 +5006,13 @@
       },
       {
        "season": 2026,
-       "att": 46,
-       "loss": 32,
-       "net": 216,
-       "td": 1,
+       "att": 60,
+       "loss": 37,
+       "net": 332,
+       "td": 3,
        "long": 76,
-       "yards_per_carry": 4.7,
-       "games": 5,
+       "yards_per_carry": 5.5,
+       "games": 6,
        "log": [
         {
          "date": "2026-09-05",
@@ -4945,6 +5058,15 @@
          "td": 0,
          "long": 4,
          "yards_per_carry": 0.2
+        },
+        {
+         "date": "2026-10-31",
+         "att": 14,
+         "loss": 5,
+         "net": 116,
+         "td": 2,
+         "long": 26,
+         "yards_per_carry": 8.3
         }
        ]
       }
@@ -5297,9 +5419,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 1,
-      "ast": 3,
-      "tot": 4,
+      "solo": 3,
+      "ast": 4,
+      "tot": 7,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -5308,13 +5430,13 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 4,
+     "career_games": 5,
      "seasons": [
       {
        "season": 2026,
-       "solo": 1,
-       "ast": 3,
-       "tot": 4,
+       "solo": 3,
+       "ast": 4,
+       "tot": 7,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -5322,7 +5444,7 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 4,
+       "games": 5,
        "log": [
         {
          "date": "2026-09-26",
@@ -5375,6 +5497,19 @@
          "qh": 0,
          "tfl": 0,
          "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 2,
+         "ast": 1,
+         "tot": 3,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
         }
        ]
       }
@@ -5389,9 +5524,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 35,
-      "ast": 27,
-      "tot": 62,
+      "solo": 38,
+      "ast": 29,
+      "tot": 67,
       "ff": 3,
       "int": 0,
       "brup": 0,
@@ -5400,7 +5535,7 @@
       "tfl": 17.5,
       "sacks": 10.5
      },
-     "career_games": 18,
+     "career_games": 19,
      "seasons": [
       {
        "season": 2025,
@@ -5550,9 +5685,9 @@
       },
       {
        "season": 2026,
-       "solo": 22,
-       "ast": 12,
-       "tot": 34,
+       "solo": 25,
+       "ast": 14,
+       "tot": 39,
        "ff": 1,
        "int": 0,
        "brup": 0,
@@ -5560,7 +5695,7 @@
        "qh": 10,
        "tfl": 12.5,
        "sacks": 8.0,
-       "games": 8,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -5664,6 +5799,19 @@
          "blkd": 0,
          "qh": 2,
          "tfl": 1.0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 3,
+         "ast": 2,
+         "tot": 5,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
          "sacks": 0
         }
        ]
@@ -6978,26 +7126,26 @@
     },
     "Punting": {
      "career": {
-      "att": 40,
-      "gross_yds": 1663,
+      "att": 41,
+      "gross_yds": 1700,
       "long": 70,
       "i20": 7,
       "blocked": 1,
-      "gross_avg": 41.6,
-      "net_avg": 33.4
+      "gross_avg": 41.5,
+      "net_avg": 33.0
      },
-     "career_games": 8,
+     "career_games": 9,
      "seasons": [
       {
        "season": 2026,
-       "att": 40,
-       "gross_yds": 1663,
+       "att": 41,
+       "gross_yds": 1700,
        "long": 70,
        "i20": 7,
        "blocked": 1,
-       "gross_avg": 41.6,
-       "net_avg": 33.4,
-       "games": 8
+       "gross_avg": 41.5,
+       "net_avg": 33.0,
+       "games": 9
       }
      ]
     }
@@ -9092,9 +9240,9 @@
     },
     "ShortSnapping": {
      "career": {
-      "att": 177
+      "att": 182
      },
-     "career_games": 37,
+     "career_games": 38,
      "seasons": [
       {
        "season": 2023,
@@ -9113,8 +9261,8 @@
       },
       {
        "season": 2026,
-       "att": 34,
-       "games": 8
+       "att": 39,
+       "games": 9
       }
      ]
     },
@@ -9979,18 +10127,18 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 23,
+      "solo": 24,
       "ast": 3,
-      "tot": 26,
+      "tot": 27,
       "ff": 0,
-      "int": 3,
+      "int": 4,
       "brup": 6,
       "blkd": 0,
       "qh": 0,
       "tfl": 2.0,
       "sacks": 0
      },
-     "career_games": 15,
+     "career_games": 16,
      "seasons": [
       {
        "season": 2024,
@@ -10117,17 +10265,17 @@
       },
       {
        "season": 2026,
-       "solo": 16,
+       "solo": 17,
        "ast": 1,
-       "tot": 17,
+       "tot": 18,
        "ff": 0,
-       "int": 2,
+       "int": 3,
        "brup": 4,
        "blkd": 0,
        "qh": 0,
        "tfl": 1.0,
        "sacks": 0,
-       "games": 8,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -10227,6 +10375,19 @@
          "tot": 4,
          "ff": 0,
          "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 1,
+         "ast": 0,
+         "tot": 1,
+         "ff": 0,
+         "int": 1,
          "brup": 0,
          "blkd": 0,
          "qh": 0,
@@ -13985,20 +14146,20 @@
     },
     "KickoffReturn": {
      "career": {
-      "att": 10,
-      "yds": 96,
+      "att": 13,
+      "yds": 167,
       "long": 38,
-      "avg": 9.6
+      "avg": 12.8
      },
-     "career_games": 2,
+     "career_games": 3,
      "seasons": [
       {
        "season": 2026,
-       "att": 10,
-       "yds": 96,
+       "att": 13,
+       "yds": 167,
        "long": 38,
-       "avg": 9.6,
-       "games": 2
+       "avg": 12.8,
+       "games": 3
       }
      ]
     }
@@ -14078,22 +14239,22 @@
    "categories": {
     "Receiving": {
      "career": {
-      "rec": 9,
-      "yds": 92,
+      "rec": 13,
+      "yds": 129,
       "td": 1,
       "long": 29,
-      "yards_per_rec": 10.2
+      "yards_per_rec": 9.9
      },
-     "career_games": 8,
+     "career_games": 9,
      "seasons": [
       {
        "season": 2026,
-       "rec": 9,
-       "yds": 92,
+       "rec": 13,
+       "yds": 129,
        "td": 1,
        "long": 29,
-       "yards_per_rec": 10.2,
-       "games": 8,
+       "yards_per_rec": 9.9,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -14157,6 +14318,14 @@
          "td": 0,
          "long": 29,
          "yards_per_rec": 16.5
+        },
+        {
+         "date": "2026-10-31",
+         "rec": 4,
+         "yds": 37,
+         "td": 0,
+         "long": 18,
+         "yards_per_rec": 9.2
         }
        ]
       }
@@ -14242,6 +14411,40 @@
          "qh": 0,
          "tfl": 0,
          "sacks": 0
+        }
+       ]
+      }
+     ]
+    },
+    "Rushing": {
+     "career": {
+      "att": 1,
+      "loss": 0,
+      "net": 20,
+      "td": 0,
+      "long": 20,
+      "yards_per_carry": 20.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2026,
+       "att": 1,
+       "loss": 0,
+       "net": 20,
+       "td": 0,
+       "long": 20,
+       "yards_per_carry": 20.0,
+       "games": 1,
+       "log": [
+        {
+         "date": "2026-10-31",
+         "att": 1,
+         "loss": 0,
+         "net": 20,
+         "td": 0,
+         "long": 20,
+         "yards_per_carry": 20.0
         }
        ]
       }
@@ -15638,22 +15841,22 @@
    "categories": {
     "Receiving": {
      "career": {
-      "rec": 10,
-      "yds": 108,
+      "rec": 11,
+      "yds": 112,
       "td": 1,
       "long": 47,
-      "yards_per_rec": 10.8
+      "yards_per_rec": 10.2
      },
-     "career_games": 8,
+     "career_games": 9,
      "seasons": [
       {
        "season": 2026,
-       "rec": 10,
-       "yds": 108,
+       "rec": 11,
+       "yds": 112,
        "td": 1,
        "long": 47,
-       "yards_per_rec": 10.8,
-       "games": 8,
+       "yards_per_rec": 10.2,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -15716,6 +15919,14 @@
          "yds": 0,
          "td": 0,
          "long": 0
+        },
+        {
+         "date": "2026-10-31",
+         "rec": 1,
+         "yds": 4,
+         "td": 0,
+         "long": 4,
+         "yards_per_rec": 4.0
         }
        ]
       }
@@ -15724,8 +15935,8 @@
     "Individual Defensive Statistics": {
      "career": {
       "solo": 1,
-      "ast": 0,
-      "tot": 1,
+      "ast": 1,
+      "tot": 2,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -15734,13 +15945,13 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 3,
+     "career_games": 4,
      "seasons": [
       {
        "season": 2026,
        "solo": 1,
-       "ast": 0,
-       "tot": 1,
+       "ast": 1,
+       "tot": 2,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -15748,7 +15959,7 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 3,
+       "games": 4,
        "log": [
         {
          "date": "2026-09-05",
@@ -15780,6 +15991,19 @@
          "date": "2026-10-10",
          "solo": 1,
          "ast": 0,
+         "tot": 1,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 0,
+         "ast": 1,
          "tot": 1,
          "ff": 0,
          "int": 0,
@@ -19363,16 +19587,16 @@
    "categories": {
     "Passing": {
      "career": {
-      "att": 349,
-      "cmp": 186,
-      "yds": 1992,
-      "td": 10,
-      "int": 10,
+      "att": 397,
+      "cmp": 217,
+      "yds": 2302,
+      "td": 12,
+      "int": 12,
       "long": 68,
-      "completion_pct": 53.3,
-      "yards_per_att": 5.7
+      "completion_pct": 54.7,
+      "yards_per_att": 5.8
      },
-     "career_games": 15,
+     "career_games": 16,
      "seasons": [
       {
        "season": 2025,
@@ -19465,15 +19689,15 @@
       },
       {
        "season": 2026,
-       "att": 256,
-       "cmp": 141,
-       "yds": 1547,
-       "td": 8,
-       "int": 8,
+       "att": 304,
+       "cmp": 172,
+       "yds": 1857,
+       "td": 10,
+       "int": 10,
        "long": 68,
-       "completion_pct": 55.1,
-       "yards_per_att": 6.0,
-       "games": 8,
+       "completion_pct": 56.6,
+       "yards_per_att": 6.1,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -19562,6 +19786,17 @@
          "long": 13,
          "completion_pct": 30.8,
          "yards_per_att": 1.8
+        },
+        {
+         "date": "2026-10-31",
+         "att": 48,
+         "cmp": 31,
+         "yds": 310,
+         "td": 2,
+         "int": 2,
+         "long": 42,
+         "completion_pct": 64.6,
+         "yards_per_att": 6.5
         }
        ]
       }
@@ -19569,14 +19804,14 @@
     },
     "Rushing": {
      "career": {
-      "att": 52,
+      "att": 55,
       "loss": 79,
-      "net": 112,
+      "net": 122,
       "td": 3,
       "long": 60,
       "yards_per_carry": 2.2
      },
-     "career_games": 13,
+     "career_games": 14,
      "seasons": [
       {
        "season": 2025,
@@ -19637,13 +19872,13 @@
       },
       {
        "season": 2026,
-       "att": 35,
+       "att": 38,
        "loss": 35,
-       "net": 115,
+       "net": 125,
        "td": 2,
        "long": 60,
        "yards_per_carry": 3.3,
-       "games": 8,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -19716,6 +19951,15 @@
          "td": 1,
          "long": 60,
          "yards_per_carry": 12.0
+        },
+        {
+         "date": "2026-10-31",
+         "att": 3,
+         "loss": 0,
+         "net": 10,
+         "td": 0,
+         "long": 6,
+         "yards_per_carry": 3.3
         }
        ]
       }
@@ -19723,9 +19967,9 @@
     },
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 0,
+      "solo": 1,
       "ast": 0,
-      "tot": 0,
+      "tot": 1,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -19734,7 +19978,7 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 6,
+     "career_games": 7,
      "seasons": [
       {
        "season": 2025,
@@ -19793,9 +20037,9 @@
       },
       {
        "season": 2026,
-       "solo": 0,
+       "solo": 1,
        "ast": 0,
-       "tot": 0,
+       "tot": 1,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -19803,7 +20047,7 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 3,
+       "games": 4,
        "log": [
         {
          "date": "2026-09-26",
@@ -19836,6 +20080,19 @@
          "solo": 0,
          "ast": 0,
          "tot": 0,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 1,
+         "ast": 0,
+         "tot": 1,
          "ff": 0,
          "int": 0,
          "brup": 0,
@@ -20850,9 +21107,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 89,
-      "ast": 54,
-      "tot": 143,
+      "solo": 91,
+      "ast": 57,
+      "tot": 148,
       "ff": 1,
       "int": 0,
       "brup": 6,
@@ -20861,7 +21118,7 @@
       "tfl": 12.5,
       "sacks": 2.0
      },
-     "career_games": 26,
+     "career_games": 27,
      "seasons": [
       {
        "season": 2023,
@@ -21147,9 +21404,9 @@
       },
       {
        "season": 2026,
-       "solo": 26,
-       "ast": 19,
-       "tot": 45,
+       "solo": 28,
+       "ast": 22,
+       "tot": 50,
        "ff": 0,
        "int": 0,
        "brup": 4,
@@ -21157,7 +21414,7 @@
        "qh": 4,
        "tfl": 5.5,
        "sacks": 0,
-       "games": 8,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -21255,6 +21512,19 @@
          "solo": 1,
          "ast": 0,
          "tot": 1,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 2,
+         "ast": 3,
+         "tot": 5,
          "ff": 0,
          "int": 0,
          "brup": 0,
@@ -22988,9 +23258,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 3,
+      "solo": 4,
       "ast": 1,
-      "tot": 4,
+      "tot": 5,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -22999,13 +23269,13 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 2,
+     "career_games": 3,
      "seasons": [
       {
        "season": 2026,
-       "solo": 3,
+       "solo": 4,
        "ast": 1,
-       "tot": 4,
+       "tot": 5,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -23013,7 +23283,7 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 2,
+       "games": 3,
        "log": [
         {
          "date": "2026-10-17",
@@ -23033,6 +23303,19 @@
          "solo": 1,
          "ast": 1,
          "tot": 2,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 1,
+         "ast": 0,
+         "tot": 1,
          "ff": 0,
          "int": 0,
          "brup": 0,
@@ -25193,9 +25476,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 23,
-      "ast": 5,
-      "tot": 28,
+      "solo": 25,
+      "ast": 6,
+      "tot": 31,
       "ff": 0,
       "int": 0,
       "brup": 1,
@@ -25204,7 +25487,7 @@
       "tfl": 2.5,
       "sacks": 0
      },
-     "career_games": 13,
+     "career_games": 14,
      "seasons": [
       {
        "season": 2024,
@@ -25331,9 +25614,9 @@
       },
       {
        "season": 2026,
-       "solo": 11,
-       "ast": 4,
-       "tot": 15,
+       "solo": 13,
+       "ast": 5,
+       "tot": 18,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -25341,7 +25624,7 @@
        "qh": 0,
        "tfl": 0.5,
        "sacks": 0,
-       "games": 6,
+       "games": 7,
        "log": [
         {
          "date": "2026-09-05",
@@ -25413,6 +25696,19 @@
          "solo": 5,
          "ast": 1,
          "tot": 6,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 2,
+         "ast": 1,
+         "tot": 3,
          "ff": 0,
          "int": 0,
          "brup": 0,
@@ -27334,6 +27630,34 @@
       }
      ]
     },
+    "Receiving": {
+     "career": {
+      "rec": 0,
+      "yds": 0,
+      "td": 0,
+      "long": 0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2026,
+       "rec": 0,
+       "yds": 0,
+       "td": 0,
+       "long": 0,
+       "games": 1,
+       "log": [
+        {
+         "date": "2026-10-31",
+         "rec": 0,
+         "yds": 0,
+         "td": 0,
+         "long": 0
+        }
+       ]
+      }
+     ]
+    },
     "PuntReturn": {
      "career": {
       "att": 11,
@@ -27397,18 +27721,18 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 22,
-      "ast": 14,
-      "tot": 36,
+      "solo": 24,
+      "ast": 15,
+      "tot": 39,
       "ff": 2,
       "int": 0,
       "brup": 0,
       "blkd": 0,
       "qh": 10,
-      "tfl": 10.0,
+      "tfl": 11.0,
       "sacks": 6.5
      },
-     "career_games": 18,
+     "career_games": 19,
      "seasons": [
       {
        "season": 2024,
@@ -27600,17 +27924,17 @@
       },
       {
        "season": 2026,
-       "solo": 12,
-       "ast": 6,
-       "tot": 18,
+       "solo": 14,
+       "ast": 7,
+       "tot": 21,
        "ff": 1,
        "int": 0,
        "brup": 0,
        "blkd": 0,
        "qh": 6,
-       "tfl": 5.0,
+       "tfl": 6.0,
        "sacks": 1.5,
-       "games": 6,
+       "games": 7,
        "log": [
         {
          "date": "2026-09-05",
@@ -27679,6 +28003,19 @@
         },
         {
          "date": "2026-10-24",
+         "solo": 2,
+         "ast": 1,
+         "tot": 3,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 1.0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
          "solo": 2,
          "ast": 1,
          "tot": 3,
@@ -28945,22 +29282,22 @@
    "categories": {
     "Receiving": {
      "career": {
-      "rec": 1,
-      "yds": 7,
+      "rec": 3,
+      "yds": 24,
       "td": 0,
-      "long": 7,
-      "yards_per_rec": 7.0
+      "long": 9,
+      "yards_per_rec": 8.0
      },
-     "career_games": 2,
+     "career_games": 3,
      "seasons": [
       {
        "season": 2026,
-       "rec": 1,
-       "yds": 7,
+       "rec": 3,
+       "yds": 24,
        "td": 0,
-       "long": 7,
-       "yards_per_rec": 7.0,
-       "games": 2,
+       "long": 9,
+       "yards_per_rec": 8.0,
+       "games": 3,
        "log": [
         {
          "date": "2026-09-19",
@@ -28976,6 +29313,14 @@
          "yds": 0,
          "td": 0,
          "long": 0
+        },
+        {
+         "date": "2026-10-31",
+         "rec": 2,
+         "yds": 17,
+         "td": 0,
+         "long": 9,
+         "yards_per_rec": 8.5
         }
        ]
       }
@@ -28983,9 +29328,9 @@
     },
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 1,
+      "solo": 2,
       "ast": 0,
-      "tot": 1,
+      "tot": 2,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -28994,13 +29339,13 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 1,
+     "career_games": 2,
      "seasons": [
       {
        "season": 2026,
-       "solo": 1,
+       "solo": 2,
        "ast": 0,
-       "tot": 1,
+       "tot": 2,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -29008,10 +29353,23 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 1,
+       "games": 2,
        "log": [
         {
          "date": "2026-10-03",
+         "solo": 1,
+         "ast": 0,
+         "tot": 1,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
          "solo": 1,
          "ast": 0,
          "tot": 1,
@@ -29108,9 +29466,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 6,
+      "solo": 7,
       "ast": 0,
-      "tot": 6,
+      "tot": 7,
       "ff": 0,
       "int": 0,
       "brup": 1,
@@ -29119,13 +29477,13 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 4,
+     "career_games": 5,
      "seasons": [
       {
        "season": 2026,
-       "solo": 6,
+       "solo": 7,
        "ast": 0,
-       "tot": 6,
+       "tot": 7,
        "ff": 0,
        "int": 0,
        "brup": 1,
@@ -29133,7 +29491,7 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 4,
+       "games": 5,
        "log": [
         {
          "date": "2026-09-05",
@@ -29182,6 +29540,19 @@
          "ff": 0,
          "int": 0,
          "brup": 1,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 1,
+         "ast": 0,
+         "tot": 1,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
          "blkd": 0,
          "qh": 0,
          "tfl": 0,
@@ -30245,20 +30616,20 @@
     },
     "KickoffReturn": {
      "career": {
-      "att": 5,
-      "yds": 31,
-      "long": 12,
-      "avg": 6.2
+      "att": 7,
+      "yds": 73,
+      "long": 24,
+      "avg": 10.4
      },
-     "career_games": 3,
+     "career_games": 4,
      "seasons": [
       {
        "season": 2026,
-       "att": 5,
-       "yds": 31,
-       "long": 12,
-       "avg": 6.2,
-       "games": 3
+       "att": 7,
+       "yds": 73,
+       "long": 24,
+       "avg": 10.4,
+       "games": 4
       }
      ]
     }
@@ -31855,9 +32226,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 24,
-      "ast": 11,
-      "tot": 35,
+      "solo": 26,
+      "ast": 13,
+      "tot": 39,
       "ff": 0,
       "int": 0,
       "brup": 5,
@@ -31866,7 +32237,7 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 14,
+     "career_games": 15,
      "seasons": [
       {
        "season": 2025,
@@ -31964,9 +32335,9 @@
       },
       {
        "season": 2026,
-       "solo": 19,
-       "ast": 7,
-       "tot": 26,
+       "solo": 21,
+       "ast": 9,
+       "tot": 30,
        "ff": 0,
        "int": 0,
        "brup": 3,
@@ -31974,7 +32345,7 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 8,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -32075,6 +32446,19 @@
          "ff": 0,
          "int": 0,
          "brup": 1,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 2,
+         "ast": 2,
+         "tot": 4,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
          "blkd": 0,
          "qh": 0,
          "tfl": 0,
@@ -33578,8 +33962,8 @@
     "Individual Defensive Statistics": {
      "career": {
       "solo": 2,
-      "ast": 1,
-      "tot": 3,
+      "ast": 2,
+      "tot": 4,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -33588,13 +33972,13 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 2,
+     "career_games": 3,
      "seasons": [
       {
        "season": 2026,
        "solo": 2,
-       "ast": 1,
-       "tot": 3,
+       "ast": 2,
+       "tot": 4,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -33602,7 +33986,7 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 2,
+       "games": 3,
        "log": [
         {
          "date": "2026-10-03",
@@ -33629,8 +34013,40 @@
          "qh": 0,
          "tfl": 0,
          "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 0,
+         "ast": 1,
+         "tot": 1,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
         }
        ]
+      }
+     ]
+    },
+    "KickoffReturn": {
+     "career": {
+      "att": 1,
+      "yds": 0,
+      "long": 0,
+      "avg": 0.0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2026,
+       "att": 1,
+       "yds": 0,
+       "long": 0,
+       "avg": 0.0,
+       "games": 1
       }
      ]
     }
@@ -36516,9 +36932,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 8,
+      "solo": 9,
       "ast": 4,
-      "tot": 12,
+      "tot": 13,
       "ff": 1,
       "int": 0,
       "brup": 1,
@@ -36527,7 +36943,7 @@
       "tfl": 2.0,
       "sacks": 0
      },
-     "career_games": 9,
+     "career_games": 10,
      "seasons": [
       {
        "season": 2025,
@@ -36599,9 +37015,9 @@
       },
       {
        "season": 2026,
-       "solo": 5,
+       "solo": 6,
        "ast": 3,
-       "tot": 8,
+       "tot": 9,
        "ff": 1,
        "int": 0,
        "brup": 1,
@@ -36609,7 +37025,7 @@
        "qh": 0,
        "tfl": 2.0,
        "sacks": 0,
-       "games": 5,
+       "games": 6,
        "log": [
         {
          "date": "2026-09-05",
@@ -36667,6 +37083,19 @@
          "date": "2026-10-17",
          "solo": 0,
          "ast": 1,
+         "tot": 1,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 1,
+         "ast": 0,
          "tot": 1,
          "ff": 0,
          "int": 0,
@@ -38455,9 +38884,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 7,
+      "solo": 8,
       "ast": 1,
-      "tot": 8,
+      "tot": 9,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -38466,7 +38895,7 @@
       "tfl": 1.0,
       "sacks": 1.0
      },
-     "career_games": 4,
+     "career_games": 5,
      "seasons": [
       {
        "season": 2025,
@@ -38499,9 +38928,9 @@
       },
       {
        "season": 2026,
-       "solo": 5,
+       "solo": 6,
        "ast": 1,
-       "tot": 6,
+       "tot": 7,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -38509,7 +38938,7 @@
        "qh": 0,
        "tfl": 1.0,
        "sacks": 1.0,
-       "games": 3,
+       "games": 4,
        "log": [
         {
          "date": "2026-10-03",
@@ -38542,6 +38971,19 @@
          "solo": 2,
          "ast": 0,
          "tot": 2,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 1,
+         "ast": 0,
+         "tot": 1,
          "ff": 0,
          "int": 0,
          "brup": 0,
@@ -39267,9 +39709,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 26,
-      "ast": 25,
-      "tot": 51,
+      "solo": 29,
+      "ast": 27,
+      "tot": 56,
       "ff": 1,
       "int": 0,
       "brup": 2,
@@ -39278,7 +39720,7 @@
       "tfl": 3.0,
       "sacks": 1.0
      },
-     "career_games": 18,
+     "career_games": 19,
      "seasons": [
       {
        "season": 2024,
@@ -39444,9 +39886,9 @@
       },
       {
        "season": 2026,
-       "solo": 14,
-       "ast": 5,
-       "tot": 19,
+       "solo": 17,
+       "ast": 7,
+       "tot": 24,
        "ff": 0,
        "int": 0,
        "brup": 2,
@@ -39454,7 +39896,7 @@
        "qh": 0,
        "tfl": 3.0,
        "sacks": 1.0,
-       "games": 8,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -39559,6 +40001,19 @@
          "qh": 0,
          "tfl": 0,
          "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 3,
+         "ast": 2,
+         "tot": 5,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
         }
        ]
       }
@@ -39579,7 +40034,7 @@
       "long": 15,
       "yards_per_rec": 15.0
      },
-     "career_games": 2,
+     "career_games": 3,
      "seasons": [
       {
        "season": 2025,
@@ -39605,7 +40060,7 @@
        "td": 0,
        "long": 15,
        "yards_per_rec": 15.0,
-       "games": 1,
+       "games": 2,
        "log": [
         {
          "date": "2026-09-19",
@@ -39614,6 +40069,13 @@
          "td": 0,
          "long": 15,
          "yards_per_rec": 15.0
+        },
+        {
+         "date": "2026-10-31",
+         "rec": 0,
+         "yds": 0,
+         "td": 0,
+         "long": 0
         }
        ]
       }
@@ -39720,13 +40182,13 @@
    "categories": {
     "Receiving": {
      "career": {
-      "rec": 43,
-      "yds": 603,
+      "rec": 54,
+      "yds": 737,
       "td": 3,
       "long": 65,
-      "yards_per_rec": 14.0
+      "yards_per_rec": 13.6
      },
-     "career_games": 14,
+     "career_games": 15,
      "seasons": [
       {
        "season": 2025,
@@ -39786,12 +40248,12 @@
       },
       {
        "season": 2026,
-       "rec": 38,
-       "yds": 571,
+       "rec": 49,
+       "yds": 705,
        "td": 3,
        "long": 65,
-       "yards_per_rec": 15.0,
-       "games": 8,
+       "yards_per_rec": 14.4,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -39856,6 +40318,14 @@
          "td": 0,
          "long": 13,
          "yards_per_rec": 8.3
+        },
+        {
+         "date": "2026-10-31",
+         "rec": 11,
+         "yds": 134,
+         "td": 0,
+         "long": 42,
+         "yards_per_rec": 12.2
         }
        ]
       }
@@ -39864,8 +40334,8 @@
     "Individual Defensive Statistics": {
      "career": {
       "solo": 1,
-      "ast": 0,
-      "tot": 1,
+      "ast": 1,
+      "tot": 2,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -39874,7 +40344,7 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 4,
+     "career_games": 5,
      "seasons": [
       {
        "season": 2025,
@@ -39908,8 +40378,8 @@
       {
        "season": 2026,
        "solo": 0,
-       "ast": 0,
-       "tot": 0,
+       "ast": 1,
+       "tot": 1,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -39917,7 +40387,7 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 3,
+       "games": 4,
        "log": [
         {
          "date": "2026-09-12",
@@ -39950,6 +40420,19 @@
          "solo": 0,
          "ast": 0,
          "tot": 0,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 0,
+         "ast": 1,
+         "tot": 1,
          "ff": 0,
          "int": 0,
          "brup": 0,
@@ -41528,14 +42011,14 @@
    "categories": {
     "Rushing": {
      "career": {
-      "att": 212,
-      "loss": 66,
-      "net": 1156,
-      "td": 7,
+      "att": 230,
+      "loss": 72,
+      "net": 1352,
+      "td": 8,
       "long": 72,
-      "yards_per_carry": 5.5
+      "yards_per_carry": 5.9
      },
-     "career_games": 20,
+     "career_games": 21,
      "seasons": [
       {
        "season": 2023,
@@ -41701,13 +42184,13 @@
       },
       {
        "season": 2026,
-       "att": 74,
-       "loss": 38,
-       "net": 400,
-       "td": 3,
+       "att": 92,
+       "loss": 44,
+       "net": 596,
+       "td": 4,
        "long": 56,
-       "yards_per_carry": 5.4,
-       "games": 6,
+       "yards_per_carry": 6.5,
+       "games": 7,
        "log": [
         {
          "date": "2026-09-05",
@@ -41762,6 +42245,15 @@
          "td": 0,
          "long": 9,
          "yards_per_carry": 1.4
+        },
+        {
+         "date": "2026-10-31",
+         "att": 18,
+         "loss": 6,
+         "net": 196,
+         "td": 1,
+         "long": 40,
+         "yards_per_carry": 10.9
         }
        ]
       }
@@ -41769,13 +42261,13 @@
     },
     "Receiving": {
      "career": {
-      "rec": 38,
-      "yds": 297,
-      "td": 1,
+      "rec": 42,
+      "yds": 358,
+      "td": 2,
       "long": 68,
-      "yards_per_rec": 7.8
+      "yards_per_rec": 8.5
      },
-     "career_games": 15,
+     "career_games": 16,
      "seasons": [
       {
        "season": 2023,
@@ -41884,12 +42376,12 @@
       },
       {
        "season": 2026,
-       "rec": 18,
-       "yds": 152,
-       "td": 1,
+       "rec": 22,
+       "yds": 213,
+       "td": 2,
        "long": 68,
-       "yards_per_rec": 8.4,
-       "games": 6,
+       "yards_per_rec": 9.7,
+       "games": 7,
        "log": [
         {
          "date": "2026-09-05",
@@ -41938,6 +42430,14 @@
          "td": 0,
          "long": 7,
          "yards_per_rec": 6.0
+        },
+        {
+         "date": "2026-10-31",
+         "rec": 4,
+         "yds": 61,
+         "td": 1,
+         "long": 32,
+         "yards_per_rec": 15.2
         }
        ]
       }
@@ -41956,7 +42456,7 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 7,
+     "career_games": 8,
      "seasons": [
       {
        "season": 2023,
@@ -42054,7 +42554,7 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 3,
+       "games": 4,
        "log": [
         {
          "date": "2026-09-05",
@@ -42084,6 +42584,19 @@
         },
         {
          "date": "2026-09-26",
+         "solo": 0,
+         "ast": 0,
+         "tot": 0,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
          "solo": 0,
          "ast": 0,
          "tot": 0,
@@ -43296,7 +43809,7 @@
       "tfl": 0,
       "sacks": 0
      },
-     "career_games": 28,
+     "career_games": 29,
      "seasons": [
       {
        "season": 2024,
@@ -43602,7 +44115,7 @@
        "qh": 0,
        "tfl": 0,
        "sacks": 0,
-       "games": 8,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -43707,6 +44220,19 @@
          "qh": 0,
          "tfl": 0,
          "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 0,
+         "ast": 0,
+         "tot": 0,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
         }
        ]
       }
@@ -43714,15 +44240,15 @@
     },
     "Kickoffs": {
      "career": {
-      "att": 97,
-      "yds": 5217,
+      "att": 103,
+      "yds": 5549,
       "tb": 26,
       "ob": 3,
       "long": 65,
-      "inside_25": 21,
-      "avg": 53.8
+      "inside_25": 25,
+      "avg": 53.9
      },
-     "career_games": 25,
+     "career_games": 26,
      "seasons": [
       {
        "season": 2024,
@@ -43748,27 +44274,27 @@
       },
       {
        "season": 2026,
-       "att": 33,
-       "yds": 2094,
+       "att": 39,
+       "yds": 2426,
        "tb": 20,
        "ob": 1,
        "long": 65,
-       "inside_25": 7,
-       "avg": 63.5,
-       "games": 8
+       "inside_25": 11,
+       "avg": 62.2,
+       "games": 9
       }
      ]
     },
     "PATFG": {
      "career": {
-      "exp_att": 76,
-      "exp_made": 73,
-      "fg_att": 39,
+      "exp_att": 80,
+      "exp_made": 77,
+      "fg_att": 40,
       "fg_made": 25,
-      "fg_pct": 64.1,
-      "exp_pct": 96.1
+      "fg_pct": 62.5,
+      "exp_pct": 96.2
      },
-     "career_games": 28,
+     "career_games": 29,
      "seasons": [
       {
        "season": 2024,
@@ -43792,13 +44318,13 @@
       },
       {
        "season": 2026,
-       "exp_att": 18,
-       "exp_made": 17,
-       "fg_att": 16,
+       "exp_att": 22,
+       "exp_made": 21,
+       "fg_att": 17,
        "fg_made": 7,
-       "fg_pct": 43.8,
-       "exp_pct": 94.4,
-       "games": 8
+       "fg_pct": 41.2,
+       "exp_pct": 95.5,
+       "games": 9
       }
      ]
     }
@@ -49532,20 +50058,20 @@
     },
     "PuntReturn": {
      "career": {
-      "att": 16,
-      "yds": 90,
+      "att": 17,
+      "yds": 95,
       "long": 20,
       "avg": 5.6
      },
-     "career_games": 6,
+     "career_games": 7,
      "seasons": [
       {
        "season": 2026,
-       "att": 16,
-       "yds": 90,
+       "att": 17,
+       "yds": 95,
        "long": 20,
        "avg": 5.6,
-       "games": 6
+       "games": 7
       }
      ]
     },
@@ -49577,22 +50103,22 @@
    "categories": {
     "Receiving": {
      "career": {
-      "rec": 4,
-      "yds": 10,
-      "td": 0,
+      "rec": 5,
+      "yds": 12,
+      "td": 1,
       "long": 7,
-      "yards_per_rec": 2.5
+      "yards_per_rec": 2.4
      },
-     "career_games": 2,
+     "career_games": 3,
      "seasons": [
       {
        "season": 2026,
-       "rec": 4,
-       "yds": 10,
-       "td": 0,
+       "rec": 5,
+       "yds": 12,
+       "td": 1,
        "long": 7,
-       "yards_per_rec": 2.5,
-       "games": 2,
+       "yards_per_rec": 2.4,
+       "games": 3,
        "log": [
         {
          "date": "2026-09-19",
@@ -49609,6 +50135,60 @@
          "td": 0,
          "long": 0,
          "yards_per_rec": -5.0
+        },
+        {
+         "date": "2026-10-31",
+         "rec": 1,
+         "yds": 2,
+         "td": 1,
+         "long": 2,
+         "yards_per_rec": 2.0
+        }
+       ]
+      }
+     ]
+    },
+    "Individual Defensive Statistics": {
+     "career": {
+      "solo": 0,
+      "ast": 0,
+      "tot": 0,
+      "ff": 0,
+      "int": 0,
+      "brup": 0,
+      "blkd": 0,
+      "qh": 0,
+      "tfl": 0,
+      "sacks": 0
+     },
+     "career_games": 1,
+     "seasons": [
+      {
+       "season": 2026,
+       "solo": 0,
+       "ast": 0,
+       "tot": 0,
+       "ff": 0,
+       "int": 0,
+       "brup": 0,
+       "blkd": 0,
+       "qh": 0,
+       "tfl": 0,
+       "sacks": 0,
+       "games": 1,
+       "log": [
+        {
+         "date": "2026-10-31",
+         "solo": 0,
+         "ast": 0,
+         "tot": 0,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
+         "sacks": 0
         }
        ]
       }
@@ -56012,9 +56592,9 @@
    "categories": {
     "Individual Defensive Statistics": {
      "career": {
-      "solo": 7,
+      "solo": 10,
       "ast": 4,
-      "tot": 11,
+      "tot": 14,
       "ff": 0,
       "int": 0,
       "brup": 0,
@@ -56023,7 +56603,7 @@
       "tfl": 1.5,
       "sacks": 0
      },
-     "career_games": 7,
+     "career_games": 8,
      "seasons": [
       {
        "season": 2025,
@@ -56069,9 +56649,9 @@
       },
       {
        "season": 2026,
-       "solo": 6,
+       "solo": 9,
        "ast": 2,
-       "tot": 8,
+       "tot": 11,
        "ff": 0,
        "int": 0,
        "brup": 0,
@@ -56079,7 +56659,7 @@
        "qh": 0,
        "tfl": 1.0,
        "sacks": 0,
-       "games": 5,
+       "games": 6,
        "log": [
         {
          "date": "2026-09-05",
@@ -56144,6 +56724,19 @@
          "blkd": 0,
          "qh": 0,
          "tfl": 1.0,
+         "sacks": 0
+        },
+        {
+         "date": "2026-10-31",
+         "solo": 3,
+         "ast": 0,
+         "tot": 3,
+         "ff": 0,
+         "int": 0,
+         "brup": 0,
+         "blkd": 0,
+         "qh": 0,
+         "tfl": 0,
          "sacks": 0
         }
        ]
@@ -59163,20 +59756,22 @@
    "categories": {
     "Receiving": {
      "career": {
-      "rec": 0,
-      "yds": 0,
+      "rec": 2,
+      "yds": 10,
       "td": 0,
-      "long": 0
+      "long": 6,
+      "yards_per_rec": 5.0
      },
-     "career_games": 1,
+     "career_games": 2,
      "seasons": [
       {
        "season": 2026,
-       "rec": 0,
-       "yds": 0,
+       "rec": 2,
+       "yds": 10,
        "td": 0,
-       "long": 0,
-       "games": 1,
+       "long": 6,
+       "yards_per_rec": 5.0,
+       "games": 2,
        "log": [
         {
          "date": "2026-10-24",
@@ -59184,6 +59779,14 @@
          "yds": 0,
          "td": 0,
          "long": 0
+        },
+        {
+         "date": "2026-10-31",
+         "rec": 2,
+         "yds": 10,
+         "td": 0,
+         "long": 6,
+         "yards_per_rec": 5.0
         }
        ]
       }
@@ -60515,13 +61118,13 @@
     },
     "Receiving": {
      "career": {
-      "rec": 18,
-      "yds": 231,
+      "rec": 19,
+      "yds": 236,
       "td": 1,
       "long": 58,
-      "yards_per_rec": 12.8
+      "yards_per_rec": 12.4
      },
-     "career_games": 9,
+     "career_games": 10,
      "seasons": [
       {
        "season": 2025,
@@ -60544,12 +61147,12 @@
       },
       {
        "season": 2026,
-       "rec": 17,
-       "yds": 226,
+       "rec": 18,
+       "yds": 231,
        "td": 1,
        "long": 58,
-       "yards_per_rec": 13.3,
-       "games": 8,
+       "yards_per_rec": 12.8,
+       "games": 9,
        "log": [
         {
          "date": "2026-09-05",
@@ -60612,6 +61215,14 @@
          "yds": 0,
          "td": 0,
          "long": 0
+        },
+        {
+         "date": "2026-10-31",
+         "rec": 1,
+         "yds": 5,
+         "td": 0,
+         "long": 5,
+         "yards_per_rec": 5.0
         }
        ]
       }

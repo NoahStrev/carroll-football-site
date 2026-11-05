@@ -8512,12 +8512,92 @@
  "record_watch": {
   "current_season": 2026,
   "career": {
+   "Passing Completions": [
+    {
+     "statistic": "Passing Completions",
+     "player": "Elisha Nieves",
+     "position": "QB",
+     "current_value": 217,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Eric Block",
+       "value": "528",
+       "value_numeric": 528
+      },
+      {
+       "rank": 2,
+       "player": "Chris Casper",
+       "value": "494",
+       "value_numeric": 494
+      },
+      {
+       "rank": 3,
+       "player": "Chris Rogers",
+       "value": "459",
+       "value_numeric": 459
+      },
+      {
+       "rank": 4,
+       "player": "Kyle Burlingame",
+       "value": "455",
+       "value_numeric": 455
+      },
+      {
+       "rank": 5,
+       "player": "Brad Dement",
+       "value": "375",
+       "value_numeric": 375
+      }
+     ]
+    }
+   ],
+   "Passing Attempts": [
+    {
+     "statistic": "Passing Attempts",
+     "player": "Elisha Nieves",
+     "position": "QB",
+     "current_value": 397,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Eric Block",
+       "value": "1,179",
+       "value_numeric": 1179
+      },
+      {
+       "rank": 2,
+       "player": "Chris Casper",
+       "value": "845",
+       "value_numeric": 845
+      },
+      {
+       "rank": 3,
+       "player": "Kyle Burlingame",
+       "value": "786",
+       "value_numeric": 786
+      },
+      {
+       "rank": 4,
+       "player": "Dave Weber",
+       "value": "738",
+       "value_numeric": 738
+      },
+      {
+       "rank": 5,
+       "player": "Chris Rogers",
+       "value": "719",
+       "value_numeric": 719
+      }
+     ]
+    }
+   ],
    "Total Tackles": [
     {
      "statistic": "Total Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 143,
+     "current_value": 148,
      "leaderboard": [
       {
        "rank": 1,
@@ -8563,7 +8643,7 @@
      "statistic": "Solo Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 89,
+     "current_value": 91,
      "leaderboard": [
       {
        "rank": 1,
@@ -8695,7 +8775,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 39,
+     "current_value": 40,
      "leaderboard": [
       {
        "rank": 1,
@@ -8735,7 +8815,7 @@
      "statistic": "PATs Made",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 73,
+     "current_value": 77,
      "leaderboard": [
       {
        "rank": 1,
@@ -8775,7 +8855,7 @@
      "statistic": "PATs Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 76,
+     "current_value": 80,
      "leaderboard": [
       {
        "rank": 1,
@@ -8817,7 +8897,7 @@
      "statistic": "Passing Yards",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 1547,
+     "current_value": 1857,
      "leaderboard": [
       {
        "rank": 1,
@@ -8852,12 +8932,52 @@
      ]
     }
    ],
+   "Passing Touchdowns": [
+    {
+     "statistic": "Passing Touchdowns",
+     "player": "Elisha Nieves",
+     "position": "QB",
+     "current_value": 10,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Chris Klippel",
+       "value": "27",
+       "value_numeric": 27
+      },
+      {
+       "rank": 2,
+       "player": "Kyle Burlingame",
+       "value": "26",
+       "value_numeric": 26
+      },
+      {
+       "rank": 2,
+       "player": "Joshua Raby",
+       "value": "26",
+       "value_numeric": 26
+      },
+      {
+       "rank": 4,
+       "player": "Michael Johnson",
+       "value": "20",
+       "value_numeric": 20
+      },
+      {
+       "rank": 5,
+       "player": "Joshua Raby",
+       "value": "19",
+       "value_numeric": 19
+      }
+     ]
+    }
+   ],
    "Passing Completions": [
     {
      "statistic": "Passing Completions",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 141,
+     "current_value": 172,
      "leaderboard": [
       {
        "rank": 1,
@@ -8897,7 +9017,7 @@
      "statistic": "Passing Attempts",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 256,
+     "current_value": 304,
      "leaderboard": [
       {
        "rank": 1,
@@ -8937,7 +9057,7 @@
      "statistic": "Receiving Yards",
      "player": "Liam Patrick",
      "position": "WR",
-     "current_value": 571,
+     "current_value": 705,
      "leaderboard": [
       {
        "rank": 1,
@@ -8977,7 +9097,7 @@
      "statistic": "Receptions",
      "player": "Liam Patrick",
      "position": "WR",
-     "current_value": 38,
+     "current_value": 49,
      "leaderboard": [
       {
        "rank": 1,
@@ -9012,12 +9132,120 @@
      ]
     }
    ],
+   "Interceptions": [
+    {
+     "statistic": "Interceptions",
+     "player": "Cameran Banks",
+     "position": "CB",
+     "current_value": 3,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Andy Ostrand",
+       "value": "9",
+       "value_numeric": 9
+      },
+      {
+       "rank": 1,
+       "player": "Andy Ostrand",
+       "value": "9",
+       "value_numeric": 9
+      },
+      {
+       "rank": 1,
+       "player": "Jack Miller",
+       "value": "9",
+       "value_numeric": 9
+      },
+      {
+       "rank": 4,
+       "player": "Dave Luisier",
+       "value": "8",
+       "value_numeric": 8
+      },
+      {
+       "rank": 5,
+       "player": "Dan Pokwinski",
+       "value": "6",
+       "value_numeric": 6
+      },
+      {
+       "rank": 5,
+       "player": "Dan Pokwinski",
+       "value": "6",
+       "value_numeric": 6
+      },
+      {
+       "rank": 5,
+       "player": "Chris Gustafson",
+       "value": "6",
+       "value_numeric": 6
+      },
+      {
+       "rank": 5,
+       "player": "Jeff Cummisford",
+       "value": "6",
+       "value_numeric": 6
+      },
+      {
+       "rank": 5,
+       "player": "Neal Lyang",
+       "value": "6",
+       "value_numeric": 6
+      },
+      {
+       "rank": 5,
+       "player": "Matt Gaulke",
+       "value": "6",
+       "value_numeric": 6
+      }
+     ]
+    }
+   ],
    "Total Tackles": [
     {
      "statistic": "Total Tackles",
      "player": "Andrew Redmon",
      "position": "LB",
-     "current_value": 49,
+     "current_value": 54,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Mike Dziewit",
+       "value": "108",
+       "value_numeric": 108
+      },
+      {
+       "rank": 1,
+       "player": "Dave Uelman",
+       "value": "108",
+       "value_numeric": 108
+      },
+      {
+       "rank": 3,
+       "player": "Justin Kontny",
+       "value": "107",
+       "value_numeric": 107
+      },
+      {
+       "rank": 4,
+       "player": "Jim Vento",
+       "value": "99",
+       "value_numeric": 99
+      },
+      {
+       "rank": 5,
+       "player": "Don Hostetler",
+       "value": "98",
+       "value_numeric": 98
+      }
+     ]
+    },
+    {
+     "statistic": "Total Tackles",
+     "player": "Evan Griffiths",
+     "position": "LB",
+     "current_value": 50,
      "leaderboard": [
       {
        "rank": 1,
@@ -9057,7 +9285,51 @@
      "statistic": "Solo Tackles",
      "player": "Andrew Redmon",
      "position": "LB",
-     "current_value": 33,
+     "current_value": 34,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Mike Dziewit",
+       "value": "67",
+       "value_numeric": 67
+      },
+      {
+       "rank": 2,
+       "player": "Justin Kontny",
+       "value": "64",
+       "value_numeric": 64
+      },
+      {
+       "rank": 3,
+       "player": "Jim Vento",
+       "value": "61",
+       "value_numeric": 61
+      },
+      {
+       "rank": 4,
+       "player": "Brian Erickson",
+       "value": "60",
+       "value_numeric": 60
+      },
+      {
+       "rank": 5,
+       "player": "Jeremy Winter",
+       "value": "55",
+       "value_numeric": 55
+      },
+      {
+       "rank": 5,
+       "player": "Jeremy Winter",
+       "value": "55",
+       "value_numeric": 55
+      }
+     ]
+    },
+    {
+     "statistic": "Solo Tackles",
+     "player": "Evan Griffiths",
+     "position": "LB",
+     "current_value": 28,
      "leaderboard": [
       {
        "rank": 1,
@@ -9201,7 +9473,7 @@
      "statistic": "Field Goals Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 16,
+     "current_value": 17,
      "leaderboard": [
       {
        "rank": 1,
@@ -9256,6 +9528,86 @@
        "player": "Chris Gustafson",
        "value": "12",
        "value_numeric": 12
+      }
+     ]
+    }
+   ],
+   "PATs Made": [
+    {
+     "statistic": "PATs Made",
+     "player": "Matthew Swink",
+     "position": "SPEC",
+     "current_value": 21,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Jacob Laurent",
+       "value": "43",
+       "value_numeric": 43
+      },
+      {
+       "rank": 2,
+       "player": "Tyler Raymaker",
+       "value": "42",
+       "value_numeric": 42
+      },
+      {
+       "rank": 3,
+       "player": "Tyler Raymaker",
+       "value": "39",
+       "value_numeric": 39
+      },
+      {
+       "rank": 4,
+       "player": "Brian Jachimek",
+       "value": "38",
+       "value_numeric": 38
+      },
+      {
+       "rank": 5,
+       "player": "Tyler Raymaker",
+       "value": "36",
+       "value_numeric": 36
+      }
+     ]
+    }
+   ],
+   "PATs Attempted": [
+    {
+     "statistic": "PATs Attempted",
+     "player": "Matthew Swink",
+     "position": "SPEC",
+     "current_value": 22,
+     "leaderboard": [
+      {
+       "rank": 1,
+       "player": "Tyler Raymaker",
+       "value": "47",
+       "value_numeric": 47
+      },
+      {
+       "rank": 2,
+       "player": "Tyler Raymaker",
+       "value": "46",
+       "value_numeric": 46
+      },
+      {
+       "rank": 3,
+       "player": "Brian Jachimek",
+       "value": "41",
+       "value_numeric": 41
+      },
+      {
+       "rank": 4,
+       "player": "Tyler Raymaker",
+       "value": "38",
+       "value_numeric": 38
+      },
+      {
+       "rank": 5,
+       "player": "Brian Jachimek",
+       "value": "37",
+       "value_numeric": 37
       }
      ]
     }

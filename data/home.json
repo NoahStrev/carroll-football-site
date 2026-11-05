@@ -934,6 +934,14 @@
     ],
     "North Park": [
       {
+        "date": "2026-10-31",
+        "season": 2026,
+        "home": false,
+        "carroll_pts": 34,
+        "opp_pts": 55,
+        "result": "L"
+      },
+      {
         "date": "2025-10-12",
         "season": 2025,
         "home": true,
@@ -1322,8 +1330,8 @@
   "seasons": {
     "2026": {
       "prior_label": "2021–2025",
-      "record": "4-4",
-      "conference_record": "3-3",
+      "record": "4-5",
+      "conference_record": "3-4",
       "games": [
         {
           "date": "2026-09-05",
@@ -1548,6 +1556,19 @@
             "taken": 1
           },
           "st_score": 48.0407
+        },
+        {
+          "date": "2026-10-31",
+          "opponent": "North Park",
+          "home": false,
+          "carroll_pts": 34,
+          "opp_pts": 55,
+          "result": "L",
+          "charted": false,
+          "offense": null,
+          "defense": null,
+          "turnovers": null,
+          "st_score": 48.0696
         }
       ],
       "season_stats": {
@@ -1565,13 +1586,13 @@
           "explosive": 0.1915,
           "turnovers": 8
         },
-        "st_score": 48.6554,
+        "st_score": 48.5931,
         "turnovers": {
           "given": 17,
           "taken": 9
         },
-        "pts_for_pg": 19.75,
-        "pts_against_pg": 27.375
+        "pts_for_pg": 21.3333,
+        "pts_against_pg": 30.4444
       },
       "prior_stats": {
         "offense": {
