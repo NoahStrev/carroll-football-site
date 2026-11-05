@@ -107,8 +107,8 @@ CCIW_SRC = FOOTBALL_ROOT / "CCIW Buddah Report" / "output_carroll" / "Carroll_Fo
 NATIONAL_SRC = FOOTBALL_ROOT / "National Buddah Report" / "CCIW_D3_Football_Stats" / "Carroll" / "Carroll_AllYears.xlsx"
 OUT = Path(__file__).resolve().parent.parent / "data" / "rankings.json"
 
-# In-season weekly progression workbooks -- both sibling projects' weekly-scrape
-# scheduled tasks (cciw-org-conference-weekly-scrape, ncaa-d3-national-weekly-scrape)
+# In-season weekly progression workbooks -- the cciw and ncaa steps of weekly_update.py
+# (once the sibling projects' weekly scheduled tasks, cancelled October 2026)
 # write these separately from the AllTime/AllYears files above, which only get rebuilt
 # once a season is over ("only on explicit request", per each project's own rule). So
 # during the season, a year's rankings live here first, not in AllTime/AllYears yet.

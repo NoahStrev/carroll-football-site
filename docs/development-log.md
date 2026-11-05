@@ -10,7 +10,7 @@
 Static HTML/CSS/JS, no build step. Replaced `dashboards-site-poc` (an earlier
 proof-of-concept covering only the 5 special-teams position pages, never deployed
 live) once this site's coverage caught up and surpassed it — removed 2026-07-30.
-Visual language originates from the `Special Teams Data/mockups/*.html` prototypes.
+Visual language originates from the `Special Teams Data/mockups/*.html` prototypes (moved to `Special Teams Data/_archive/mockups-2026-07/` on 2026-10-25).
 
 ## Structure
 
@@ -2703,3 +2703,26 @@ python -m http.server 8731
 Initialized but had no commits until 2026-07-30's validation pass — first commit
 covers everything through that pass (Phase 1 dashboards, design system, all UX/bugfix
 rounds below). Going forward, changes land as their own commits when requested.
+
+## 2026-10-23 to 10-28: full-project review, ten follow-ups, North Central week
+
+Shipped as v1.4.3 on the Updates page (commits 80b15f7, 75ad6d3, 50f3a6d) and the weekly update fddae42.
+
+- **Review fixes:** one Special Teams Score scale for every unit (Score = 50 + 10 x Value); trend lines coloured
+  for lower-is-better stats; career kickoffs from the box score; Wash U 2023 defensive snaps coded as offense
+  re-coded in the Game Analysis combiner; zero-play drives dropped; lifting name typos merged and partial Combined
+  Totals left out; CCIW red-zone turnover ranks fixed and "G" no longer ranked; many label and layout fixes.
+- **Ten follow-ups:** validator checks for lifting name typos, career totals, turnovers, Special Teams counts and the
+  charted side split; unit tests (`tests/test_names.py`, `Special Teams Data/tests/test_parsing.py`); CCIW 2016-25
+  re-scraped; punt/kickoff turnovers counted (`build_lib.kick_turnovers`); 2021-24 film rows with no result filled
+  from the official play-by-play; field position recomputed from each game's own abbreviations (four games were
+  mirrored); expected points added (`add_expected_points`); motion and formation strength cards; Offense/Defense
+  draw `game-data-latest.json` first; old backups, scheduled-task prompts and record fields tidied.
+- **GitHub check:** a note with one long slash-joined word clipped at 320px under Linux's wider font; notes now
+  break such words. To catch this locally, append `body, body * { font-family: Verdana, sans-serif !important; }` to
+  theme.css temporarily, restamp, run `SMOKE_WIDTHS=320 python tests/run_smoke.py`, then restore and restamp.
+- **Weekly update, 2026-10-27:** Excel being open stopped the `box` step after the box score was saved (the rebuild
+  was run by hand); the Hudl export had to be named with `--hudl` because a punt-return playlist sat next to it in
+  Downloads, and the move from Downloads failed on a Windows file lock after copying (the combiner was run by hand);
+  the `ncaa` step had to run from the PowerShell tool. The weekly scheduled tasks no longer exist; the update runs
+  on request.

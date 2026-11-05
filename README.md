@@ -122,19 +122,19 @@ that buckets those rows by score ("Leading by 9+") as the opponent's own offense
 
 `build_game_data.py` also drops "Penalty, No Play" snaps (nullified and replayed, so not plays) and re-labels a drive whose
 "Touchdown" was really an interception/fumble returned the other way. With both, per-game yardage matches the official box score exactly on both sides in
-32 of 57 games (83 of 114 sides), and every side is within 30 yards except 2024-10-12's offense (-32). One drive the source tagged to the wrong side (2021-11-06 vs Carthage, Carroll's final field-goal drive) is moved back by
+32 of 58 games (84 of 116 sides, as of 2026-10-27), and every side is within 30 yards except 2024-10-12's offense (-32). One drive the source tagged to the wrong side (2021-11-06 vs Carthage, Carroll's final field-goal drive) is moved back by
 `MANUAL_DRIVE_SIDE_OVERRIDES` in build_game_data.py, which makes that game match its box score exactly. A handful of other games carry a 20-30 yard rushing gap. Those gaps are inside the official box
 scores themselves, not our parsing: the parsed yards equal the play text in every play, and for 2023-10-07 vs North Central the same page
 reports 670 yards (drive chart), 695 (team stats) and 725 (play-by-play text). Treating accepted offensive penalties as nullified plays was
 tried and made the match worse, so it is not done. `validate_data.py` re-checks every season on every refresh (the reviewed 2024-10-12 gap is listed in `KNOWN_BOX_GAPS`).
 
-Fourth downs: the play-by-play's tries and conversions match the box score's "4th Down Conversions" line exactly for Carroll in all 57 games and for opponents in 54 (the other three are one try off:
+Fourth downs: the play-by-play's tries and conversions match the box score's "4th Down Conversions" line exactly for Carroll in all 58 games and for opponents in 55 (the other three are one try off:
 an uncharted snap, or a penalty first down the box counts as a conversion; `KNOWN_FOURTH_GAPS` in validate_data.py). A snap that carries a *declined* penalty is a normal snap, so
 `is_penalty` means an accepted penalty only.
 
 Turnovers: the play-by-play holds offensive and defensive snaps only, so a fumble or muff on a punt or kickoff that the kicking team recovers (a
 turnover the box score counts) is taken from the box score's play text by `kick_turnovers()` (build_lib.py) and stored per game as `st_turnovers` in
-game-data.json. Game Review's turnover margin and Home's turnover totals add these, so giveaways and takeaways match the box score in all 57 games
+game-data.json. Game Review's turnover margin and Home's turnover totals add these, so giveaways and takeaways match the box score in every game (58 as of 2026-10-27)
 (`check_turnovers_vs_box` keeps checking); the per-snap Turnover/Takeaway Rate stays snap-based. Four rows the source mislabelled — a fumble Carroll recovered itself
 flagged as a turnover, and three real takeaways on drives labelled "Punt" — are corrected in `MANUAL_NOT_A_TURNOVER` / `MANUAL_DRIVE_RESULT_OVERRIDES`
 (build_game_data.py); the validator warns about any new turnover flagged on a drive that went on to score or punt. Special teams counts: Carroll's punts, PATs,

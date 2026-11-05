@@ -148,8 +148,8 @@ KNOWN_BOX_GAPS = {
 
 def check_pbp_vs_box(game):
     """Each charted game's play-by-play yardage against the official box score's total offense. Nullified ("No Play")
-    snaps are excluded at build time, so the two should agree closely: 32 of 57 archive games match exactly on both
-    sides, 83 of 114 sides match, and every side is within 30 yards except one reviewed case (KNOWN_BOX_GAPS) -- the
+    snaps are excluded at build time, so the two should agree closely: 32 of 58 archive games match exactly on both
+    sides, 84 of 116 sides match (2026-10-27), and every side is within 30 yards except one reviewed case (KNOWN_BOX_GAPS) -- the
     rest are inconsistencies inside the box scores. A bigger gap in any season is worth a look, e.g. a drive tagged to
     the wrong side, which moves its yards from one side to the other (2021-11-06 vs Carthage did exactly that and is
     fixed by MANUAL_DRIVE_SIDE_OVERRIDES in build_game_data.py)."""
@@ -192,7 +192,7 @@ KNOWN_FOURTH_GAPS = {("2022-11-12", "defense"), ("2026-09-19", "defense"), ("202
 
 def check_fourth_downs(game):
     """Fourth-down tries and conversions in the play-by-play against the box score's "4th Down Conversions" line.
-    Carroll's side matches the box exactly in all 57 archive games, and the opponent's in 54 (the rest are the reviewed
+    Carroll's side matches the box exactly in all 58 archive games, and the opponent's in 55 (2026-10-27) (the rest are the reviewed
     one-try gaps above). A new difference means a snap went missing or landed on the wrong side."""
     raw = SITE.parent / "Special Teams Data" / "raw"
     if not raw.exists():

@@ -22,7 +22,10 @@ It never commits or pushes, never maps a new opponent name, and never fixes a pa
 needs a decision is collected under "NEEDS YOUR DECISION" at the end and the exit code is 2. Exit 0 = clean,
 1 = a step failed.
 
-This is the same sequence the weekly scheduled tasks describe -- it is not scheduled; you run it on request.
+This is the sequence the weekly scheduled tasks used to run (cancelled October 2026; their prompts are archived in
+~/.claude/scheduled-tasks-archive/2026-10-25/). It is not scheduled; you run it on request. Gotchas: close Excel first;
+run it from a PowerShell session that allows scripts (the ncaa step runs .ps1 files); pass --hudl <file> when
+Downloads holds more than one PlaylistData export.
 """
 
 import argparse

@@ -97,9 +97,9 @@ non-roster people either. A real, smaller residual gap than the
 original version of this note described, flagged rather than silently
 claimed solved.
 
-Re-run whenever new raw game JSONs are added (i.e. after
-carroll-special-teams-weekly-scrape or a manual Special Teams Data
-scrape) or the Lifting Data roster changes:
+Re-run whenever new raw game JSONs are added (refresh_all.py does, after
+weekly_update.py's box step or a manual Special Teams Data scrape) or the
+Lifting Data roster changes:
     python build_career_stats.py
 """
 
