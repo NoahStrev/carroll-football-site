@@ -8597,7 +8597,7 @@
      "statistic": "Total Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 148,
+     "current_value": 147,
      "leaderboard": [
       {
        "rank": 1,
@@ -8643,7 +8643,7 @@
      "statistic": "Solo Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 91,
+     "current_value": 90,
      "leaderboard": [
       {
        "rank": 1,
@@ -8683,7 +8683,7 @@
      "statistic": "Sacks",
      "player": "August Johansen",
      "position": "BOB",
-     "current_value": 10.5,
+     "current_value": 11.0,
      "leaderboard": [
       {
        "rank": 1,
@@ -8855,7 +8855,7 @@
      "statistic": "PATs Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 80,
+     "current_value": 81,
      "leaderboard": [
       {
        "rank": 1,
@@ -8897,7 +8897,7 @@
      "statistic": "Passing Yards",
      "player": "Elisha Nieves",
      "position": "QB",
-     "current_value": 1857,
+     "current_value": 1840,
      "leaderboard": [
       {
        "rank": 1,
@@ -9057,7 +9057,7 @@
      "statistic": "Receiving Yards",
      "player": "Liam Patrick",
      "position": "WR",
-     "current_value": 705,
+     "current_value": 709,
      "leaderboard": [
       {
        "rank": 1,
@@ -9097,7 +9097,7 @@
      "statistic": "Receptions",
      "player": "Liam Patrick",
      "position": "WR",
-     "current_value": 49,
+     "current_value": 48,
      "leaderboard": [
       {
        "rank": 1,
@@ -9245,7 +9245,7 @@
      "statistic": "Total Tackles",
      "player": "Evan Griffiths",
      "position": "LB",
-     "current_value": 50,
+     "current_value": 49,
      "leaderboard": [
       {
        "rank": 1,
@@ -9285,51 +9285,7 @@
      "statistic": "Solo Tackles",
      "player": "Andrew Redmon",
      "position": "LB",
-     "current_value": 34,
-     "leaderboard": [
-      {
-       "rank": 1,
-       "player": "Mike Dziewit",
-       "value": "67",
-       "value_numeric": 67
-      },
-      {
-       "rank": 2,
-       "player": "Justin Kontny",
-       "value": "64",
-       "value_numeric": 64
-      },
-      {
-       "rank": 3,
-       "player": "Jim Vento",
-       "value": "61",
-       "value_numeric": 61
-      },
-      {
-       "rank": 4,
-       "player": "Brian Erickson",
-       "value": "60",
-       "value_numeric": 60
-      },
-      {
-       "rank": 5,
-       "player": "Jeremy Winter",
-       "value": "55",
-       "value_numeric": 55
-      },
-      {
-       "rank": 5,
-       "player": "Jeremy Winter",
-       "value": "55",
-       "value_numeric": 55
-      }
-     ]
-    },
-    {
-     "statistic": "Solo Tackles",
-     "player": "Evan Griffiths",
-     "position": "LB",
-     "current_value": 28,
+     "current_value": 33,
      "leaderboard": [
       {
        "rank": 1,
@@ -9375,7 +9331,7 @@
      "statistic": "Sacks",
      "player": "August Johansen",
      "position": "BOB",
-     "current_value": 8.0,
+     "current_value": 8.5,
      "leaderboard": [
       {
        "rank": 1,
@@ -9577,7 +9533,7 @@
      "statistic": "PATs Attempted",
      "player": "Matthew Swink",
      "position": "SPEC",
-     "current_value": 22,
+     "current_value": 23,
      "leaderboard": [
       {
        "rank": 1,

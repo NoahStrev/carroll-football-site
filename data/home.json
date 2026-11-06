@@ -1350,9 +1350,9 @@
           },
           "defense": {
             "plays": 72,
-            "ypp": 3.5352,
-            "success": 0.3803,
-            "explosive": 0.1268,
+            "ypp": 4.0563,
+            "success": 0.3944,
+            "explosive": 0.1408,
             "turnovers": 1
           },
           "turnovers": {
@@ -1401,7 +1401,7 @@
             "plays": 80,
             "ypp": 6.9359,
             "success": 0.5256,
-            "explosive": 0.1923,
+            "explosive": 0.1795,
             "turnovers": 3
           },
           "defense": {
@@ -1456,13 +1456,13 @@
           "offense": {
             "plays": 58,
             "ypp": 6.5536,
-            "success": 0.5,
-            "explosive": 0.1296,
+            "success": 0.5185,
+            "explosive": 0.1111,
             "turnovers": 2
           },
           "defense": {
             "plays": 65,
-            "ypp": 5.7538,
+            "ypp": 5.7692,
             "success": 0.5231,
             "explosive": 0.2,
             "turnovers": 1
@@ -1564,32 +1564,47 @@
           "carroll_pts": 34,
           "opp_pts": 55,
           "result": "L",
-          "charted": false,
-          "offense": null,
-          "defense": null,
-          "turnovers": null,
+          "charted": true,
+          "offense": {
+            "plays": 85,
+            "ypp": 7.9512,
+            "success": 0.5854,
+            "explosive": 0.2195,
+            "turnovers": 2
+          },
+          "defense": {
+            "plays": 54,
+            "ypp": 11.7059,
+            "success": 0.4314,
+            "explosive": 0.2353,
+            "turnovers": 1
+          },
+          "turnovers": {
+            "given": 2,
+            "taken": 1
+          },
           "st_score": 48.0696
         }
       ],
       "season_stats": {
         "offense": {
-          "plays": 514,
-          "ypp": 5.3618,
-          "success": 0.3655,
-          "explosive": 0.1325,
-          "turnovers": 14
+          "plays": 599,
+          "ypp": 5.7248,
+          "success": 0.3983,
+          "explosive": 0.1414,
+          "turnovers": 16
         },
         "defense": {
-          "plays": 506,
-          "ypp": 6.1563,
-          "success": 0.4375,
-          "explosive": 0.1915,
-          "turnovers": 8
+          "plays": 560,
+          "ypp": 6.74,
+          "success": 0.4388,
+          "explosive": 0.1974,
+          "turnovers": 9
         },
         "st_score": 48.5931,
         "turnovers": {
-          "given": 17,
-          "taken": 9
+          "given": 19,
+          "taken": 10
         },
         "pts_for_pg": 21.3333,
         "pts_against_pg": 30.4444
