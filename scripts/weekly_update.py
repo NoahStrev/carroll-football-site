@@ -10,6 +10,13 @@ Steps (each is skippable with --only; they run in this order):
   guard  is it in season? (also refreshes Schedule/schedule.json)
   box    scrape any NEW box score from gopios.com into Special Teams Data/raw, rebuild its workbooks, and stop if
          the build reports a problem with the new game (a parse warning, or an opponent name it does not know)
+  recheck  re-download this season's box scores that are already stored and compare: the Carroll site keeps
+         correcting recent games for weeks (2026-11-06: four of nine had changed -- tacklers, yardage, a kicker, a
+         field-goal distance). A changed one replaces the stored copy (the old one goes to Special Teams Data/
+         _archive/raw-replaced/<date>/), the Special Teams workbooks are rebuilt, and a charted game is reloaded in Game
+         Analysis (build_combined_dataset.py --reload-json, not --rebuild). Typed Special Teams values are matched by
+         kick number, so a correction that adds, removes or reorders kicks is NOT applied: the fresh copy is saved
+         to _archive/recheck-pending/ and listed under NEEDS YOUR DECISION.
   cciw   CCIW.org weekly snapshot + progression workbooks
   ncaa   NCAA.com national weekly snapshot + trend workbooks (several minutes; skipped if today's already exists)
   hudl   file Hudl "PlaylistData_*.xlsx" exports from Downloads into Game Analysis/raw under the right names, then run
@@ -37,6 +44,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 import urllib.request
 from pathlib import Path
 
@@ -48,7 +56,7 @@ CCIW_DIR = FOOTBALL / "CCIW Buddah Report"
 NCAA_DIR = FOOTBALL / "National Buddah Report" / "CCIW_D3_Football_Stats"
 SCHEDULE_DIR = FOOTBALL / "Schedule"
 DOWNLOADS = Path.home() / "Downloads"
-STEPS = ["guard", "box", "cciw", "ncaa", "hudl", "site"]
+STEPS = ["guard", "box", "recheck", "cciw", "ncaa", "hudl", "site"]
 
 decisions = []   # things only the user can decide
 notes = []       # what happened, for the closing summary
@@ -108,6 +116,18 @@ def find_new_box_links(year):
     return [(slug, gid) for slug, gid in links if f"{year}_{slug}_{gid}.json" not in have]
 
 
+def rebuild_special_teams():
+    """Both Special Teams workbook builds (the cumulative one and the 2021-current one the site reads); their output."""
+    outputs = []
+    for cmd in ([sys.executable, "build_workbook.py", "raw/*.json"],
+                [sys.executable, "build_workbook.py", "raw/*.json", "Carroll_Special_Teams_2021_Current.xlsx", "--min-season=2021"]):
+        code, out = run(cmd, ST_DIR)
+        outputs.append(out)
+        if code != 0:
+            raise SystemExit(f"build_workbook.py failed:\n{out[-2000:]}")
+    return "\n".join(outputs)
+
+
 def step_box(args, year):
     step_header("box", "new box scores from gopios.com")
     new = find_new_box_links(year)
@@ -130,14 +150,7 @@ def step_box(args, year):
     for slug, gid in new:
         raw = json.loads((ST_DIR / "raw" / f"{year}_{slug}_{gid}.json").read_text(encoding="utf-8"))
         names.append(raw["game_info"].get("score", slug))
-    outputs = []
-    for cmd in ([sys.executable, "build_workbook.py", "raw/*.json"],
-                [sys.executable, "build_workbook.py", "raw/*.json", "Carroll_Special_Teams_2021_Current.xlsx", "--min-season=2021"]):
-        code, out = run(cmd, ST_DIR)
-        outputs.append(out)
-        if code != 0:
-            raise SystemExit(f"build_workbook.py failed:\n{out[-2000:]}")
-    text = "\n".join(outputs)
+    text = rebuild_special_teams()
     # Problems with the NEW game only (the archive prints many old, known notes every run).
     keys = {slug.split("-")[0] for slug, _ in new}
     for line in text.splitlines():
@@ -149,6 +162,85 @@ def step_box(args, year):
     say("Rebuilt workbooks." + ("" if not decisions else " -- but see NEEDS YOUR DECISION below."))
     notes.append("box: scraped " + ", ".join(names))
     return [slug for slug, _ in new]
+
+
+# ------------------------------------------------------------------------------------------------- recheck
+
+ST_UNITS = {"carroll_punts": "Punt Number", "carroll_punt_returns": "Punt Number", "carroll_pat_fg": "Kick Number",
+            "carroll_kickoffs": "Kick Number", "carroll_kickoff_returns": "Kick Number"}
+GA_SECTIONS = {"play_by_play", "drive_chart", "home_away", "game_info"}  # what the Game Analysis combiner reads
+
+
+def kicks_line_up(stored, fresh):
+    """True when the corrected box score has the same kicks, in the same order and quarters, for every Special Teams
+    unit -- the condition for typed values (matched by date + kick number) to stay on the right kick. Who kicked or
+    returned may change; that is the kind of correction we want."""
+    import contextlib
+    import copy
+    import io
+    if str(ST_DIR) not in sys.path:
+        sys.path.insert(0, str(ST_DIR))
+    import build_workbook
+    with contextlib.redirect_stdout(io.StringIO()):
+        old, new = build_workbook.build(copy.deepcopy(stored)), build_workbook.build(copy.deepcopy(fresh))
+    key = lambda rows, num: [(r.get(num), r.get("Quarter")) for r in rows]
+    return all(key(old[u], n) == key(new[u], n) for u, n in ST_UNITS.items())
+
+
+def step_recheck(args, year):
+    step_header("recheck", "this season's stored box scores, downloaded again: did the Carroll site correct any?")
+    if str(ST_DIR) not in sys.path:
+        sys.path.insert(0, str(ST_DIR))
+    import fetch_raw
+    changed = []
+    for path in sorted((ST_DIR / "raw").glob(f"{year}_*.json")):
+        stored = json.loads(path.read_text(encoding="utf-8"))
+        try:
+            fresh = fetch_raw.scrape_raw(stored["source_url"])
+        except Exception as e:  # noqa: BLE001 -- one page failing must not stop the update
+            notes.append(f"recheck: could not download {path.name} again ({type(e).__name__}); left as it was")
+            continue
+        sections = sorted(k for k in set(fresh) | set(stored) if k != "source_url" and fresh.get(k) != stored.get(k))
+        if sections:
+            changed.append((path, stored, fresh, sections))
+            say(f"{path.name}: changed on the site ({', '.join(sections)})")
+        time.sleep(1.5)  # go easy on gopios.com
+    if not changed:
+        say("No changes: every stored box score this season matches the site.")
+        notes.append("recheck: no box score corrections on the site")
+        return
+    safe, held = [], []
+    for item in changed:
+        (safe if kicks_line_up(item[1], item[2]) else held).append(item)
+    for path, _, fresh, _ in held:
+        decisions.append(f"recheck: {path.name} was corrected on the site in a way that adds, removes or reorders kicks, so typed "
+                         f"Special Teams values could land on the wrong kick. Not applied; the fresh copy is in Special Teams "
+                         f"Data/_archive/recheck-pending/{path.name} -- compare the kicks, then replace raw/{path.name} by hand.")
+    if args.dry_run:
+        say(f"(dry run: would replace {len(safe)} box score(s), rebuild the Special Teams workbooks and reload the charted ones in Game Analysis)")
+        return
+    for path, _, fresh, _ in held:
+        pending = ST_DIR / "_archive" / "recheck-pending"
+        pending.mkdir(parents=True, exist_ok=True)
+        (pending / path.name).write_text(json.dumps(fresh, indent=2), encoding="utf-8")
+    if not safe:
+        return
+    archive = ST_DIR / "_archive" / "raw-replaced" / dt.date.today().isoformat()
+    archive.mkdir(parents=True, exist_ok=True)
+    for path, _, fresh, _ in safe:
+        shutil.copy2(path, archive / path.name)
+        path.write_text(json.dumps(fresh, indent=2), encoding="utf-8")  # same format fetch_raw.py writes
+    ensure_excel_closed(args)
+    rebuild_special_teams()
+    reload = [path.name for path, _, _, sections in safe if GA_SECTIONS & set(sections)]
+    if reload:
+        code, out = run([sys.executable, "scripts/build_combined_dataset.py", "--reload-json", *reload], GA_DIR)
+        say("\n".join(out.strip().splitlines()[-4:]))
+        if code != 0:
+            raise SystemExit(f"build_combined_dataset.py --reload-json failed:\n{out[-2000:]}")
+    names = ", ".join(f"{p.name.split('_')[1]} ({', '.join(s)})" for p, _, _, s in safe)
+    say(f"Applied: {names}. Old copies in {archive}.")
+    notes.append(f"recheck: applied site corrections to {len(safe)} box score(s): {names}")
 
 
 # ------------------------------------------------------------------------------------------------- CCIW.org
@@ -381,7 +473,14 @@ def step_hudl(args, year):
             say("(dry run: would move them there and run the append-only combiner)")
         return
     for src, target in moves:
-        shutil.move(str(src), str(target))
+        # Copy, then try to remove the original: Windows often still holds a fresh download (antivirus scan,
+        # Explorer preview), and shutil.move then failed after copying and stopped the whole update (2026-10-27
+        # and 11-06). A file left in Downloads is harmless -- the next run sees its identical copy is filed.
+        shutil.copy2(str(src), str(target))
+        try:
+            src.unlink()
+        except OSError:
+            notes.append(f"hudl: {src.name} is still in Downloads (Windows had it open); it is filed, so delete it when convenient")
     code, out = run([sys.executable, "scripts/build_combined_dataset.py"], GA_DIR)  # append-only; never --rebuild
     say("\n".join(out.strip().splitlines()[-6:]))
     if code != 0:
@@ -434,6 +533,8 @@ def main():
     year = step_guard(args) if "guard" in wanted else dt.date.today().year
     if "box" in wanted:
         step_box(args, year)
+    if "recheck" in wanted:
+        step_recheck(args, year)
     if "cciw" in wanted:
         step_cciw(args, year)
     if "ncaa" in wanted:

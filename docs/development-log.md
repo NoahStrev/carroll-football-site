@@ -2726,3 +2726,17 @@ Shipped as v1.4.3 on the Updates page (commits 80b15f7, 75ad6d3, 50f3a6d) and th
   Downloads, and the move from Downloads failed on a Windows file lock after copying (the combiner was run by hand);
   the `ncaa` step had to run from the PowerShell tool. The weekly scheduled tasks no longer exist; the update runs
   on request.
+
+## 2026-11-06: North Park film, box-score corrections, recheck step
+
+- North Park 10/31 charted. The validator's turnover check caught 3 giveaways vs the box score's 2: Carroll's label
+  that day was "CRL" ("CARR" in the play text), unknown to the Game Analysis combiner, so Carroll recovering its own
+  fumble read as lost. `CARROLL_ABBREVIATIONS` now lists every label seen; the game was reloaded.
+- All 159 stored box scores were downloaded again and compared: every pre-2026 game identical, four 2026 games
+  corrected on the Carroll site (Elmhurst, Millikin, North Central, St. Norbert) and Carthage's attendance added.
+  Applied: old copies archived, Special Teams workbooks rebuilt (same kicks in the same order, so typed values stayed
+  put), the four games reloaded in Game Analysis.
+- New `recheck` step in `weekly_update.py` (re-downloads this season's stored box scores every run and applies
+  corrections the same way, holding back any that change the kick list) and `--reload-json` in the combiner. The
+  Hudl step now copies the export instead of moving it, so a Windows file lock no longer stops the update.
+

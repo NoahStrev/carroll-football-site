@@ -167,10 +167,16 @@ latest season.
 
 ## Weekly update
 
-`python scripts/weekly_update.py` runs the whole update in order (schedule guard, new box score, CCIW.org, NCAA.com, Hudl file from Downloads,
-site rebuild and validation), `--dry-run` shows what it would do, and `--only box,hudl,site` runs just some steps. It never commits or pushes,
+`python scripts/weekly_update.py` runs the whole update in order (schedule guard, new box score, a recheck of this season's stored box
+scores, CCIW.org, NCAA.com, Hudl file from Downloads, site rebuild and validation), `--dry-run` shows what it would do, and `--only box,hudl,site` runs just some steps. It never commits or pushes,
 never maps a new opponent name, and never fixes a parse problem itself: anything needing a decision is listed under "NEEDS YOUR DECISION"
 and the exit code is 2. Run it when you want an update; nothing is scheduled.
+
+The recheck step exists because the Carroll site keeps correcting box scores for weeks after a game (on 2026-11-06 four of nine
+2026 games had changed: tacklers, yardage, a kicker, a field-goal distance). It re-downloads each stored game of the season, and
+a changed one replaces the stored copy (the old one goes to `Special Teams Data/_archive/raw-replaced/<date>/`), the Special Teams
+workbooks are rebuilt and a charted game is reloaded in Game Analysis (`build_combined_dataset.py --reload-json`). Typed Special
+Teams values are matched by kick number, so a correction that adds, removes or reorders kicks is held back for you instead.
 
 ## Running locally
 
