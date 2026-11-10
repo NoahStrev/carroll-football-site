@@ -176,7 +176,7 @@ The recheck step exists because the Carroll site keeps correcting box scores for
 2026 games had changed: tacklers, yardage, a kicker, a field-goal distance). It re-downloads each stored game of the season, and
 a changed one replaces the stored copy (the old one goes to `Special Teams Data/_archive/raw-replaced/<date>/`), the Special Teams
 workbooks are rebuilt and a charted game is reloaded in Game Analysis (`build_combined_dataset.py --reload-json`). Typed Special
-Teams values are matched by kick number, so a correction that adds, removes or reorders kicks is held back for you instead.
+Teams values are matched by kick number, so a correction that adds, removes or reorders kicks is held back for you instead. `build_game_data.py` writes games in date order, so a reloaded game (which moves to the end of the Game Analysis workbook) does not reshuffle the site's files.
 
 ## Running locally
 

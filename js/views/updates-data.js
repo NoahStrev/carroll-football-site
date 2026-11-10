@@ -16,6 +16,23 @@
    rather than becoming their own version. */
 const UPDATES = [
   {
+    version: '1.4.5',
+    date: 'November 10, 2026',
+    title: 'Punt carry and roll on fair catches',
+    changes: [
+      { change: 'A punt that was fair-caught (and not muffed) now counts as carrying its full distance with no roll, as every hand-charted fair catch already did. That adds 25 Carroll punts to the carry and roll numbers', effect: 'Punt and punter carry and roll averages cover more punts; the average roll is 2.5 yards (it was 3.0).' },
+    ],
+  },
+  {
+    version: '1.4.4',
+    date: 'November 6, 2026',
+    title: 'North Park charting and corrected box scores',
+    changes: [
+      { change: 'The Carroll site corrected four earlier 2026 box scores after they were first loaded: tackle credits in Elmhurst, Millikin and St. Norbert; a 16-yard Millikin play that was a run, not a pass (Carroll passing 313 to 297 yards, rushing 54 to 70); a Millikin field goal that was blocked, not missed; St. Norbert\'s punt returner and PAT kicker; and a North Central field goal of 42 yards, not 35. All four are updated, and every weekly update now checks for corrections like these', effect: 'Game, season and career numbers match the official box scores as they stand now.' },
+      { change: 'The North Park game (Oct 31) is charted. A fumble Carroll recovered itself was being counted as a turnover because the box score used a new label for Carroll that day', effect: 'Offense and Defense include North Park, and its turnover total matches the box score.' },
+    ],
+  },
+  {
     version: '1.4.3',
     date: 'October 25, 2026',
     title: 'Full review: expected points, one Special Teams score scale, and fixes across the data',

@@ -2740,3 +2740,17 @@ Shipped as v1.4.3 on the Updates page (commits 80b15f7, 75ad6d3, 50f3a6d) and th
   corrections the same way, holding back any that change the kick list) and `--reload-json` in the combiner. The
   Hudl step now copies the export instead of moving it, so a Windows file lock no longer stops the update.
 
+## 2026-11-09 to 11-10: Special Teams charting fields, weekly update
+
+- Kickoff Return: `Hash Received On` was the same field as `Landing Location` (the user); its 133 codes moved into Landing
+  Location, the column was removed, and Landing Location Worth now fills in for those kicks. The site's Return Location
+  chart reads Landing Location (`build_special_teams_data.py`, ML/MR written LM/RM); its data is unchanged.
+- Punts and punt returns: a fair catch that was not muffed gets Carry Distance = Total Distance and Roll = 0 (fills blanks;
+  all 33 already typed matched). Punt carry/roll on the site now covers 142 Carroll punts (was 117).
+- The five Special Teams sheets were regrouped for charting: find-the-play columns, then the typed columns in the user's
+  order (green headers), then the derived ones (blue). Snap to Catch, Catch to Kick and Hangtime are recalculated from
+  the timestamps on every rebuild (`derive_timings()`). Details in the Special Teams skill and rules files.
+- `build_game_data.py` writes games in date order, so reloading a corrected game in Game Analysis (which moves it to the
+  end of that workbook) no longer reshuffles game-data.json.
+- Weekly update 11-10 (no Carroll game): no box-score corrections found; CCIW and NCAA snapshots added.
+
