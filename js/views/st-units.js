@@ -461,7 +461,7 @@
         { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'converted_los', '', 'Avg Starting Field Position') },
         { raw: true, render: (el, { rows }) => renderTrendCard(el, rows, 'return_length', ' yds', 'Avg Return Length') },
       ],
-      footer: () => ST.source('kickoff_return', 'Kickoff Return', 'Return Location uses the sheet\'s "Hash Received On" field.'),
+      footer: () => ST.source('kickoff_return', 'Kickoff Return', 'Return Location is the sheet\'s Landing Location code (where the kick came down).'),
     });
   };
 })();

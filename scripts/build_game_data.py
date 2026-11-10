@@ -634,6 +634,11 @@ def main():
     drive_sides = resolve_drive_sides(opbp_all, carroll_game_labels)
     offense_official, defense_official, drives_by_key, defensive_td_drives = build_official(opbp_all, carroll_game_labels, drive_sides)
     apply_corrections(offense_official, defense_official, drives_by_key, defensive_td_drives)
+    # Games in date order, whatever order the Game Analysis workbook holds them in: reloading a corrected game there
+    # (--reload-json, the weekly update's recheck step) moves it to the end, which reshuffled these files without any
+    # real change (2026-11-09). The sort is stable, so the plays of each game keep their order.
+    for rows in (offense_plays, defense_plays, offense_official, defense_official):
+        rows.sort(key=lambda r: r["date"] or "")
     filled = {side: fill_unknown_film_rows(film, offi) for side, film, offi in
               (("offense", offense_plays, offense_official), ("defense", defense_plays, defense_official))}
     print(f"film rows with no result filled from the official play-by-play: offense {filled['offense']}, defense {filled['defense']}")
@@ -648,8 +653,8 @@ def main():
     def drive_out(k, v):
         return {"drive_num": k[1], "game_label": k[0], **{f: x for f, x in v.items() if f not in ("start_field_pos", "play_count", "yards")}}
     real = {k: v for k, v in drives_by_key.items() if v.get("play_count")}
-    offense_drives = [drive_out(k, v) for k, v in real.items() if v["side"] == "offense"]
-    defense_drives = [drive_out(k, v) for k, v in real.items() if v["side"] == "defense"]
+    offense_drives = sorted((drive_out(k, v) for k, v in real.items() if v["side"] == "offense"), key=lambda d: d["date"] or "")
+    defense_drives = sorted((drive_out(k, v) for k, v in real.items() if v["side"] == "defense"), key=lambda d: d["date"] or "")
     for d in (*offense_drives, *defense_drives):
         del d["side"]
 

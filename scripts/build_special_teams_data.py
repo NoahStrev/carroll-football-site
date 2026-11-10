@@ -22,6 +22,7 @@ from build_lib import distinct, sheet_rows
 
 SRC = Path(__file__).resolve().parent.parent.parent / "Special Teams Data" / "Carroll_Special_Teams_2021_Current.xlsx"
 OUT = Path(__file__).resolve().parent.parent / "data" / "special-teams.json"
+LANDING_CODE_ALIASES = {"ML": "LM", "MR": "RM"}  # the Return Location chart buckets by L / LM / M / RM / R / OBR / OBL
 
 
 def field_bucket(converted_los):
@@ -154,7 +155,9 @@ def build_kickoff_return(wb):
             "next_drive_outcome": outcome_bucket(pts), "drive_success": drive_success(pts),
             "hangtime": r["Hangtime"], "total_distance": r["Total Distance"],
             "return_length": r["Return Length"],
-            "return_location": r["Hash Received On"],
+            # The sheet's Landing Location code (it absorbed the old "Hash Received On" column on 2026-11-09). ML/MR
+            # are written LM/RM, the spelling the Return Location chart buckets by.
+            "return_location": LANDING_CODE_ALIASES.get(str(r["Landing Location"] or "").strip().upper(), str(r["Landing Location"] or "").strip().upper()) or None,
             "converted_los": r["Converted Result LOS"],
             "field_bucket": field_bucket(r["Converted Result LOS"]),
             # Added 2026-07-30: see the identical note in build_punt_return() --
